@@ -1,6 +1,4 @@
-<p align="center">
-  <img src="./force-logo.png" alt="FORCE logo" width="160" />
-</p>
+![FORCE, GPU physics engine: illustration of a cube of blue particles collapsing onto a grid](./force-cover.png)
 
 # FORCE
 
