@@ -1,0 +1,55 @@
+{
+  "name": "force-gpu",
+  "version": "0.0.0",
+  "description": "A GPU-first physics engine for the web, built on WebGPU.",
+  "keywords": [
+    "webgpu",
+    "wgsl",
+    "gpu",
+    "physics",
+    "physics-engine",
+    "compute-shader",
+    "simulation"
+  ],
+  "license": "MIT",
+  "author": "rock-biter",
+  "homepage": "https://github.com/rock-biter/force#readme",
+  "bugs": "https://github.com/rock-biter/force/issues",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rock-biter/force.git"
+  },
+  "type": "module",
+  "sideEffects": false,
+  "files": [
+    "dist"
+  ],
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "dev": "vite examples",
+    "build": "vite build && tsc -p tsconfig.build.json",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc",
+    "lint": "biome check .",
+    "format": "biome check --write .",
+    "prepublishOnly": "npm run lint && npm run typecheck && npm run test && npm run build"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.6.5",
+    "@types/web": "^0.0.360",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.5",
+    "vitest": "^5.1.0"
+  }
+}

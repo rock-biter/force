@@ -1,0 +1,45 @@
+<p align="center">
+  <img src="./force-logo.png" alt="FORCE logo" width="160" />
+</p>
+
+# FORCE
+
+A GPU-first physics engine for the web, built on [WebGPU](https://www.w3.org/TR/webgpu/).
+
+> **Status: early development.** There is no physics engine here yet and the package is not
+> published on npm. The API will change without notice.
+
+## Goals
+
+- Run the simulation on the GPU with WebGPU compute shaders.
+- Stay independent of any rendering library.
+- Add a WebGL fallback later on.
+
+## Requirements
+
+A [browser with WebGPU support](https://github.com/gpuweb/gpuweb/wiki/Implementation-Status),
+on a page served from HTTPS or localhost.
+
+The WebGPU types are built into TypeScript 6 and later. On TypeScript 5, also install
+[`@webgpu/types`](https://www.npmjs.com/package/@webgpu/types).
+
+## Development
+
+```sh
+npm install
+npm run dev        # serve the examples
+npm test           # run the unit tests
+npm run typecheck  # check types
+npm run lint       # check lint and formatting
+npm run build      # build the package into dist/
+```
+
+| Path        | Contents                                   |
+| ----------- | ------------------------------------------ |
+| `src/`      | The library                                |
+| `test/`     | Unit tests                                 |
+| `examples/` | Runnable demos, importing from `force-gpu` |
+
+## License
+
+[MIT](./LICENSE)

@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    // No "DOM" here: up to TypeScript 7.0.2 the built-in DOM lib has only part of the WebGPU types
+    // (no GPUBufferUsage, for example). @types/web replaces it with the complete set.
+    "lib": ["ES2022"],
+    "types": ["@types/web", "vite/client"],
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "paths": { "force-gpu": ["./src/index.ts"] },
+    "strict": true,
+    "verbatimModuleSyntax": true,
+    "noEmit": true
+  },
+  "include": ["src", "test", "examples"],
+  "exclude": ["examples/vite.config.ts"]
+}
