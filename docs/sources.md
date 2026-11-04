@@ -23,6 +23,15 @@ The status says how much we actually read:
 | [Matthias Müller, Ten Minute Physics](https://matthias-research.github.io/pages/tenMinutePhysics/index.html) | Short videos with JavaScript demos on cloth, fluids, rigid bodies and GPU | Index only |
 | [Witkin and Baraff, Physically Based Modeling](https://www.cs.cmu.edu/~baraff/sigcourse/) | The classic SIGGRAPH 1997 course notes | Index only |
 
+## WebGPU
+
+| Source | What it gives us | Status |
+| --- | --- | --- |
+| [WebGPU specification](https://www.w3.org/TR/webgpu/) | The official definition of the API | Index only |
+| [WGSL specification](https://www.w3.org/TR/WGSL/) | The official definition of the shader language | Index only |
+| [MDN, WebGPU API](https://developer.mozilla.org/en-US/docs/Web/API/WebGPU_API) | A readable API reference | Index only |
+| [WebGPU Fundamentals](https://webgpufundamentals.org/) | Step-by-step lessons | Index only |
+
 ## Method
 
 | Source | What it gives us | Status |

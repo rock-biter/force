@@ -12,6 +12,7 @@ This is where we tell how FORCE gets built, one step at a time. If you are new h
 
 ## For reference
 
+- [WebGPU mini guides](./guides/README.md): one concept each, built from our code
 - [Glossary](./glossary.md): technical terms in plain words
 - [Sources](./sources.md): papers, talks and code, with how much of each we actually read
 
