@@ -21,6 +21,10 @@ on a page served from HTTPS or localhost.
 The WebGPU types are built into TypeScript 6 and later. On TypeScript 5, also install
 [`@webgpu/types`](https://www.npmjs.com/package/@webgpu/types).
 
+## Documentation
+
+The development logbook and study notes are in [docs/](./docs/README.md).
+
 ## Development
 
 ```sh
