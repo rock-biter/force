@@ -70,8 +70,11 @@ The spec or MDN first.
 The answer, checked like the rest of the guide.
 ```
 
-Stay under 80 lines, about 4 minutes of reading, not counting the questions. If it does not fit, it
-is two concepts: split it.
+Aim for about 80 lines, around 4 minutes of reading, not counting the questions. It is a guide, not
+a cap: it keeps explanations tight, and must not make a hard topic shallow. A few lines more are fine
+when the concept needs them. Going well past it is a reason to check: if the guide covers two
+concepts, split it; if it is one concept that needs the room, keep it whole and cut only what does
+not help the reader.
 
 ## The user's questions
 

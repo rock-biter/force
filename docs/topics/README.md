@@ -5,8 +5,8 @@
 Everything we have met while building FORCE, concepts and sources, and how far we went with each
 one. Use it to look up a term, to find what to read, or to pick what to explore next.
 
-- **132 concepts:** ● 13 studied · ◐ 50 seen · ○ 69 mentioned
-- **75 sources:** ● 2 studied · ◐ 11 seen · ○ 62 mentioned · read by Claude: 11 parts, 0 in full
+- **134 concepts:** ● 14 studied · ◐ 51 seen · ○ 69 mentioned
+- **80 sources:** ● 5 studied · ◐ 11 seen · ○ 64 mentioned · read by Claude: 17 parts, 0 in full
 
 | | Status | What it means |
 | --- | --- | --- |
@@ -198,7 +198,7 @@ WebGPU, WGSL and how to make thousands of threads work.
 | ○ | Atomic operations | Memory updates that stay correct even when thousands of threads write to the same place |  | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |
 | ◐ | Billboard | A flat shape turned to face the camera in every frame, the base of most impostors | Impostor | [009](../logbook/009-the-first-picture.md) |
 | ○ | Bind group | Connects real buffers to the numbered slots a shader reads from | WebGPU | [guides index](../guides/README.md) |
-| ○ | Buffer | A block of GPU memory holding raw bytes, declared up front with everything it will be used for | WebGPU | [guides index](../guides/README.md) |
+| ● | **[Buffer](../guides/buffers.md)** | A block of GPU memory holding raw bytes, declared up front with everything it will be used for | WebGPU | [guides index](../guides/README.md) |
 | ○ | Commands and queue | GPU work is recorded first, and runs only when it is submitted to the queue | WebGPU | [guides index](../guides/README.md) |
 | ○ | Compatibility mode | A restricted WebGPU that also runs on older graphics APIs, such as OpenGL ES 3.1 | WebGPU | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |
 | ○ | Compute pipeline | A compiled shader plus its fixed settings, ready to run | WebGPU | [guides index](../guides/README.md) |
@@ -206,6 +206,7 @@ WebGPU, WGSL and how to make thousands of threads work.
 | ○ | Constraint graph coloring | Splitting constraints into groups that share no body, so each group can be solved in parallel |  | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |
 | ◐ | Device limits | What a given GPU guarantees, such as buffer sizes and workgroup memory: to check before choosing a pipeline | WebGPU | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |
 | ◐ | Device loss | The browser can take the GPU back at any time: every buffer and pipeline, and the data in them, must then be created again | Adapter and device | [adapter-and-device](../guides/adapter-and-device.md) |
+| ○ | Error scope | Catches WebGPU errors in code: push a scope before the calls, pop it after to get the first error, or null | WebGPU errors | [buffers](../guides/buffers.md) |
 | ○ | GPU-resident simulation | Keeping the simulation's data on the GPU, and not reading it back every frame |  | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |
 | ◐ | Impostor | A flat shape that a shader paints to look like a 3D object, such as a sphere drawn on one triangle |  | [009](../logbook/009-the-first-picture.md) |
 | ◐ | Instancing | Drawing the same geometry many times in one call, each copy with its own data, like InstancedMesh in three.js |  | [009](../logbook/009-the-first-picture.md) |
@@ -220,6 +221,7 @@ WebGPU, WGSL and how to make thousands of threads work.
 | ○ | Uniform buffer | A small read-only buffer of values shared by every thread, like a GLSL uniform | Buffer | [008](../logbook/008-the-first-loop.md) |
 | ○ | Usage scope | A stretch of GPU work whose parts may run at the same time: in a compute pass, each dispatch is one | WebGPU | [WebGPU specification](https://www.w3.org/TR/webgpu/) |
 | ○ | WebGPU | The browser API that lets a page use the GPU, both to draw and to calculate |  | [README](../../README.md) |
+| ◐ | WebGPU errors | Most mistakes do not throw: the call returns, the work is skipped, and the browser prints a warning in the console | WebGPU | [buffers](../guides/buffers.md) |
 | ○ | WGSL | The shader language of WebGPU, the counterpart of GLSL | WebGPU | [guides index](../guides/README.md) |
 | ○ | Workgroups and dispatch | How the work is split into groups of threads and launched on the GPU | WebGPU | [guides index](../guides/README.md) |
 
@@ -231,20 +233,25 @@ WebGPU, WGSL and how to make thousands of threads work.
 | ○ | [GPU Gems 3](https://developer.nvidia.com/gpugems/gpugems3)<br>*2007* | Book | NVIDIA's free book of GPU techniques, with a whole part on physics simulation | Parallel work on the GPU | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |  |
 | ○ | [MDN, GPU.requestAdapter()](https://developer.mozilla.org/en-US/docs/Web/API/GPU/requestAdapter) | Documentation | How to ask for an adapter, and why it can be null | Adapter and device | [adapter-and-device](../guides/adapter-and-device.md) | Parts |
 | ○ | [MDN, GPUAdapter.requestDevice()](https://developer.mozilla.org/en-US/docs/Web/API/GPUAdapter/requestDevice) | Documentation | How to ask for a device, its options, and why a second call rejects | Adapter and device, Device limits | [adapter-and-device](../guides/adapter-and-device.md) | Parts |
+| ● | [MDN, GPUBuffer.usage](https://developer.mozilla.org/en-US/docs/Web/API/GPUBuffer/usage) · **[our page](../guides/buffers.md)** | Documentation | Every buffer usage flag and what it allows | Buffer | [buffers](../guides/buffers.md) | Parts |
+| ● | [MDN, GPUDevice.createBuffer()](https://developer.mozilla.org/en-US/docs/Web/API/GPUDevice/createBuffer) · **[our page](../guides/buffers.md)** | Documentation | How to create a buffer, and which usage flags may go together | Buffer | [buffers](../guides/buffers.md) | Parts |
 | ○ | [MDN, GPUDevice.lost](https://developer.mozilla.org/en-US/docs/Web/API/GPUDevice/lost) | Documentation | When a device is lost, and how to start over | Device loss | [adapter-and-device](../guides/adapter-and-device.md) | Parts |
+| ● | [MDN, GPUQueue.writeBuffer()](https://developer.mozilla.org/en-US/docs/Web/API/GPUQueue/writeBuffer) · **[our page](../guides/buffers.md)** | Documentation | How to fill a buffer from JavaScript: offsets in bytes or elements, and what throws | Buffer, WebGPU errors | [buffers](../guides/buffers.md) | Parts |
 | ○ | [MDN, GPUSupportedLimits](https://developer.mozilla.org/en-US/docs/Web/API/GPUSupportedLimits) | Documentation | Every limit with its default value | Device limits | [adapter-and-device](../guides/adapter-and-device.md) | Parts |
 | ○ | [MDN, Navigator.gpu](https://developer.mozilla.org/en-US/docs/Web/API/Navigator/gpu) | Documentation | The entry point of WebGPU, only on HTTPS or localhost | WebGPU | [adapter-and-device](../guides/adapter-and-device.md) | Parts |
+| ○ | [MDN, WebGLRenderingContext.bufferData()](https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/bufferData) | Documentation | How WebGL fills a buffer; its usage is only an intended pattern, for speed | Buffer | [buffers](../guides/buffers.md) | Parts |
 | ○ | [MDN, WebGPU API](https://developer.mozilla.org/en-US/docs/Web/API/WebGPU_API) | Documentation | A readable API reference | WebGPU | [guide skill](../../.claude/skills/guide/SKILL.md) |  |
 | ◐ | [Real-Time Rigid Body Simulation on GPUs](https://developer.nvidia.com/gpugems/gpugems3/part-v-physics-simulation/chapter-29-real-time-rigid-body-simulation-gpus)<br>*Takahiro Harada, 2007* | Book | Rigid bodies built from particles: collisions found on a uniform grid and pushed apart with springs and dampers, all on the GPU | Rigid body, Inertia tensor, Parallel work on the GPU, Particle-based rigid bodies, Uniform grid, Discrete element method (DEM) | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |  |
 | ○ | [Taichi](https://github.com/taichi-dev/taichi) | Project | A language embedded in Python for writing parallel simulations that run on the GPU | Parallel work on the GPU | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |  |
 | ○ | [three.js](https://github.com/mrdoob/three.js) | Project | The 3D library for the web; its WebGPU renderer draws our debug viewer, on the same device as FORCE | Adapter and device, Buffer, Instancing, TSL (Three Shading Language) | [010-device-from-outside](../decisions/010-device-from-outside.md) | Parts |
+| ○ | [three.js r187, WebGLAttributes.js](https://github.com/mrdoob/three.js/blob/r187/src/renderers/webgl/WebGLAttributes.js) | Source code | How the WebGL renderer uploads a BufferAttribute, and uploads it again after needsUpdate | Buffer | [buffers](../guides/buffers.md) | Parts |
 | ○ | [three.js r187, WebGPUAttributeUtils.js](https://github.com/mrdoob/three.js/blob/r187/src/renderers/webgpu/utils/WebGPUAttributeUtils.js) | Source code | createAttribute() makes a GPU buffer for an attribute only when it has none yet | Buffer | [009](../logbook/009-the-first-picture.md) | Parts |
 | ○ | [three.js r187, WebGPUBackend.js](https://github.com/mrdoob/three.js/blob/r187/src/renderers/webgpu/WebGPUBackend.js) | Source code | The WebGPU renderer accepts a device from outside, and destroys only a device it created | Adapter and device | [009](../logbook/009-the-first-picture.md) | Parts |
 | ○ | [WebGPU Best Practices: Device Loss](https://toji.dev/webgpu-best-practices/device-loss) | Article | What makes a device get lost, how to recover, and how to test it | Device loss | [adapter-and-device](../guides/adapter-and-device.md) | Parts |
 | ○ | [WebGPU Fundamentals](https://webgpufundamentals.org/) | Course | Step-by-step lessons | WebGPU | [002](../logbook/002-the-toolbox.md) |  |
 | ○ | [WebGPU on web-features](https://web-platform-dx.github.io/web-features-explorer/features/webgpu/) | Documentation | Which browsers support WebGPU | WebGPU | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |  |
-| ○ | [WebGPU specification](https://www.w3.org/TR/webgpu/) | Specification | The official definition of the API | WebGPU, Device limits, Usage scope, Adapter and device, Device loss, Commands and queue | [README](../../README.md) | Parts |
-| ○ | [WGSL specification](https://www.w3.org/TR/WGSL/) | Specification | The official definition of the shader language | WGSL | [guide skill](../../.claude/skills/guide/SKILL.md) |  |
+| ○ | [WebGPU specification](https://www.w3.org/TR/webgpu/) | Specification | The official definition of the API | WebGPU, Device limits, Usage scope, Adapter and device, Device loss, Commands and queue, Buffer, WebGPU errors, Error scope | [README](../../README.md) | Parts |
+| ○ | [WGSL specification](https://www.w3.org/TR/WGSL/) | Specification | The official definition of the shader language | WGSL, Memory alignment | [guide skill](../../.claude/skills/guide/SKILL.md) | Parts |
 
 ## Engine design
 

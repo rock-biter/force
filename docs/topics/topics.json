@@ -371,7 +371,12 @@
       "status": "mentioned",
       "partOf": "webgpu",
       "related": ["gpu-parallelism", "wgsl"],
-      "citedIn": ["docs/logbook/000-the-launch.md", "docs/guides/README.md", "chatgpt-research"],
+      "citedIn": [
+        "docs/logbook/000-the-launch.md",
+        "docs/guides/README.md",
+        "chatgpt-research",
+        "docs/guides/buffers.md"
+      ],
       "code": ["examples/hello-compute/free-fall.wgsl", "src/shaders/integrate.wgsl"]
     },
     {
@@ -391,15 +396,16 @@
       "title": "Buffer",
       "summary": "A block of GPU memory holding raw bytes, declared up front with everything it will be used for",
       "area": "gpu",
-      "status": "mentioned",
+      "status": "studied",
       "partOf": "webgpu",
-      "related": ["bind-group", "readback"],
+      "related": ["bind-group", "readback", "webgpu-errors"],
       "citedIn": [
         "docs/guides/README.md",
         "chatgpt-research",
         "docs/logbook/009-the-first-picture.md"
       ],
-      "code": ["examples/hello-compute/main.ts", "src/world.ts", "examples/debug/particles.ts"]
+      "code": ["examples/hello-compute/main.ts", "src/world.ts", "examples/debug/particles.ts"],
+      "page": "docs/guides/buffers.md"
     },
     {
       "id": "compute-pipeline",
@@ -456,7 +462,8 @@
       "citedIn": [
         "docs/guides/README.md",
         "chatgpt-research",
-        "docs/logbook/009-the-first-picture.md"
+        "docs/logbook/009-the-first-picture.md",
+        "docs/guides/buffers.md"
       ],
       "code": ["examples/hello-compute/main.ts", "src/world.ts", "examples/debug/viewer.ts"]
     },
@@ -468,7 +475,7 @@
       "area": "gpu",
       "status": "mentioned",
       "partOf": "webgpu",
-      "citedIn": ["docs/guides/README.md", "chatgpt-research"],
+      "citedIn": ["docs/guides/README.md", "chatgpt-research", "docs/guides/buffers.md"],
       "code": ["examples/hello-compute/main.ts", "src/world.ts"]
     },
     {
@@ -1273,7 +1280,8 @@
       "citedIn": [
         "chatgpt-research",
         "docs/logbook/008-the-first-loop.md",
-        "docs/guides/adapter-and-device.md"
+        "docs/guides/adapter-and-device.md",
+        "docs/guides/buffers.md"
       ],
       "code": ["src/world.ts"]
     },
@@ -1560,7 +1568,10 @@
         "usage-scope",
         "adapter-and-device",
         "device-loss",
-        "command-queue"
+        "command-queue",
+        "buffer",
+        "webgpu-errors",
+        "error-scope"
       ],
       "citedIn": [
         "README.md",
@@ -1568,7 +1579,8 @@
         "chatgpt-research",
         "docs/logbook/008-the-first-loop.md",
         "docs/guides/adapter-and-device.md",
-        "docs/logbook/009-the-first-picture.md"
+        "docs/logbook/009-the-first-picture.md",
+        "docs/guides/buffers.md"
       ],
       "url": "https://www.w3.org/TR/webgpu/",
       "claudeRead": "parts"
@@ -1580,9 +1592,10 @@
       "summary": "The official definition of the shader language",
       "area": "gpu",
       "status": "mentioned",
-      "about": ["wgsl"],
-      "citedIn": [".claude/skills/guide/SKILL.md", "chatgpt-research"],
-      "url": "https://www.w3.org/TR/WGSL/"
+      "about": ["wgsl", "memory-alignment"],
+      "citedIn": [".claude/skills/guide/SKILL.md", "chatgpt-research", "docs/guides/buffers.md"],
+      "url": "https://www.w3.org/TR/WGSL/",
+      "claudeRead": "parts"
     },
     {
       "id": "mdn-webgpu",
@@ -2263,7 +2276,7 @@
       "area": "gpu",
       "status": "seen",
       "partOf": "wgsl",
-      "citedIn": ["docs/logbook/008-the-first-loop.md"],
+      "citedIn": ["docs/logbook/008-the-first-loop.md", "docs/guides/buffers.md"],
       "code": ["src/shaders/integrate.wgsl", "src/world.ts"]
     },
     {
@@ -2274,7 +2287,7 @@
       "area": "gpu",
       "status": "mentioned",
       "partOf": "buffer",
-      "citedIn": ["docs/logbook/008-the-first-loop.md"],
+      "citedIn": ["docs/logbook/008-the-first-loop.md", "docs/guides/buffers.md"],
       "code": ["src/world.ts", "src/shaders/integrate.wgsl"]
     },
     {
@@ -2509,6 +2522,93 @@
       "related": ["contact", "restitution", "friction"],
       "citedIn": ["docs/logbook/010-the-ground.md"],
       "code": ["src/shaders/integrate.wgsl"]
+    },
+    {
+      "id": "webgpu-errors",
+      "kind": "concept",
+      "title": "WebGPU errors",
+      "summary": "Most mistakes do not throw: the call returns, the work is skipped, and the browser prints a warning in the console",
+      "area": "gpu",
+      "status": "seen",
+      "partOf": "webgpu",
+      "citedIn": ["docs/guides/buffers.md"]
+    },
+    {
+      "id": "mdn-create-buffer",
+      "kind": "docs",
+      "title": "MDN, GPUDevice.createBuffer()",
+      "summary": "How to create a buffer, and which usage flags may go together",
+      "area": "gpu",
+      "status": "studied",
+      "partOf": "mdn-webgpu",
+      "about": ["buffer"],
+      "citedIn": ["docs/guides/buffers.md"],
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/GPUDevice/createBuffer",
+      "claudeRead": "parts",
+      "page": "docs/guides/buffers.md"
+    },
+    {
+      "id": "mdn-write-buffer",
+      "kind": "docs",
+      "title": "MDN, GPUQueue.writeBuffer()",
+      "summary": "How to fill a buffer from JavaScript: offsets in bytes or elements, and what throws",
+      "area": "gpu",
+      "status": "studied",
+      "partOf": "mdn-webgpu",
+      "about": ["buffer", "webgpu-errors"],
+      "citedIn": ["docs/guides/buffers.md"],
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/GPUQueue/writeBuffer",
+      "claudeRead": "parts",
+      "page": "docs/guides/buffers.md"
+    },
+    {
+      "id": "mdn-buffer-usage",
+      "kind": "docs",
+      "title": "MDN, GPUBuffer.usage",
+      "summary": "Every buffer usage flag and what it allows",
+      "area": "gpu",
+      "status": "studied",
+      "partOf": "mdn-webgpu",
+      "about": ["buffer"],
+      "citedIn": ["docs/guides/buffers.md"],
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/GPUBuffer/usage",
+      "claudeRead": "parts",
+      "page": "docs/guides/buffers.md"
+    },
+    {
+      "id": "mdn-webgl-buffer-data",
+      "kind": "docs",
+      "title": "MDN, WebGLRenderingContext.bufferData()",
+      "summary": "How WebGL fills a buffer; its usage is only an intended pattern, for speed",
+      "area": "gpu",
+      "status": "mentioned",
+      "about": ["buffer"],
+      "citedIn": ["docs/guides/buffers.md"],
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/bufferData",
+      "claudeRead": "parts"
+    },
+    {
+      "id": "threejs-webgl-attributes",
+      "kind": "code",
+      "title": "three.js r187, WebGLAttributes.js",
+      "summary": "How the WebGL renderer uploads a BufferAttribute, and uploads it again after needsUpdate",
+      "area": "gpu",
+      "status": "mentioned",
+      "partOf": "three-js",
+      "about": ["buffer"],
+      "citedIn": ["docs/guides/buffers.md"],
+      "url": "https://github.com/mrdoob/three.js/blob/r187/src/renderers/webgl/WebGLAttributes.js",
+      "claudeRead": "parts"
+    },
+    {
+      "id": "error-scope",
+      "kind": "concept",
+      "title": "Error scope",
+      "summary": "Catches WebGPU errors in code: push a scope before the calls, pop it after to get the first error, or null",
+      "area": "gpu",
+      "status": "mentioned",
+      "partOf": "webgpu-errors",
+      "citedIn": ["docs/guides/buffers.md"]
     }
   ]
 }
