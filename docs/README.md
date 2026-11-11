@@ -10,6 +10,7 @@ This is where we tell how FORCE gets built, one step at a time. If you are new h
 | 001 | [The Flip Book](./logbook/001-the-flip-book.md) | What a physics engine does, in five questions |
 | 002 | [The Toolbox](./logbook/002-the-toolbox.md) | The rules and skills for working with Claude |
 | 003 | [The Map](./logbook/003-the-map.md) | Keeping track of what we studied and what we only heard of |
+| 004 | [The Detour](./logbook/004-the-detour.md) | A few days of study with ChatGPT, brought home and checked |
 
 ## For reference
 

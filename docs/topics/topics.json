@@ -19,9 +19,17 @@
       "title": "Physics",
       "description": "How things move, collide and stay together"
     },
+    "math": {
+      "title": "Math",
+      "description": "The math behind motion: change over time, rotations, numbers on a computer"
+    },
     "gpu": {
       "title": "GPU",
       "description": "WebGPU, WGSL and how to make thousands of threads work"
+    },
+    "engine": {
+      "title": "Engine design",
+      "description": "How an engine is organized, measured and scaled across devices"
     },
     "method": {
       "title": "Method",
@@ -61,6 +69,9 @@
     },
     "code": {
       "title": "Source code"
+    },
+    "conversation": {
+      "title": "Conversation"
     }
   },
   "topics": [
@@ -71,7 +82,7 @@
       "summary": "A program that works out how objects move, one small step at a time",
       "area": "physics",
       "status": "seen",
-      "citedIn": ["docs/logbook/001-the-flip-book.md", "box2d-hello"]
+      "citedIn": ["docs/logbook/001-the-flip-book.md", "box2d-hello", "chatgpt-research"]
     },
     {
       "id": "simulation-step",
@@ -81,7 +92,7 @@
       "area": "physics",
       "status": "seen",
       "partOf": "physics-engine",
-      "citedIn": ["docs/logbook/001-the-flip-book.md", "box2d-physics-world"]
+      "citedIn": ["docs/logbook/001-the-flip-book.md", "box2d-physics-world", "chatgpt-research"]
     },
     {
       "id": "timestep",
@@ -92,7 +103,7 @@
       "status": "seen",
       "partOf": "simulation-step",
       "related": ["integration"],
-      "citedIn": ["docs/logbook/001-the-flip-book.md", "box2d-hello"]
+      "citedIn": ["docs/logbook/001-the-flip-book.md", "box2d-hello", "chatgpt-research"]
     },
     {
       "id": "fixed-timestep",
@@ -103,7 +114,7 @@
       "status": "seen",
       "partOf": "timestep",
       "related": ["tunneling"],
-      "citedIn": ["docs/logbook/001-the-flip-book.md", "fix-your-timestep"]
+      "citedIn": ["docs/logbook/001-the-flip-book.md", "fix-your-timestep", "chatgpt-research"]
     },
     {
       "id": "force",
@@ -113,7 +124,7 @@
       "area": "physics",
       "status": "seen",
       "partOf": "simulation-step",
-      "citedIn": ["docs/logbook/001-the-flip-book.md"]
+      "citedIn": ["docs/logbook/001-the-flip-book.md", "chatgpt-research"]
     },
     {
       "id": "gravity",
@@ -121,9 +132,9 @@
       "title": "Gravity",
       "summary": "The force that pulls everything down: on Earth it adds 9.81 m/s of downward speed every second",
       "area": "physics",
-      "status": "mentioned",
+      "status": "seen",
       "partOf": "force",
-      "citedIn": ["docs/logbook/001-the-flip-book.md"],
+      "citedIn": ["docs/logbook/001-the-flip-book.md", "chatgpt-research"],
       "code": ["examples/hello-compute/free-fall.wgsl"]
     },
     {
@@ -134,7 +145,7 @@
       "area": "physics",
       "status": "seen",
       "partOf": "simulation-step",
-      "citedIn": ["docs/logbook/001-the-flip-book.md"]
+      "citedIn": ["docs/logbook/001-the-flip-book.md", "chatgpt-research"]
     },
     {
       "id": "broad-phase",
@@ -145,7 +156,7 @@
       "status": "seen",
       "partOf": "collision-detection",
       "related": ["bounding-box"],
-      "citedIn": ["docs/logbook/001-the-flip-book.md"]
+      "citedIn": ["docs/logbook/001-the-flip-book.md", "chatgpt-research"]
     },
     {
       "id": "bounding-box",
@@ -154,7 +165,7 @@
       "summary": "An invisible box around an object: testing two boxes is much cheaper than testing two real shapes",
       "area": "physics",
       "status": "seen",
-      "citedIn": ["docs/logbook/001-the-flip-book.md"]
+      "citedIn": ["docs/logbook/001-the-flip-book.md", "chatgpt-research"]
     },
     {
       "id": "narrow-phase",
@@ -165,7 +176,7 @@
       "status": "seen",
       "partOf": "collision-detection",
       "related": ["contact"],
-      "citedIn": ["docs/logbook/001-the-flip-book.md"]
+      "citedIn": ["docs/logbook/001-the-flip-book.md", "chatgpt-research"]
     },
     {
       "id": "tunneling",
@@ -185,7 +196,7 @@
       "area": "physics",
       "status": "seen",
       "related": ["constraint"],
-      "citedIn": ["docs/logbook/001-the-flip-book.md"]
+      "citedIn": ["docs/logbook/001-the-flip-book.md", "chatgpt-research"]
     },
     {
       "id": "constraint",
@@ -195,7 +206,7 @@
       "area": "physics",
       "status": "seen",
       "related": ["solver"],
-      "citedIn": ["docs/logbook/001-the-flip-book.md"]
+      "citedIn": ["docs/logbook/001-the-flip-book.md", "chatgpt-research"]
     },
     {
       "id": "solver",
@@ -205,7 +216,7 @@
       "area": "physics",
       "status": "seen",
       "partOf": "simulation-step",
-      "citedIn": ["docs/logbook/001-the-flip-book.md"]
+      "citedIn": ["docs/logbook/001-the-flip-book.md", "chatgpt-research"]
     },
     {
       "id": "iterative-solver",
@@ -215,7 +226,11 @@
       "area": "physics",
       "status": "seen",
       "partOf": "solver",
-      "citedIn": ["docs/logbook/001-the-flip-book.md", "rapier-integration-parameters"]
+      "citedIn": [
+        "docs/logbook/001-the-flip-book.md",
+        "rapier-integration-parameters",
+        "chatgpt-research"
+      ]
     },
     {
       "id": "integration",
@@ -225,7 +240,7 @@
       "area": "physics",
       "status": "seen",
       "partOf": "simulation-step",
-      "citedIn": ["docs/logbook/001-the-flip-book.md"]
+      "citedIn": ["docs/logbook/001-the-flip-book.md", "chatgpt-research"]
     },
     {
       "id": "particle",
@@ -233,9 +248,9 @@
       "title": "Particle",
       "summary": "A point that moves but has no size or shape: the simplest thing to simulate",
       "area": "physics",
-      "status": "mentioned",
+      "status": "seen",
       "related": ["rigid-body"],
-      "citedIn": ["docs/logbook/000-the-launch.md"],
+      "citedIn": ["docs/logbook/000-the-launch.md", "chatgpt-research"],
       "code": ["examples/hello-compute/free-fall.wgsl"]
     },
     {
@@ -244,8 +259,8 @@
       "title": "Rigid body",
       "summary": "An object that moves and rotates but never bends, like a box or a ball",
       "area": "physics",
-      "status": "mentioned",
-      "citedIn": ["docs/README.md", "ten-minute-physics"]
+      "status": "seen",
+      "citedIn": ["docs/README.md", "ten-minute-physics", "chatgpt-research"]
     },
     {
       "id": "spring",
@@ -253,9 +268,9 @@
       "title": "Spring",
       "summary": "A link that keeps two points near a rest distance, pulling when stretched and pushing when squeezed",
       "area": "physics",
-      "status": "mentioned",
+      "status": "seen",
       "related": ["cloth"],
-      "citedIn": ["docs/README.md"]
+      "citedIn": ["docs/README.md", "chatgpt-research"]
     },
     {
       "id": "cloth",
@@ -265,7 +280,7 @@
       "area": "physics",
       "status": "mentioned",
       "related": ["particle"],
-      "citedIn": ["docs/README.md", "ten-minute-physics"]
+      "citedIn": ["docs/README.md", "ten-minute-physics", "chatgpt-research"]
     },
     {
       "id": "fluid",
@@ -275,7 +290,7 @@
       "area": "physics",
       "status": "mentioned",
       "related": ["particle"],
-      "citedIn": ["docs/README.md", "ten-minute-physics"]
+      "citedIn": ["docs/README.md", "ten-minute-physics", "chatgpt-research"]
     },
     {
       "id": "gpu-parallelism",
@@ -285,7 +300,7 @@
       "area": "gpu",
       "status": "seen",
       "related": ["solver", "workgroup"],
-      "citedIn": ["docs/logbook/001-the-flip-book.md"]
+      "citedIn": ["docs/logbook/001-the-flip-book.md", "chatgpt-research"]
     },
     {
       "id": "webgpu",
@@ -294,7 +309,7 @@
       "summary": "The browser API that lets a page use the GPU, both to draw and to calculate",
       "area": "gpu",
       "status": "mentioned",
-      "citedIn": ["README.md", "docs/logbook/000-the-launch.md", "webgpu-spec"],
+      "citedIn": ["README.md", "docs/logbook/000-the-launch.md", "webgpu-spec", "chatgpt-research"],
       "code": ["src/gpu/device.ts"]
     },
     {
@@ -305,7 +320,7 @@
       "area": "gpu",
       "status": "mentioned",
       "partOf": "webgpu",
-      "citedIn": ["docs/guides/README.md"],
+      "citedIn": ["docs/guides/README.md", "chatgpt-research"],
       "code": ["src/gpu/device.ts"]
     },
     {
@@ -317,7 +332,7 @@
       "status": "mentioned",
       "partOf": "webgpu",
       "related": ["gpu-parallelism", "wgsl"],
-      "citedIn": ["docs/logbook/000-the-launch.md", "docs/guides/README.md"],
+      "citedIn": ["docs/logbook/000-the-launch.md", "docs/guides/README.md", "chatgpt-research"],
       "code": ["examples/hello-compute/free-fall.wgsl"]
     },
     {
@@ -328,7 +343,7 @@
       "area": "gpu",
       "status": "mentioned",
       "partOf": "webgpu",
-      "citedIn": ["docs/guides/README.md"],
+      "citedIn": ["docs/guides/README.md", "chatgpt-research"],
       "code": ["examples/hello-compute/free-fall.wgsl"]
     },
     {
@@ -340,7 +355,7 @@
       "status": "mentioned",
       "partOf": "webgpu",
       "related": ["bind-group", "readback"],
-      "citedIn": ["docs/guides/README.md"],
+      "citedIn": ["docs/guides/README.md", "chatgpt-research"],
       "code": ["examples/hello-compute/main.ts"]
     },
     {
@@ -387,7 +402,7 @@
       "area": "gpu",
       "status": "mentioned",
       "partOf": "webgpu",
-      "citedIn": ["docs/guides/README.md"],
+      "citedIn": ["docs/guides/README.md", "chatgpt-research"],
       "code": ["examples/hello-compute/main.ts"]
     },
     {
@@ -398,7 +413,7 @@
       "area": "gpu",
       "status": "mentioned",
       "partOf": "webgpu",
-      "citedIn": ["docs/guides/README.md"],
+      "citedIn": ["docs/guides/README.md", "chatgpt-research"],
       "code": ["examples/hello-compute/main.ts"]
     },
     {
@@ -409,7 +424,7 @@
       "area": "physics",
       "status": "mentioned",
       "related": ["constraint", "cloth", "soft-body"],
-      "citedIn": ["ten-minute-physics"]
+      "citedIn": ["ten-minute-physics", "chatgpt-research"]
     },
     {
       "id": "soft-body",
@@ -418,7 +433,7 @@
       "summary": "An object that squashes and bounces back, like jelly",
       "area": "physics",
       "status": "mentioned",
-      "citedIn": ["ten-minute-physics"]
+      "citedIn": ["ten-minute-physics", "chatgpt-research"]
     },
     {
       "id": "sweep-and-prune",
@@ -428,7 +443,7 @@
       "area": "physics",
       "status": "mentioned",
       "partOf": "broad-phase",
-      "citedIn": ["ten-minute-physics"]
+      "citedIn": ["ten-minute-physics", "chatgpt-research"]
     },
     {
       "id": "bounding-volume-hierarchy",
@@ -439,7 +454,7 @@
       "status": "mentioned",
       "partOf": "broad-phase",
       "related": ["bounding-box"],
-      "citedIn": ["ten-minute-physics"]
+      "citedIn": ["ten-minute-physics", "chatgpt-research"]
     },
     {
       "id": "joint",
@@ -449,7 +464,7 @@
       "area": "physics",
       "status": "mentioned",
       "related": ["constraint", "rigid-body"],
-      "citedIn": ["ten-minute-physics"]
+      "citedIn": ["ten-minute-physics", "chatgpt-research"]
     },
     {
       "id": "implicit-integration",
@@ -481,7 +496,7 @@
       "status": "mentioned",
       "partOf": "fluid",
       "related": ["particle"],
-      "citedIn": ["ten-minute-physics"]
+      "citedIn": ["ten-minute-physics", "chatgpt-research"]
     },
     {
       "id": "documentation-kinds",
@@ -493,6 +508,750 @@
       "citedIn": ["docs/logbook/002-the-toolbox.md", "diataxis"]
     },
     {
+      "id": "derivative",
+      "kind": "concept",
+      "title": "Derivative",
+      "summary": "How fast a quantity changes at an instant: velocity is the derivative of position, acceleration that of velocity",
+      "area": "math",
+      "status": "seen",
+      "related": ["integral"],
+      "citedIn": ["chatgpt-research"]
+    },
+    {
+      "id": "integral",
+      "kind": "concept",
+      "title": "Integral",
+      "summary": "The reverse of a derivative: adding up small changes over time, such as velocity into position",
+      "area": "math",
+      "status": "seen",
+      "related": ["integration"],
+      "citedIn": ["chatgpt-research"]
+    },
+    {
+      "id": "float-precision",
+      "kind": "concept",
+      "title": "Floating point precision",
+      "summary": "Numbers on a computer have a limited number of digits: 32-bit floats are fast on the GPU, but rounding errors add up",
+      "area": "math",
+      "status": "mentioned",
+      "citedIn": ["chatgpt-research"]
+    },
+    {
+      "id": "explicit-euler",
+      "kind": "concept",
+      "title": "Explicit Euler",
+      "summary": "Move with the old velocity, then update the velocity: simple, but it makes oscillations gain energy",
+      "area": "physics",
+      "status": "seen",
+      "partOf": "integration",
+      "related": ["semi-implicit-euler"],
+      "citedIn": ["chatgpt-research"]
+    },
+    {
+      "id": "semi-implicit-euler",
+      "kind": "concept",
+      "title": "Semi-implicit Euler",
+      "summary": "Update the velocity first, then move with the new one: a small swap that keeps a spring's energy bounded when the step is small enough",
+      "area": "physics",
+      "status": "seen",
+      "partOf": "integration",
+      "citedIn": ["chatgpt-research"]
+    },
+    {
+      "id": "velocity-verlet",
+      "kind": "concept",
+      "title": "Velocity Verlet",
+      "summary": "Uses the acceleration both before and after moving: more accurate, but forces are computed twice",
+      "area": "physics",
+      "status": "seen",
+      "partOf": "integration",
+      "citedIn": ["chatgpt-research"]
+    },
+    {
+      "id": "numerical-stability",
+      "kind": "concept",
+      "title": "Numerical stability",
+      "summary": "Whether a simulation's errors stay small or grow until it explodes: not the same thing as accuracy",
+      "area": "physics",
+      "status": "seen",
+      "related": ["explicit-euler", "stiffness"],
+      "citedIn": ["chatgpt-research"]
+    },
+    {
+      "id": "stiffness",
+      "kind": "concept",
+      "title": "Stiffness",
+      "summary": "How strongly a spring or constraint resists: the stiffer it is, the faster it oscillates and the smaller the safe timestep",
+      "area": "physics",
+      "status": "seen",
+      "related": ["spring", "substepping"],
+      "citedIn": ["chatgpt-research"]
+    },
+    {
+      "id": "substepping",
+      "kind": "concept",
+      "title": "Substepping",
+      "summary": "Splitting each step into smaller ones, to follow fast motion and stiff constraints",
+      "area": "physics",
+      "status": "seen",
+      "partOf": "timestep",
+      "related": ["numerical-stability"],
+      "citedIn": ["chatgpt-research"]
+    },
+    {
+      "id": "accumulator",
+      "kind": "concept",
+      "title": "Time accumulator",
+      "summary": "Keeps the real time not simulated yet, and spends it in fixed steps",
+      "area": "physics",
+      "status": "seen",
+      "partOf": "fixed-timestep",
+      "citedIn": ["chatgpt-research"]
+    },
+    {
+      "id": "render-interpolation",
+      "kind": "concept",
+      "title": "Render interpolation",
+      "summary": "Drawing a blend of the last two physics states, so motion looks smooth between steps",
+      "area": "physics",
+      "status": "seen",
+      "partOf": "fixed-timestep",
+      "citedIn": ["chatgpt-research"]
+    },
+    {
+      "id": "spiral-of-death",
+      "kind": "concept",
+      "title": "Spiral of death",
+      "summary": "When catching up on physics takes so long that every frame falls further behind",
+      "area": "physics",
+      "status": "seen",
+      "partOf": "fixed-timestep",
+      "citedIn": ["chatgpt-research"]
+    },
+    {
+      "id": "newtons-second-law",
+      "kind": "concept",
+      "title": "Newton's second law",
+      "summary": "Force equals mass times acceleration (F = ma): the same push moves a light object more",
+      "area": "physics",
+      "status": "seen",
+      "partOf": "force",
+      "citedIn": ["chatgpt-research"]
+    },
+    {
+      "id": "hookes-law",
+      "kind": "concept",
+      "title": "Hooke's law",
+      "summary": "A spring pulls back in proportion to how far it is stretched (F = −kx)",
+      "area": "physics",
+      "status": "seen",
+      "partOf": "spring",
+      "citedIn": ["chatgpt-research"]
+    },
+    {
+      "id": "energy-conservation",
+      "kind": "concept",
+      "title": "Conservation of energy",
+      "summary": "Without friction, the energy of motion plus the stored energy stays constant: a simple test for an integrator",
+      "area": "physics",
+      "status": "seen",
+      "related": ["numerical-stability"],
+      "citedIn": ["chatgpt-research"]
+    },
+    {
+      "id": "plausibility",
+      "kind": "concept",
+      "title": "Plausibility over accuracy",
+      "summary": "Games need motion that looks right, fast and stable, more than exact physics",
+      "area": "physics",
+      "status": "seen",
+      "partOf": "physics-engine",
+      "related": ["iterative-solver"],
+      "citedIn": ["docs/logbook/001-the-flip-book.md", "chatgpt-research"]
+    },
+    {
+      "id": "center-of-mass",
+      "kind": "concept",
+      "title": "Center of mass",
+      "summary": "The balance point of an object: a rigid body's position, and the point it spins around when free",
+      "area": "physics",
+      "status": "mentioned",
+      "partOf": "rigid-body",
+      "citedIn": ["chatgpt-research"]
+    },
+    {
+      "id": "torque",
+      "kind": "concept",
+      "title": "Torque",
+      "summary": "The turning effect of a force: the same push turns more the farther it is from the center (τ = r × F)",
+      "area": "physics",
+      "status": "seen",
+      "partOf": "rigid-body",
+      "citedIn": ["chatgpt-research"]
+    },
+    {
+      "id": "moment-of-inertia",
+      "kind": "concept",
+      "title": "Moment of inertia",
+      "summary": "How hard an object is to spin: it depends on its mass and on how far that mass is from the axis",
+      "area": "physics",
+      "status": "seen",
+      "partOf": "rigid-body",
+      "related": ["torque"],
+      "citedIn": ["chatgpt-research"]
+    },
+    {
+      "id": "inertia-tensor",
+      "kind": "concept",
+      "title": "Inertia tensor",
+      "summary": "The moment of inertia in 3D: a 3×3 matrix, because the resistance to spinning changes with the axis",
+      "area": "physics",
+      "status": "seen",
+      "partOf": "moment-of-inertia",
+      "citedIn": ["chatgpt-research"]
+    },
+    {
+      "id": "angular-velocity",
+      "kind": "concept",
+      "title": "Angular velocity",
+      "summary": "How fast a body spins and around which axis, as one vector in radians per second",
+      "area": "physics",
+      "status": "seen",
+      "partOf": "rigid-body",
+      "citedIn": ["chatgpt-research"]
+    },
+    {
+      "id": "angular-momentum",
+      "kind": "concept",
+      "title": "Angular momentum",
+      "summary": "Inertia times angular velocity: the quantity a torque changes over time",
+      "area": "physics",
+      "status": "seen",
+      "partOf": "rigid-body",
+      "related": ["inertia-tensor"],
+      "citedIn": ["chatgpt-research"]
+    },
+    {
+      "id": "orientation",
+      "kind": "concept",
+      "title": "Orientation",
+      "summary": "How a body is rotated, stored as a quaternion and updated each step by a small rotation",
+      "area": "physics",
+      "status": "seen",
+      "partOf": "rigid-body",
+      "related": ["angular-velocity"],
+      "citedIn": ["chatgpt-research"]
+    },
+    {
+      "id": "inverse-mass",
+      "kind": "concept",
+      "title": "Inverse mass",
+      "summary": "Storing 1/m instead of m: no divisions in hot loops, and zero means a body that never moves",
+      "area": "physics",
+      "status": "seen",
+      "partOf": "rigid-body",
+      "citedIn": ["chatgpt-research"]
+    },
+    {
+      "id": "uniform-grid",
+      "kind": "concept",
+      "title": "Uniform grid",
+      "summary": "Space split into equal cells: only objects in the same or nearby cells get compared",
+      "area": "physics",
+      "status": "mentioned",
+      "partOf": "broad-phase",
+      "citedIn": ["chatgpt-research"]
+    },
+    {
+      "id": "spatial-hashing",
+      "kind": "concept",
+      "title": "Spatial hashing",
+      "summary": "A uniform grid stored in a hash table, so it can cover endless space with little memory",
+      "area": "physics",
+      "status": "mentioned",
+      "partOf": "broad-phase",
+      "related": ["uniform-grid", "neighbour-search"],
+      "citedIn": ["chatgpt-research"]
+    },
+    {
+      "id": "gjk",
+      "kind": "concept",
+      "title": "GJK",
+      "summary": "A test that tells whether two convex shapes overlap, using only their farthest points in each direction",
+      "area": "physics",
+      "status": "mentioned",
+      "partOf": "narrow-phase",
+      "citedIn": ["chatgpt-research"]
+    },
+    {
+      "id": "epa",
+      "kind": "concept",
+      "title": "EPA",
+      "summary": "Run after GJK when two shapes overlap, to find how deep and in which direction",
+      "area": "physics",
+      "status": "mentioned",
+      "partOf": "narrow-phase",
+      "related": ["gjk"],
+      "citedIn": ["chatgpt-research"]
+    },
+    {
+      "id": "sdf-collision",
+      "kind": "concept",
+      "title": "Signed distance field collision",
+      "summary": "Describing a shape by the distance from it at every point of space, so a contact test becomes a lookup",
+      "area": "physics",
+      "status": "mentioned",
+      "partOf": "narrow-phase",
+      "citedIn": ["chatgpt-research"]
+    },
+    {
+      "id": "continuous-collision-detection",
+      "kind": "concept",
+      "title": "Continuous collision detection",
+      "summary": "Checking the whole path between two steps, so fast objects cannot tunnel through walls",
+      "area": "physics",
+      "status": "mentioned",
+      "partOf": "collision-detection",
+      "related": ["tunneling"],
+      "citedIn": ["chatgpt-research"]
+    },
+    {
+      "id": "contact-manifold",
+      "kind": "concept",
+      "title": "Contact manifold",
+      "summary": "All the contact points between two touching shapes, such as the four corners of a box resting on the floor",
+      "area": "physics",
+      "status": "mentioned",
+      "related": ["contact"],
+      "citedIn": ["chatgpt-research"]
+    },
+    {
+      "id": "friction",
+      "kind": "concept",
+      "title": "Friction",
+      "summary": "The force that resists sliding between two surfaces in contact",
+      "area": "physics",
+      "status": "mentioned",
+      "related": ["contact"],
+      "citedIn": ["chatgpt-research"]
+    },
+    {
+      "id": "restitution",
+      "kind": "concept",
+      "title": "Restitution",
+      "summary": "How bouncy a collision is: how much speed comes back after the impact",
+      "area": "physics",
+      "status": "mentioned",
+      "related": ["contact"],
+      "citedIn": ["chatgpt-research"]
+    },
+    {
+      "id": "raycast",
+      "kind": "concept",
+      "title": "Raycast",
+      "summary": "Shooting a line into the world to find what it hits first, for aiming, picking or line of sight",
+      "area": "physics",
+      "status": "mentioned",
+      "related": ["collision-detection"],
+      "citedIn": ["chatgpt-research"]
+    },
+    {
+      "id": "contact-events",
+      "kind": "concept",
+      "title": "Contact events",
+      "summary": "Telling game code when two objects start or stop touching",
+      "area": "physics",
+      "status": "mentioned",
+      "related": ["contact"],
+      "citedIn": ["chatgpt-research"]
+    },
+    {
+      "id": "impulse-based-dynamics",
+      "kind": "concept",
+      "title": "Impulse-based dynamics",
+      "summary": "Resolving collisions by changing velocities at once, with an instant kick called an impulse",
+      "area": "physics",
+      "status": "mentioned",
+      "related": ["solver"],
+      "citedIn": ["chatgpt-research"]
+    },
+    {
+      "id": "sequential-impulses",
+      "kind": "concept",
+      "title": "Sequential impulses (PGS)",
+      "summary": "Applying impulses to one contact or joint at a time, over several rounds: the classic rigid body solver",
+      "area": "physics",
+      "status": "mentioned",
+      "partOf": "iterative-solver",
+      "related": ["impulse-based-dynamics", "warm-starting"],
+      "citedIn": ["chatgpt-research"]
+    },
+    {
+      "id": "gauss-seidel",
+      "kind": "concept",
+      "title": "Gauss-Seidel",
+      "summary": "Fixing constraints one after another, each using the latest results: converges fast, but it is sequential",
+      "area": "physics",
+      "status": "mentioned",
+      "partOf": "iterative-solver",
+      "related": ["jacobi"],
+      "citedIn": ["chatgpt-research"]
+    },
+    {
+      "id": "jacobi",
+      "kind": "concept",
+      "title": "Jacobi",
+      "summary": "Fixing every constraint at once from the same old state, then combining: parallel, but slower to converge",
+      "area": "physics",
+      "status": "mentioned",
+      "partOf": "iterative-solver",
+      "related": ["gpu-parallelism"],
+      "citedIn": ["chatgpt-research"]
+    },
+    {
+      "id": "tgs-solver",
+      "kind": "concept",
+      "title": "TGS solver",
+      "summary": "PhysX's temporal Gauss-Seidel solver, designed to converge better with complex constraints",
+      "area": "physics",
+      "status": "mentioned",
+      "partOf": "solver",
+      "related": ["gauss-seidel"],
+      "citedIn": ["chatgpt-research"]
+    },
+    {
+      "id": "warm-starting",
+      "kind": "concept",
+      "title": "Warm starting",
+      "summary": "Starting the solver from the previous step's answer, so fewer rounds are needed",
+      "area": "physics",
+      "status": "mentioned",
+      "partOf": "solver",
+      "citedIn": ["chatgpt-research"]
+    },
+    {
+      "id": "island",
+      "kind": "concept",
+      "title": "Islands",
+      "summary": "Groups of bodies that touch each other, solved apart from the rest",
+      "area": "physics",
+      "status": "mentioned",
+      "partOf": "solver",
+      "related": ["sleeping"],
+      "citedIn": ["chatgpt-research"]
+    },
+    {
+      "id": "sleeping",
+      "kind": "concept",
+      "title": "Sleeping",
+      "summary": "Pausing bodies that have come to rest, until something wakes them up",
+      "area": "physics",
+      "status": "mentioned",
+      "citedIn": ["chatgpt-research"]
+    },
+    {
+      "id": "soft-step",
+      "kind": "concept",
+      "title": "Soft Step",
+      "summary": "The solver of recent Box2D versions, built around substeps",
+      "area": "physics",
+      "status": "mentioned",
+      "partOf": "solver",
+      "related": ["substepping"],
+      "citedIn": ["chatgpt-research"]
+    },
+    {
+      "id": "distance-constraint",
+      "kind": "concept",
+      "title": "Distance constraint",
+      "summary": "A rule that keeps two points at a fixed distance: the building block of chains, ropes and cloth",
+      "area": "physics",
+      "status": "mentioned",
+      "partOf": "constraint",
+      "citedIn": ["chatgpt-research"]
+    },
+    {
+      "id": "graph-coloring",
+      "kind": "concept",
+      "title": "Constraint graph coloring",
+      "summary": "Splitting constraints into groups that share no body, so each group can be solved in parallel",
+      "area": "gpu",
+      "status": "mentioned",
+      "related": ["gauss-seidel", "solver"],
+      "citedIn": ["chatgpt-research"]
+    },
+    {
+      "id": "xpbd",
+      "kind": "concept",
+      "title": "XPBD",
+      "summary": "Extended PBD: each constraint gets a softness, called compliance, so stiffness no longer depends on step size or rounds",
+      "area": "physics",
+      "status": "mentioned",
+      "partOf": "position-based-dynamics",
+      "citedIn": ["chatgpt-research"]
+    },
+    {
+      "id": "shape-matching",
+      "kind": "concept",
+      "title": "Shape matching",
+      "summary": "Pulling a group of particles back toward the best rigid fit of their original shape",
+      "area": "physics",
+      "status": "mentioned",
+      "related": ["soft-body", "position-based-dynamics"],
+      "citedIn": ["chatgpt-research"]
+    },
+    {
+      "id": "unified-particle-physics",
+      "kind": "concept",
+      "title": "Unified particle physics",
+      "summary": "Building every material, from solids to cloth and fluids, out of particles held by constraints",
+      "area": "physics",
+      "status": "mentioned",
+      "related": ["particle", "position-based-dynamics"],
+      "citedIn": ["chatgpt-research"]
+    },
+    {
+      "id": "mesh-sampling",
+      "kind": "concept",
+      "title": "Mesh sampling",
+      "summary": "Turning a mesh's surface or volume into points, for example to build a body out of particles",
+      "area": "physics",
+      "status": "mentioned",
+      "related": ["unified-particle-physics"],
+      "citedIn": ["chatgpt-research"]
+    },
+    {
+      "id": "mass-spring-system",
+      "kind": "concept",
+      "title": "Mass-spring system",
+      "summary": "Particles linked by springs: the simplest model of cloth and soft bodies",
+      "area": "physics",
+      "status": "mentioned",
+      "related": ["spring", "cloth"],
+      "citedIn": ["chatgpt-research"]
+    },
+    {
+      "id": "finite-element-method",
+      "kind": "concept",
+      "title": "Finite element method (FEM)",
+      "summary": "Splitting a solid into small pieces, such as tetrahedra, and working out how each one deforms",
+      "area": "physics",
+      "status": "mentioned",
+      "related": ["soft-body"],
+      "citedIn": ["chatgpt-research"]
+    },
+    {
+      "id": "self-collision",
+      "kind": "concept",
+      "title": "Self-collision",
+      "summary": "Cloth or a soft body hitting itself",
+      "area": "physics",
+      "status": "mentioned",
+      "partOf": "cloth",
+      "citedIn": ["chatgpt-research", "ten-minute-physics"]
+    },
+    {
+      "id": "sph",
+      "kind": "concept",
+      "title": "SPH",
+      "summary": "Smoothed particle hydrodynamics: a fluid's density and pressure at each particle, estimated from its neighbours",
+      "area": "physics",
+      "status": "mentioned",
+      "partOf": "fluid",
+      "citedIn": ["chatgpt-research"]
+    },
+    {
+      "id": "position-based-fluids",
+      "kind": "concept",
+      "title": "Position based fluids (PBF)",
+      "summary": "Fluids kept from compressing with position constraints, the PBD way",
+      "area": "physics",
+      "status": "mentioned",
+      "partOf": "fluid",
+      "related": ["position-based-dynamics"],
+      "citedIn": ["chatgpt-research"]
+    },
+    {
+      "id": "material-point-method",
+      "kind": "concept",
+      "title": "Material point method (MPM)",
+      "summary": "Particles carry the material while a grid works out the forces: good for snow, sand and deformables",
+      "area": "physics",
+      "status": "mentioned",
+      "related": ["flip-fluid", "granular-material"],
+      "citedIn": ["chatgpt-research"]
+    },
+    {
+      "id": "neighbour-search",
+      "kind": "concept",
+      "title": "Neighbour search",
+      "summary": "Finding the particles near each particle: a major cost of particle fluids",
+      "area": "physics",
+      "status": "mentioned",
+      "related": ["sph"],
+      "citedIn": ["chatgpt-research"]
+    },
+    {
+      "id": "granular-material",
+      "kind": "concept",
+      "title": "Granular materials",
+      "summary": "Sand, snow and grains: solid up close, flowing in bulk",
+      "area": "physics",
+      "status": "mentioned",
+      "citedIn": ["chatgpt-research"]
+    },
+    {
+      "id": "two-way-coupling",
+      "kind": "concept",
+      "title": "Two-way coupling",
+      "summary": "Different materials pushing on each other both ways, like a ball floating on water",
+      "area": "physics",
+      "status": "mentioned",
+      "related": ["unified-particle-physics"],
+      "citedIn": ["chatgpt-research"]
+    },
+    {
+      "id": "destruction",
+      "kind": "concept",
+      "title": "Destruction",
+      "summary": "Breaking objects into pieces while the game runs",
+      "area": "physics",
+      "status": "mentioned",
+      "citedIn": ["chatgpt-research"]
+    },
+    {
+      "id": "articulated-body",
+      "kind": "concept",
+      "title": "Articulated bodies",
+      "summary": "Chains of bodies linked by joints, such as robots and ragdolls",
+      "area": "physics",
+      "status": "mentioned",
+      "related": ["joint"],
+      "citedIn": ["chatgpt-research"]
+    },
+    {
+      "id": "atomic-operations",
+      "kind": "concept",
+      "title": "Atomic operations",
+      "summary": "Memory updates that stay correct even when thousands of threads write to the same place",
+      "area": "gpu",
+      "status": "mentioned",
+      "citedIn": ["chatgpt-research"]
+    },
+    {
+      "id": "prefix-sum",
+      "kind": "concept",
+      "title": "Prefix sum (scan)",
+      "summary": "Turning a list of counts into running totals, in parallel: the GPU's way of packing results",
+      "area": "gpu",
+      "status": "mentioned",
+      "citedIn": ["chatgpt-research"]
+    },
+    {
+      "id": "parallel-sort",
+      "kind": "concept",
+      "title": "Parallel sorting",
+      "summary": "Sorting many keys at once on the GPU, for example objects by grid cell",
+      "area": "gpu",
+      "status": "mentioned",
+      "related": ["uniform-grid"],
+      "citedIn": ["chatgpt-research"]
+    },
+    {
+      "id": "structure-of-arrays",
+      "kind": "concept",
+      "title": "Structure of arrays (SoA)",
+      "summary": "One array per property, all positions together, so the GPU reads memory in neat runs",
+      "area": "gpu",
+      "status": "mentioned",
+      "citedIn": ["chatgpt-research"]
+    },
+    {
+      "id": "gpu-resident-data",
+      "kind": "concept",
+      "title": "GPU-resident simulation",
+      "summary": "Keeping the simulation's data on the GPU, and not reading it back every frame",
+      "area": "gpu",
+      "status": "mentioned",
+      "related": ["readback", "buffer"],
+      "citedIn": ["chatgpt-research"]
+    },
+    {
+      "id": "device-limits",
+      "kind": "concept",
+      "title": "Device limits",
+      "summary": "What a given GPU guarantees, such as buffer sizes and workgroup memory: to check before choosing a pipeline",
+      "area": "gpu",
+      "status": "mentioned",
+      "partOf": "webgpu",
+      "related": ["adapter-and-device"],
+      "citedIn": ["chatgpt-research"]
+    },
+    {
+      "id": "compatibility-mode",
+      "kind": "concept",
+      "title": "Compatibility mode",
+      "summary": "A restricted WebGPU that also runs on older graphics APIs, such as OpenGL ES 3.1",
+      "area": "gpu",
+      "status": "mentioned",
+      "partOf": "webgpu",
+      "citedIn": ["chatgpt-research", "new-in-webgpu-146"]
+    },
+    {
+      "id": "quality-tiers",
+      "kind": "concept",
+      "title": "Quality tiers",
+      "summary": "The same simulation at different costs: fewer particles, substeps and solver rounds on weaker devices",
+      "area": "engine",
+      "status": "seen",
+      "citedIn": ["chatgpt-research"]
+    },
+    {
+      "id": "frame-budget",
+      "kind": "concept",
+      "title": "Frame budget",
+      "summary": "The slice of each frame the physics may use, for example 2 to 4 ms of the 16.7 ms available at 60 FPS",
+      "area": "engine",
+      "status": "mentioned",
+      "citedIn": ["chatgpt-research"]
+    },
+    {
+      "id": "benchmark",
+      "kind": "concept",
+      "title": "Benchmark scenes",
+      "summary": "Standard test scenes, such as a stack of boxes or a dam break, to compare algorithms fairly",
+      "area": "engine",
+      "status": "mentioned",
+      "citedIn": ["chatgpt-research"]
+    },
+    {
+      "id": "thermal-throttling",
+      "kind": "concept",
+      "title": "Thermal throttling",
+      "summary": "Phones slow down as they heat up, so speed must be measured over minutes, not seconds",
+      "area": "engine",
+      "status": "mentioned",
+      "citedIn": ["chatgpt-research"]
+    },
+    {
+      "id": "ecs",
+      "kind": "concept",
+      "title": "Entity component system (ECS)",
+      "summary": "Organizing a game as plain data components processed by systems, instead of objects with methods",
+      "area": "engine",
+      "status": "mentioned",
+      "citedIn": ["chatgpt-research"]
+    },
+    {
+      "id": "job-system",
+      "kind": "concept",
+      "title": "Job system",
+      "summary": "Splitting the work of a step into small jobs spread over the CPU cores",
+      "area": "engine",
+      "status": "mentioned",
+      "citedIn": ["chatgpt-research"]
+    },
+    {
       "id": "box2d",
       "kind": "project",
       "title": "Box2D",
@@ -500,7 +1259,7 @@
       "area": "physics",
       "status": "seen",
       "about": ["physics-engine", "simulation-step", "solver"],
-      "citedIn": ["docs/logbook/001-the-flip-book.md"],
+      "citedIn": ["docs/logbook/001-the-flip-book.md", "chatgpt-research"],
       "url": "https://github.com/erincatto/box2d",
       "authors": "Erin Catto"
     },
@@ -548,7 +1307,7 @@
       "area": "physics",
       "status": "seen",
       "about": ["physics-engine", "solver"],
-      "citedIn": ["docs/logbook/001-the-flip-book.md"],
+      "citedIn": ["docs/logbook/001-the-flip-book.md", "chatgpt-research"],
       "url": "https://github.com/dimforge/rapier"
     },
     {
@@ -570,8 +1329,14 @@
       "summary": "Why the step must be fixed, and how to separate it from frames",
       "area": "physics",
       "status": "seen",
-      "about": ["fixed-timestep", "timestep"],
-      "citedIn": ["docs/logbook/001-the-flip-book.md"],
+      "about": [
+        "fixed-timestep",
+        "timestep",
+        "accumulator",
+        "render-interpolation",
+        "spiral-of-death"
+      ],
+      "citedIn": ["docs/logbook/001-the-flip-book.md", "chatgpt-research"],
       "url": "https://gafferongames.com/post/fix_your_timestep/",
       "authors": "Glenn Fiedler"
     },
@@ -615,8 +1380,16 @@
       "summary": "The classic SIGGRAPH course notes: particles, rigid bodies, constraints and implicit methods",
       "area": "physics",
       "status": "mentioned",
-      "about": ["particle", "rigid-body", "constraint", "integration", "implicit-integration"],
-      "citedIn": ["docs/logbook/001-the-flip-book.md"],
+      "about": [
+        "particle",
+        "rigid-body",
+        "constraint",
+        "integration",
+        "implicit-integration",
+        "inertia-tensor",
+        "angular-momentum"
+      ],
+      "citedIn": ["docs/logbook/001-the-flip-book.md", "chatgpt-research"],
       "url": "https://www.cs.cmu.edu/~baraff/sigcourse/",
       "authors": "Andrew Witkin, David Baraff",
       "year": 1997
@@ -628,8 +1401,8 @@
       "summary": "The official definition of the API",
       "area": "gpu",
       "status": "mentioned",
-      "about": ["webgpu"],
-      "citedIn": ["README.md", ".claude/skills/guide/SKILL.md"],
+      "about": ["webgpu", "device-limits"],
+      "citedIn": ["README.md", ".claude/skills/guide/SKILL.md", "chatgpt-research"],
       "url": "https://www.w3.org/TR/webgpu/"
     },
     {
@@ -640,7 +1413,7 @@
       "area": "gpu",
       "status": "mentioned",
       "about": ["wgsl"],
-      "citedIn": [".claude/skills/guide/SKILL.md"],
+      "citedIn": [".claude/skills/guide/SKILL.md", "chatgpt-research"],
       "url": "https://www.w3.org/TR/WGSL/"
     },
     {
@@ -675,6 +1448,612 @@
       "about": ["documentation-kinds"],
       "citedIn": ["docs/logbook/002-the-toolbox.md"],
       "url": "https://diataxis.fr/"
+    },
+    {
+      "id": "chatgpt-research",
+      "kind": "conversation",
+      "title": "Research with ChatGPT",
+      "summary": "Days of study before this logbook resumed: the engine landscape, the first papers, then lessons on time, stability and rigid bodies",
+      "area": "physics",
+      "status": "seen",
+      "about": [
+        "physics-engine",
+        "integration",
+        "fixed-timestep",
+        "numerical-stability",
+        "rigid-body",
+        "broad-phase",
+        "position-based-dynamics",
+        "quality-tiers"
+      ],
+      "citedIn": ["docs/logbook/004-the-detour.md"],
+      "url": "https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a",
+      "file": "library/chatgpt-research.md",
+      "year": 2026
+    },
+    {
+      "id": "unified-particle-physics-paper",
+      "kind": "paper",
+      "title": "Unified Particle Physics for Real-Time Applications",
+      "summary": "The paper behind NVIDIA FleX: solids, cloth and fluids as particles and constraints, solved in parallel",
+      "area": "physics",
+      "status": "mentioned",
+      "about": ["unified-particle-physics", "position-based-dynamics", "two-way-coupling"],
+      "citedIn": ["chatgpt-research"],
+      "url": "https://doi.org/10.1145/2601097.2601152",
+      "authors": "Miles Macklin, Matthias Müller, Nuttapong Chentanez, Tae-Yong Kim",
+      "year": 2014
+    },
+    {
+      "id": "xpbd-paper",
+      "kind": "paper",
+      "title": "XPBD: Position-Based Simulation of Compliant Constrained Dynamics",
+      "summary": "Adds compliance to PBD, so stiffness stops depending on the timestep and the number of rounds",
+      "area": "physics",
+      "status": "mentioned",
+      "about": ["xpbd"],
+      "citedIn": ["chatgpt-research"],
+      "url": "https://matthias-research.github.io/pages/publications/XPBD.pdf",
+      "authors": "Miles Macklin, Matthias Müller, Nuttapong Chentanez",
+      "year": 2016
+    },
+    {
+      "id": "rigid-body-xpbd-paper",
+      "kind": "paper",
+      "title": "Detailed Rigid Body Simulation with Extended Position Based Dynamics",
+      "summary": "Rigid bodies, contacts and joints solved with XPBD, with implementation details",
+      "area": "physics",
+      "status": "mentioned",
+      "about": ["xpbd", "rigid-body", "joint"],
+      "citedIn": ["chatgpt-research"],
+      "url": "https://diglib.eg.org/items/114b20b0-8543-4c54-bd04-42ee60c71946",
+      "authors": "Matthias Müller, Miles Macklin, Nuttapong Chentanez, Stefan Jeschke, Tae-Yong Kim",
+      "year": 2020
+    },
+    {
+      "id": "pbd-paper",
+      "kind": "paper",
+      "title": "Position Based Dynamics",
+      "summary": "The paper that introduced moving positions directly to satisfy constraints",
+      "area": "physics",
+      "status": "mentioned",
+      "about": ["position-based-dynamics"],
+      "citedIn": ["chatgpt-research"],
+      "url": "https://doi.org/10.1016/j.jvcir.2007.01.005",
+      "authors": "Matthias Müller, Bruno Heidelberger, Marcus Hennix, John Ratcliff",
+      "year": 2007
+    },
+    {
+      "id": "pbd-survey",
+      "kind": "paper",
+      "title": "A Survey on Position-Based Simulation Methods in Computer Graphics",
+      "summary": "An overview of the whole position based family",
+      "area": "physics",
+      "status": "mentioned",
+      "about": ["position-based-dynamics"],
+      "citedIn": ["chatgpt-research"],
+      "url": "https://doi.org/10.1111/cgf.12346",
+      "authors": "Jan Bender, Matthias Müller, Miguel A. Otaduy, Matthias Teschner, Miles Macklin",
+      "year": 2014
+    },
+    {
+      "id": "strain-based-dynamics-paper",
+      "kind": "paper",
+      "title": "Strain Based Dynamics",
+      "summary": "PBD constraints that control stretching in any direction, not only along the edges of the mesh",
+      "area": "physics",
+      "status": "mentioned",
+      "about": ["position-based-dynamics", "cloth", "soft-body"],
+      "citedIn": ["chatgpt-research"],
+      "url": "https://matthias-research.github.io/pages/publications/strainBasedDynamics.pdf",
+      "authors": "Matthias Müller, Nuttapong Chentanez, Tae-Yong Kim, Miles Macklin",
+      "year": 2014
+    },
+    {
+      "id": "shape-matching-paper",
+      "kind": "paper",
+      "title": "Meshless Deformations Based on Shape Matching",
+      "summary": "Deformable objects made of points pulled back toward their rest shape",
+      "area": "physics",
+      "status": "mentioned",
+      "about": ["shape-matching", "soft-body"],
+      "citedIn": ["chatgpt-research"],
+      "url": "https://doi.org/10.1145/1073204.1073216",
+      "authors": "Matthias Müller, Bruno Heidelberger, Matthias Teschner, Markus Gross",
+      "year": 2005
+    },
+    {
+      "id": "small-steps-paper",
+      "kind": "paper",
+      "title": "Small Steps in Physics Simulation",
+      "summary": "Many substeps with one solver round each can beat one step with many rounds",
+      "area": "physics",
+      "status": "mentioned",
+      "about": ["substepping", "xpbd", "iterative-solver"],
+      "citedIn": ["chatgpt-research"],
+      "url": "https://mmacklin.com/smallsteps.pdf",
+      "authors": "Miles Macklin et al.",
+      "year": 2019
+    },
+    {
+      "id": "pbf-paper",
+      "kind": "paper",
+      "title": "Position Based Fluids",
+      "summary": "Fluids that do not compress, built on position constraints, for real time",
+      "area": "physics",
+      "status": "mentioned",
+      "about": ["position-based-fluids"],
+      "citedIn": ["chatgpt-research"],
+      "url": "https://mmacklin.com/pbf_sig_preprint.pdf",
+      "authors": "Miles Macklin, Matthias Müller",
+      "year": 2013
+    },
+    {
+      "id": "sph-paper",
+      "kind": "paper",
+      "title": "Particle-Based Fluid Simulation for Interactive Applications",
+      "summary": "SPH fluids fast enough for interactive use",
+      "area": "physics",
+      "status": "mentioned",
+      "about": ["sph"],
+      "citedIn": ["chatgpt-research"],
+      "url": "https://matthias-research.github.io/pages/publications/sca03.pdf",
+      "authors": "Matthias Müller et al.",
+      "year": 2003
+    },
+    {
+      "id": "stable-fluids-paper",
+      "kind": "paper",
+      "title": "Stable Fluids",
+      "summary": "A grid fluid method that stays stable even with large timesteps",
+      "area": "physics",
+      "status": "mentioned",
+      "about": ["eulerian-fluid", "numerical-stability"],
+      "citedIn": ["chatgpt-research"],
+      "url": "https://doi.org/10.1145/311535.311548",
+      "authors": "Jos Stam",
+      "year": 1999
+    },
+    {
+      "id": "mpm-snow-paper",
+      "kind": "paper",
+      "title": "A Material Point Method for Snow Simulation",
+      "summary": "The material point method applied to snow",
+      "area": "physics",
+      "status": "mentioned",
+      "about": ["material-point-method", "granular-material"],
+      "citedIn": ["chatgpt-research"],
+      "url": "https://doi.org/10.1145/2461912.2461948",
+      "authors": "Alexey Stomakhin, Craig Schroeder, Lawrence Chai, Joseph Teran, Andrew Selle",
+      "year": 2013
+    },
+    {
+      "id": "sand-as-fluid-paper",
+      "kind": "paper",
+      "title": "Animating Sand as a Fluid",
+      "summary": "Sand simulated with a mix of particles and a grid",
+      "area": "physics",
+      "status": "mentioned",
+      "about": ["granular-material", "flip-fluid"],
+      "citedIn": ["chatgpt-research"],
+      "url": "https://doi.org/10.1145/1073204.1073298",
+      "authors": "Yongning Zhu, Robert Bridson",
+      "year": 2005
+    },
+    {
+      "id": "gpu-gems-3",
+      "kind": "book",
+      "title": "GPU Gems 3",
+      "summary": "NVIDIA's free book of GPU techniques, with a whole part on physics simulation",
+      "area": "gpu",
+      "status": "mentioned",
+      "about": ["gpu-parallelism"],
+      "citedIn": ["chatgpt-research"],
+      "url": "https://developer.nvidia.com/gpugems/gpugems3",
+      "year": 2007
+    },
+    {
+      "id": "gpu-gems-broad-phase",
+      "kind": "book",
+      "title": "Broad-Phase Collision Detection with CUDA",
+      "summary": "A parallel broad phase built from spatial subdivision, sorting and prefix sums",
+      "area": "gpu",
+      "status": "mentioned",
+      "partOf": "gpu-gems-3",
+      "about": ["broad-phase", "uniform-grid", "parallel-sort", "prefix-sum"],
+      "citedIn": ["chatgpt-research"],
+      "url": "https://developer.nvidia.com/gpugems/gpugems3/part-v-physics-simulation/chapter-32-broad-phase-collision-detection-cuda",
+      "authors": "Scott Le Grand",
+      "year": 2007
+    },
+    {
+      "id": "gpu-gems-rigid-bodies",
+      "kind": "book",
+      "title": "Real-Time Rigid Body Simulation on GPUs",
+      "summary": "Rigid bodies on the GPU: mass, angular momentum, inertia tensor and quaternions",
+      "area": "gpu",
+      "status": "mentioned",
+      "partOf": "gpu-gems-3",
+      "about": ["rigid-body", "inertia-tensor", "gpu-parallelism"],
+      "citedIn": ["chatgpt-research"],
+      "url": "https://developer.nvidia.com/gpugems/gpugems3/part-v-physics-simulation/chapter-29-real-time-rigid-body-simulation-gpus",
+      "year": 2007
+    },
+    {
+      "id": "integration-basics",
+      "kind": "article",
+      "title": "Integration Basics",
+      "summary": "How numerical integrators behave, explained for game developers",
+      "area": "physics",
+      "status": "mentioned",
+      "about": ["integration", "numerical-stability"],
+      "citedIn": ["chatgpt-research"],
+      "url": "https://gafferongames.com/post/integration_basics/",
+      "authors": "Glenn Fiedler"
+    },
+    {
+      "id": "jolt-architecture",
+      "kind": "docs",
+      "title": "Jolt Physics, Architecture",
+      "summary": "How Jolt is built: AABB trees, GJK and EPA, sequential impulses, islands, sleeping and jobs",
+      "area": "physics",
+      "status": "mentioned",
+      "partOf": "jolt",
+      "about": [
+        "bounding-volume-hierarchy",
+        "gjk",
+        "epa",
+        "sequential-impulses",
+        "warm-starting",
+        "island",
+        "sleeping",
+        "job-system"
+      ],
+      "citedIn": ["chatgpt-research"],
+      "url": "https://github.com/jrouwe/JoltPhysics/blob/master/Docs/Architecture.md"
+    },
+    {
+      "id": "physx-gpu-rigid-bodies",
+      "kind": "docs",
+      "title": "PhysX, GPU simulation",
+      "summary": "Which parts of PhysX run on the GPU with CUDA",
+      "area": "physics",
+      "status": "mentioned",
+      "partOf": "physx",
+      "about": ["gpu-parallelism", "rigid-body"],
+      "citedIn": ["chatgpt-research"],
+      "url": "https://nvidia-omniverse.github.io/PhysX/physx/5.7.0/docs/GPURigidBodies.html"
+    },
+    {
+      "id": "physx-rigid-body-dynamics",
+      "kind": "docs",
+      "title": "PhysX, Rigid Body Dynamics",
+      "summary": "The PhysX guide to rigid bodies, and to its two solvers, PGS and TGS",
+      "area": "physics",
+      "status": "mentioned",
+      "partOf": "physx",
+      "about": ["rigid-body", "sequential-impulses", "tgs-solver"],
+      "citedIn": ["chatgpt-research"],
+      "url": "https://nvidia-omniverse.github.io/PhysX/physx/5.2.1/docs/RigidBodyDynamics.html"
+    },
+    {
+      "id": "flex-manual",
+      "kind": "docs",
+      "title": "NVIDIA FleX, manual",
+      "summary": "How FleX turns materials into particles, and why it is meant for effects more than gameplay",
+      "area": "physics",
+      "status": "mentioned",
+      "partOf": "flex",
+      "about": ["unified-particle-physics", "shape-matching"],
+      "citedIn": ["chatgpt-research"],
+      "url": "https://gameworksdocs.nvidia.com/FleX/1.2/lib_docs/manual.html"
+    },
+    {
+      "id": "flex-ext-api",
+      "kind": "docs",
+      "title": "NVIDIA FleX, extensions API",
+      "summary": "Creating particle assets from a mesh: voxels, surface sampling and clusters",
+      "area": "physics",
+      "status": "mentioned",
+      "partOf": "flex",
+      "about": ["mesh-sampling", "shape-matching"],
+      "citedIn": ["chatgpt-research"],
+      "url": "https://gameworksdocs.nvidia.com/FleX/1.2/lib_docs/_static/api/_nv_flex_ext_8h.html"
+    },
+    {
+      "id": "box2d-simulation",
+      "kind": "docs",
+      "title": "Box2D, Simulation",
+      "summary": "Box2D's guide to the world and its step, including substeps",
+      "area": "physics",
+      "status": "mentioned",
+      "partOf": "box2d",
+      "about": ["substepping", "soft-step"],
+      "citedIn": ["chatgpt-research"],
+      "url": "https://github.com/erincatto/box2d/blob/main/docs/simulation.md"
+    },
+    {
+      "id": "unity-rigidbody",
+      "kind": "docs",
+      "title": "Unity, Rigidbody",
+      "summary": "The manual page of Unity's rigid body component",
+      "area": "physics",
+      "status": "mentioned",
+      "partOf": "unity",
+      "about": ["rigid-body"],
+      "citedIn": ["chatgpt-research"],
+      "url": "https://docs.unity.com/en-us/engine/6000.7/manual/physics-section/physics-overview/rigidbody/class-rigidbody"
+    },
+    {
+      "id": "unity-inertia-tensor",
+      "kind": "docs",
+      "title": "Unity, Rigidbody.inertiaTensor",
+      "summary": "How Unity exposes a body's inertia tensor, and lets you change it",
+      "area": "physics",
+      "status": "mentioned",
+      "partOf": "unity",
+      "about": ["inertia-tensor"],
+      "citedIn": ["chatgpt-research"],
+      "url": "https://docs.unity.com/en-us/engine/6000.6/script-reference/unityengine/rigidbody/inertiatensor"
+    },
+    {
+      "id": "webgpu-browser-support",
+      "kind": "docs",
+      "title": "WebGPU on web-features",
+      "summary": "Which browsers support WebGPU",
+      "area": "gpu",
+      "status": "mentioned",
+      "about": ["webgpu"],
+      "citedIn": ["chatgpt-research"],
+      "url": "https://web-platform-dx.github.io/web-features-explorer/features/webgpu/"
+    },
+    {
+      "id": "chrome-webgpu-overview",
+      "kind": "docs",
+      "title": "Chrome, WebGPU overview",
+      "summary": "Chrome's introduction to WebGPU",
+      "area": "gpu",
+      "status": "mentioned",
+      "about": ["webgpu"],
+      "citedIn": ["chatgpt-research"],
+      "url": "https://developer.chrome.com/docs/web-platform/webgpu/overview"
+    },
+    {
+      "id": "new-in-webgpu-146",
+      "kind": "docs",
+      "title": "Chrome, What's New in WebGPU 146",
+      "summary": "Chrome 146 brings WebGPU compatibility mode to OpenGL ES 3.1",
+      "area": "gpu",
+      "status": "seen",
+      "about": ["compatibility-mode", "webgpu"],
+      "citedIn": ["chatgpt-research"],
+      "url": "https://developer.chrome.com/blog/new-in-webgpu-146"
+    },
+    {
+      "id": "unity",
+      "kind": "project",
+      "title": "Unity",
+      "summary": "Game engine: PhysX for 3D physics, Box2D for 2D",
+      "area": "physics",
+      "status": "mentioned",
+      "about": ["physics-engine", "ecs"],
+      "related": ["physx", "box2d", "havok"],
+      "citedIn": ["chatgpt-research"],
+      "url": "https://docs.unity.com/en-us/engine/6000.0/manual/physics-section"
+    },
+    {
+      "id": "unreal",
+      "kind": "project",
+      "title": "Unreal Engine",
+      "summary": "Game engine with its own physics system, Chaos, which also covers destruction, cloth and fluids",
+      "area": "physics",
+      "status": "mentioned",
+      "about": ["physics-engine", "destruction", "cloth", "fluid"],
+      "citedIn": ["chatgpt-research"],
+      "url": "https://dev.epicgames.com/documentation/unreal-engine/physics-in-unreal-engine"
+    },
+    {
+      "id": "godot",
+      "kind": "project",
+      "title": "Godot",
+      "summary": "Open source game engine with its own physics, and alternative backends",
+      "area": "physics",
+      "status": "mentioned",
+      "about": ["physics-engine"],
+      "citedIn": ["chatgpt-research"],
+      "url": "https://godotengine.org/"
+    },
+    {
+      "id": "bevy",
+      "kind": "project",
+      "title": "Bevy",
+      "summary": "A Rust game engine built on ECS, with physics from plugins such as Rapier and Avian",
+      "area": "physics",
+      "status": "mentioned",
+      "about": ["ecs"],
+      "related": ["rapier", "avian"],
+      "citedIn": ["chatgpt-research"],
+      "url": "https://bevy.org/"
+    },
+    {
+      "id": "avian",
+      "kind": "project",
+      "title": "Avian",
+      "summary": "A physics engine for Bevy, written in Rust",
+      "area": "physics",
+      "status": "mentioned",
+      "about": ["physics-engine", "ecs"],
+      "citedIn": ["chatgpt-research"],
+      "url": "https://github.com/avianphysics/avian"
+    },
+    {
+      "id": "o3de",
+      "kind": "project",
+      "title": "O3DE",
+      "summary": "Open 3D Engine, an open source game engine that uses PhysX",
+      "area": "physics",
+      "status": "mentioned",
+      "about": ["physics-engine"],
+      "related": ["physx"],
+      "citedIn": ["chatgpt-research"],
+      "url": "https://o3de.org/"
+    },
+    {
+      "id": "physx",
+      "kind": "project",
+      "title": "NVIDIA PhysX",
+      "summary": "NVIDIA's physics SDK: rigid bodies, particles and soft bodies, partly accelerated on the GPU with CUDA",
+      "area": "physics",
+      "status": "mentioned",
+      "about": ["rigid-body", "gpu-parallelism", "tgs-solver", "finite-element-method"],
+      "citedIn": ["chatgpt-research"],
+      "url": "https://developer.nvidia.com/physx-sdk"
+    },
+    {
+      "id": "bullet",
+      "kind": "project",
+      "title": "Bullet Physics",
+      "summary": "A long-lived open source C++ library: rigid bodies, collision detection and soft bodies",
+      "area": "physics",
+      "status": "mentioned",
+      "about": ["rigid-body", "collision-detection", "soft-body"],
+      "citedIn": ["chatgpt-research"],
+      "url": "https://github.com/bulletphysics/bullet3"
+    },
+    {
+      "id": "jolt",
+      "kind": "project",
+      "title": "Jolt Physics",
+      "summary": "A fast C++ engine for rigid bodies in games",
+      "area": "physics",
+      "status": "mentioned",
+      "about": ["rigid-body", "bounding-volume-hierarchy", "sequential-impulses", "job-system"],
+      "citedIn": ["chatgpt-research"],
+      "url": "https://github.com/jrouwe/JoltPhysics"
+    },
+    {
+      "id": "jolt-js",
+      "kind": "project",
+      "title": "JoltPhysics.js",
+      "summary": "Jolt compiled to WebAssembly, for the browser",
+      "area": "physics",
+      "status": "mentioned",
+      "partOf": "jolt",
+      "about": ["physics-engine"],
+      "citedIn": ["chatgpt-research"],
+      "url": "https://github.com/jrouwe/JoltPhysics.js"
+    },
+    {
+      "id": "mujoco",
+      "kind": "project",
+      "title": "MuJoCo",
+      "summary": "A physics engine for robotics: contacts and articulated systems",
+      "area": "physics",
+      "status": "mentioned",
+      "about": ["articulated-body", "contact"],
+      "citedIn": ["chatgpt-research"],
+      "url": "https://github.com/google-deepmind/mujoco"
+    },
+    {
+      "id": "flex",
+      "kind": "project",
+      "title": "NVIDIA FleX",
+      "summary": "NVIDIA's unified particle library: rigid bodies, cloth and fluids all made of particles",
+      "area": "physics",
+      "status": "mentioned",
+      "about": ["unified-particle-physics", "shape-matching", "mesh-sampling"],
+      "citedIn": ["chatgpt-research"],
+      "url": "https://developer.nvidia.com/flex"
+    },
+    {
+      "id": "chrono",
+      "kind": "project",
+      "title": "Project Chrono",
+      "summary": "A C++ engine for multibody dynamics and engineering simulation",
+      "area": "physics",
+      "status": "mentioned",
+      "about": ["articulated-body"],
+      "citedIn": ["chatgpt-research"],
+      "url": "https://projectchrono.org/"
+    },
+    {
+      "id": "pbd-library",
+      "kind": "project",
+      "title": "PositionBasedDynamics",
+      "summary": "An open source C++ library of position based methods: PBD, XPBD, cloth and deformables",
+      "area": "physics",
+      "status": "mentioned",
+      "about": ["position-based-dynamics", "xpbd", "cloth", "soft-body"],
+      "citedIn": ["chatgpt-research"],
+      "url": "https://github.com/InteractiveComputerGraphics/PositionBasedDynamics"
+    },
+    {
+      "id": "taichi",
+      "kind": "project",
+      "title": "Taichi",
+      "summary": "A language embedded in Python for writing parallel simulations that run on the GPU",
+      "area": "gpu",
+      "status": "mentioned",
+      "about": ["gpu-parallelism"],
+      "citedIn": ["chatgpt-research"],
+      "url": "https://github.com/taichi-dev/taichi"
+    },
+    {
+      "id": "havok",
+      "kind": "project",
+      "title": "Havok",
+      "summary": "A commercial physics engine, available as an option in Unity",
+      "area": "physics",
+      "status": "mentioned",
+      "about": ["physics-engine"],
+      "citedIn": ["chatgpt-research"],
+      "url": "https://www.havok.com/"
+    },
+    {
+      "id": "ammo-js",
+      "kind": "project",
+      "title": "Ammo.js",
+      "summary": "Bullet compiled to JavaScript for the browser",
+      "area": "physics",
+      "status": "mentioned",
+      "about": ["physics-engine"],
+      "related": ["bullet"],
+      "citedIn": ["chatgpt-research"],
+      "url": "https://github.com/kripken/ammo.js"
+    },
+    {
+      "id": "cannon-es",
+      "kind": "project",
+      "title": "cannon-es",
+      "summary": "A 3D physics engine written in JavaScript",
+      "area": "physics",
+      "status": "mentioned",
+      "about": ["rigid-body"],
+      "citedIn": ["chatgpt-research"],
+      "url": "https://github.com/pmndrs/cannon-es"
+    },
+    {
+      "id": "matter-js",
+      "kind": "project",
+      "title": "Matter.js",
+      "summary": "A 2D physics engine written in JavaScript",
+      "area": "physics",
+      "status": "mentioned",
+      "about": ["rigid-body"],
+      "citedIn": ["chatgpt-research"],
+      "url": "https://github.com/liabru/matter-js"
+    },
+    {
+      "id": "planck-js",
+      "kind": "project",
+      "title": "Planck.js",
+      "summary": "A JavaScript rewrite of Box2D",
+      "area": "physics",
+      "status": "mentioned",
+      "about": ["rigid-body"],
+      "related": ["box2d"],
+      "citedIn": ["chatgpt-research"],
+      "url": "https://github.com/piqnt/planck.js"
     }
   ]
 }
