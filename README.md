@@ -12,13 +12,12 @@ A GPU-first physics engine for the web, built on [WebGPU](https://www.w3.org/TR/
 
 *Updated November 11, 2026*
 
-**Latest step:** [the first loop](./docs/logbook/008-the-first-loop.md). FORCE moves particles
-under gravity on the GPU, in fixed steps of 1/60 s, and the GPU matches the same steps computed in
-JavaScript within a millimeter. Since then, the first WebGPU guide:
-[how do you get access to the GPU?](./docs/guides/adapter-and-device.md)
+**Latest step:** [the first picture](./docs/logbook/009-the-first-picture.md). FORCE can now be
+seen: a small debug viewer built on three.js draws the particles as spheres, reading them straight
+from the engine's GPU memory, with buttons to pause, restart and change the simulation step.
 
-**Next:** the rest of the WebGPU guides, built from this code, starting with buffers. Later, examples
-with three.js and other libraries sharing the same GPU device.
+**Next:** back to the WebGPU guides, starting with buffers. Sharing one buffer between FORCE and
+three.js gets a guide of its own.
 
 Every step, with what we learned and what went wrong, is in the [logbook](./docs/README.md).
 

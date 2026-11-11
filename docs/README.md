@@ -15,6 +15,7 @@ This is where we tell how FORCE gets built, one step at a time. If you are new h
 | 006 | [The Decision Log](./logbook/006-the-decision-log.md) | Writing down what we chose for the engine, and why |
 | 007 | [The Open Door](./logbook/007-the-open-door.md) | How anyone can suggest what to study, and how we check it |
 | 008 | [The First Loop](./logbook/008-the-first-loop.md) | The fixed-step loop and semi-implicit Euler, running on the GPU |
+| 009 | [The First Picture](./logbook/009-the-first-picture.md) | A debug viewer on three.js, drawing straight from the engine's GPU buffer |
 
 ## For reference
 

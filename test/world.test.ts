@@ -13,6 +13,14 @@ describe('World.create', () => {
     )
   })
 
+  it('rejects substeps that are not a whole number of at least 1', async () => {
+    for (const substeps of [0, 1.5, Number.NaN]) {
+      await expect(
+        World.create({ positions: new Float32Array(3), substeps }),
+      ).rejects.toBeInstanceOf(RangeError)
+    }
+  })
+
   it('requests a device of its own when none is given', async () => {
     vi.stubGlobal('navigator', {})
 

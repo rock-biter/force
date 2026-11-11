@@ -22,5 +22,5 @@ A device is the exclusive owner of what it creates: a buffer made on one device 
 
 ## Still open
 
-- How each library exposes its device: to check, library by library, before writing the examples.
+- How each library exposes its device: to check, library by library, before writing the examples. three.js r187 checked in [decision 012](./012-renderers-read-the-gpu-buffer.md).
 - What to do when the shared device is lost, since the simulation state lives on it.

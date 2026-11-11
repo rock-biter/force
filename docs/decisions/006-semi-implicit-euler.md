@@ -18,7 +18,7 @@ One force computation per step, energy steady on average, and the integrator Gle
 ## Consequences
 
 - Each particle integrates on its own: one GPU thread per particle.
-- Substeps become a knob of the quality tiers: more on desktop, fewer on phones.
+- Substeps become a knob of the quality tiers: more on desktop, fewer on phones. In code since [decision 011](./011-substeps-per-world.md).
 
 ## Still open
 

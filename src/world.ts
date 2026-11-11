@@ -24,12 +24,15 @@ export interface WorldOptions {
   step?: number
   /** Steps per frame at most, with the time beyond them thrown away. Default: 4 (decision 007). */
   maxStepsPerFrame?: number
+  /** Equal parts each step is split into, one dispatch each. Default: 1 (decision 011). */
+  substeps?: number
 }
 
 /** A set of particles that move on the GPU, one fixed step at a time. */
 export class World {
   readonly device: GPUDevice
   readonly particleCount: number
+  readonly substeps: number
   private readonly clock: FixedTimestep
   private readonly positions: GPUBuffer
   private readonly velocities: GPUBuffer
@@ -47,12 +50,15 @@ export class World {
    * @throws {WebGPUUnavailableError} If no device is given and WebGPU is not available.
    */
   static async create(options: WorldOptions): Promise<World> {
-    const { positions, velocities } = options
+    const { positions, velocities, substeps = 1 } = options
     if (positions.length === 0 || positions.length % 3 !== 0) {
       throw new RangeError('positions must hold x, y, z for at least one particle')
     }
     if (velocities && velocities.length !== positions.length) {
       throw new RangeError('velocities must hold x, y, z for each particle')
+    }
+    if (!Number.isInteger(substeps) || substeps < 1) {
+      throw new RangeError(`substeps must be a whole number of at least 1, got ${substeps}`)
     }
 
     if (options.device) {
@@ -66,6 +72,7 @@ export class World {
     this.device = device
     this.ownsDevice = ownsDevice
     this.particleCount = positions.length / 3
+    this.substeps = options.substeps ?? 1
     this.clock = new FixedTimestep(options.step, options.maxStepsPerFrame)
 
     // Workgroups are counted per dimension, and we only use x.
@@ -91,12 +98,14 @@ export class World {
       device.queue.writeBuffer(this.velocities, 0, toVec4(velocities))
     } // otherwise the buffer stays as WebGPU creates it: all zeros
 
-    // The shader's Params struct: gravity in xyz, the step in the fourth slot.
+    // The shader's Params struct: gravity in xyz, the time it advances in the fourth slot. The
+    // shader only ever sees one substep: with 4 substeps, it runs 4 times on a quarter of the step.
     this.params = device.createBuffer({
       size: 4 * FLOAT_BYTES,
       usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
     })
-    device.queue.writeBuffer(this.params, 0, new Float32Array([...gravity, this.clock.step]))
+    const substep = this.clock.step / this.substeps
+    device.queue.writeBuffer(this.params, 0, new Float32Array([...gravity, substep]))
 
     this.pipeline = device.createComputePipeline({
       layout: 'auto',
@@ -120,6 +129,19 @@ export class World {
     return this.steps
   }
 
+  /** Seconds of simulated time per step. */
+  get step(): number {
+    return this.clock.step
+  }
+
+  /**
+   * The positions on the GPU, for a renderer on the same device to draw from with no copy: one
+   * vec4f per particle, xyz in meters and w free (decision 008). Read it, never write it.
+   */
+  get positionBuffer(): GPUBuffer {
+    return this.positions
+  }
+
   /** Seconds of simulated time so far. */
   get time(): number {
     return this.steps * this.clock.step
@@ -139,10 +161,10 @@ export class World {
     const pass = encoder.beginComputePass()
     pass.setPipeline(this.pipeline)
     pass.setBindGroup(0, this.bindGroup)
-    // One dispatch per step. The spec makes each dispatch its own usage scope (§3.4.4); our
-    // reading is that WebGPU orders them, so every step sees what the step before wrote.
+    // One dispatch per substep. The spec makes each dispatch its own usage scope (§3.4.4); our
+    // reading is that WebGPU orders them, so every substep sees what the one before wrote.
     // The falling-particles example checks it against the CPU.
-    for (let i = 0; i < steps; i++) {
+    for (let i = 0; i < steps * this.substeps; i++) {
       pass.dispatchWorkgroups(this.workgroups)
     }
     pass.end()

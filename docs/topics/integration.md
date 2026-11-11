@@ -83,7 +83,7 @@ Once the forces are known, each particle's update needs only its own position, v
 
 ## In FORCE
 
-Semi-implicit Euler, as [decision 006](../decisions/006-semi-implicit-euler.md) chose: [integrate.wgsl](../../src/shaders/integrate.wgsl) moves every particle by one step, one GPU thread each, with gravity as the only force so far. The [falling-particles](../../examples/falling-particles/main.ts) example checks 600 steps against the same steps in JavaScript: they agree within 1 mm, the drift between 32-bit and 64-bit floats. Substeps will arrive with the first stiff force, such as a spring.
+Semi-implicit Euler, as [decision 006](../decisions/006-semi-implicit-euler.md) chose: [integrate.wgsl](../../src/shaders/integrate.wgsl) moves every particle by one step, one GPU thread each, with gravity as the only force so far. The [falling-particles](../../examples/falling-particles/main.ts) example checks 600 steps against the same steps in JavaScript: they agree within 1 mm, the drift between 32-bit and 64-bit floats. Substeps are in the code since [decision 011](../decisions/011-substeps-per-world.md): `World.create({ substeps })` turns each step into N dispatches of `step / N`. With gravity alone they matter little: 4 substeps cut the drift from exact free fall from 8.2 to 2.0 cm after one second. They will matter with the first stiff force, such as a spring.
 
 ## Check yourself
 

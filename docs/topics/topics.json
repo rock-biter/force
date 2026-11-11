@@ -345,8 +345,12 @@
       "area": "gpu",
       "status": "studied",
       "partOf": "webgpu",
-      "citedIn": ["docs/guides/README.md", "chatgpt-research"],
-      "code": ["src/gpu/device.ts", "src/world.ts"],
+      "citedIn": [
+        "docs/guides/README.md",
+        "chatgpt-research",
+        "docs/logbook/009-the-first-picture.md"
+      ],
+      "code": ["src/gpu/device.ts", "src/world.ts", "examples/debug/viewer.ts"],
       "page": "docs/guides/adapter-and-device.md"
     },
     {
@@ -381,8 +385,12 @@
       "status": "mentioned",
       "partOf": "webgpu",
       "related": ["bind-group", "readback"],
-      "citedIn": ["docs/guides/README.md", "chatgpt-research"],
-      "code": ["examples/hello-compute/main.ts", "src/world.ts"]
+      "citedIn": [
+        "docs/guides/README.md",
+        "chatgpt-research",
+        "docs/logbook/009-the-first-picture.md"
+      ],
+      "code": ["examples/hello-compute/main.ts", "src/world.ts", "examples/debug/particles.ts"]
     },
     {
       "id": "compute-pipeline",
@@ -436,8 +444,12 @@
       "area": "gpu",
       "status": "mentioned",
       "partOf": "webgpu",
-      "citedIn": ["docs/guides/README.md", "chatgpt-research"],
-      "code": ["examples/hello-compute/main.ts", "src/world.ts"]
+      "citedIn": [
+        "docs/guides/README.md",
+        "chatgpt-research",
+        "docs/logbook/009-the-first-picture.md"
+      ],
+      "code": ["examples/hello-compute/main.ts", "src/world.ts", "examples/debug/viewer.ts"]
     },
     {
       "id": "readback",
@@ -641,8 +653,13 @@
       "status": "studied",
       "partOf": "timestep",
       "related": ["numerical-stability"],
-      "citedIn": ["chatgpt-research"],
-      "page": "docs/topics/integration.md#substeps"
+      "citedIn": [
+        "chatgpt-research",
+        "docs/logbook/009-the-first-picture.md",
+        "docs/decisions/011-substeps-per-world.md"
+      ],
+      "page": "docs/topics/integration.md#substeps",
+      "code": ["src/world.ts"]
     },
     {
       "id": "accumulator",
@@ -664,7 +681,7 @@
       "area": "physics",
       "status": "studied",
       "partOf": "fixed-timestep",
-      "citedIn": ["chatgpt-research"],
+      "citedIn": ["chatgpt-research", "docs/logbook/009-the-first-picture.md"],
       "page": "docs/topics/fixed-timestep.md#render-interpolation"
     },
     {
@@ -1522,13 +1539,21 @@
       "summary": "The official definition of the API",
       "area": "gpu",
       "status": "mentioned",
-      "about": ["webgpu", "device-limits", "usage-scope", "adapter-and-device", "device-loss"],
+      "about": [
+        "webgpu",
+        "device-limits",
+        "usage-scope",
+        "adapter-and-device",
+        "device-loss",
+        "command-queue"
+      ],
       "citedIn": [
         "README.md",
         ".claude/skills/guide/SKILL.md",
         "chatgpt-research",
         "docs/logbook/008-the-first-loop.md",
-        "docs/guides/adapter-and-device.md"
+        "docs/guides/adapter-and-device.md",
+        "docs/logbook/009-the-first-picture.md"
       ],
       "url": "https://www.w3.org/TR/webgpu/",
       "claudeRead": "parts"
@@ -2368,6 +2393,90 @@
       "about": ["device-loss"],
       "citedIn": ["docs/guides/adapter-and-device.md"],
       "url": "https://toji.dev/webgpu-best-practices/device-loss",
+      "claudeRead": "parts"
+    },
+    {
+      "id": "impostor",
+      "kind": "concept",
+      "title": "Impostor",
+      "summary": "A flat shape that a shader paints to look like a 3D object, such as a sphere drawn on one triangle",
+      "area": "gpu",
+      "status": "seen",
+      "related": ["instancing"],
+      "citedIn": ["docs/logbook/009-the-first-picture.md"],
+      "code": ["examples/debug/particles.ts"]
+    },
+    {
+      "id": "billboard",
+      "kind": "concept",
+      "title": "Billboard",
+      "summary": "A flat shape turned to face the camera in every frame, the base of most impostors",
+      "area": "gpu",
+      "status": "seen",
+      "partOf": "impostor",
+      "citedIn": ["docs/logbook/009-the-first-picture.md"],
+      "code": ["examples/debug/particles.ts"]
+    },
+    {
+      "id": "instancing",
+      "kind": "concept",
+      "title": "Instancing",
+      "summary": "Drawing the same geometry many times in one call, each copy with its own data, like InstancedMesh in three.js",
+      "area": "gpu",
+      "status": "seen",
+      "citedIn": ["docs/logbook/009-the-first-picture.md"],
+      "code": ["examples/debug/particles.ts"]
+    },
+    {
+      "id": "tsl",
+      "kind": "concept",
+      "title": "TSL (Three Shading Language)",
+      "summary": "How three.js writes shaders in JavaScript, compiled to WGSL for its WebGPU renderer",
+      "area": "gpu",
+      "status": "mentioned",
+      "related": ["wgsl"],
+      "citedIn": ["docs/logbook/009-the-first-picture.md"],
+      "code": ["examples/debug/particles.ts"]
+    },
+    {
+      "id": "three-js",
+      "kind": "project",
+      "title": "three.js",
+      "summary": "The 3D library for the web; its WebGPU renderer draws our debug viewer, on the same device as FORCE",
+      "area": "gpu",
+      "status": "mentioned",
+      "about": ["adapter-and-device", "buffer", "instancing", "tsl"],
+      "citedIn": [
+        "docs/decisions/010-device-from-outside.md",
+        "docs/logbook/009-the-first-picture.md"
+      ],
+      "url": "https://github.com/mrdoob/three.js",
+      "claudeRead": "parts"
+    },
+    {
+      "id": "threejs-webgpu-backend",
+      "kind": "code",
+      "title": "three.js r187, WebGPUBackend.js",
+      "summary": "The WebGPU renderer accepts a device from outside, and destroys only a device it created",
+      "area": "gpu",
+      "status": "mentioned",
+      "partOf": "three-js",
+      "about": ["adapter-and-device"],
+      "citedIn": ["docs/logbook/009-the-first-picture.md"],
+      "url": "https://github.com/mrdoob/three.js/blob/r187/src/renderers/webgpu/WebGPUBackend.js",
+      "claudeRead": "parts"
+    },
+    {
+      "id": "threejs-webgpu-attribute-utils",
+      "kind": "code",
+      "title": "three.js r187, WebGPUAttributeUtils.js",
+      "summary": "createAttribute() makes a GPU buffer for an attribute only when it has none yet",
+      "area": "gpu",
+      "status": "mentioned",
+      "partOf": "three-js",
+      "about": ["buffer"],
+      "citedIn": ["docs/logbook/009-the-first-picture.md"],
+      "url": "https://github.com/mrdoob/three.js/blob/r187/src/renderers/webgpu/utils/WebGPUAttributeUtils.js",
       "claudeRead": "parts"
     }
   ]

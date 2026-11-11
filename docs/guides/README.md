@@ -22,3 +22,4 @@ The first series comes from [`examples/hello-compute`](../../examples/hello-comp
 - [ ] How do you get the results back? (readback)
 - [ ] How do you give every thread the same values? (uniform buffers)
 - [ ] Why does a vec3f take 16 bytes? (memory alignment)
+- [ ] How do two libraries share GPU data? (one device, one buffer, from [`examples/debug`](../../examples/debug/viewer.ts))
