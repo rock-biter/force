@@ -8,7 +8,7 @@ None yet: they arrive together with the code.
 
 ## Planned
 
-The first series comes from [`examples/hello-compute`](../../examples/hello-compute/main.ts), which already uses these concepts:
+The first series comes from [`examples/hello-compute`](../../examples/hello-compute/main.ts) and from the engine's first loop, [`src/world.ts`](../../src/world.ts) with its shader [`integrate.wgsl`](../../src/shaders/integrate.wgsl), which already use these concepts:
 
 - [ ] How do you get access to the GPU? (adapter and device)
 - [ ] How do you send data to the GPU? (buffers)
@@ -18,3 +18,5 @@ The first series comes from [`examples/hello-compute`](../../examples/hello-comp
 - [ ] How do you make thousands of threads work? (dispatch and workgroups)
 - [ ] When does the GPU actually run? (commands and queue)
 - [ ] How do you get the results back? (readback)
+- [ ] How do you give every thread the same values? (uniform buffers)
+- [ ] Why does a vec3f take 16 bytes? (memory alignment)

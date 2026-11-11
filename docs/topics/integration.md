@@ -83,7 +83,7 @@ Once the forces are known, each particle's update needs only its own position, v
 
 ## In FORCE
 
-Not yet. [hello-compute](../../examples/hello-compute/free-fall.wgsl) moves each particle with the exact free-fall formula for one step from rest, `0.5 * g * dt²`, and stores no velocity. The first integrator will be semi-implicit Euler, with more substeps on fast devices and fewer on phones: [decision 006](../decisions/006-semi-implicit-euler.md).
+Semi-implicit Euler, as [decision 006](../decisions/006-semi-implicit-euler.md) chose: [integrate.wgsl](../../src/shaders/integrate.wgsl) moves every particle by one step, one GPU thread each, with gravity as the only force so far. The [falling-particles](../../examples/falling-particles/main.ts) example checks 600 steps against the same steps in JavaScript: they agree within 1 mm, the drift between 32-bit and 64-bit floats. Substeps will arrive with the first stiff force, such as a spring.
 
 ## Check yourself
 

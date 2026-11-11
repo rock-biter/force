@@ -21,6 +21,6 @@ With a variable step the results change with the frame rate, and one long frame 
 
 ## Still open
 
-- The length of a step: 1/60 s is the usual choice.
+- The length of a step: 1/60 s is the usual choice. Settled by [decision 007](./007-step-length-and-limit.md).
 - Who blends the two states: the engine, or the renderer with `alpha`.
-- The limit on steps per frame.
+- The limit on steps per frame. Settled by [decision 007](./007-step-length-and-limit.md).

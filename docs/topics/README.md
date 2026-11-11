@@ -5,8 +5,8 @@
 Everything we have met while building FORCE, concepts and sources, and how far we went with each
 one. Use it to look up a term, to find what to read, or to pick what to explore next.
 
-- **121 concepts:** ● 12 studied · ◐ 38 seen · ○ 71 mentioned
-- **65 sources:** ● 2 studied · ◐ 11 seen · ○ 52 mentioned
+- **126 concepts:** ● 12 studied · ◐ 42 seen · ○ 72 mentioned
+- **66 sources:** ● 2 studied · ◐ 13 seen · ○ 51 mentioned
 
 | | Status | What it means |
 | --- | --- | --- |
@@ -108,6 +108,7 @@ How things move, collide and stay together.
 | ○ | Two-way coupling | Different materials pushing on each other both ways, like a ball floating on water |  | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |
 | ○ | Unified particle physics | Building every material, from solids to cloth and fluids, out of particles held by constraints |  | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |
 | ○ | Uniform grid | Space split into equal cells: only objects in the same or nearby cells get compared | Broad phase | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |
+| ◐ | Units and scale | Engines tune their tolerances for one size of object: meters and everyday objects, from soup cans to buses | Physics engine | [Box2D, Overview](https://github.com/erincatto/box2d/blob/main/docs/overview.md) |
 | ◐ | Velocity Verlet | Uses the acceleration both before and after moving: more accurate, but forces are computed twice | Integration | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |
 | ○ | Warm starting | Starting the solver from the previous step's answer, so fewer rounds are needed | Solver | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |
 | ○ | XPBD | Extended PBD: each constraint gets a softness, called compliance, so stiffness no longer depends on step size or rounds | Position based dynamics (PBD) | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |
@@ -122,6 +123,7 @@ How things move, collide and stay together.
 | ○ | [Bevy](https://bevy.org/) | Project | A Rust game engine built on ECS, with physics from plugins such as Rapier and Avian | Entity component system (ECS) | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |
 | ◐ | [Box2D](https://github.com/erincatto/box2d)<br>*Erin Catto* | Project | One of the most widely used 2D physics engines, open source | Physics engine, Simulation step, Solver | [001](../logbook/001-the-flip-book.md) |
 | ◐ | [Box2D, Hello Box2D](https://github.com/erincatto/box2d/blob/main/docs/hello.md) | Documentation | The flip book comparison, and the 1/60 second step | Physics engine, Timestep | [001](../logbook/001-the-flip-book.md) |
+| ◐ | [Box2D, Overview](https://github.com/erincatto/box2d/blob/main/docs/overview.md) | Documentation | The units Box2D is tuned for, and the size of objects it handles well | Units and scale | [008](../logbook/008-the-first-loop.md) |
 | ◐ | [Box2D, physics_world.c](https://github.com/erincatto/box2d/blob/main/src/physics_world.c) | Source code | The real order of the steps: broad phase, collisions, solver | Simulation step | [001](../logbook/001-the-flip-book.md) |
 | ○ | [Box2D, Simulation](https://github.com/erincatto/box2d/blob/main/docs/simulation.md) | Documentation | Box2D's guide to the world and its step, including substeps | Substepping, Soft Step | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |
 | ◐ | [Box2D, solver.c](https://github.com/erincatto/box2d/blob/main/src/solver.c) | Source code | The internal stages of the solver | Solver, Semi-implicit Euler | [001](../logbook/001-the-flip-book.md) |
@@ -174,7 +176,7 @@ The math behind motion: change over time, rotations, numbers on a computer.
 | | Concept | In short | Part of | First cited in |
 | --- | --- | --- | --- | --- |
 | ◐ | Derivative | How fast a quantity changes at an instant: velocity is the derivative of position, acceleration that of velocity |  | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |
-| ○ | Floating point precision | Numbers on a computer have a limited number of digits: 32-bit floats are fast on the GPU, but rounding errors add up |  | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |
+| ◐ | Floating point precision | Numbers on a computer have a limited number of digits: 32-bit floats are fast on the GPU, but rounding errors add up |  | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |
 | ◐ | Integral | The reverse of a derivative: adding up small changes over time, such as velocity into position |  | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |
 
 ## GPU
@@ -194,11 +196,15 @@ WebGPU, WGSL and how to make thousands of threads work.
 | ○ | Constraint graph coloring | Splitting constraints into groups that share no body, so each group can be solved in parallel |  | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |
 | ○ | Device limits | What a given GPU guarantees, such as buffer sizes and workgroup memory: to check before choosing a pipeline | WebGPU | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |
 | ○ | GPU-resident simulation | Keeping the simulation's data on the GPU, and not reading it back every frame |  | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |
+| ◐ | Memory alignment | Where a value may start in memory: a vec3f starts on a multiple of 16 bytes, so in an array it takes 16 bytes, not 12 | WGSL | [008](../logbook/008-the-first-loop.md) |
+| ○ | Override constant | A WGSL constant set from JavaScript when the pipeline is created, such as the workgroup size | WGSL | [free-fall](../../examples/hello-compute/free-fall.wgsl) |
 | ○ | Parallel sorting | Sorting many keys at once on the GPU, for example objects by grid cell |  | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |
 | ◐ | Parallel work on the GPU | The GPU runs the same code on thousands of items at once, and is fastest when each one can go its own way |  | [001](../logbook/001-the-flip-book.md) |
 | ○ | Prefix sum (scan) | Turning a list of counts into running totals, in parallel: the GPU's way of packing results |  | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |
 | ○ | Readback | Copying results from the GPU back into JavaScript | WebGPU | [guides index](../guides/README.md) |
-| ○ | Structure of arrays (SoA) | One array per property, all positions together, so the GPU reads memory in neat runs |  | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |
+| ◐ | Structure of arrays (SoA) | One array per property, all positions together and all velocities together, instead of one object per particle |  | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |
+| ○ | Uniform buffer | A small read-only buffer of values shared by every thread, like a GLSL uniform | Buffer | [008](../logbook/008-the-first-loop.md) |
+| ○ | Usage scope | A stretch of GPU work whose parts may run at the same time: in a compute pass, each dispatch is one | WebGPU | [WebGPU specification](https://www.w3.org/TR/webgpu/) |
 | ○ | WebGPU | The browser API that lets a page use the GPU, both to draw and to calculate |  | [README](../../README.md) |
 | ○ | WGSL | The shader language of WebGPU, the counterpart of GLSL | WebGPU | [guides index](../guides/README.md) |
 | ○ | Workgroups and dispatch | How the work is split into groups of threads and launched on the GPU | WebGPU | [guides index](../guides/README.md) |
@@ -214,7 +220,7 @@ WebGPU, WGSL and how to make thousands of threads work.
 | ○ | [Taichi](https://github.com/taichi-dev/taichi) | Project | A language embedded in Python for writing parallel simulations that run on the GPU | Parallel work on the GPU | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |
 | ○ | [WebGPU Fundamentals](https://webgpufundamentals.org/) | Course | Step-by-step lessons | WebGPU | [002](../logbook/002-the-toolbox.md) |
 | ○ | [WebGPU on web-features](https://web-platform-dx.github.io/web-features-explorer/features/webgpu/) | Documentation | Which browsers support WebGPU | WebGPU | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |
-| ○ | [WebGPU specification](https://www.w3.org/TR/webgpu/) | Specification | The official definition of the API | WebGPU, Device limits | [README](../../README.md) |
+| ◐ | [WebGPU specification](https://www.w3.org/TR/webgpu/) | Specification | The official definition of the API | WebGPU, Device limits, Usage scope | [README](../../README.md) |
 | ○ | [WGSL specification](https://www.w3.org/TR/WGSL/) | Specification | The official definition of the shader language | WGSL | [guide skill](../../.claude/skills/guide/SKILL.md) |
 
 ## Engine design

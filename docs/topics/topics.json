@@ -104,7 +104,8 @@
       "partOf": "simulation-step",
       "related": ["integration"],
       "citedIn": ["docs/logbook/001-the-flip-book.md", "box2d-hello", "chatgpt-research"],
-      "page": "docs/topics/fixed-timestep.md"
+      "page": "docs/topics/fixed-timestep.md",
+      "code": ["src/fixed-timestep.ts"]
     },
     {
       "id": "fixed-timestep",
@@ -115,8 +116,14 @@
       "status": "studied",
       "partOf": "timestep",
       "related": ["tunneling"],
-      "citedIn": ["docs/logbook/001-the-flip-book.md", "fix-your-timestep", "chatgpt-research"],
-      "page": "docs/topics/fixed-timestep.md"
+      "citedIn": [
+        "docs/logbook/001-the-flip-book.md",
+        "fix-your-timestep",
+        "chatgpt-research",
+        "docs/logbook/008-the-first-loop.md"
+      ],
+      "page": "docs/topics/fixed-timestep.md",
+      "code": ["src/fixed-timestep.ts", "src/world.ts"]
     },
     {
       "id": "force",
@@ -137,7 +144,11 @@
       "status": "seen",
       "partOf": "force",
       "citedIn": ["docs/logbook/001-the-flip-book.md", "chatgpt-research"],
-      "code": ["examples/hello-compute/free-fall.wgsl"]
+      "code": [
+        "examples/hello-compute/free-fall.wgsl",
+        "src/shaders/integrate.wgsl",
+        "src/world.ts"
+      ]
     },
     {
       "id": "collision-detection",
@@ -243,7 +254,8 @@
       "status": "studied",
       "partOf": "simulation-step",
       "citedIn": ["docs/logbook/001-the-flip-book.md", "chatgpt-research"],
-      "page": "docs/topics/integration.md"
+      "page": "docs/topics/integration.md",
+      "code": ["src/shaders/integrate.wgsl"]
     },
     {
       "id": "particle",
@@ -336,7 +348,7 @@
       "partOf": "webgpu",
       "related": ["gpu-parallelism", "wgsl"],
       "citedIn": ["docs/logbook/000-the-launch.md", "docs/guides/README.md", "chatgpt-research"],
-      "code": ["examples/hello-compute/free-fall.wgsl"]
+      "code": ["examples/hello-compute/free-fall.wgsl", "src/shaders/integrate.wgsl"]
     },
     {
       "id": "wgsl",
@@ -347,7 +359,7 @@
       "status": "mentioned",
       "partOf": "webgpu",
       "citedIn": ["docs/guides/README.md", "chatgpt-research"],
-      "code": ["examples/hello-compute/free-fall.wgsl"]
+      "code": ["examples/hello-compute/free-fall.wgsl", "src/shaders/integrate.wgsl"]
     },
     {
       "id": "buffer",
@@ -359,7 +371,7 @@
       "partOf": "webgpu",
       "related": ["bind-group", "readback"],
       "citedIn": ["docs/guides/README.md", "chatgpt-research"],
-      "code": ["examples/hello-compute/main.ts"]
+      "code": ["examples/hello-compute/main.ts", "src/world.ts"]
     },
     {
       "id": "compute-pipeline",
@@ -371,7 +383,7 @@
       "partOf": "webgpu",
       "related": ["compute-shader"],
       "citedIn": ["docs/guides/README.md"],
-      "code": ["examples/hello-compute/main.ts"]
+      "code": ["examples/hello-compute/main.ts", "src/world.ts"]
     },
     {
       "id": "bind-group",
@@ -383,7 +395,11 @@
       "partOf": "webgpu",
       "related": ["compute-pipeline"],
       "citedIn": ["docs/guides/README.md"],
-      "code": ["examples/hello-compute/main.ts", "examples/hello-compute/free-fall.wgsl"]
+      "code": [
+        "examples/hello-compute/main.ts",
+        "examples/hello-compute/free-fall.wgsl",
+        "src/world.ts"
+      ]
     },
     {
       "id": "workgroup",
@@ -395,7 +411,11 @@
       "partOf": "webgpu",
       "related": ["compute-shader"],
       "citedIn": ["docs/guides/README.md"],
-      "code": ["examples/hello-compute/main.ts", "examples/hello-compute/free-fall.wgsl"]
+      "code": [
+        "examples/hello-compute/main.ts",
+        "examples/hello-compute/free-fall.wgsl",
+        "src/world.ts"
+      ]
     },
     {
       "id": "command-queue",
@@ -406,7 +426,7 @@
       "status": "mentioned",
       "partOf": "webgpu",
       "citedIn": ["docs/guides/README.md", "chatgpt-research"],
-      "code": ["examples/hello-compute/main.ts"]
+      "code": ["examples/hello-compute/main.ts", "src/world.ts"]
     },
     {
       "id": "readback",
@@ -417,7 +437,7 @@
       "status": "mentioned",
       "partOf": "webgpu",
       "citedIn": ["docs/guides/README.md", "chatgpt-research"],
-      "code": ["examples/hello-compute/main.ts"]
+      "code": ["examples/hello-compute/main.ts", "src/world.ts"]
     },
     {
       "id": "position-based-dynamics",
@@ -537,8 +557,8 @@
       "title": "Floating point precision",
       "summary": "Numbers on a computer have a limited number of digits: 32-bit floats are fast on the GPU, but rounding errors add up",
       "area": "math",
-      "status": "mentioned",
-      "citedIn": ["chatgpt-research"]
+      "status": "seen",
+      "citedIn": ["chatgpt-research", "docs/logbook/008-the-first-loop.md"]
     },
     {
       "id": "explicit-euler",
@@ -560,8 +580,14 @@
       "area": "physics",
       "status": "studied",
       "partOf": "integration",
-      "citedIn": ["chatgpt-research", "integration-basics", "box2d-solver"],
-      "page": "docs/topics/integration.md#semi-implicit-euler"
+      "citedIn": [
+        "chatgpt-research",
+        "integration-basics",
+        "box2d-solver",
+        "docs/logbook/008-the-first-loop.md"
+      ],
+      "page": "docs/topics/integration.md#semi-implicit-euler",
+      "code": ["src/shaders/integrate.wgsl"]
     },
     {
       "id": "velocity-verlet",
@@ -615,8 +641,9 @@
       "area": "physics",
       "status": "studied",
       "partOf": "fixed-timestep",
-      "citedIn": ["chatgpt-research"],
-      "page": "docs/topics/fixed-timestep.md#the-accumulator"
+      "citedIn": ["chatgpt-research", "docs/logbook/008-the-first-loop.md"],
+      "page": "docs/topics/fixed-timestep.md#the-accumulator",
+      "code": ["src/fixed-timestep.ts"]
     },
     {
       "id": "render-interpolation",
@@ -638,7 +665,8 @@
       "status": "studied",
       "partOf": "fixed-timestep",
       "citedIn": ["chatgpt-research"],
-      "page": "docs/topics/fixed-timestep.md#the-spiral-of-death"
+      "page": "docs/topics/fixed-timestep.md#the-spiral-of-death",
+      "code": ["src/fixed-timestep.ts"]
     },
     {
       "id": "newtons-second-law",
@@ -1173,10 +1201,12 @@
       "id": "structure-of-arrays",
       "kind": "concept",
       "title": "Structure of arrays (SoA)",
-      "summary": "One array per property, all positions together, so the GPU reads memory in neat runs",
+      "summary": "One array per property, all positions together and all velocities together, instead of one object per particle",
       "area": "gpu",
-      "status": "mentioned",
-      "citedIn": ["chatgpt-research"]
+      "status": "seen",
+      "citedIn": ["chatgpt-research", "docs/logbook/008-the-first-loop.md"],
+      "related": ["memory-alignment"],
+      "code": ["src/world.ts", "src/shaders/integrate.wgsl"]
     },
     {
       "id": "gpu-resident-data",
@@ -1197,7 +1227,8 @@
       "status": "mentioned",
       "partOf": "webgpu",
       "related": ["adapter-and-device"],
-      "citedIn": ["chatgpt-research"]
+      "citedIn": ["chatgpt-research", "docs/logbook/008-the-first-loop.md"],
+      "code": ["src/world.ts"]
     },
     {
       "id": "compatibility-mode",
@@ -1475,9 +1506,14 @@
       "title": "WebGPU specification",
       "summary": "The official definition of the API",
       "area": "gpu",
-      "status": "mentioned",
-      "about": ["webgpu", "device-limits"],
-      "citedIn": ["README.md", ".claude/skills/guide/SKILL.md", "chatgpt-research"],
+      "status": "seen",
+      "about": ["webgpu", "device-limits", "usage-scope"],
+      "citedIn": [
+        "README.md",
+        ".claude/skills/guide/SKILL.md",
+        "chatgpt-research",
+        "docs/logbook/008-the-first-loop.md"
+      ],
       "url": "https://www.w3.org/TR/webgpu/"
     },
     {
@@ -2161,6 +2197,73 @@
       "url": "https://www.cognitect.com/blog/2011/11/15/documenting-architecture-decisions",
       "authors": "Michael Nygard",
       "year": 2011
+    },
+    {
+      "id": "memory-alignment",
+      "kind": "concept",
+      "title": "Memory alignment",
+      "summary": "Where a value may start in memory: a vec3f starts on a multiple of 16 bytes, so in an array it takes 16 bytes, not 12",
+      "area": "gpu",
+      "status": "seen",
+      "partOf": "wgsl",
+      "citedIn": ["docs/logbook/008-the-first-loop.md"],
+      "code": ["src/shaders/integrate.wgsl", "src/world.ts"]
+    },
+    {
+      "id": "uniform-buffer",
+      "kind": "concept",
+      "title": "Uniform buffer",
+      "summary": "A small read-only buffer of values shared by every thread, like a GLSL uniform",
+      "area": "gpu",
+      "status": "mentioned",
+      "partOf": "buffer",
+      "citedIn": ["docs/logbook/008-the-first-loop.md"],
+      "code": ["src/world.ts", "src/shaders/integrate.wgsl"]
+    },
+    {
+      "id": "override-constant",
+      "kind": "concept",
+      "title": "Override constant",
+      "summary": "A WGSL constant set from JavaScript when the pipeline is created, such as the workgroup size",
+      "area": "gpu",
+      "status": "mentioned",
+      "partOf": "wgsl",
+      "citedIn": ["examples/hello-compute/free-fall.wgsl", "docs/logbook/008-the-first-loop.md"],
+      "code": ["examples/hello-compute/free-fall.wgsl", "src/shaders/integrate.wgsl"]
+    },
+    {
+      "id": "usage-scope",
+      "kind": "concept",
+      "title": "Usage scope",
+      "summary": "A stretch of GPU work whose parts may run at the same time: in a compute pass, each dispatch is one",
+      "area": "gpu",
+      "status": "mentioned",
+      "partOf": "webgpu",
+      "citedIn": ["webgpu-spec", "docs/logbook/008-the-first-loop.md"],
+      "code": ["src/world.ts"]
+    },
+    {
+      "id": "units-and-scale",
+      "kind": "concept",
+      "title": "Units and scale",
+      "summary": "Engines tune their tolerances for one size of object: meters and everyday objects, from soup cans to buses",
+      "area": "physics",
+      "status": "seen",
+      "partOf": "physics-engine",
+      "citedIn": ["box2d-overview", "docs/logbook/008-the-first-loop.md"],
+      "code": ["src/world.ts"]
+    },
+    {
+      "id": "box2d-overview",
+      "kind": "docs",
+      "title": "Box2D, Overview",
+      "summary": "The units Box2D is tuned for, and the size of objects it handles well",
+      "area": "physics",
+      "status": "seen",
+      "partOf": "box2d",
+      "about": ["units-and-scale"],
+      "citedIn": ["docs/logbook/008-the-first-loop.md"],
+      "url": "https://github.com/erincatto/box2d/blob/main/docs/overview.md"
     }
   ]
 }

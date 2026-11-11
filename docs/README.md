@@ -14,6 +14,7 @@ This is where we tell how FORCE gets built, one step at a time. If you are new h
 | 005 | [The First Pages](./logbook/005-the-first-pages.md) | What "studied" means, and our first two theory pages |
 | 006 | [The Decision Log](./logbook/006-the-decision-log.md) | Writing down what we chose for the engine, and why |
 | 007 | [The Open Door](./logbook/007-the-open-door.md) | How anyone can suggest what to study, and how we check it |
+| 008 | [The First Loop](./logbook/008-the-first-loop.md) | The fixed-step loop and semi-implicit Euler, running on the GPU |
 
 ## For reference
 

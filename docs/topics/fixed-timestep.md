@@ -72,7 +72,7 @@ The loop itself stays in JavaScript: it decides how many steps to run, and each 
 
 ## In FORCE
 
-Not yet: [hello-compute](../../examples/hello-compute/main.ts) runs one single step of 0.1 s. The fixed-step loop will be one of the first pieces of the engine: [decision 005](../decisions/005-fixed-timestep.md).
+[`FixedTimestep`](../../src/fixed-timestep.ts) is the accumulator, with steps of 1/60 s and at most 4 per frame ([decision 007](../decisions/007-step-length-and-limit.md)); its [test](../../test/fixed-timestep.test.ts) replays the 50 FPS table above. [`World.update`](../../src/world.ts) takes the time of a frame and sends all its steps to the GPU in one go, one dispatch each. Nothing is drawn yet, so nothing is blended: who blends is still open in [decision 005](../decisions/005-fixed-timestep.md).
 
 ## Check yourself
 
