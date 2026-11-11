@@ -46,8 +46,6 @@ const LIGHT = normalize(vec3(0.4, 0.6, 0.7))
 /** The particles of one world, drawn straight from its GPU buffer. */
 export class ParticleView {
   readonly mesh: Mesh
-  /** Meters. For drawing only: the engine has no radius yet (decision 008, the free w). */
-  readonly radius = uniform(0.05)
   readonly color = uniform(new Color(0xe8552d))
   private readonly geometry: InstancedBufferGeometry
   private readonly material: MeshBasicNodeMaterial
@@ -58,6 +56,7 @@ export class ParticleView {
     const positions = new StorageInstancedBufferAttribute(world.particleCount, 4)
     useExternalBuffer(renderer, positions, world.positionBuffer)
     const centers = storage(positions, 'vec4', world.particleCount).toReadOnly()
+    const radius = uniform(world.radius) // the engine's own, so spheres rest on the ground
 
     // Three corners shared by every particle, drawn once per particle (instancing).
     this.geometry = new InstancedBufferGeometry()
@@ -68,7 +67,7 @@ export class ParticleView {
     // opens around it in the XY plane, so the triangle always faces the camera (a billboard).
     const corner = positionGeometry.xy
     const viewCenter = cameraViewMatrix.mul(vec4(centers.element(instanceIndex).xyz, 1)).xyz
-    const viewCorner = viewCenter.add(vec3(corner.mul(this.radius), 0))
+    const viewCorner = viewCenter.add(vec3(corner.mul(radius), 0))
 
     // What the fragment shader receives, like GLSL varyings.
     const disc = varying(corner) // the point on the triangle, in radii from the center
@@ -88,7 +87,7 @@ export class ParticleView {
       return vec4(this.color.mul(diffuse.mul(0.75).add(0.25)), 1)
     })()
     // The depth of the sphere's surface, not of the flat triangle: like gl_FragDepth in GLSL.
-    const surfaceZ = sphereCenter.z.add(normal.z.mul(this.radius))
+    const surfaceZ = sphereCenter.z.add(normal.z.mul(radius))
     this.material.depthNode = viewZToPerspectiveDepth(surfaceZ, cameraNear, cameraFar)
 
     this.mesh = new Mesh(this.geometry, this.material)

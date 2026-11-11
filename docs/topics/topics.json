@@ -168,7 +168,12 @@
       "area": "physics",
       "status": "seen",
       "partOf": "simulation-step",
-      "citedIn": ["docs/logbook/001-the-flip-book.md", "chatgpt-research"]
+      "citedIn": [
+        "docs/logbook/001-the-flip-book.md",
+        "chatgpt-research",
+        "docs/logbook/010-the-ground.md"
+      ],
+      "code": ["src/shaders/integrate.wgsl"]
     },
     {
       "id": "broad-phase",
@@ -209,7 +214,7 @@
       "area": "physics",
       "status": "seen",
       "partOf": "collision-detection",
-      "citedIn": ["docs/logbook/001-the-flip-book.md"]
+      "citedIn": ["docs/logbook/001-the-flip-book.md", "docs/logbook/010-the-ground.md"]
     },
     {
       "id": "contact",
@@ -219,7 +224,11 @@
       "area": "physics",
       "status": "seen",
       "related": ["constraint"],
-      "citedIn": ["docs/logbook/001-the-flip-book.md", "chatgpt-research"]
+      "citedIn": [
+        "docs/logbook/001-the-flip-book.md",
+        "chatgpt-research",
+        "docs/logbook/010-the-ground.md"
+      ]
     },
     {
       "id": "constraint",
@@ -470,7 +479,7 @@
       "area": "physics",
       "status": "mentioned",
       "related": ["constraint", "cloth", "soft-body"],
-      "citedIn": ["ten-minute-physics", "chatgpt-research"]
+      "citedIn": ["ten-minute-physics", "chatgpt-research", "docs/decisions/013-a-flat-ground.md"]
     },
     {
       "id": "soft-body",
@@ -581,7 +590,11 @@
       "summary": "Numbers on a computer have a limited number of digits: 32-bit floats are fast on the GPU, but rounding errors add up",
       "area": "math",
       "status": "seen",
-      "citedIn": ["chatgpt-research", "docs/logbook/008-the-first-loop.md"]
+      "citedIn": [
+        "chatgpt-research",
+        "docs/logbook/008-the-first-loop.md",
+        "docs/logbook/010-the-ground.md"
+      ]
     },
     {
       "id": "explicit-euler",
@@ -899,9 +912,10 @@
       "title": "Friction",
       "summary": "The force that resists sliding between two surfaces in contact",
       "area": "physics",
-      "status": "mentioned",
+      "status": "seen",
       "related": ["contact"],
-      "citedIn": ["chatgpt-research"]
+      "citedIn": ["chatgpt-research", "docs/logbook/010-the-ground.md"],
+      "code": ["src/shaders/integrate.wgsl"]
     },
     {
       "id": "restitution",
@@ -909,9 +923,10 @@
       "title": "Restitution",
       "summary": "How bouncy a collision is: how much speed comes back after the impact",
       "area": "physics",
-      "status": "mentioned",
+      "status": "seen",
       "related": ["contact"],
-      "citedIn": ["chatgpt-research"]
+      "citedIn": ["chatgpt-research", "docs/logbook/010-the-ground.md"],
+      "code": ["src/shaders/integrate.wgsl"]
     },
     {
       "id": "raycast",
@@ -941,7 +956,7 @@
       "area": "physics",
       "status": "mentioned",
       "related": ["solver"],
-      "citedIn": ["chatgpt-research"]
+      "citedIn": ["chatgpt-research", "docs/decisions/013-a-flat-ground.md"]
     },
     {
       "id": "sequential-impulses",
@@ -2270,7 +2285,11 @@
       "area": "gpu",
       "status": "mentioned",
       "partOf": "wgsl",
-      "citedIn": ["examples/hello-compute/free-fall.wgsl", "docs/logbook/008-the-first-loop.md"],
+      "citedIn": [
+        "examples/hello-compute/free-fall.wgsl",
+        "docs/logbook/008-the-first-loop.md",
+        "docs/logbook/010-the-ground.md"
+      ],
       "code": ["examples/hello-compute/free-fall.wgsl", "src/shaders/integrate.wgsl"]
     },
     {
@@ -2478,6 +2497,18 @@
       "citedIn": ["docs/logbook/009-the-first-picture.md"],
       "url": "https://github.com/mrdoob/three.js/blob/r187/src/renderers/webgpu/utils/WebGPUAttributeUtils.js",
       "claudeRead": "parts"
+    },
+    {
+      "id": "collision-response",
+      "kind": "concept",
+      "title": "Collision response",
+      "summary": "What to do once a contact is found: push the objects apart and change their velocities",
+      "area": "physics",
+      "status": "seen",
+      "partOf": "simulation-step",
+      "related": ["contact", "restitution", "friction"],
+      "citedIn": ["docs/logbook/010-the-ground.md"],
+      "code": ["src/shaders/integrate.wgsl"]
     }
   ]
 }

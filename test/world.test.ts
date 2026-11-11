@@ -21,6 +21,20 @@ describe('World.create', () => {
     }
   })
 
+  it('rejects a negative radius', async () => {
+    await expect(
+      World.create({ positions: new Float32Array(3), radius: -1 }),
+    ).rejects.toBeInstanceOf(RangeError)
+  })
+
+  it('rejects a ground with restitution outside 0 to 1, or negative friction', async () => {
+    for (const ground of [{ restitution: 1.5 }, { restitution: -0.1 }, { friction: -1 }]) {
+      await expect(World.create({ positions: new Float32Array(3), ground })).rejects.toBeInstanceOf(
+        RangeError,
+      )
+    }
+  })
+
   it('requests a device of its own when none is given', async () => {
     vi.stubGlobal('navigator', {})
 

@@ -24,6 +24,7 @@ The choices that shape FORCE, one per page: what we decided, why, what we left o
 | 010 | [The device comes from outside](./010-device-from-outside.md) | Accepted | November 11, 2026 |
 | 011 | [Substeps, chosen when the world is created](./011-substeps-per-world.md) | Accepted | November 11, 2026 |
 | 012 | [Renderers draw from the world's GPU buffer](./012-renderers-read-the-gpu-buffer.md) | Accepted | November 11, 2026 |
+| 013 | [A flat ground, the simplest way](./013-a-flat-ground.md) | Accepted | November 11, 2026 |
 
 ## Rules
 

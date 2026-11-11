@@ -6,6 +6,7 @@ const WORKGROUP_SIZE = 64
 /** Floats per particle in each GPU buffer: one vec4f, with w free (decision 008). */
 const STRIDE = 4
 const FLOAT_BYTES = Float32Array.BYTES_PER_ELEMENT
+const DEFAULT_RADIUS = 0.05 // meters
 
 export interface WorldOptions {
   /**
@@ -26,6 +27,20 @@ export interface WorldOptions {
   maxStepsPerFrame?: number
   /** Equal parts each step is split into, one dispatch each. Default: 1 (decision 011). */
   substeps?: number
+  /** The radius of every particle, in meters: how far above the ground its center stops. Default: 0.05. */
+  radius?: number
+  /** A flat ground that particles bounce on (decision 013). Default: none, particles fall forever. */
+  ground?: GroundOptions
+}
+
+/** An infinite, flat ground, facing up. */
+export interface GroundOptions {
+  /** Its height, in meters. Default: 0. */
+  y?: number
+  /** How much of the speed into the ground comes back: 0 stops dead, 1 bounces back as high. Default: 0.5. */
+  restitution?: number
+  /** How much a hit slows the sliding along the ground: 0 is ice. Default: 0.3. */
+  friction?: number
 }
 
 /** A set of particles that move on the GPU, one fixed step at a time. */
@@ -33,6 +48,8 @@ export class World {
   readonly device: GPUDevice
   readonly particleCount: number
   readonly substeps: number
+  /** The radius of every particle, in meters. */
+  readonly radius: number
   private readonly clock: FixedTimestep
   private readonly positions: GPUBuffer
   private readonly velocities: GPUBuffer
@@ -50,7 +67,7 @@ export class World {
    * @throws {WebGPUUnavailableError} If no device is given and WebGPU is not available.
    */
   static async create(options: WorldOptions): Promise<World> {
-    const { positions, velocities, substeps = 1 } = options
+    const { positions, velocities, substeps = 1, radius = DEFAULT_RADIUS, ground } = options
     if (positions.length === 0 || positions.length % 3 !== 0) {
       throw new RangeError('positions must hold x, y, z for at least one particle')
     }
@@ -60,6 +77,21 @@ export class World {
     if (!Number.isInteger(substeps) || substeps < 1) {
       throw new RangeError(`substeps must be a whole number of at least 1, got ${substeps}`)
     }
+    if (!(radius >= 0 && Number.isFinite(radius))) {
+      throw new RangeError(`radius must be zero or more meters, got ${radius}`)
+    }
+    if (ground) {
+      const { y, restitution, friction } = groundWithDefaults(ground)
+      if (!Number.isFinite(y)) {
+        throw new RangeError(`ground.y must be a finite number of meters, got ${y}`)
+      }
+      if (!(restitution >= 0 && restitution <= 1)) {
+        throw new RangeError(`ground.restitution must be between 0 and 1, got ${restitution}`)
+      }
+      if (!(friction >= 0 && Number.isFinite(friction))) {
+        throw new RangeError(`ground.friction must be zero or more, got ${friction}`)
+      }
+    }
 
     if (options.device) {
       return new World(options.device, false, options)
@@ -68,11 +100,12 @@ export class World {
   }
 
   private constructor(device: GPUDevice, ownsDevice: boolean, options: WorldOptions) {
-    const { positions, velocities, gravity = [0, -9.81, 0] } = options
+    const { positions, velocities, gravity = [0, -9.81, 0], ground } = options
     this.device = device
     this.ownsDevice = ownsDevice
     this.particleCount = positions.length / 3
     this.substeps = options.substeps ?? 1
+    this.radius = options.radius ?? DEFAULT_RADIUS
     this.clock = new FixedTimestep(options.step, options.maxStepsPerFrame)
 
     // Workgroups are counted per dimension, and we only use x.
@@ -98,20 +131,24 @@ export class World {
       device.queue.writeBuffer(this.velocities, 0, toVec4(velocities))
     } // otherwise the buffer stays as WebGPU creates it: all zeros
 
-    // The shader's Params struct: gravity in xyz, the time it advances in the fourth slot. The
-    // shader only ever sees one substep: with 4 substeps, it runs 4 times on a quarter of the step.
+    // The shader's Params struct, in its order: gravity in xyz and the time it advances in the
+    // fourth slot, then the ground. The shader only ever sees one substep: with 4 substeps, it runs
+    // 4 times on a quarter of the step.
+    const substep = this.clock.step / this.substeps
+    const { y, restitution, friction } = groundWithDefaults(ground ?? {})
+    const params = new Float32Array([...gravity, substep, y, this.radius, restitution, friction])
     this.params = device.createBuffer({
-      size: 4 * FLOAT_BYTES,
+      size: params.byteLength,
       usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
     })
-    const substep = this.clock.step / this.substeps
-    device.queue.writeBuffer(this.params, 0, new Float32Array([...gravity, substep]))
+    device.queue.writeBuffer(this.params, 0, params)
 
     this.pipeline = device.createComputePipeline({
       layout: 'auto',
       compute: {
         module: device.createShaderModule({ code: integrateCode }),
-        constants: { WORKGROUP_SIZE },
+        // With no ground, the shader is built without it: GROUND is fixed when the pipeline is made.
+        constants: { WORKGROUP_SIZE, GROUND: ground ? 1 : 0 },
       },
     })
     this.bindGroup = device.createBindGroup({
@@ -209,6 +246,11 @@ export class World {
       this.device.destroy()
     }
   }
+}
+
+/** The ground with every missing value filled in. */
+function groundWithDefaults({ y = 0, restitution = 0.4, friction = 0.1 }: GroundOptions) {
+  return { y, restitution, friction }
 }
 
 /** Three floats per particle to four, as the GPU buffers hold them. */

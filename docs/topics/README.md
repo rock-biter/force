@@ -5,7 +5,7 @@
 Everything we have met while building FORCE, concepts and sources, and how far we went with each
 one. Use it to look up a term, to find what to read, or to pick what to explore next.
 
-- **131 concepts:** ● 13 studied · ◐ 47 seen · ○ 71 mentioned
+- **132 concepts:** ● 13 studied · ◐ 50 seen · ○ 69 mentioned
 - **75 sources:** ● 2 studied · ◐ 11 seen · ○ 62 mentioned · read by Claude: 11 parts, 0 in full
 
 | | Status | What it means |
@@ -37,6 +37,7 @@ How things move, collide and stay together.
 | ○ | Center of mass | The balance point of an object: a rigid body's position, and the point it spins around when free | Rigid body | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |
 | ○ | Cloth | A sheet that bends and folds, like a flag or a curtain |  | [docs index](../README.md) |
 | ◐ | Collision detection | Finding out which objects touch: first a rough pass, then a precise one | Simulation step | [001](../logbook/001-the-flip-book.md) |
+| ◐ | Collision response | What to do once a contact is found: push the objects apart and change their velocities | Simulation step | [010](../logbook/010-the-ground.md) |
 | ◐ | Conservation of energy | Without friction, the energy of motion plus the stored energy stays constant: a simple test for an integrator |  | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |
 | ◐ | Constraint | A rule objects must obey, such as "do not pass through each other" |  | [001](../logbook/001-the-flip-book.md) |
 | ◐ | Contact | The result of a collision: where two objects touch, in which direction, and how far they overlap |  | [001](../logbook/001-the-flip-book.md) |
@@ -53,7 +54,7 @@ How things move, collide and stay together.
 | ○ | FLIP water | Water simulated with particles that carry the motion, plus a grid that keeps it from compressing | Fluid | [Ten Minute Physics](https://matthias-research.github.io/pages/tenMinutePhysics/index.html) |
 | ○ | Fluid | Water, smoke and anything else that flows instead of keeping its shape |  | [docs index](../README.md) |
 | ◐ | Forces | Pushes such as gravity or wind: they change velocity, and change a light object more than a heavy one | Simulation step | [001](../logbook/001-the-flip-book.md) |
-| ○ | Friction | The force that resists sliding between two surfaces in contact |  | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |
+| ◐ | Friction | The force that resists sliding between two surfaces in contact |  | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |
 | ○ | Gauss-Seidel | Fixing constraints one after another, each using the latest results: converges fast, but it is sequential | Iterative solver | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |
 | ○ | GJK | A test that tells whether two convex shapes overlap, using only their farthest points in each direction | Narrow phase | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |
 | ○ | Granular materials | Sand, snow and grains: solid up close, flowing in bulk |  | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |
@@ -86,7 +87,7 @@ How things move, collide and stay together.
 | ○ | Position based fluids (PBF) | Fluids kept from compressing with position constraints, the PBD way | Fluid | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |
 | ○ | Raycast | Shooting a line into the world to find what it hits first, for aiming, picking or line of sight |  | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |
 | ● | **[Render interpolation](fixed-timestep.md#render-interpolation)** | Drawing a blend of the last two physics states, so motion looks smooth between steps | Fixed timestep | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |
-| ○ | Restitution | How bouncy a collision is: how much speed comes back after the impact |  | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |
+| ◐ | Restitution | How bouncy a collision is: how much speed comes back after the impact |  | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |
 | ◐ | Rigid body | An object that moves and rotates but never bends, like a box or a ball |  | [docs index](../README.md) |
 | ◐ | Runge-Kutta 4 (RK4) | Samples the rate of change four times per step: very accurate, but four times the work, and it slowly loses energy | Integration | [Integration Basics](https://gafferongames.com/post/integration_basics/) |
 | ○ | Self-collision | Cloth or a soft body hitting itself | Cloth | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |

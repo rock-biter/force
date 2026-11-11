@@ -9,8 +9,6 @@ export interface Controls {
   /** Seconds of simulated time per step. */
   step: number
   substeps: number
-  /** Particle radius in meters, for drawing only. */
-  radius: number
 }
 
 /** What the panel shows. The viewer writes it every frame, and the panel polls it. */
@@ -72,7 +70,6 @@ export class Panel {
     simulation
       .addBinding(controls, 'substeps', { min: 1, max: 16, step: 1 })
       .on('change', actions.restart)
-    simulation.addBinding(controls, 'radius', { min: 0.01, max: 0.5 })
 
     // World
     const world = pane.addFolder({ title: 'World' })

@@ -1,5 +1,5 @@
 // A fountain: 5000 particles thrown up from the origin in a narrow cone, drawn by the debug viewer.
-// There is no ground yet, so they fall through the grid: restart throws them again.
+// They land on the ground at y = 0, bounce a few times and stop: restart throws them again.
 
 import { World } from 'force-gpu'
 import { showError, startDebugViewer } from '../debug/viewer.js'
@@ -25,7 +25,14 @@ for (let i = 0; i < PARTICLE_COUNT; i++) {
 
 startDebugViewer({
   create: (device, { step, substeps }) =>
-    World.create({ device, positions, velocities, step, substeps }),
+    World.create({
+      device,
+      positions,
+      velocities,
+      step,
+      substeps,
+      radius: 0.04,
+      ground: {}, // at y = 0, with the default bounce and friction
+    }),
   camera: { position: [8, 4, 10], target: [0, 2, 0] },
-  radius: 0.04,
 }).catch(showError)

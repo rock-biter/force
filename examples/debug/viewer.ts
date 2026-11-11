@@ -25,8 +25,6 @@ export interface DebugViewerOptions {
   create(device: GPUDevice, settings: { step: number; substeps: number }): Promise<World>
   /** Where the camera starts and what it looks at, in meters. */
   camera?: { position: Vec3; target: Vec3 }
-  /** Particle radius in meters, for drawing only. Default: 0.05. */
-  radius?: number
 }
 
 export async function startDebugViewer(options: DebugViewerOptions): Promise<void> {
@@ -56,7 +54,7 @@ export async function startDebugViewer(options: DebugViewerOptions): Promise<voi
     renderer.setSize(window.innerWidth, window.innerHeight)
   })
 
-  const controls: Controls = { step: 1 / 60, substeps: 1, radius: options.radius ?? 0.05 }
+  const controls: Controls = { step: 1 / 60, substeps: 1 }
   const stats: Stats = {
     particles: 0,
     time: 0,
@@ -111,12 +109,11 @@ export async function startDebugViewer(options: DebugViewerOptions): Promise<voi
     const frameTime = last === undefined ? 0 : (now - last) / 1000
     last = now
 
-    if (world && particles) {
+    if (world) {
       stats.stepsLastFrame = paused ? 0 : world.update(frameTime)
       stats.particles = world.particleCount
       stats.time = world.time
       stats.steps = world.stepCount
-      particles.radius.value = controls.radius
     }
     // Same queue, same order: the steps sent above run before this drawing reads the positions.
     renderer.render(scene, camera)
