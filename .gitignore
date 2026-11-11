@@ -7,3 +7,6 @@ coverage/
 
 # Local copies of papers and PDFs: usually copyrighted, never committed.
 library/
+
+# Social posts about the project, drafts and published: kept local.
+posts/

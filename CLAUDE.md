@@ -33,6 +33,7 @@ Everything in the repo is in English: code, comments, docs and skills. Chat in I
 - `docs/topics/`: the topic map of concepts and sources (`topics.json`, with a generated index), theory pages and reading notes. For looking things up, not for reading straight through.
 - `CONTRIBUTING.md` and `.github/ISSUE_TEMPLATE/`: how people suggest what to study and report mistakes.
 - `library/`: local copies of papers and PDFs. Ignored by git, never committed.
+- `posts/`: the social posts about the project, drafts and published (`post` skill). Ignored by git.
 
 ## Commands
 
