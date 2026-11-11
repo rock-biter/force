@@ -1315,6 +1315,16 @@
       "citedIn": ["gpu-gems-rigid-bodies"]
     },
     {
+      "id": "decision-record",
+      "kind": "concept",
+      "title": "Decision record",
+      "summary": "A short page per design choice: what we chose, why, and what we left out, so nobody has to accept or reverse it blindly",
+      "area": "method",
+      "status": "seen",
+      "related": ["documentation-kinds"],
+      "citedIn": ["docs/logbook/006-the-decision-log.md", "nygard-adr"]
+    },
+    {
       "id": "box2d",
       "kind": "project",
       "title": "Box2D",
@@ -2138,6 +2148,19 @@
       "related": ["box2d"],
       "citedIn": ["chatgpt-research"],
       "url": "https://github.com/piqnt/planck.js"
+    },
+    {
+      "id": "nygard-adr",
+      "kind": "article",
+      "title": "Documenting Architecture Decisions",
+      "summary": "The post that proposed decision records: context, decision, status and consequences, superseded but never deleted",
+      "area": "method",
+      "status": "seen",
+      "about": ["decision-record"],
+      "citedIn": ["docs/logbook/006-the-decision-log.md"],
+      "url": "https://www.cognitect.com/blog/2011/11/15/documenting-architecture-decisions",
+      "authors": "Michael Nygard",
+      "year": 2011
     }
   ]
 }

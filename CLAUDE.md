@@ -16,6 +16,7 @@ Knows JavaScript, three.js and GLSL well. Starts from zero on WebGPU and physics
 - **Tell the story.** Every step ends up in the logbook (`logbook` skill).
 - **Turn code into guides.** Each WebGPU concept we use in code for the first time gets a mini guide (`guide` skill). Guides are for learning, for looking things up, and for becoming articles and YouTube videos.
 - **Map what we meet.** Every concept and every source we touch goes on the topic map, with where we met it and how far we went: mentioned, seen, or studied with its own page (`topic` skill).
+- **Record decisions.** Every choice about how the engine works gets a decision record (`decision` skill). Claude proposes, the user decides.
 - **Verify.** Cite only sources you have opened, and separate what is proven from what is a guess.
 
 ## Language
@@ -27,6 +28,7 @@ Everything in the repo is in English: code, comments, docs and skills. Chat in I
 - `docs/README.md`: index and study route. Start here to see where we are.
 - `docs/logbook/`: the story of the project, one chapter per step.
 - `docs/guides/`: WebGPU mini guides, one concept each.
+- `docs/decisions/`: the decisions that shape the engine, and why.
 - `docs/topics/`: the topic map of concepts and sources (`topics.json`, with a generated index), theory pages and reading notes. For looking things up, not for reading straight through.
 - `library/`: local copies of papers and PDFs. Ignored by git, never committed.
 

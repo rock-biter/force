@@ -83,7 +83,7 @@ Once the forces are known, each particle's update needs only its own position, v
 
 ## In FORCE
 
-Not yet. [hello-compute](../../examples/hello-compute/free-fall.wgsl) moves each particle with the exact free-fall formula for one step from rest, `0.5 * g * dt²`, and stores no velocity. The likely first integrator is semi-implicit Euler, with more substeps on fast devices and fewer on phones: a proposal, not a decision.
+Not yet. [hello-compute](../../examples/hello-compute/free-fall.wgsl) moves each particle with the exact free-fall formula for one step from rest, `0.5 * g * dt²`, and stores no velocity. The first integrator will be semi-implicit Euler, with more substeps on fast devices and fewer on phones: [decision 006](../decisions/006-semi-implicit-euler.md).
 
 ## Check yourself
 

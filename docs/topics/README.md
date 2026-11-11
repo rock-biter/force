@@ -5,8 +5,8 @@
 Everything we have met while building FORCE, concepts and sources, and how far we went with each
 one. Use it to look up a term, to find what to read, or to pick what to explore next.
 
-- **120 concepts:** ● 12 studied · ◐ 37 seen · ○ 71 mentioned
-- **64 sources:** ● 2 studied · ◐ 10 seen · ○ 52 mentioned
+- **121 concepts:** ● 12 studied · ◐ 38 seen · ○ 71 mentioned
+- **65 sources:** ● 2 studied · ◐ 11 seen · ○ 52 mentioned
 
 | | Status | What it means |
 | --- | --- | --- |
@@ -236,8 +236,10 @@ How we learn and write things down.
 
 | | Concept | In short | Part of | First cited in |
 | --- | --- | --- | --- | --- |
+| ◐ | Decision record | A short page per design choice: what we chose, why, and what we left out, so nobody has to accept or reverse it blindly |  | [006](../logbook/006-the-decision-log.md) |
 | ◐ | Kinds of documentation | Texts for learning, for doing, for looking up and for understanding work best kept apart |  | [002](../logbook/002-the-toolbox.md) |
 
 | | Source | Kind | What it gives us | About | First cited in |
 | --- | --- | --- | --- | --- | --- |
 | ◐ | [Diátaxis](https://diataxis.fr/) | Documentation | Keeping what you read to learn apart from what you look up | Kinds of documentation | [002](../logbook/002-the-toolbox.md) |
+| ◐ | [Documenting Architecture Decisions](https://www.cognitect.com/blog/2011/11/15/documenting-architecture-decisions)<br>*Michael Nygard, 2011* | Article | The post that proposed decision records: context, decision, status and consequences, superseded but never deleted | Decision record | [006](../logbook/006-the-decision-log.md) |
