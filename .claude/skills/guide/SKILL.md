@@ -61,9 +61,25 @@ The spec or MDN first.
 - **Hook:** the question or surprise that opens it.
 - **Show:** what appears on screen.
 - **Takeaway:** the one sentence to remember.
+
+## Questions
+
+*Asked while reading this guide, and answered after checking the sources.*
+
+### The user's question, in English
+The answer, checked like the rest of the guide.
 ```
 
-Stay under 80 lines, about 4 minutes of reading. If it does not fit, it is two concepts: split it.
+Stay under 80 lines, about 4 minutes of reading, not counting the questions. If it does not fit, it
+is two concepts: split it.
+
+## The user's questions
+
+The user always reads the guide, and asks what is not clear. Every question goes at the end, in the
+**Questions** section, translated into English, with its answer: the next reader will probably ask
+the same. Check the answer against the sources like the rest of the guide, and add any new source to
+**Sources**. Keep each answer short; one that needs more than about 15 lines is a concept of its own,
+so give it its own guide and link it.
 
 ## What makes a guide trustworthy
 

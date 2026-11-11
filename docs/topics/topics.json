@@ -74,6 +74,16 @@
       "title": "Conversation"
     }
   },
+  "claudeReadings": {
+    "parts": {
+      "title": "Parts",
+      "description": "Claude opened it to check what we cite: other topics in it may be missing from the map"
+    },
+    "full": {
+      "title": "In full",
+      "description": "Claude read all of it, and put on the map every topic in it that matters for FORCE"
+    }
+  },
   "topics": [
     {
       "id": "physics-engine",
@@ -333,10 +343,11 @@
       "title": "Adapter and device",
       "summary": "How a page gets the GPU: the adapter stands for a GPU on the system, the device is our own connection to it",
       "area": "gpu",
-      "status": "mentioned",
+      "status": "studied",
       "partOf": "webgpu",
       "citedIn": ["docs/guides/README.md", "chatgpt-research"],
-      "code": ["src/gpu/device.ts"]
+      "code": ["src/gpu/device.ts", "src/world.ts"],
+      "page": "docs/guides/adapter-and-device.md"
     },
     {
       "id": "compute-shader",
@@ -1224,10 +1235,14 @@
       "title": "Device limits",
       "summary": "What a given GPU guarantees, such as buffer sizes and workgroup memory: to check before choosing a pipeline",
       "area": "gpu",
-      "status": "mentioned",
+      "status": "seen",
       "partOf": "webgpu",
       "related": ["adapter-and-device"],
-      "citedIn": ["chatgpt-research", "docs/logbook/008-the-first-loop.md"],
+      "citedIn": [
+        "chatgpt-research",
+        "docs/logbook/008-the-first-loop.md",
+        "docs/guides/adapter-and-device.md"
+      ],
       "code": ["src/world.ts"]
     },
     {
@@ -1506,15 +1521,17 @@
       "title": "WebGPU specification",
       "summary": "The official definition of the API",
       "area": "gpu",
-      "status": "seen",
-      "about": ["webgpu", "device-limits", "usage-scope"],
+      "status": "mentioned",
+      "about": ["webgpu", "device-limits", "usage-scope", "adapter-and-device", "device-loss"],
       "citedIn": [
         "README.md",
         ".claude/skills/guide/SKILL.md",
         "chatgpt-research",
-        "docs/logbook/008-the-first-loop.md"
+        "docs/logbook/008-the-first-loop.md",
+        "docs/guides/adapter-and-device.md"
       ],
-      "url": "https://www.w3.org/TR/webgpu/"
+      "url": "https://www.w3.org/TR/webgpu/",
+      "claudeRead": "parts"
     },
     {
       "id": "wgsl-spec",
@@ -2259,11 +2276,99 @@
       "title": "Box2D, Overview",
       "summary": "The units Box2D is tuned for, and the size of objects it handles well",
       "area": "physics",
-      "status": "seen",
+      "status": "mentioned",
       "partOf": "box2d",
       "about": ["units-and-scale"],
       "citedIn": ["docs/logbook/008-the-first-loop.md"],
-      "url": "https://github.com/erincatto/box2d/blob/main/docs/overview.md"
+      "url": "https://github.com/erincatto/box2d/blob/main/docs/overview.md",
+      "claudeRead": "parts"
+    },
+    {
+      "id": "device-loss",
+      "kind": "concept",
+      "title": "Device loss",
+      "summary": "The browser can take the GPU back at any time: every buffer and pipeline, and the data in them, must then be created again",
+      "area": "gpu",
+      "status": "seen",
+      "partOf": "adapter-and-device",
+      "citedIn": ["docs/guides/adapter-and-device.md"]
+    },
+    {
+      "id": "mdn-request-adapter",
+      "kind": "docs",
+      "title": "MDN, GPU.requestAdapter()",
+      "summary": "How to ask for an adapter, and why it can be null",
+      "area": "gpu",
+      "status": "mentioned",
+      "partOf": "mdn-webgpu",
+      "about": ["adapter-and-device"],
+      "citedIn": ["docs/guides/adapter-and-device.md"],
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/GPU/requestAdapter",
+      "claudeRead": "parts"
+    },
+    {
+      "id": "mdn-request-device",
+      "kind": "docs",
+      "title": "MDN, GPUAdapter.requestDevice()",
+      "summary": "How to ask for a device, its options, and why a second call rejects",
+      "area": "gpu",
+      "status": "mentioned",
+      "partOf": "mdn-webgpu",
+      "about": ["adapter-and-device", "device-limits"],
+      "citedIn": ["docs/guides/adapter-and-device.md"],
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/GPUAdapter/requestDevice",
+      "claudeRead": "parts"
+    },
+    {
+      "id": "mdn-device-lost",
+      "kind": "docs",
+      "title": "MDN, GPUDevice.lost",
+      "summary": "When a device is lost, and how to start over",
+      "area": "gpu",
+      "status": "mentioned",
+      "partOf": "mdn-webgpu",
+      "about": ["device-loss"],
+      "citedIn": ["docs/guides/adapter-and-device.md"],
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/GPUDevice/lost",
+      "claudeRead": "parts"
+    },
+    {
+      "id": "mdn-navigator-gpu",
+      "kind": "docs",
+      "title": "MDN, Navigator.gpu",
+      "summary": "The entry point of WebGPU, only on HTTPS or localhost",
+      "area": "gpu",
+      "status": "mentioned",
+      "partOf": "mdn-webgpu",
+      "about": ["webgpu"],
+      "citedIn": ["docs/guides/adapter-and-device.md"],
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Navigator/gpu",
+      "claudeRead": "parts"
+    },
+    {
+      "id": "mdn-supported-limits",
+      "kind": "docs",
+      "title": "MDN, GPUSupportedLimits",
+      "summary": "Every limit with its default value",
+      "area": "gpu",
+      "status": "mentioned",
+      "partOf": "mdn-webgpu",
+      "about": ["device-limits"],
+      "citedIn": ["docs/guides/adapter-and-device.md"],
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/GPUSupportedLimits",
+      "claudeRead": "parts"
+    },
+    {
+      "id": "toji-device-loss",
+      "kind": "article",
+      "title": "WebGPU Best Practices: Device Loss",
+      "summary": "What makes a device get lost, how to recover, and how to test it",
+      "area": "gpu",
+      "status": "mentioned",
+      "about": ["device-loss"],
+      "citedIn": ["docs/guides/adapter-and-device.md"],
+      "url": "https://toji.dev/webgpu-best-practices/device-loss",
+      "claudeRead": "parts"
     }
   ]
 }

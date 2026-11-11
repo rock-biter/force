@@ -2,7 +2,7 @@
 // Every simulated second the page reads the positions back from the GPU and checks them against
 // the same steps computed in JavaScript. Nothing is drawn yet: the numbers are the result.
 
-import { requestGPUDevice, World } from 'force-gpu'
+import { World } from 'force-gpu'
 
 const PARTICLE_COUNT = 1000
 const GRAVITY = -9.81 // m/s² along Y, the engine's default
@@ -46,8 +46,8 @@ function largestDifference(gpu: Float32Array, cpu: Float64Array): number {
 }
 
 async function run(output: HTMLElement): Promise<void> {
-  const device = await requestGPUDevice()
-  const world = new World(device, { positions: start, velocities: startVelocity })
+  // No device given: FORCE requests its own, since nothing else on this page uses the GPU.
+  const world = await World.create({ positions: start, velocities: startVelocity })
 
   const framesBySteps = [0, 0, 0, 0, 0] // how many frames ran 0, 1, 2, 3 or 4 steps
   const checks: string[] = []

@@ -51,6 +51,9 @@ it into two chapters.
 - **Reader test.** Reread it as someone who knows nothing: is every technical term explained the
   first time it appears? For a study chapter, have an agent with no context read it.
 - **Index.** Update `docs/README.md`: the new chapter and the stop on the route.
+- **Project README.** Rewrite "Where we are" in the root `README.md`, with its date: the latest step
+  in two or three lines, linked to its chapter, and what comes next in one or two. It is the first
+  thing a visitor reads, so keep it short and plain, with no jargon left unexplained.
 - **Decisions.** If the step settled a choice about the engine, record it (`decision` skill).
 - **Map.** Add every concept and source the step touched to the topic map, or raise its status
   (`topic` skill).

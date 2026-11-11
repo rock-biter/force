@@ -80,6 +80,7 @@ Only for sources:
   usually copyrighted, so they must not end up in this public repo. Always add the `url` too when the
   source is online, so others can find it.
 - `authors`, `year`: when known and checked.
+- `claudeRead`: `parts` or `full`, what Claude has read of it (see below).
 
 ### Status
 
@@ -90,6 +91,19 @@ The status says what the user knows, not what the docs contain. Each level is a 
 | `mentioned` | "I have heard the name." | We know it exists, or read only its index |
 | `seen` | "I can say in two sentences what it is and why it exists." | We opened it and checked what we cite |
 | `studied` | "I can explain how it works, with an example, and when it fails." | We read it in full |
+
+For a source, *we* means the user. An external source that Claude opened to check a claim, or that
+a page links for further reading, stays `mentioned` until the user says they read it.
+
+What Claude read is tracked apart, in `claudeRead`, because Claude forgets between sessions and the
+map must say whether a source's topics were collected:
+
+- `parts`: Claude opened it to check what we cite. Other topics in it may be missing from the map.
+- `full`: Claude read all of it, and put on the map every topic in it that matters for FORCE.
+
+Set it every time Claude opens a source, and raise it to `full` only after collecting its topics.
+No field means not opened by Claude, or not recorded: sources from before November 11, 2026 have
+none.
 
 `studied` also needs a page of ours, written together: writing it is the last step of studying, and
 it makes the status checkable. A studied source points to the page where we digest it: its reading

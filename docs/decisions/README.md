@@ -21,6 +21,7 @@ The choices that shape FORCE, one per page: what we decided, why, what we left o
 | 007 | [A step of 1/60 s, at most 4 per frame](./007-step-length-and-limit.md) | Accepted | November 11, 2026 |
 | 008 | [Particles in two vec4 buffers](./008-particles-in-two-vec4-buffers.md) | Accepted | November 11, 2026 |
 | 009 | [Meters, seconds, and Y up](./009-meters-seconds-y-up.md) | Accepted | November 11, 2026 |
+| 010 | [The device comes from outside](./010-device-from-outside.md) | Accepted | November 11, 2026 |
 
 ## Rules
 

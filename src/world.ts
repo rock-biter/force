@@ -1,4 +1,5 @@
 import { FixedTimestep } from './fixed-timestep.js'
+import { requestGPUDevice } from './gpu/device.js'
 import integrateCode from './shaders/integrate.wgsl?raw'
 
 const WORKGROUP_SIZE = 64
@@ -7,6 +8,12 @@ const STRIDE = 4
 const FLOAT_BYTES = Float32Array.BYTES_PER_ELEMENT
 
 export interface WorldOptions {
+  /**
+   * The GPU device to simulate on. Give the device your renderer draws with: buffers cannot move
+   * between devices, so sharing one keeps the particles on the GPU (decision 010).
+   * Default: FORCE requests a device of its own.
+   */
+  device?: GPUDevice
   /** Where the particles start, in meters: x, y, z for each one. */
   positions: Float32Array
   /** How fast they start, in meters per second: x, y, z for each one. Default: at rest. */
@@ -30,10 +37,17 @@ export class World {
   private readonly pipeline: GPUComputePipeline
   private readonly bindGroup: GPUBindGroup
   private readonly workgroups: number
+  /** Whether FORCE requested the device itself, and so must destroy it. */
+  private readonly ownsDevice: boolean
   private steps = 0
 
-  constructor(device: GPUDevice, options: WorldOptions) {
-    const { positions, velocities, gravity = [0, -9.81, 0] } = options
+  /**
+   * Creates a world on the given device, or on a new one when none is given.
+   *
+   * @throws {WebGPUUnavailableError} If no device is given and WebGPU is not available.
+   */
+  static async create(options: WorldOptions): Promise<World> {
+    const { positions, velocities } = options
     if (positions.length === 0 || positions.length % 3 !== 0) {
       throw new RangeError('positions must hold x, y, z for at least one particle')
     }
@@ -41,7 +55,16 @@ export class World {
       throw new RangeError('velocities must hold x, y, z for each particle')
     }
 
+    if (options.device) {
+      return new World(options.device, false, options)
+    }
+    return new World(await requestGPUDevice(), true, options)
+  }
+
+  private constructor(device: GPUDevice, ownsDevice: boolean, options: WorldOptions) {
+    const { positions, velocities, gravity = [0, -9.81, 0] } = options
     this.device = device
+    this.ownsDevice = ownsDevice
     this.particleCount = positions.length / 3
     this.clock = new FixedTimestep(options.step, options.maxStepsPerFrame)
 
@@ -152,11 +175,17 @@ export class World {
     return xyz
   }
 
-  /** Frees the GPU memory. The world cannot be used after this. */
+  /**
+   * Frees the GPU memory, and the device too if FORCE created it: a device that was given stays
+   * with its owner. The world cannot be used after this.
+   */
   destroy(): void {
     this.positions.destroy()
     this.velocities.destroy()
     this.params.destroy()
+    if (this.ownsDevice) {
+      this.device.destroy()
+    }
   }
 }
 

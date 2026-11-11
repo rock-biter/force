@@ -4,13 +4,15 @@ Short guides, one concept each, built from the code of FORCE. They are written f
 
 ## Guides
 
-None yet: they arrive together with the code.
+| Guide | The concept |
+| --- | --- |
+| [How do you get access to the GPU?](./adapter-and-device.md) | Adapter and device |
 
 ## Planned
 
 The first series comes from [`examples/hello-compute`](../../examples/hello-compute/main.ts) and from the engine's first loop, [`src/world.ts`](../../src/world.ts) with its shader [`integrate.wgsl`](../../src/shaders/integrate.wgsl), which already use these concepts:
 
-- [ ] How do you get access to the GPU? (adapter and device)
+- [x] How do you get access to the GPU? (adapter and device)
 - [ ] How do you send data to the GPU? (buffers)
 - [ ] What does a compute shader look like? (WGSL)
 - [ ] How do you prepare a shader to run? (pipelines)

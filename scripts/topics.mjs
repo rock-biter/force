@@ -26,6 +26,7 @@ const SOURCE_FIELDS = [
   'file',
   'authors',
   'year',
+  'claudeRead',
 ]
 
 const isConcept = (topic) => topic.kind === 'concept'
@@ -101,6 +102,9 @@ function check(map) {
       for (const id of topic.about ?? []) {
         if (!isConcept(byId.get(id) ?? {})) fail(`"about": "${id}" is not a concept on the map`)
       }
+      // What Claude has read of it, which is not what the user has read: that is the status.
+      if (topic.claudeRead !== undefined && !Object.hasOwn(map.claudeReadings, topic.claudeRead))
+        fail(`unknown "claudeRead" "${topic.claudeRead}"`)
       if (!topic.url && !topic.file) fail('a source needs a "url" or a "file"')
       if (topic.url && !/^https?:\/\//.test(topic.url))
         fail(`"url" is not a web address: ${topic.url}`)
@@ -201,6 +205,14 @@ function renderIndex(map) {
   const count = (list, status) => list.filter((topic) => topic.status === status).length
   const totals = (list) => statusIds.map((s) => `${ICONS[s]} ${count(list, s)} ${s}`).join(' · ')
   const concepts = map.topics.filter(isConcept)
+  const readings = Object.entries(map.claudeReadings)
+  const claudeRead = (topic) => (topic.claudeRead ? map.claudeReadings[topic.claudeRead].title : '')
+  const readTotals = readings
+    .map(
+      ([id, { title }]) =>
+        `${sources.filter((s) => s.claudeRead === id).length} ${title.toLowerCase()}`,
+    )
+    .join(', ')
 
   const lines = [
     '# Topic map',
@@ -211,7 +223,7 @@ function renderIndex(map) {
     'one. Use it to look up a term, to find what to read, or to pick what to explore next.',
     '',
     `- **${concepts.length} concepts:** ${totals(concepts)}`,
-    `- **${sources.length} sources:** ${totals(sources)}`,
+    `- **${sources.length} sources:** ${totals(sources)} · read by Claude: ${readTotals}`,
     '',
     '| | Status | What it means |',
     '| --- | --- | --- |',
@@ -219,6 +231,13 @@ function renderIndex(map) {
       const { title, description } = map.statuses[status]
       return `| ${ICONS[status]} | ${title} | ${description} |`
     }),
+    '',
+    'The status is what the user knows. For sources, a separate column says what Claude has read:',
+    '',
+    '| Claude read | What it means |',
+    '| --- | --- |',
+    ...readings.map(([, { title, description }]) => `| ${title} | ${description} |`),
+    '| *(empty)* | Not opened by Claude, or not recorded |',
   ]
 
   const byTitle = (a, b) => a.title.localeCompare(b.title)
@@ -244,8 +263,11 @@ function renderIndex(map) {
 
     const areaSources = inArea.filter((topic) => !isConcept(topic))
     if (areaSources.length > 0) {
-      lines.push('', '| | Source | Kind | What it gives us | About | First cited in |')
-      lines.push('| --- | --- | --- | --- | --- | --- |')
+      lines.push(
+        '',
+        '| | Source | Kind | What it gives us | About | First cited in | Claude read |',
+        '| --- | --- | --- | --- | --- | --- | --- |',
+      )
       for (const topic of areaSources) {
         const by = [topic.authors, topic.year].filter(Boolean).join(', ')
         // A source keeps the link to the original; our page, when there is one, comes after.
@@ -254,7 +276,8 @@ function renderIndex(map) {
         const source = `${title}${ours}${by ? `<br>*${cell(by)}*` : ''}${credit(topic)}`
         const about = topic.about.map((id) => cell(byId.get(id).title)).join(', ')
         const kind = map.kinds[topic.kind].title
-        const row = [source, kind, cell(topic.summary), about, reference(topic.citedIn[0])]
+        const firstCited = reference(topic.citedIn[0])
+        const row = [source, kind, cell(topic.summary), about, firstCited, claudeRead(topic)]
         lines.push(`| ${ICONS[topic.status]} | ${row.join(' | ')} |`)
       }
     }
