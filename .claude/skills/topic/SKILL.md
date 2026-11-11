@@ -63,7 +63,9 @@ Every topic:
 - `partOf`: the bigger topic it belongs to, one at most: a concept inside a concept, a source inside a
   source (a file inside an engine's repo).
 - `related`: the few topics worth visiting next from here. Once per pair is enough.
-- `page`: the theory page, reading notes or WebGPU guide that covers it in depth.
+- `page`: the theory page, reading notes or WebGPU guide that covers it in depth. It can be a whole
+  file or one section of it (`docs/topics/integration.md#substeps`), so several topics can share a
+  page. The check makes sure the section exists.
 
 Only for concepts: `code`, the files where FORCE uses it.
 
@@ -78,13 +80,19 @@ Only for sources:
 
 ### Status
 
-| Status | A concept | A source |
-| --- | --- | --- |
-| `mentioned` | We met the name, in chat, code or docs | We know it exists, or read only its index |
-| `seen` | We explained what it is and why it matters | We opened it and checked what we cite |
-| `studied` | We studied it from verified sources | We read it in full |
+The status says what the user knows, not what the docs contain. Each level is a question to ask:
 
-Be honest: the map is only useful if the statuses mean what they say. A status only goes up, and
+| Status | The test, for a concept | For a source |
+| --- | --- | --- |
+| `mentioned` | "I have heard the name." | We know it exists, or read only its index |
+| `seen` | "I can say in two sentences what it is and why it exists." | We opened it and checked what we cite |
+| `studied` | "I can explain how it works, with an example, and when it fails." | We read it in full |
+
+`studied` also needs a page of ours, written together: writing it is the last step of studying, and
+it makes the status checkable. A studied source points to the page where we digest it: its reading
+notes, or the theory page built on it.
+
+Be honest: the map is only useful if the statuses mean what they say. A status never goes down, and
 `studied` always comes with a `page`: the check enforces it.
 
 ### Keeping it up to date
@@ -93,10 +101,23 @@ Be honest: the map is only useful if the statuses mean what they say. A status o
   only in chat, name it in the logbook chapter of the step and cite that chapter.
 - **It goes one level deeper:** raise its status, and add the new place to `citedIn`.
 
+### When a studied topic grows
+
+Studying never really ends, so pages stay alive:
+
+- **A new detail or a better explanation:** update the page and its "Updated" date, and add the source
+  to the page and to the map, with the topic in its `about`.
+- **A new idea that needs its own explanation:** a new topic on the map, `partOf` the studied one,
+  starting as `mentioned` or `seen`, linked from the page. The parent stays `studied`: depth grows as
+  new branches, not as a higher status.
+- **Something we had wrong:** fix the page, and tell it in the logbook: that is where the learning is.
+- **The page outgrows 100 lines:** split it, one topic per page.
+
 What goes on the map: concepts of physics, math, GPU programming and our method, and everything worth
 reading or watching about them. Project tooling stays out.
 
-Then run `npm run topics`: it checks the map and rewrites `docs/topics/README.md`, the readable index.
+Then run `npm run topics`: it formats the map, checks it and rewrites `docs/topics/README.md`, the
+readable index.
 Never edit that file by hand: `npm run lint` fails if it is out of date. A missing local copy is only a
 warning, since `library/` is not in git.
 
@@ -110,7 +131,7 @@ Create `docs/topics/<id>.md`, with the same id as the map:
 ```markdown
 # Title
 
-*Theory · N min read · [Topic map](./README.md)*
+*Theory · N min read · Updated <date> · [Topic map](./README.md)*
 
 **In short:** two lines at most.
 
@@ -129,9 +150,15 @@ What parallelizes well, what does not, and why.
 ## In FORCE
 What we do or plan to do, with links to the code. "Not yet" is a fine answer.
 
+## Check yourself
+Three questions that match the `studied` test: how it works, an example, when it fails.
+
 ## Sources
-Only sources we opened, linked to the map, with what each one gave us.
+Only sources we opened, with what each one gave us.
 ```
+
+When a page shows numbers, keep the script that produces them next to it (`docs/topics/<id>.mjs`, run
+with `node`), so anyone can check them and play with the constants.
 
 ## Reading notes
 

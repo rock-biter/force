@@ -43,7 +43,7 @@
     "typecheck": "tsc",
     "lint": "biome check . && node scripts/topics.mjs --check",
     "format": "biome check --write .",
-    "topics": "node scripts/topics.mjs",
+    "topics": "biome format --write docs/topics/topics.json && node scripts/topics.mjs",
     "prepublishOnly": "npm run lint && npm run typecheck && npm run test && npm run build"
   },
   "devDependencies": {

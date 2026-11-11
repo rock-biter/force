@@ -3,15 +3,15 @@
   "statuses": {
     "mentioned": {
       "title": "Mentioned",
-      "description": "Only cited so far: still to explore"
+      "description": "Only the name so far: still to explore"
     },
     "seen": {
       "title": "Seen",
-      "description": "We know what it is: explained in a few lines, or opened to check what we cite"
+      "description": "We can say what it is and why it exists, in two sentences"
     },
     "studied": {
       "title": "Studied",
-      "description": "Studied in depth: it has its own page"
+      "description": "We can explain how it works, with an example, and when it fails: it has a page of ours"
     }
   },
   "areas": {
@@ -100,10 +100,11 @@
       "title": "Timestep",
       "summary": "The jump in time of each step, often 1/60 of a second",
       "area": "physics",
-      "status": "seen",
+      "status": "studied",
       "partOf": "simulation-step",
       "related": ["integration"],
-      "citedIn": ["docs/logbook/001-the-flip-book.md", "box2d-hello", "chatgpt-research"]
+      "citedIn": ["docs/logbook/001-the-flip-book.md", "box2d-hello", "chatgpt-research"],
+      "page": "docs/topics/fixed-timestep.md"
     },
     {
       "id": "fixed-timestep",
@@ -111,10 +112,11 @@
       "title": "Fixed timestep",
       "summary": "Keeping every step the same length, and spending the time of each frame in equal steps",
       "area": "physics",
-      "status": "seen",
+      "status": "studied",
       "partOf": "timestep",
       "related": ["tunneling"],
-      "citedIn": ["docs/logbook/001-the-flip-book.md", "fix-your-timestep", "chatgpt-research"]
+      "citedIn": ["docs/logbook/001-the-flip-book.md", "fix-your-timestep", "chatgpt-research"],
+      "page": "docs/topics/fixed-timestep.md"
     },
     {
       "id": "force",
@@ -236,11 +238,12 @@
       "id": "integration",
       "kind": "concept",
       "title": "Integration",
-      "summary": "The calculation that updates position from velocity",
+      "summary": "Moving a simulation forward in small steps, updating velocity and position from the current state",
       "area": "physics",
-      "status": "seen",
+      "status": "studied",
       "partOf": "simulation-step",
-      "citedIn": ["docs/logbook/001-the-flip-book.md", "chatgpt-research"]
+      "citedIn": ["docs/logbook/001-the-flip-book.md", "chatgpt-research"],
+      "page": "docs/topics/integration.md"
     },
     {
       "id": "particle",
@@ -470,12 +473,13 @@
       "id": "implicit-integration",
       "kind": "concept",
       "title": "Implicit integration",
-      "summary": "A way of taking a step that stays stable even with stiff springs or long steps",
+      "summary": "Uses the force at the end of the step: stable with stiff springs, but it must solve equations and it drains energy",
       "area": "physics",
-      "status": "mentioned",
+      "status": "studied",
       "partOf": "integration",
       "related": ["spring"],
-      "citedIn": ["physically-based-modeling"]
+      "citedIn": ["physically-based-modeling", "integration-basics"],
+      "page": "docs/topics/integration.md#implicit-euler"
     },
     {
       "id": "eulerian-fluid",
@@ -542,10 +546,11 @@
       "title": "Explicit Euler",
       "summary": "Move with the old velocity, then update the velocity: simple, but it makes oscillations gain energy",
       "area": "physics",
-      "status": "seen",
+      "status": "studied",
       "partOf": "integration",
       "related": ["semi-implicit-euler"],
-      "citedIn": ["chatgpt-research"]
+      "citedIn": ["chatgpt-research", "integration-basics"],
+      "page": "docs/topics/integration.md#explicit-euler"
     },
     {
       "id": "semi-implicit-euler",
@@ -553,9 +558,10 @@
       "title": "Semi-implicit Euler",
       "summary": "Update the velocity first, then move with the new one: a small swap that keeps a spring's energy bounded when the step is small enough",
       "area": "physics",
-      "status": "seen",
+      "status": "studied",
       "partOf": "integration",
-      "citedIn": ["chatgpt-research"]
+      "citedIn": ["chatgpt-research", "integration-basics", "box2d-solver"],
+      "page": "docs/topics/integration.md#semi-implicit-euler"
     },
     {
       "id": "velocity-verlet",
@@ -573,9 +579,10 @@
       "title": "Numerical stability",
       "summary": "Whether a simulation's errors stay small or grow until it explodes: not the same thing as accuracy",
       "area": "physics",
-      "status": "seen",
+      "status": "studied",
       "related": ["explicit-euler", "stiffness"],
-      "citedIn": ["chatgpt-research"]
+      "citedIn": ["chatgpt-research"],
+      "page": "docs/topics/integration.md#when-it-fails-stability"
     },
     {
       "id": "stiffness",
@@ -583,9 +590,10 @@
       "title": "Stiffness",
       "summary": "How strongly a spring or constraint resists: the stiffer it is, the faster it oscillates and the smaller the safe timestep",
       "area": "physics",
-      "status": "seen",
+      "status": "studied",
       "related": ["spring", "substepping"],
-      "citedIn": ["chatgpt-research"]
+      "citedIn": ["chatgpt-research"],
+      "page": "docs/topics/integration.md#the-step-limit"
     },
     {
       "id": "substepping",
@@ -593,10 +601,11 @@
       "title": "Substepping",
       "summary": "Splitting each step into smaller ones, to follow fast motion and stiff constraints",
       "area": "physics",
-      "status": "seen",
+      "status": "studied",
       "partOf": "timestep",
       "related": ["numerical-stability"],
-      "citedIn": ["chatgpt-research"]
+      "citedIn": ["chatgpt-research"],
+      "page": "docs/topics/integration.md#substeps"
     },
     {
       "id": "accumulator",
@@ -604,9 +613,10 @@
       "title": "Time accumulator",
       "summary": "Keeps the real time not simulated yet, and spends it in fixed steps",
       "area": "physics",
-      "status": "seen",
+      "status": "studied",
       "partOf": "fixed-timestep",
-      "citedIn": ["chatgpt-research"]
+      "citedIn": ["chatgpt-research"],
+      "page": "docs/topics/fixed-timestep.md#the-accumulator"
     },
     {
       "id": "render-interpolation",
@@ -614,9 +624,10 @@
       "title": "Render interpolation",
       "summary": "Drawing a blend of the last two physics states, so motion looks smooth between steps",
       "area": "physics",
-      "status": "seen",
+      "status": "studied",
       "partOf": "fixed-timestep",
-      "citedIn": ["chatgpt-research"]
+      "citedIn": ["chatgpt-research"],
+      "page": "docs/topics/fixed-timestep.md#render-interpolation"
     },
     {
       "id": "spiral-of-death",
@@ -624,9 +635,10 @@
       "title": "Spiral of death",
       "summary": "When catching up on physics takes so long that every frame falls further behind",
       "area": "physics",
-      "status": "seen",
+      "status": "studied",
       "partOf": "fixed-timestep",
-      "citedIn": ["chatgpt-research"]
+      "citedIn": ["chatgpt-research"],
+      "page": "docs/topics/fixed-timestep.md#the-spiral-of-death"
     },
     {
       "id": "newtons-second-law",
@@ -1252,6 +1264,57 @@
       "citedIn": ["chatgpt-research"]
     },
     {
+      "id": "symplectic-integrator",
+      "kind": "concept",
+      "title": "Symplectic integrator",
+      "summary": "An integrator that keeps energy steady on average over long runs, such as semi-implicit Euler or Verlet",
+      "area": "physics",
+      "status": "seen",
+      "partOf": "integration",
+      "citedIn": ["integration-basics"]
+    },
+    {
+      "id": "rk4",
+      "kind": "concept",
+      "title": "Runge-Kutta 4 (RK4)",
+      "summary": "Samples the rate of change four times per step: very accurate, but four times the work, and it slowly loses energy",
+      "area": "physics",
+      "status": "seen",
+      "partOf": "integration",
+      "citedIn": ["integration-basics"]
+    },
+    {
+      "id": "semi-fixed-timestep",
+      "kind": "concept",
+      "title": "Semi-fixed timestep",
+      "summary": "Splitting long frames into steps no longer than a maximum: safer, but steps still differ in length",
+      "area": "physics",
+      "status": "seen",
+      "partOf": "fixed-timestep",
+      "citedIn": ["fix-your-timestep"]
+    },
+    {
+      "id": "particle-rigid-bodies",
+      "kind": "concept",
+      "title": "Particle-based rigid bodies",
+      "summary": "A rigid body's shape approximated by spheres, so every collision becomes a cheap test between spheres",
+      "area": "physics",
+      "status": "seen",
+      "partOf": "rigid-body",
+      "related": ["mesh-sampling", "uniform-grid"],
+      "citedIn": ["gpu-gems-rigid-bodies", "docs/logbook/005-the-first-pages.md"]
+    },
+    {
+      "id": "discrete-element-method",
+      "kind": "concept",
+      "title": "Discrete element method (DEM)",
+      "summary": "Particles that push each other apart when they overlap, like small springs, with dampers to absorb the bounce",
+      "area": "physics",
+      "status": "mentioned",
+      "related": ["particle-rigid-bodies", "granular-material"],
+      "citedIn": ["gpu-gems-rigid-bodies"]
+    },
+    {
       "id": "box2d",
       "kind": "project",
       "title": "Box2D",
@@ -1295,7 +1358,7 @@
       "area": "physics",
       "status": "seen",
       "partOf": "box2d",
-      "about": ["solver"],
+      "about": ["solver", "semi-implicit-euler"],
       "citedIn": ["docs/logbook/001-the-flip-book.md"],
       "url": "https://github.com/erincatto/box2d/blob/main/src/solver.c"
     },
@@ -1328,17 +1391,19 @@
       "title": "Fix Your Timestep!",
       "summary": "Why the step must be fixed, and how to separate it from frames",
       "area": "physics",
-      "status": "seen",
+      "status": "studied",
       "about": [
         "fixed-timestep",
         "timestep",
         "accumulator",
         "render-interpolation",
-        "spiral-of-death"
+        "spiral-of-death",
+        "semi-fixed-timestep"
       ],
       "citedIn": ["docs/logbook/001-the-flip-book.md", "chatgpt-research"],
       "url": "https://gafferongames.com/post/fix_your_timestep/",
-      "authors": "Glenn Fiedler"
+      "authors": "Glenn Fiedler",
+      "page": "docs/topics/fixed-timestep.md"
     },
     {
       "id": "catto-publications",
@@ -1670,14 +1735,22 @@
       "id": "gpu-gems-rigid-bodies",
       "kind": "book",
       "title": "Real-Time Rigid Body Simulation on GPUs",
-      "summary": "Rigid bodies on the GPU: mass, angular momentum, inertia tensor and quaternions",
+      "summary": "Rigid bodies built from particles: collisions found on a uniform grid and pushed apart with springs and dampers, all on the GPU",
       "area": "gpu",
-      "status": "mentioned",
+      "status": "seen",
       "partOf": "gpu-gems-3",
-      "about": ["rigid-body", "inertia-tensor", "gpu-parallelism"],
-      "citedIn": ["chatgpt-research"],
+      "about": [
+        "rigid-body",
+        "inertia-tensor",
+        "gpu-parallelism",
+        "particle-rigid-bodies",
+        "uniform-grid",
+        "discrete-element-method"
+      ],
+      "citedIn": ["chatgpt-research", "docs/logbook/005-the-first-pages.md"],
       "url": "https://developer.nvidia.com/gpugems/gpugems3/part-v-physics-simulation/chapter-29-real-time-rigid-body-simulation-gpus",
-      "year": 2007
+      "year": 2007,
+      "authors": "Takahiro Harada"
     },
     {
       "id": "integration-basics",
@@ -1685,11 +1758,22 @@
       "title": "Integration Basics",
       "summary": "How numerical integrators behave, explained for game developers",
       "area": "physics",
-      "status": "mentioned",
-      "about": ["integration", "numerical-stability"],
+      "status": "studied",
+      "about": [
+        "integration",
+        "numerical-stability",
+        "explicit-euler",
+        "semi-implicit-euler",
+        "implicit-integration",
+        "rk4",
+        "symplectic-integrator",
+        "stiffness",
+        "hookes-law"
+      ],
       "citedIn": ["chatgpt-research"],
       "url": "https://gafferongames.com/post/integration_basics/",
-      "authors": "Glenn Fiedler"
+      "authors": "Glenn Fiedler",
+      "page": "docs/topics/integration.md"
     },
     {
       "id": "jolt-architecture",

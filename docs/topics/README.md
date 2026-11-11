@@ -5,14 +5,14 @@
 Everything we have met while building FORCE, concepts and sources, and how far we went with each
 one. Use it to look up a term, to find what to read, or to pick what to explore next.
 
-- **115 concepts:** ● 0 studied · ◐ 44 seen · ○ 71 mentioned
-- **64 sources:** ● 0 studied · ◐ 10 seen · ○ 54 mentioned
+- **120 concepts:** ● 12 studied · ◐ 37 seen · ○ 71 mentioned
+- **64 sources:** ● 2 studied · ◐ 10 seen · ○ 52 mentioned
 
 | | Status | What it means |
 | --- | --- | --- |
-| ● | Studied | Studied in depth: it has its own page |
-| ◐ | Seen | We know what it is: explained in a few lines, or opened to check what we cite |
-| ○ | Mentioned | Only cited so far: still to explore |
+| ● | Studied | We can explain how it works, with an example, and when it fails: it has a page of ours |
+| ◐ | Seen | We can say what it is and why it exists, in two sentences |
+| ○ | Mentioned | Only the name so far: still to explore |
 
 ## Physics
 
@@ -36,11 +36,12 @@ How things move, collide and stay together.
 | ○ | Contact manifold | All the contact points between two touching shapes, such as the four corners of a box resting on the floor |  | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |
 | ○ | Continuous collision detection | Checking the whole path between two steps, so fast objects cannot tunnel through walls | Collision detection | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |
 | ○ | Destruction | Breaking objects into pieces while the game runs |  | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |
+| ○ | Discrete element method (DEM) | Particles that push each other apart when they overlap, like small springs, with dampers to absorb the bounce |  | [Real-Time Rigid Body Simulation on GPUs](https://developer.nvidia.com/gpugems/gpugems3/part-v-physics-simulation/chapter-29-real-time-rigid-body-simulation-gpus) |
 | ○ | Distance constraint | A rule that keeps two points at a fixed distance: the building block of chains, ropes and cloth | Constraint | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |
 | ○ | EPA | Run after GJK when two shapes overlap, to find how deep and in which direction | Narrow phase | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |
-| ◐ | Explicit Euler | Move with the old velocity, then update the velocity: simple, but it makes oscillations gain energy | Integration | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |
+| ● | **[Explicit Euler](integration.md#explicit-euler)** | Move with the old velocity, then update the velocity: simple, but it makes oscillations gain energy | Integration | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |
 | ○ | Finite element method (FEM) | Splitting a solid into small pieces, such as tetrahedra, and working out how each one deforms |  | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |
-| ◐ | Fixed timestep | Keeping every step the same length, and spending the time of each frame in equal steps | Timestep | [001](../logbook/001-the-flip-book.md) |
+| ● | **[Fixed timestep](fixed-timestep.md)** | Keeping every step the same length, and spending the time of each frame in equal steps | Timestep | [001](../logbook/001-the-flip-book.md) |
 | ○ | FLIP water | Water simulated with particles that carry the motion, plus a grid that keeps it from compressing | Fluid | [Ten Minute Physics](https://matthias-research.github.io/pages/tenMinutePhysics/index.html) |
 | ○ | Fluid | Water, smoke and anything else that flows instead of keeping its shape |  | [docs index](../README.md) |
 | ◐ | Forces | Pushes such as gravity or wind: they change velocity, and change a light object more than a heavy one | Simulation step | [001](../logbook/001-the-flip-book.md) |
@@ -51,10 +52,10 @@ How things move, collide and stay together.
 | ◐ | Gravity | The force that pulls everything down: on Earth it adds 9.81 m/s of downward speed every second | Forces | [001](../logbook/001-the-flip-book.md) |
 | ○ | Grid fluid (Eulerian) | A fluid simulated on a fixed grid, tracking what flows through each cell | Fluid | [Ten Minute Physics](https://matthias-research.github.io/pages/tenMinutePhysics/index.html) |
 | ◐ | Hooke's law | A spring pulls back in proportion to how far it is stretched (F = −kx) | Spring | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |
-| ○ | Implicit integration | A way of taking a step that stays stable even with stiff springs or long steps | Integration | [Physically Based Modeling: Principles and Practice](https://www.cs.cmu.edu/~baraff/sigcourse/) |
+| ● | **[Implicit integration](integration.md#implicit-euler)** | Uses the force at the end of the step: stable with stiff springs, but it must solve equations and it drains energy | Integration | [Physically Based Modeling: Principles and Practice](https://www.cs.cmu.edu/~baraff/sigcourse/) |
 | ○ | Impulse-based dynamics | Resolving collisions by changing velocities at once, with an instant kick called an impulse |  | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |
 | ◐ | Inertia tensor | The moment of inertia in 3D: a 3×3 matrix, because the resistance to spinning changes with the axis | Moment of inertia | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |
-| ◐ | Integration | The calculation that updates position from velocity | Simulation step | [001](../logbook/001-the-flip-book.md) |
+| ● | **[Integration](integration.md)** | Moving a simulation forward in small steps, updating velocity and position from the current state | Simulation step | [001](../logbook/001-the-flip-book.md) |
 | ◐ | Inverse mass | Storing 1/m instead of m: no divisions in hot loops, and zero means a body that never moves | Rigid body | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |
 | ○ | Islands | Groups of bodies that touch each other, solved apart from the rest | Solver | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |
 | ◐ | Iterative solver | Fixing one constraint at a time, going over all of them a few rounds, and stopping when it looks right | Solver | [001](../logbook/001-the-flip-book.md) |
@@ -67,19 +68,22 @@ How things move, collide and stay together.
 | ◐ | Narrow phase | A precise check, on the real shapes, of the pairs that survived the broad phase | Collision detection | [001](../logbook/001-the-flip-book.md) |
 | ○ | Neighbour search | Finding the particles near each particle: a major cost of particle fluids |  | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |
 | ◐ | Newton's second law | Force equals mass times acceleration (F = ma): the same push moves a light object more | Forces | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |
-| ◐ | Numerical stability | Whether a simulation's errors stay small or grow until it explodes: not the same thing as accuracy |  | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |
+| ● | **[Numerical stability](integration.md#when-it-fails-stability)** | Whether a simulation's errors stay small or grow until it explodes: not the same thing as accuracy |  | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |
 | ◐ | Orientation | How a body is rotated, stored as a quaternion and updated each step by a small rotation | Rigid body | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |
 | ◐ | Particle | A point that moves but has no size or shape: the simplest thing to simulate |  | [000](../logbook/000-the-launch.md) |
+| ◐ | Particle-based rigid bodies | A rigid body's shape approximated by spheres, so every collision becomes a cheap test between spheres | Rigid body | [Real-Time Rigid Body Simulation on GPUs](https://developer.nvidia.com/gpugems/gpugems3/part-v-physics-simulation/chapter-29-real-time-rigid-body-simulation-gpus) |
 | ◐ | Physics engine | A program that works out how objects move, one small step at a time |  | [001](../logbook/001-the-flip-book.md) |
 | ◐ | Plausibility over accuracy | Games need motion that looks right, fast and stable, more than exact physics | Physics engine | [001](../logbook/001-the-flip-book.md) |
 | ○ | Position based dynamics (PBD) | Moving points straight to where the constraints want them, instead of going through forces: simple and stable |  | [Ten Minute Physics](https://matthias-research.github.io/pages/tenMinutePhysics/index.html) |
 | ○ | Position based fluids (PBF) | Fluids kept from compressing with position constraints, the PBD way | Fluid | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |
 | ○ | Raycast | Shooting a line into the world to find what it hits first, for aiming, picking or line of sight |  | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |
-| ◐ | Render interpolation | Drawing a blend of the last two physics states, so motion looks smooth between steps | Fixed timestep | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |
+| ● | **[Render interpolation](fixed-timestep.md#render-interpolation)** | Drawing a blend of the last two physics states, so motion looks smooth between steps | Fixed timestep | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |
 | ○ | Restitution | How bouncy a collision is: how much speed comes back after the impact |  | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |
 | ◐ | Rigid body | An object that moves and rotates but never bends, like a box or a ball |  | [docs index](../README.md) |
+| ◐ | Runge-Kutta 4 (RK4) | Samples the rate of change four times per step: very accurate, but four times the work, and it slowly loses energy | Integration | [Integration Basics](https://gafferongames.com/post/integration_basics/) |
 | ○ | Self-collision | Cloth or a soft body hitting itself | Cloth | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |
-| ◐ | Semi-implicit Euler | Update the velocity first, then move with the new one: a small swap that keeps a spring's energy bounded when the step is small enough | Integration | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |
+| ◐ | Semi-fixed timestep | Splitting long frames into steps no longer than a maximum: safer, but steps still differ in length | Fixed timestep | [Fix Your Timestep!](https://gafferongames.com/post/fix_your_timestep/) |
+| ● | **[Semi-implicit Euler](integration.md#semi-implicit-euler)** | Update the velocity first, then move with the new one: a small swap that keeps a spring's energy bounded when the step is small enough | Integration | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |
 | ○ | Sequential impulses (PGS) | Applying impulses to one contact or joint at a time, over several rounds: the classic rigid body solver | Iterative solver | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |
 | ○ | Shape matching | Pulling a group of particles back toward the best rigid fit of their original shape |  | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |
 | ○ | Signed distance field collision | Describing a shape by the distance from it at every point of space, so a contact test becomes a lookup | Narrow phase | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |
@@ -90,14 +94,15 @@ How things move, collide and stay together.
 | ◐ | Solver | The part of the engine that corrects velocities so constraints are obeyed | Simulation step | [001](../logbook/001-the-flip-book.md) |
 | ○ | Spatial hashing | A uniform grid stored in a hash table, so it can cover endless space with little memory | Broad phase | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |
 | ○ | SPH | Smoothed particle hydrodynamics: a fluid's density and pressure at each particle, estimated from its neighbours | Fluid | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |
-| ◐ | Spiral of death | When catching up on physics takes so long that every frame falls further behind | Fixed timestep | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |
+| ● | **[Spiral of death](fixed-timestep.md#the-spiral-of-death)** | When catching up on physics takes so long that every frame falls further behind | Fixed timestep | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |
 | ◐ | Spring | A link that keeps two points near a rest distance, pulling when stretched and pushing when squeezed |  | [docs index](../README.md) |
-| ◐ | Stiffness | How strongly a spring or constraint resists: the stiffer it is, the faster it oscillates and the smaller the safe timestep |  | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |
-| ◐ | Substepping | Splitting each step into smaller ones, to follow fast motion and stiff constraints | Timestep | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |
+| ● | **[Stiffness](integration.md#the-step-limit)** | How strongly a spring or constraint resists: the stiffer it is, the faster it oscillates and the smaller the safe timestep |  | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |
+| ● | **[Substepping](integration.md#substeps)** | Splitting each step into smaller ones, to follow fast motion and stiff constraints | Timestep | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |
 | ○ | Sweep and prune | A broad phase that sorts objects along an axis, so only neighbours in the list need checking | Broad phase | [Ten Minute Physics](https://matthias-research.github.io/pages/tenMinutePhysics/index.html) |
+| ◐ | Symplectic integrator | An integrator that keeps energy steady on average over long runs, such as semi-implicit Euler or Verlet | Integration | [Integration Basics](https://gafferongames.com/post/integration_basics/) |
 | ○ | TGS solver | PhysX's temporal Gauss-Seidel solver, designed to converge better with complex constraints | Solver | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |
-| ◐ | Time accumulator | Keeps the real time not simulated yet, and spends it in fixed steps | Fixed timestep | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |
-| ◐ | Timestep | The jump in time of each step, often 1/60 of a second | Simulation step | [001](../logbook/001-the-flip-book.md) |
+| ● | **[Time accumulator](fixed-timestep.md#the-accumulator)** | Keeps the real time not simulated yet, and spends it in fixed steps | Fixed timestep | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |
+| ● | **[Timestep](fixed-timestep.md)** | The jump in time of each step, often 1/60 of a second | Simulation step | [001](../logbook/001-the-flip-book.md) |
 | ◐ | Torque | The turning effect of a force: the same push turns more the farther it is from the center (τ = r × F) | Rigid body | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |
 | ◐ | Tunneling | A fast object passing through a wall between two steps, without ever touching it | Collision detection | [001](../logbook/001-the-flip-book.md) |
 | ○ | Two-way coupling | Different materials pushing on each other both ways, like a ball floating on water |  | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |
@@ -119,15 +124,15 @@ How things move, collide and stay together.
 | ◐ | [Box2D, Hello Box2D](https://github.com/erincatto/box2d/blob/main/docs/hello.md) | Documentation | The flip book comparison, and the 1/60 second step | Physics engine, Timestep | [001](../logbook/001-the-flip-book.md) |
 | ◐ | [Box2D, physics_world.c](https://github.com/erincatto/box2d/blob/main/src/physics_world.c) | Source code | The real order of the steps: broad phase, collisions, solver | Simulation step | [001](../logbook/001-the-flip-book.md) |
 | ○ | [Box2D, Simulation](https://github.com/erincatto/box2d/blob/main/docs/simulation.md) | Documentation | Box2D's guide to the world and its step, including substeps | Substepping, Soft Step | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |
-| ◐ | [Box2D, solver.c](https://github.com/erincatto/box2d/blob/main/src/solver.c) | Source code | The internal stages of the solver | Solver | [001](../logbook/001-the-flip-book.md) |
+| ◐ | [Box2D, solver.c](https://github.com/erincatto/box2d/blob/main/src/solver.c) | Source code | The internal stages of the solver | Solver, Semi-implicit Euler | [001](../logbook/001-the-flip-book.md) |
 | ○ | [Bullet Physics](https://github.com/bulletphysics/bullet3) | Project | A long-lived open source C++ library: rigid bodies, collision detection and soft bodies | Rigid body, Collision detection, Soft body | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |
 | ○ | [cannon-es](https://github.com/pmndrs/cannon-es) | Project | A 3D physics engine written in JavaScript | Rigid body | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |
 | ○ | [Detailed Rigid Body Simulation with Extended Position Based Dynamics](https://diglib.eg.org/items/114b20b0-8543-4c54-bd04-42ee60c71946)<br>*Matthias Müller, Miles Macklin, Nuttapong Chentanez, Stefan Jeschke, Tae-Yong Kim, 2020* | Paper | Rigid bodies, contacts and joints solved with XPBD, with implementation details | XPBD, Rigid body, Joint | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |
 | ○ | [Erin Catto, publications](https://box2d.org/publications/)<br>*Erin Catto* | Talk | GDC talks by the creator of Box2D on solvers and collisions | Solver, Collision detection | [001](../logbook/001-the-flip-book.md) |
-| ◐ | [Fix Your Timestep!](https://gafferongames.com/post/fix_your_timestep/)<br>*Glenn Fiedler* | Article | Why the step must be fixed, and how to separate it from frames | Fixed timestep, Timestep, Time accumulator, Render interpolation, Spiral of death | [001](../logbook/001-the-flip-book.md) |
+| ● | [Fix Your Timestep!](https://gafferongames.com/post/fix_your_timestep/) · **[our page](fixed-timestep.md)**<br>*Glenn Fiedler* | Article | Why the step must be fixed, and how to separate it from frames | Fixed timestep, Timestep, Time accumulator, Render interpolation, Spiral of death, Semi-fixed timestep | [001](../logbook/001-the-flip-book.md) |
 | ○ | [Godot](https://godotengine.org/) | Project | Open source game engine with its own physics, and alternative backends | Physics engine | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |
 | ○ | [Havok](https://www.havok.com/) | Project | A commercial physics engine, available as an option in Unity | Physics engine | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |
-| ○ | [Integration Basics](https://gafferongames.com/post/integration_basics/)<br>*Glenn Fiedler* | Article | How numerical integrators behave, explained for game developers | Integration, Numerical stability | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |
+| ● | [Integration Basics](https://gafferongames.com/post/integration_basics/) · **[our page](integration.md)**<br>*Glenn Fiedler* | Article | How numerical integrators behave, explained for game developers | Integration, Numerical stability, Explicit Euler, Semi-implicit Euler, Implicit integration, Runge-Kutta 4 (RK4), Symplectic integrator, Stiffness, Hooke's law | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |
 | ○ | [Jolt Physics](https://github.com/jrouwe/JoltPhysics) | Project | A fast C++ engine for rigid bodies in games | Rigid body, Bounding volume hierarchy (BVH), Sequential impulses (PGS), Job system | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |
 | ○ | [Jolt Physics, Architecture](https://github.com/jrouwe/JoltPhysics/blob/master/Docs/Architecture.md) | Documentation | How Jolt is built: AABB trees, GJK and EPA, sequential impulses, islands, sleeping and jobs | Bounding volume hierarchy (BVH), GJK, EPA, Sequential impulses (PGS), Warm starting, Islands, Sleeping, Job system | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |
 | ○ | [JoltPhysics.js](https://github.com/jrouwe/JoltPhysics.js) | Project | Jolt compiled to WebAssembly, for the browser | Physics engine | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |
@@ -205,7 +210,7 @@ WebGPU, WGSL and how to make thousands of threads work.
 | ◐ | [Chrome, What's New in WebGPU 146](https://developer.chrome.com/blog/new-in-webgpu-146) | Documentation | Chrome 146 brings WebGPU compatibility mode to OpenGL ES 3.1 | Compatibility mode, WebGPU | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |
 | ○ | [GPU Gems 3](https://developer.nvidia.com/gpugems/gpugems3)<br>*2007* | Book | NVIDIA's free book of GPU techniques, with a whole part on physics simulation | Parallel work on the GPU | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |
 | ○ | [MDN, WebGPU API](https://developer.mozilla.org/en-US/docs/Web/API/WebGPU_API) | Documentation | A readable API reference | WebGPU | [guide skill](../../.claude/skills/guide/SKILL.md) |
-| ○ | [Real-Time Rigid Body Simulation on GPUs](https://developer.nvidia.com/gpugems/gpugems3/part-v-physics-simulation/chapter-29-real-time-rigid-body-simulation-gpus)<br>*2007* | Book | Rigid bodies on the GPU: mass, angular momentum, inertia tensor and quaternions | Rigid body, Inertia tensor, Parallel work on the GPU | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |
+| ◐ | [Real-Time Rigid Body Simulation on GPUs](https://developer.nvidia.com/gpugems/gpugems3/part-v-physics-simulation/chapter-29-real-time-rigid-body-simulation-gpus)<br>*Takahiro Harada, 2007* | Book | Rigid bodies built from particles: collisions found on a uniform grid and pushed apart with springs and dampers, all on the GPU | Rigid body, Inertia tensor, Parallel work on the GPU, Particle-based rigid bodies, Uniform grid, Discrete element method (DEM) | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |
 | ○ | [Taichi](https://github.com/taichi-dev/taichi) | Project | A language embedded in Python for writing parallel simulations that run on the GPU | Parallel work on the GPU | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |
 | ○ | [WebGPU Fundamentals](https://webgpufundamentals.org/) | Course | Step-by-step lessons | WebGPU | [002](../logbook/002-the-toolbox.md) |
 | ○ | [WebGPU on web-features](https://web-platform-dx.github.io/web-features-explorer/features/webgpu/) | Documentation | Which browsers support WebGPU | WebGPU | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |

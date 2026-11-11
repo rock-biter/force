@@ -96,8 +96,17 @@ function check(map) {
       }
     }
 
-    for (const file of [...(topic.code ?? []), ...(topic.page ? [topic.page] : [])]) {
+    for (const file of topic.code ?? []) {
       if (!fileExists(file)) fail(`file not found: ${file}`)
+    }
+
+    // A page can be a whole file, or one section of it: "docs/topics/integration.md#substeps".
+    if (topic.page) {
+      const [file, anchor] = topic.page.split('#')
+      if (!fileExists(file)) fail(`page not found: ${file}`)
+      else if (anchor && !headingAnchors(join(ROOT, file)).has(anchor)) {
+        fail(`no heading "#${anchor}" in ${file}`)
+      }
     }
 
     // The one promise the map makes: "studied" always comes with a page to read.
@@ -119,6 +128,21 @@ function check(map) {
   }
 
   return { errors, warnings }
+}
+
+// The anchors GitHub gives to the headings of a Markdown file: "## When it fails: stability"
+// becomes "#when-it-fails-stability".
+function headingAnchors(path) {
+  const headings = readFileSync(path, 'utf8').match(/^#{1,6} .+$/gm) ?? []
+  return new Set(
+    headings.map((heading) =>
+      heading
+        .replace(/^#+ /, '')
+        .toLowerCase()
+        .replace(/[^\p{L}\p{N} _-]/gu, '')
+        .replaceAll(' ', '-'),
+    ),
+  )
 }
 
 function href(file) {
@@ -202,7 +226,10 @@ function renderIndex(map) {
       lines.push('| --- | --- | --- | --- | --- | --- |')
       for (const topic of areaSources) {
         const by = [topic.authors, topic.year].filter(Boolean).join(', ')
-        const source = by ? `${name(topic)}<br>*${cell(by)}*` : name(topic)
+        // A source keeps the link to the original; our page, when there is one, comes after.
+        const title = name({ ...topic, page: undefined })
+        const ours = topic.page ? ` · **[our page](${href(topic.page)})**` : ''
+        const source = `${title}${ours}${by ? `<br>*${cell(by)}*` : ''}`
         const about = topic.about.map((id) => cell(byId.get(id).title)).join(', ')
         const kind = map.kinds[topic.kind].title
         const row = [source, kind, cell(topic.summary), about, reference(topic.citedIn[0])]
