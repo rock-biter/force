@@ -46,7 +46,9 @@ export async function startDebugViewer(options: DebugViewerOptions): Promise<voi
   camera.position.set(...position)
   const orbit = new OrbitControls(camera, renderer.domElement)
   orbit.target.set(...target)
-  orbit.update()
+  // The camera keeps gliding a little after you let go. It needs orbit.update() on every frame.
+  orbit.enableDamping = true
+  orbit.dampingFactor = 0.08
 
   window.addEventListener('resize', () => {
     camera.aspect = window.innerWidth / window.innerHeight
@@ -115,6 +117,7 @@ export async function startDebugViewer(options: DebugViewerOptions): Promise<voi
       stats.time = world.time
       stats.steps = world.stepCount
     }
+    orbit.update() // moves the camera on with the damping
     // Same queue, same order: the steps sent above run before this drawing reads the positions.
     renderer.render(scene, camera)
 

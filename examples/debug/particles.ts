@@ -17,6 +17,7 @@ import {
   max,
   normalize,
   positionGeometry,
+  pow,
   sqrt,
   storage,
   uniform,
@@ -42,11 +43,14 @@ const CORNERS = [0, 2, 0, -SQRT3, -1, 0, SQRT3, -1, 0]
 
 // Where the light comes from, in view space: up, right, and toward the camera.
 const LIGHT = normalize(vec3(0.4, 0.6, 0.7))
+// Halfway between the light and the eye, for the highlight (Blinn-Phong). The eye is taken straight
+// ahead, along +Z in view space: close enough for small spheres.
+const HALFWAY = normalize(LIGHT.add(vec3(0, 0, 1)))
 
 /** The particles of one world, drawn straight from its GPU buffer. */
 export class ParticleView {
   readonly mesh: Mesh
-  readonly color = uniform(new Color(0xe8552d))
+  readonly color = uniform(new Color(0x0031f5)) // the blue of the cover in the README
   private readonly geometry: InstancedBufferGeometry
   private readonly material: MeshBasicNodeMaterial
 
@@ -83,8 +87,11 @@ export class ParticleView {
       If(dot(disc, disc).greaterThan(1), () => {
         Discard() // outside the disc: this pixel was only part of the triangle
       })
+      // Some light everywhere (ambient), more where the surface faces the light (diffuse), and a
+      // white highlight where it mirrors the light toward the eye (specular), as in GLSL.
       const diffuse = max(dot(normal, LIGHT), 0)
-      return vec4(this.color.mul(diffuse.mul(0.75).add(0.25)), 1)
+      const specular = pow(max(dot(normal, HALFWAY), 0), 20).mul(0.45)
+      return vec4(this.color.mul(diffuse.mul(0.6).add(0.4)).add(specular), 1)
     })()
     // The depth of the sphere's surface, not of the flat triangle: like gl_FragDepth in GLSL.
     const surfaceZ = sphereCenter.z.add(normal.z.mul(radius))
