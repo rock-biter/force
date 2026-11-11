@@ -51,7 +51,8 @@ it into two chapters.
 - **Reader test.** Reread it as someone who knows nothing: is every technical term explained the
   first time it appears? For a study chapter, have an agent with no context read it.
 - **Index.** Update `docs/README.md`: the new chapter and the stop on the route.
-- **Reference.** Add new terms to `docs/glossary.md` and sources to `docs/sources.md`.
+- **Map.** Add every concept and source the step touched to the topic map, or raise its status
+  (`topic` skill).
 
 ## "Where did we leave off?"
 

@@ -77,5 +77,6 @@ Stay under 80 lines, about 4 minutes of reading. If it does not fit, it is two c
 
 - **Reader test.** Have an agent with no context read it, as a JavaScript developer new to WebGPU.
 - **Index.** Update `docs/guides/README.md`.
-- **Reference.** Add new terms to `docs/glossary.md` and sources to `docs/sources.md`.
+- **Map.** Set the concept to `studied`, with this guide as its `page`, and add new sources (`topic`
+  skill).
 - **Logbook.** Link the guide from the chapter of the step that produced it.

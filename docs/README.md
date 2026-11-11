@@ -9,12 +9,12 @@ This is where we tell how FORCE gets built, one step at a time. If you are new h
 | 000 | [The Launch](./logbook/000-the-launch.md) | From an empty folder to the first 1000 particles on the GPU |
 | 001 | [The Flip Book](./logbook/001-the-flip-book.md) | What a physics engine does, in five questions |
 | 002 | [The Toolbox](./logbook/002-the-toolbox.md) | The rules and skills for working with Claude |
+| 003 | [The Map](./logbook/003-the-map.md) | Keeping track of what we studied and what we only heard of |
 
 ## For reference
 
+- [Topic map](./topics/README.md): every concept and source we have met, and how far we went with each one
 - [WebGPU mini guides](./guides/README.md): one concept each, built from our code
-- [Glossary](./glossary.md): technical terms in plain words
-- [Sources](./sources.md): papers, talks and code, with how much of each we actually read
 
 ## Study route
 

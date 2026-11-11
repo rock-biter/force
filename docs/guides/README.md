@@ -16,4 +16,5 @@ The first series comes from [`examples/hello-compute`](../../examples/hello-comp
 - [ ] How do you prepare a shader to run? (pipelines)
 - [ ] How does a shader find its data? (bind groups)
 - [ ] How do you make thousands of threads work? (dispatch and workgroups)
+- [ ] When does the GPU actually run? (commands and queue)
 - [ ] How do you get the results back? (readback)

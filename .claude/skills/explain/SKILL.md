@@ -25,4 +25,5 @@ After "I didn't get it", change the example. Repeating the same words does not h
 
 ## Afterwards
 
-If the term is new, add it to `docs/glossary.md`.
+Update the topic map with the `topic` skill: add the concept if it is new, and raise it to `seen`
+once it has been explained.

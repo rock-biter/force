@@ -1,0 +1,680 @@
+{
+  "about": "Everything FORCE has met, concepts and sources, and how far we went with each one. Edit this file, then run `npm run topics`. The format is described in .claude/skills/topic/SKILL.md.",
+  "statuses": {
+    "mentioned": {
+      "title": "Mentioned",
+      "description": "Only cited so far: still to explore"
+    },
+    "seen": {
+      "title": "Seen",
+      "description": "We know what it is: explained in a few lines, or opened to check what we cite"
+    },
+    "studied": {
+      "title": "Studied",
+      "description": "Studied in depth: it has its own page"
+    }
+  },
+  "areas": {
+    "physics": {
+      "title": "Physics",
+      "description": "How things move, collide and stay together"
+    },
+    "gpu": {
+      "title": "GPU",
+      "description": "WebGPU, WGSL and how to make thousands of threads work"
+    },
+    "method": {
+      "title": "Method",
+      "description": "How we learn and write things down"
+    }
+  },
+  "kinds": {
+    "concept": {
+      "title": "Concept"
+    },
+    "paper": {
+      "title": "Paper"
+    },
+    "book": {
+      "title": "Book"
+    },
+    "course": {
+      "title": "Course"
+    },
+    "talk": {
+      "title": "Talk"
+    },
+    "video": {
+      "title": "Video"
+    },
+    "article": {
+      "title": "Article"
+    },
+    "spec": {
+      "title": "Specification"
+    },
+    "docs": {
+      "title": "Documentation"
+    },
+    "project": {
+      "title": "Project"
+    },
+    "code": {
+      "title": "Source code"
+    }
+  },
+  "topics": [
+    {
+      "id": "physics-engine",
+      "kind": "concept",
+      "title": "Physics engine",
+      "summary": "A program that works out how objects move, one small step at a time",
+      "area": "physics",
+      "status": "seen",
+      "citedIn": ["docs/logbook/001-the-flip-book.md", "box2d-hello"]
+    },
+    {
+      "id": "simulation-step",
+      "kind": "concept",
+      "title": "Simulation step",
+      "summary": "What an engine repeats over and over: apply forces, find contacts, fix them, move everything",
+      "area": "physics",
+      "status": "seen",
+      "partOf": "physics-engine",
+      "citedIn": ["docs/logbook/001-the-flip-book.md", "box2d-physics-world"]
+    },
+    {
+      "id": "timestep",
+      "kind": "concept",
+      "title": "Timestep",
+      "summary": "The jump in time of each step, often 1/60 of a second",
+      "area": "physics",
+      "status": "seen",
+      "partOf": "simulation-step",
+      "related": ["integration"],
+      "citedIn": ["docs/logbook/001-the-flip-book.md", "box2d-hello"]
+    },
+    {
+      "id": "fixed-timestep",
+      "kind": "concept",
+      "title": "Fixed timestep",
+      "summary": "Keeping every step the same length, and spending the time of each frame in equal steps",
+      "area": "physics",
+      "status": "seen",
+      "partOf": "timestep",
+      "related": ["tunneling"],
+      "citedIn": ["docs/logbook/001-the-flip-book.md", "fix-your-timestep"]
+    },
+    {
+      "id": "force",
+      "kind": "concept",
+      "title": "Forces",
+      "summary": "Pushes such as gravity or wind: they change velocity, and change a light object more than a heavy one",
+      "area": "physics",
+      "status": "seen",
+      "partOf": "simulation-step",
+      "citedIn": ["docs/logbook/001-the-flip-book.md"]
+    },
+    {
+      "id": "gravity",
+      "kind": "concept",
+      "title": "Gravity",
+      "summary": "The force that pulls everything down: on Earth it adds 9.81 m/s of downward speed every second",
+      "area": "physics",
+      "status": "mentioned",
+      "partOf": "force",
+      "citedIn": ["docs/logbook/001-the-flip-book.md"],
+      "code": ["examples/hello-compute/free-fall.wgsl"]
+    },
+    {
+      "id": "collision-detection",
+      "kind": "concept",
+      "title": "Collision detection",
+      "summary": "Finding out which objects touch: first a rough pass, then a precise one",
+      "area": "physics",
+      "status": "seen",
+      "partOf": "simulation-step",
+      "citedIn": ["docs/logbook/001-the-flip-book.md"]
+    },
+    {
+      "id": "broad-phase",
+      "kind": "concept",
+      "title": "Broad phase",
+      "summary": "A rough check that discards pairs of objects too far apart to touch",
+      "area": "physics",
+      "status": "seen",
+      "partOf": "collision-detection",
+      "related": ["bounding-box"],
+      "citedIn": ["docs/logbook/001-the-flip-book.md"]
+    },
+    {
+      "id": "bounding-box",
+      "kind": "concept",
+      "title": "Bounding box",
+      "summary": "An invisible box around an object: testing two boxes is much cheaper than testing two real shapes",
+      "area": "physics",
+      "status": "seen",
+      "citedIn": ["docs/logbook/001-the-flip-book.md"]
+    },
+    {
+      "id": "narrow-phase",
+      "kind": "concept",
+      "title": "Narrow phase",
+      "summary": "A precise check, on the real shapes, of the pairs that survived the broad phase",
+      "area": "physics",
+      "status": "seen",
+      "partOf": "collision-detection",
+      "related": ["contact"],
+      "citedIn": ["docs/logbook/001-the-flip-book.md"]
+    },
+    {
+      "id": "tunneling",
+      "kind": "concept",
+      "title": "Tunneling",
+      "summary": "A fast object passing through a wall between two steps, without ever touching it",
+      "area": "physics",
+      "status": "seen",
+      "partOf": "collision-detection",
+      "citedIn": ["docs/logbook/001-the-flip-book.md"]
+    },
+    {
+      "id": "contact",
+      "kind": "concept",
+      "title": "Contact",
+      "summary": "The result of a collision: where two objects touch, in which direction, and how far they overlap",
+      "area": "physics",
+      "status": "seen",
+      "related": ["constraint"],
+      "citedIn": ["docs/logbook/001-the-flip-book.md"]
+    },
+    {
+      "id": "constraint",
+      "kind": "concept",
+      "title": "Constraint",
+      "summary": "A rule objects must obey, such as \"do not pass through each other\"",
+      "area": "physics",
+      "status": "seen",
+      "related": ["solver"],
+      "citedIn": ["docs/logbook/001-the-flip-book.md"]
+    },
+    {
+      "id": "solver",
+      "kind": "concept",
+      "title": "Solver",
+      "summary": "The part of the engine that corrects velocities so constraints are obeyed",
+      "area": "physics",
+      "status": "seen",
+      "partOf": "simulation-step",
+      "citedIn": ["docs/logbook/001-the-flip-book.md"]
+    },
+    {
+      "id": "iterative-solver",
+      "kind": "concept",
+      "title": "Iterative solver",
+      "summary": "Fixing one constraint at a time, going over all of them a few rounds, and stopping when it looks right",
+      "area": "physics",
+      "status": "seen",
+      "partOf": "solver",
+      "citedIn": ["docs/logbook/001-the-flip-book.md", "rapier-integration-parameters"]
+    },
+    {
+      "id": "integration",
+      "kind": "concept",
+      "title": "Integration",
+      "summary": "The calculation that updates position from velocity",
+      "area": "physics",
+      "status": "seen",
+      "partOf": "simulation-step",
+      "citedIn": ["docs/logbook/001-the-flip-book.md"]
+    },
+    {
+      "id": "particle",
+      "kind": "concept",
+      "title": "Particle",
+      "summary": "A point that moves but has no size or shape: the simplest thing to simulate",
+      "area": "physics",
+      "status": "mentioned",
+      "related": ["rigid-body"],
+      "citedIn": ["docs/logbook/000-the-launch.md"],
+      "code": ["examples/hello-compute/free-fall.wgsl"]
+    },
+    {
+      "id": "rigid-body",
+      "kind": "concept",
+      "title": "Rigid body",
+      "summary": "An object that moves and rotates but never bends, like a box or a ball",
+      "area": "physics",
+      "status": "mentioned",
+      "citedIn": ["docs/README.md", "ten-minute-physics"]
+    },
+    {
+      "id": "spring",
+      "kind": "concept",
+      "title": "Spring",
+      "summary": "A link that keeps two points near a rest distance, pulling when stretched and pushing when squeezed",
+      "area": "physics",
+      "status": "mentioned",
+      "related": ["cloth"],
+      "citedIn": ["docs/README.md"]
+    },
+    {
+      "id": "cloth",
+      "kind": "concept",
+      "title": "Cloth",
+      "summary": "A sheet that bends and folds, like a flag or a curtain",
+      "area": "physics",
+      "status": "mentioned",
+      "related": ["particle"],
+      "citedIn": ["docs/README.md", "ten-minute-physics"]
+    },
+    {
+      "id": "fluid",
+      "kind": "concept",
+      "title": "Fluid",
+      "summary": "Water, smoke and anything else that flows instead of keeping its shape",
+      "area": "physics",
+      "status": "mentioned",
+      "related": ["particle"],
+      "citedIn": ["docs/README.md", "ten-minute-physics"]
+    },
+    {
+      "id": "gpu-parallelism",
+      "kind": "concept",
+      "title": "Parallel work on the GPU",
+      "summary": "The GPU runs the same code on thousands of items at once, and is fastest when each one can go its own way",
+      "area": "gpu",
+      "status": "seen",
+      "related": ["solver", "workgroup"],
+      "citedIn": ["docs/logbook/001-the-flip-book.md"]
+    },
+    {
+      "id": "webgpu",
+      "kind": "concept",
+      "title": "WebGPU",
+      "summary": "The browser API that lets a page use the GPU, both to draw and to calculate",
+      "area": "gpu",
+      "status": "mentioned",
+      "citedIn": ["README.md", "docs/logbook/000-the-launch.md", "webgpu-spec"],
+      "code": ["src/gpu/device.ts"]
+    },
+    {
+      "id": "adapter-and-device",
+      "kind": "concept",
+      "title": "Adapter and device",
+      "summary": "How a page gets the GPU: the adapter stands for a GPU on the system, the device is our own connection to it",
+      "area": "gpu",
+      "status": "mentioned",
+      "partOf": "webgpu",
+      "citedIn": ["docs/guides/README.md"],
+      "code": ["src/gpu/device.ts"]
+    },
+    {
+      "id": "compute-shader",
+      "kind": "concept",
+      "title": "Compute shader",
+      "summary": "A GPU program that calculates instead of drawing",
+      "area": "gpu",
+      "status": "mentioned",
+      "partOf": "webgpu",
+      "related": ["gpu-parallelism", "wgsl"],
+      "citedIn": ["docs/logbook/000-the-launch.md", "docs/guides/README.md"],
+      "code": ["examples/hello-compute/free-fall.wgsl"]
+    },
+    {
+      "id": "wgsl",
+      "kind": "concept",
+      "title": "WGSL",
+      "summary": "The shader language of WebGPU, the counterpart of GLSL",
+      "area": "gpu",
+      "status": "mentioned",
+      "partOf": "webgpu",
+      "citedIn": ["docs/guides/README.md"],
+      "code": ["examples/hello-compute/free-fall.wgsl"]
+    },
+    {
+      "id": "buffer",
+      "kind": "concept",
+      "title": "Buffer",
+      "summary": "A block of GPU memory holding raw bytes, declared up front with everything it will be used for",
+      "area": "gpu",
+      "status": "mentioned",
+      "partOf": "webgpu",
+      "related": ["bind-group", "readback"],
+      "citedIn": ["docs/guides/README.md"],
+      "code": ["examples/hello-compute/main.ts"]
+    },
+    {
+      "id": "compute-pipeline",
+      "kind": "concept",
+      "title": "Compute pipeline",
+      "summary": "A compiled shader plus its fixed settings, ready to run",
+      "area": "gpu",
+      "status": "mentioned",
+      "partOf": "webgpu",
+      "related": ["compute-shader"],
+      "citedIn": ["docs/guides/README.md"],
+      "code": ["examples/hello-compute/main.ts"]
+    },
+    {
+      "id": "bind-group",
+      "kind": "concept",
+      "title": "Bind group",
+      "summary": "Connects real buffers to the numbered slots a shader reads from",
+      "area": "gpu",
+      "status": "mentioned",
+      "partOf": "webgpu",
+      "related": ["compute-pipeline"],
+      "citedIn": ["docs/guides/README.md"],
+      "code": ["examples/hello-compute/main.ts", "examples/hello-compute/free-fall.wgsl"]
+    },
+    {
+      "id": "workgroup",
+      "kind": "concept",
+      "title": "Workgroups and dispatch",
+      "summary": "How the work is split into groups of threads and launched on the GPU",
+      "area": "gpu",
+      "status": "mentioned",
+      "partOf": "webgpu",
+      "related": ["compute-shader"],
+      "citedIn": ["docs/guides/README.md"],
+      "code": ["examples/hello-compute/main.ts", "examples/hello-compute/free-fall.wgsl"]
+    },
+    {
+      "id": "command-queue",
+      "kind": "concept",
+      "title": "Commands and queue",
+      "summary": "GPU work is recorded first, and runs only when it is submitted to the queue",
+      "area": "gpu",
+      "status": "mentioned",
+      "partOf": "webgpu",
+      "citedIn": ["docs/guides/README.md"],
+      "code": ["examples/hello-compute/main.ts"]
+    },
+    {
+      "id": "readback",
+      "kind": "concept",
+      "title": "Readback",
+      "summary": "Copying results from the GPU back into JavaScript",
+      "area": "gpu",
+      "status": "mentioned",
+      "partOf": "webgpu",
+      "citedIn": ["docs/guides/README.md"],
+      "code": ["examples/hello-compute/main.ts"]
+    },
+    {
+      "id": "position-based-dynamics",
+      "kind": "concept",
+      "title": "Position based dynamics (PBD)",
+      "summary": "Moving points straight to where the constraints want them, instead of going through forces: simple and stable",
+      "area": "physics",
+      "status": "mentioned",
+      "related": ["constraint", "cloth", "soft-body"],
+      "citedIn": ["ten-minute-physics"]
+    },
+    {
+      "id": "soft-body",
+      "kind": "concept",
+      "title": "Soft body",
+      "summary": "An object that squashes and bounces back, like jelly",
+      "area": "physics",
+      "status": "mentioned",
+      "citedIn": ["ten-minute-physics"]
+    },
+    {
+      "id": "sweep-and-prune",
+      "kind": "concept",
+      "title": "Sweep and prune",
+      "summary": "A broad phase that sorts objects along an axis, so only neighbours in the list need checking",
+      "area": "physics",
+      "status": "mentioned",
+      "partOf": "broad-phase",
+      "citedIn": ["ten-minute-physics"]
+    },
+    {
+      "id": "bounding-volume-hierarchy",
+      "kind": "concept",
+      "title": "Bounding volume hierarchy (BVH)",
+      "summary": "Boxes nested inside boxes: a tree that skips whole groups of far-away objects at once",
+      "area": "physics",
+      "status": "mentioned",
+      "partOf": "broad-phase",
+      "related": ["bounding-box"],
+      "citedIn": ["ten-minute-physics"]
+    },
+    {
+      "id": "joint",
+      "kind": "concept",
+      "title": "Joint",
+      "summary": "A link that holds two bodies together but lets them move in some ways, like a hinge",
+      "area": "physics",
+      "status": "mentioned",
+      "related": ["constraint", "rigid-body"],
+      "citedIn": ["ten-minute-physics"]
+    },
+    {
+      "id": "implicit-integration",
+      "kind": "concept",
+      "title": "Implicit integration",
+      "summary": "A way of taking a step that stays stable even with stiff springs or long steps",
+      "area": "physics",
+      "status": "mentioned",
+      "partOf": "integration",
+      "related": ["spring"],
+      "citedIn": ["physically-based-modeling"]
+    },
+    {
+      "id": "eulerian-fluid",
+      "kind": "concept",
+      "title": "Grid fluid (Eulerian)",
+      "summary": "A fluid simulated on a fixed grid, tracking what flows through each cell",
+      "area": "physics",
+      "status": "mentioned",
+      "partOf": "fluid",
+      "citedIn": ["ten-minute-physics"]
+    },
+    {
+      "id": "flip-fluid",
+      "kind": "concept",
+      "title": "FLIP water",
+      "summary": "Water simulated with particles that carry the motion, plus a grid that keeps it from compressing",
+      "area": "physics",
+      "status": "mentioned",
+      "partOf": "fluid",
+      "related": ["particle"],
+      "citedIn": ["ten-minute-physics"]
+    },
+    {
+      "id": "documentation-kinds",
+      "kind": "concept",
+      "title": "Kinds of documentation",
+      "summary": "Texts for learning, for doing, for looking up and for understanding work best kept apart",
+      "area": "method",
+      "status": "seen",
+      "citedIn": ["docs/logbook/002-the-toolbox.md", "diataxis"]
+    },
+    {
+      "id": "box2d",
+      "kind": "project",
+      "title": "Box2D",
+      "summary": "One of the most widely used 2D physics engines, open source",
+      "area": "physics",
+      "status": "seen",
+      "about": ["physics-engine", "simulation-step", "solver"],
+      "citedIn": ["docs/logbook/001-the-flip-book.md"],
+      "url": "https://github.com/erincatto/box2d",
+      "authors": "Erin Catto"
+    },
+    {
+      "id": "box2d-hello",
+      "kind": "docs",
+      "title": "Box2D, Hello Box2D",
+      "summary": "The flip book comparison, and the 1/60 second step",
+      "area": "physics",
+      "status": "seen",
+      "partOf": "box2d",
+      "about": ["physics-engine", "timestep"],
+      "citedIn": ["docs/logbook/001-the-flip-book.md"],
+      "url": "https://github.com/erincatto/box2d/blob/main/docs/hello.md"
+    },
+    {
+      "id": "box2d-physics-world",
+      "kind": "code",
+      "title": "Box2D, physics_world.c",
+      "summary": "The real order of the steps: broad phase, collisions, solver",
+      "area": "physics",
+      "status": "seen",
+      "partOf": "box2d",
+      "about": ["simulation-step"],
+      "citedIn": ["docs/logbook/001-the-flip-book.md"],
+      "url": "https://github.com/erincatto/box2d/blob/main/src/physics_world.c"
+    },
+    {
+      "id": "box2d-solver",
+      "kind": "code",
+      "title": "Box2D, solver.c",
+      "summary": "The internal stages of the solver",
+      "area": "physics",
+      "status": "seen",
+      "partOf": "box2d",
+      "about": ["solver"],
+      "citedIn": ["docs/logbook/001-the-flip-book.md"],
+      "url": "https://github.com/erincatto/box2d/blob/main/src/solver.c"
+    },
+    {
+      "id": "rapier",
+      "kind": "project",
+      "title": "Rapier",
+      "summary": "An open source 2D and 3D physics engine written in Rust",
+      "area": "physics",
+      "status": "seen",
+      "about": ["physics-engine", "solver"],
+      "citedIn": ["docs/logbook/001-the-flip-book.md"],
+      "url": "https://github.com/dimforge/rapier"
+    },
+    {
+      "id": "rapier-integration-parameters",
+      "kind": "code",
+      "title": "Rapier, integration_parameters.rs",
+      "summary": "The solver repeats 4 rounds by default",
+      "area": "physics",
+      "status": "seen",
+      "partOf": "rapier",
+      "about": ["iterative-solver"],
+      "citedIn": ["docs/logbook/001-the-flip-book.md"],
+      "url": "https://github.com/dimforge/rapier/blob/master/src/dynamics/integration_parameters.rs"
+    },
+    {
+      "id": "fix-your-timestep",
+      "kind": "article",
+      "title": "Fix Your Timestep!",
+      "summary": "Why the step must be fixed, and how to separate it from frames",
+      "area": "physics",
+      "status": "seen",
+      "about": ["fixed-timestep", "timestep"],
+      "citedIn": ["docs/logbook/001-the-flip-book.md"],
+      "url": "https://gafferongames.com/post/fix_your_timestep/",
+      "authors": "Glenn Fiedler"
+    },
+    {
+      "id": "catto-publications",
+      "kind": "talk",
+      "title": "Erin Catto, publications",
+      "summary": "GDC talks by the creator of Box2D on solvers and collisions",
+      "area": "physics",
+      "status": "mentioned",
+      "about": ["solver", "collision-detection"],
+      "related": ["box2d"],
+      "citedIn": ["docs/logbook/001-the-flip-book.md"],
+      "url": "https://box2d.org/publications/",
+      "authors": "Erin Catto"
+    },
+    {
+      "id": "ten-minute-physics",
+      "kind": "video",
+      "title": "Ten Minute Physics",
+      "summary": "Short videos with JavaScript demos: PBD, cloth, soft bodies, fluids, rigid bodies, collisions and the GPU",
+      "area": "physics",
+      "status": "mentioned",
+      "about": [
+        "position-based-dynamics",
+        "cloth",
+        "soft-body",
+        "fluid",
+        "rigid-body",
+        "broad-phase",
+        "gpu-parallelism"
+      ],
+      "citedIn": ["docs/logbook/001-the-flip-book.md"],
+      "url": "https://matthias-research.github.io/pages/tenMinutePhysics/index.html",
+      "authors": "Matthias Müller"
+    },
+    {
+      "id": "physically-based-modeling",
+      "kind": "course",
+      "title": "Physically Based Modeling: Principles and Practice",
+      "summary": "The classic SIGGRAPH course notes: particles, rigid bodies, constraints and implicit methods",
+      "area": "physics",
+      "status": "mentioned",
+      "about": ["particle", "rigid-body", "constraint", "integration", "implicit-integration"],
+      "citedIn": ["docs/logbook/001-the-flip-book.md"],
+      "url": "https://www.cs.cmu.edu/~baraff/sigcourse/",
+      "authors": "Andrew Witkin, David Baraff",
+      "year": 1997
+    },
+    {
+      "id": "webgpu-spec",
+      "kind": "spec",
+      "title": "WebGPU specification",
+      "summary": "The official definition of the API",
+      "area": "gpu",
+      "status": "mentioned",
+      "about": ["webgpu"],
+      "citedIn": ["README.md", ".claude/skills/guide/SKILL.md"],
+      "url": "https://www.w3.org/TR/webgpu/"
+    },
+    {
+      "id": "wgsl-spec",
+      "kind": "spec",
+      "title": "WGSL specification",
+      "summary": "The official definition of the shader language",
+      "area": "gpu",
+      "status": "mentioned",
+      "about": ["wgsl"],
+      "citedIn": [".claude/skills/guide/SKILL.md"],
+      "url": "https://www.w3.org/TR/WGSL/"
+    },
+    {
+      "id": "mdn-webgpu",
+      "kind": "docs",
+      "title": "MDN, WebGPU API",
+      "summary": "A readable API reference",
+      "area": "gpu",
+      "status": "mentioned",
+      "about": ["webgpu"],
+      "citedIn": [".claude/skills/guide/SKILL.md"],
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/WebGPU_API"
+    },
+    {
+      "id": "webgpu-fundamentals",
+      "kind": "course",
+      "title": "WebGPU Fundamentals",
+      "summary": "Step-by-step lessons",
+      "area": "gpu",
+      "status": "mentioned",
+      "about": ["webgpu"],
+      "citedIn": ["docs/logbook/002-the-toolbox.md"],
+      "url": "https://webgpufundamentals.org/"
+    },
+    {
+      "id": "diataxis",
+      "kind": "docs",
+      "title": "Diátaxis",
+      "summary": "Keeping what you read to learn apart from what you look up",
+      "area": "method",
+      "status": "seen",
+      "about": ["documentation-kinds"],
+      "citedIn": ["docs/logbook/002-the-toolbox.md"],
+      "url": "https://diataxis.fr/"
+    }
+  ]
+}

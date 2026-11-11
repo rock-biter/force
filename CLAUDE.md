@@ -15,6 +15,7 @@ Knows JavaScript, three.js and GLSL well. Starts from zero on WebGPU and physics
 - **Be brief.** No walls of text: if it takes more than one screen, the step is too big.
 - **Tell the story.** Every step ends up in the logbook (`logbook` skill).
 - **Turn code into guides.** Each WebGPU concept we use in code for the first time gets a mini guide (`guide` skill). Guides are for learning, for looking things up, and for becoming articles and YouTube videos.
+- **Map what we meet.** Every concept and every source we touch goes on the topic map, with where we met it and how far we went: mentioned, seen, or studied with its own page (`topic` skill).
 - **Verify.** Cite only sources you have opened, and separate what is proven from what is a guess.
 
 ## Language
@@ -26,8 +27,9 @@ Everything in the repo is in English: code, comments, docs and skills. Chat in I
 - `docs/README.md`: index and study route. Start here to see where we are.
 - `docs/logbook/`: the story of the project, one chapter per step.
 - `docs/guides/`: WebGPU mini guides, one concept each.
-- `docs/glossary.md` and `docs/sources.md`: for looking things up, not for reading straight through.
+- `docs/topics/`: the topic map of concepts and sources (`topics.json`, with a generated index), theory pages and reading notes. For looking things up, not for reading straight through.
+- `library/`: local copies of papers and PDFs. Ignored by git, never committed.
 
 ## Commands
 
-`npm run dev` (examples), `npm test`, `npm run typecheck`, `npm run lint`, `npm run build`.
+`npm run dev` (examples), `npm test`, `npm run typecheck`, `npm run lint`, `npm run build`, `npm run topics` (checks the topic map and regenerates its index).

@@ -41,8 +41,9 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "typecheck": "tsc",
-    "lint": "biome check .",
+    "lint": "biome check . && node scripts/topics.mjs --check",
     "format": "biome check --write .",
+    "topics": "node scripts/topics.mjs",
     "prepublishOnly": "npm run lint && npm run typecheck && npm run test && npm run build"
   },
   "devDependencies": {
