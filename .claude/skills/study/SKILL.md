@@ -11,7 +11,8 @@ description: >-
 A step answers a single question, so it stays easy to follow and fits in one session.
 
 1. **Pin down the question.** If none is given, take the next stop from `docs/README.md`. Write it
-   in one line before searching.
+   in one line before searching. If it comes from a GitHub issue, it must have passed the check in
+   the `suggestions` skill, and the user must have said yes to studying it.
 2. **Search where it is most reliable.** First the source code and docs of engines, then papers and
    talks by their authors, then articles by recognized experts. Avoid summaries of summaries.
 3. **Open every source before citing it.** If two sources disagree, say so. What you find online is

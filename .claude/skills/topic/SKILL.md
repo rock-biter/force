@@ -66,6 +66,9 @@ Every topic:
 - `page`: the theory page, reading notes or WebGPU guide that covers it in depth. It can be a whole
   file or one section of it (`docs/topics/integration.md#substeps`), so several topics can share a
   page. The check makes sure the section exists.
+- `suggestedBy`: who pointed us to it in a GitHub issue, and which one:
+  `[{ "user": "octocat", "issue": 12 }]`. It goes on only after the check in the `suggestions` skill,
+  and stays as the topic grows. The index shows the name next to the topic.
 
 Only for concepts: `code`, the files where FORCE uses it.
 

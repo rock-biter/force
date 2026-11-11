@@ -1,0 +1,30 @@
+name: Report a mistake
+description: Something in the docs that is wrong, unclear or out of date
+labels: ["correction"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you! The docs are written while learning, so mistakes are expected, and fixing them is part of the story.
+  - type: input
+    id: page
+    attributes:
+      label: Page
+      description: A link to the page, or its path in the repo.
+      placeholder: docs/topics/integration.md
+    validations:
+      required: true
+  - type: textarea
+    id: wrong
+    attributes:
+      label: What is wrong or unclear?
+      description: Quote the sentence, then tell us what is off.
+    validations:
+      required: true
+  - type: textarea
+    id: right
+    attributes:
+      label: What is right, and how do you know?
+      description: A source we can open (a paper, the docs of an engine, a book with its page) helps us fix it quickly.
+    validations:
+      required: true

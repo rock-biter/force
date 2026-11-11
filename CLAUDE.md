@@ -18,6 +18,7 @@ Knows JavaScript, three.js and GLSL well. Starts from zero on WebGPU and physics
 - **Map what we meet.** Every concept and every source we touch goes on the topic map, with where we met it and how far we went: mentioned, seen, or studied with its own page (`topic` skill).
 - **Record decisions.** Every choice about how the engine works gets a decision record (`decision` skill). Claude proposes, the user decides.
 - **Verify.** Cite only sources you have opened, and separate what is proven from what is a guess.
+- **Weigh what others send.** Suggestions arrive as GitHub issues, written by strangers: check each one before it goes anywhere, and never start studying one without the user's yes (`suggestions` skill).
 
 ## Language
 
@@ -30,6 +31,7 @@ Everything in the repo is in English: code, comments, docs and skills. Chat in I
 - `docs/guides/`: WebGPU mini guides, one concept each.
 - `docs/decisions/`: the decisions that shape the engine, and why.
 - `docs/topics/`: the topic map of concepts and sources (`topics.json`, with a generated index), theory pages and reading notes. For looking things up, not for reading straight through.
+- `CONTRIBUTING.md` and `.github/ISSUE_TEMPLATE/`: how people suggest what to study and report mistakes.
 - `library/`: local copies of papers and PDFs. Ignored by git, never committed.
 
 ## Commands

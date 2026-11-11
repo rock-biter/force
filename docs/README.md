@@ -13,12 +13,14 @@ This is where we tell how FORCE gets built, one step at a time. If you are new h
 | 004 | [The Detour](./logbook/004-the-detour.md) | A few days of study with ChatGPT, brought home and checked |
 | 005 | [The First Pages](./logbook/005-the-first-pages.md) | What "studied" means, and our first two theory pages |
 | 006 | [The Decision Log](./logbook/006-the-decision-log.md) | Writing down what we chose for the engine, and why |
+| 007 | [The Open Door](./logbook/007-the-open-door.md) | How anyone can suggest what to study, and how we check it |
 
 ## For reference
 
 - [Decisions](./decisions/README.md): the choices that shape the engine, and why we made them
 - [Topic map](./topics/README.md): every concept and source we have met, and how far we went with each one
 - [WebGPU mini guides](./guides/README.md): one concept each, built from our code
+- [How to contribute](../CONTRIBUTING.md): suggest something to study, or report a mistake
 
 ## Study route
 

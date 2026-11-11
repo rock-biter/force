@@ -42,6 +42,11 @@ npm run build      # build the package into dist/
 | `test/`     | Unit tests                                 |
 | `examples/` | Runnable demos, importing from `force-gpu` |
 
+## Contributing
+
+FORCE is studied in the open. If you know a paper, a talk or an engine worth studying, or you spot a
+mistake in the docs, see [CONTRIBUTING.md](./CONTRIBUTING.md).
+
 ## License
 
 [MIT](./LICENSE)

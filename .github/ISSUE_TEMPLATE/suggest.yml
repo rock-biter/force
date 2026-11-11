@@ -1,0 +1,73 @@
+name: Suggest something to study
+description: A paper, book, talk, engine, article or concept worth studying for FORCE
+labels: ["suggestion"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you! FORCE is built one step at a time, and every step starts from what we read.
+        First check the [topic map](https://github.com/rock-biter/force/blob/main/docs/topics/README.md): it may already be there.
+        We go through new suggestions at the end of each step: see [what happens next](https://github.com/rock-biter/force/blob/main/CONTRIBUTING.md#what-happens-next).
+  - type: dropdown
+    id: kind
+    attributes:
+      label: What is it?
+      options:
+        - Paper
+        - Book
+        - Course
+        - Talk or video
+        - Article or blog post
+        - Engine or project
+        - Source code
+        - A concept or a technique
+        - Something else
+    validations:
+      required: true
+  - type: input
+    id: link
+    attributes:
+      label: Link
+      description: For a paper, the publisher, arXiv or the author's page. For a concept, the best place to start, if you know one.
+      placeholder: https://
+  - type: textarea
+    id: what
+    attributes:
+      label: What is it, in a line or two?
+      description: Plain words are perfect. For a paper or a book, add the authors and the year.
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: Why would it help FORCE?
+      description: Which problem it solves, or which part of the engine it is about.
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Physics
+        - Math
+        - GPU and WebGPU
+        - Engine design
+        - Not sure
+  - type: dropdown
+    id: level
+    attributes:
+      label: How hard is it?
+      description: FORCE is also a way to learn, so this helps us pick the right moment.
+      options:
+        - Friendly for beginners
+        - Needs some background
+        - Advanced
+        - Not sure
+  - type: checkboxes
+    id: checked
+    attributes:
+      label: Before sending
+      options:
+        - label: I opened the link myself, and it is what I describe
+          required: true

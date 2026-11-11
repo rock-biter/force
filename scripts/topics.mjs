@@ -10,10 +10,13 @@ import { fileURLToPath } from 'node:url'
 const ROOT = fileURLToPath(new URL('..', import.meta.url))
 const MAP_PATH = 'docs/topics/topics.json'
 const INDEX_PATH = 'docs/topics/README.md'
+// Where suggestions live: "https://github.com/<owner>/<repo>/issues".
+const ISSUES_URL = JSON.parse(readFileSync(join(ROOT, 'package.json'), 'utf8')).bugs
+const GITHUB_USER = /^[a-z\d](?:[a-z\d]|-(?=[a-z\d])){0,38}$/i
 
 const ICONS = { studied: '●', seen: '◐', mentioned: '○' }
 const COMMON_FIELDS = ['id', 'kind', 'title', 'summary', 'area', 'status', 'partOf', 'related']
-const COMMON_FIELDS_END = ['citedIn', 'page']
+const COMMON_FIELDS_END = ['citedIn', 'suggestedBy', 'page']
 const CONCEPT_FIELDS = [...COMMON_FIELDS, ...COMMON_FIELDS_END, 'code']
 const SOURCE_FIELDS = [
   ...COMMON_FIELDS,
@@ -79,6 +82,17 @@ function check(map) {
       if (ref === topic.id) fail('it cites itself')
       else if (!byId.has(ref) && !fileExists(ref))
         fail(`"citedIn": "${ref}" is neither a topic nor a file`)
+    }
+
+    // Credit: who suggested it, and in which issue of the repo.
+    const credits = topic.suggestedBy ?? []
+    if (!Array.isArray(credits)) fail('"suggestedBy" must be a list')
+    else {
+      for (const credit of credits) {
+        const valid = GITHUB_USER.test(credit?.user ?? '') && Number.isInteger(credit.issue)
+        if (!valid || credit.issue < 1 || Object.keys(credit).length !== 2)
+          fail('"suggestedBy" takes a GitHub user and an issue: { "user": "octocat", "issue": 12 }')
+      }
     }
 
     // Categories: a source says which concepts it is about.
@@ -175,6 +189,13 @@ function renderIndex(map) {
     if (topic.url) return `[${title}](${topic.url})`
     return topic.file ? `[${title}](${href(topic.file)})` : title
   }
+  // Whoever pointed us to it gets their name next to it.
+  const credit = (topic) => {
+    if (!topic.suggestedBy?.length) return ''
+    const issue = (n) => `[#${n}](${ISSUES_URL}/${n})`
+    const who = topic.suggestedBy.map((by) => `${by.user} in ${issue(by.issue)}`)
+    return `<br>*suggested by ${who.join(', ')}*`
+  }
 
   const sources = map.topics.filter((topic) => !isConcept(topic))
   const count = (list, status) => list.filter((topic) => topic.status === status).length
@@ -215,7 +236,8 @@ function renderIndex(map) {
       )
       for (const topic of areaConcepts) {
         const parent = topic.partOf ? cell(byId.get(topic.partOf).title) : ''
-        const row = [name(topic), cell(topic.summary), parent, reference(topic.citedIn[0])]
+        const title = `${name(topic)}${credit(topic)}`
+        const row = [title, cell(topic.summary), parent, reference(topic.citedIn[0])]
         lines.push(`| ${ICONS[topic.status]} | ${row.join(' | ')} |`)
       }
     }
@@ -229,7 +251,7 @@ function renderIndex(map) {
         // A source keeps the link to the original; our page, when there is one, comes after.
         const title = name({ ...topic, page: undefined })
         const ours = topic.page ? ` · **[our page](${href(topic.page)})**` : ''
-        const source = `${title}${ours}${by ? `<br>*${cell(by)}*` : ''}`
+        const source = `${title}${ours}${by ? `<br>*${cell(by)}*` : ''}${credit(topic)}`
         const about = topic.about.map((id) => cell(byId.get(id).title)).join(', ')
         const kind = map.kinds[topic.kind].title
         const row = [source, kind, cell(topic.summary), about, reference(topic.citedIn[0])]

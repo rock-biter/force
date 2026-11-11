@@ -54,6 +54,8 @@ it into two chapters.
 - **Decisions.** If the step settled a choice about the engine, record it (`decision` skill).
 - **Map.** Add every concept and source the step touched to the topic map, or raise its status
   (`topic` skill).
+- **Suggestions.** Go through new GitHub issues, and thank by name whoever suggested what this step
+  studied (`suggestions` skill).
 
 ## "Where did we leave off?"
 
