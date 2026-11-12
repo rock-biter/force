@@ -5,7 +5,7 @@
 Everything we have met while building FORCE, concepts and sources, and how far we went with each
 one. Use it to look up a term, to find what to read, or to pick what to explore next.
 
-- **134 concepts:** ● 14 studied · ◐ 51 seen · ○ 69 mentioned
+- **135 concepts:** ● 14 studied · ◐ 51 seen · ○ 70 mentioned
 - **80 sources:** ● 5 studied · ◐ 11 seen · ○ 64 mentioned · read by Claude: 17 parts, 0 in full
 
 | | Status | What it means |
@@ -260,6 +260,7 @@ How an engine is organized, measured and scaled across devices.
 | | Concept | In short | Part of | First cited in |
 | --- | --- | --- | --- | --- |
 | ○ | Benchmark scenes | Standard test scenes, such as a stack of boxes or a dam break, to compare algorithms fairly |  | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |
+| ○ | Determinism | Two runs from the same start give exactly the same numbers. On the GPU, threads adding floats to the same body in a different order each run can break it |  | [010](../logbook/010-the-ground.md) |
 | ○ | Entity component system (ECS) | Organizing a game as plain data components processed by systems, instead of objects with methods |  | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |
 | ○ | Frame budget | The slice of each frame the physics may use, for example 2 to 4 ms of the 16.7 ms available at 60 FPS |  | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |
 | ○ | Job system | Splitting the work of a step into small jobs spread over the CPU cores |  | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |

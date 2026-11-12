@@ -38,6 +38,7 @@ A particle sliding on the ground at 2 m/s stopped after 0.68 s. That is exactly 
 
 - How real engines handle contacts, with impulses or position based dynamics: to study with the rigid bodies.
 - Where restitution and friction will live once bodies differ from each other.
+- Whether two runs on the same GPU must give exactly the same numbers ([determinism](../topics/README.md)). Today they do, because no particle talks to another. A reader asked on November 12, 2026: to study and decide with the contact solver.
 
 ## Next step
 

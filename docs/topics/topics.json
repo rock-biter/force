@@ -1229,6 +1229,16 @@
       "citedIn": ["chatgpt-research"]
     },
     {
+      "id": "determinism",
+      "kind": "concept",
+      "title": "Determinism",
+      "summary": "Two runs from the same start give exactly the same numbers. On the GPU, threads adding floats to the same body in a different order each run can break it",
+      "area": "engine",
+      "status": "mentioned",
+      "related": ["atomic-operations", "float-precision"],
+      "citedIn": ["docs/logbook/010-the-ground.md"]
+    },
+    {
       "id": "prefix-sum",
       "kind": "concept",
       "title": "Prefix sum (scan)",
