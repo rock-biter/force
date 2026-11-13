@@ -17,6 +17,7 @@ This is where we tell how FORCE gets built, one step at a time. If you are new h
 | 008 | [The First Loop](./logbook/008-the-first-loop.md) | The fixed-step loop and semi-implicit Euler, running on the GPU |
 | 009 | [The First Picture](./logbook/009-the-first-picture.md) | A debug viewer on three.js, drawing straight from the engine's GPU buffer |
 | 010 | [The Ground](./logbook/010-the-ground.md) | Particles bounce on a flat ground, the simplest way |
+| 011 | [The Living Map](./logbook/011-the-living-map.md) | The topic map as a graph in 3D, with its dates and a timeline to replay it |
 
 ## For reference
 

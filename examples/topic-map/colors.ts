@@ -3,6 +3,8 @@
 
 export const PAPER = 0xf2f1ec
 export const INK = 0x16161a
+/** A topic we have only heard of, on the timeline: no color yet. */
+export const GREY = 0x85857f
 
 /**
  * One color per area of the map. Checked with a palette validator on the paper background: every
@@ -18,7 +20,7 @@ const AREA_COLOR: Record<string, number> = {
 }
 
 /** The color of an area. An area added to the map later is grey until it gets a color here. */
-export const areaColor = (area: string): number => AREA_COLOR[area] ?? 0x85857f
+export const areaColor = (area: string): number => AREA_COLOR[area] ?? GREY
 
 /** A color as CSS wants it: 0x0031f5 becomes "#0031f5". */
 export const cssColor = (color: number): string => `#${color.toString(16).padStart(6, '0')}`

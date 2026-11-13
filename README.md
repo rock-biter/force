@@ -10,15 +10,15 @@ A GPU-first physics engine for the web, built on [WebGPU](https://www.w3.org/TR/
 
 ## Where we are
 
-*Updated November 11, 2026*
+*Updated November 14, 2026*
 
-**Latest step:** [the ground](./docs/logbook/010-the-ground.md). Particles no longer fall
-forever: they bounce on a flat ground, slide and stop. A first, simple version; real contacts will
-come with the rigid bodies. Just before it, [the first picture](./docs/logbook/009-the-first-picture.md):
-a debug viewer on three.js that draws the particles straight from the engine's GPU memory.
+**Latest step:** [the living map](./docs/logbook/011-the-living-map.md). The map of everything we
+have met while studying is now a graph in 3D: one point per topic, filled according to how far we
+went with it. You can click a topic to read its page, and replay day by day how the map grew. It
+runs with `npm run dev`, under `topic-map`. Before it, a first series of
+[WebGPU mini guides](./docs/guides/README.md): buffers, compute shaders and pipelines.
 
-**Next:** back to the WebGPU guides, starting with buffers. Sharing one buffer between FORCE and
-three.js gets a guide of its own.
+**Next:** back to the guides, with bind groups: how a shader finds its data.
 
 Every step, with what we learned and what went wrong, is in the [logbook](./docs/README.md).
 

@@ -3468,6 +3468,32 @@
       "related": ["pipeline-layout"],
       "citedIn": ["docs/guides/pipelines.md"],
       "code": ["src/world.ts", "examples/hello-compute/main.ts"]
+    },
+    {
+      "id": "force-directed-layout",
+      "kind": "concept",
+      "title": "Force-directed layout",
+      "summary": "Placing the nodes of a graph with a simulation: links pull like springs, and every node pushes the others away",
+      "area": "physics",
+      "status": "seen",
+      "since": { "seen": "2026-11-14" },
+      "related": ["spring"],
+      "citedIn": ["docs/logbook/011-the-living-map.md"],
+      "code": ["examples/topic-map/layout.ts"]
+    },
+    {
+      "id": "d3-force-3d",
+      "kind": "project",
+      "title": "d3-force-3d",
+      "summary": "A small library that simulates forces between points in 1, 2 or 3 dimensions, made to lay out graphs",
+      "area": "physics",
+      "status": "mentioned",
+      "since": { "mentioned": "2026-11-14" },
+      "about": ["force-directed-layout", "spring"],
+      "citedIn": ["docs/logbook/011-the-living-map.md"],
+      "url": "https://github.com/vasturiano/d3-force-3d",
+      "authors": "Vasco Asturiano",
+      "claudeRead": "parts"
     }
   ]
 }

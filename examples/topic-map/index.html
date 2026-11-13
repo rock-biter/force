@@ -125,6 +125,75 @@
         cursor: pointer;
       }
 
+      /* The two views: the one on screen is in bold. */
+      .views {
+        position: fixed;
+        top: 16px;
+        right: 16px;
+        display: flex;
+        gap: 16px;
+        user-select: none;
+      }
+      .views button {
+        color: var(--grey);
+        text-decoration: none;
+      }
+      .views button[aria-pressed="true"] {
+        color: var(--ink);
+        font-weight: 700;
+        text-decoration: underline;
+      }
+
+      /* The timeline: a play button, the day, the last change, and a slider with the days. */
+      .timeline {
+        position: fixed;
+        left: 16px;
+        right: 16px;
+        bottom: 12px;
+        user-select: none;
+      }
+      .timeline .now {
+        display: flex;
+        gap: 16px;
+        margin-bottom: 4px;
+      }
+      .timeline .play {
+        width: 64px;
+        text-align: left;
+        text-decoration: none;
+      }
+      .timeline .day {
+        width: 56px;
+        font-weight: 700;
+      }
+      .timeline .change {
+        color: var(--grey);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .timeline input {
+        display: block;
+        width: 100%;
+        margin: 0;
+        accent-color: var(--ink);
+      }
+      .timeline .days {
+        position: relative;
+        height: 16px;
+        color: var(--grey);
+      }
+      .timeline .days span {
+        position: absolute;
+        padding-left: 4px;
+        border-left: 1px solid var(--grey);
+      }
+
+      /* The timeline bar is there only in the timeline view. */
+      body:not([data-view="timeline"]) .timeline {
+        display: none;
+      }
+
       /* The page of a topic, over the graph. */
       .page {
         width: min(760px, calc(100vw - 32px));
@@ -186,7 +255,7 @@
       }
     </style>
   </head>
-  <body>
+  <body data-view="map">
     <div class="legend">
       <h1>FORCE · topic map</h1>
       <table>
@@ -219,6 +288,19 @@
       </table>
     </div>
     <aside class="panel" hidden></aside>
+    <nav class="views">
+      <button type="button" data-view="map" aria-pressed="true">map</button>
+      <button type="button" data-view="timeline" aria-pressed="false">timeline</button>
+    </nav>
+    <div class="timeline">
+      <div class="now">
+        <button class="play" type="button">▶ play</button>
+        <span class="day"></span>
+        <span class="change"></span>
+      </div>
+      <input type="range" min="0" max="1" step="any" value="1" aria-label="Timeline" />
+      <div class="days"></div>
+    </div>
     <dialog class="page">
       <header>
         <span class="path"></span>

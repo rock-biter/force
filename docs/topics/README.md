@@ -5,8 +5,8 @@
 Everything we have met while building FORCE, concepts and sources, and how far we went with each
 one. Use it to look up a term, to find what to read, or to pick what to explore next.
 
-- **168 concepts:** ● 17 studied · ◐ 58 seen · ○ 93 mentioned
-- **89 sources:** ● 7 studied · ◐ 15 seen · ○ 67 mentioned · read by Claude: 24 parts, 3 in full
+- **169 concepts:** ● 17 studied · ◐ 59 seen · ○ 93 mentioned
+- **90 sources:** ● 7 studied · ◐ 15 seen · ○ 68 mentioned · read by Claude: 25 parts, 3 in full
 
 | | Status | What it means |
 | --- | --- | --- |
@@ -53,6 +53,7 @@ How things move, collide and stay together.
 | ● | **[Fixed timestep](fixed-timestep.md)** | Keeping every step the same length, and spending the time of each frame in equal steps | Timestep | [001](../logbook/001-the-flip-book.md) |
 | ○ | FLIP water | Water simulated with particles that carry the motion, plus a grid that keeps it from compressing | Fluid | [Ten Minute Physics](https://matthias-research.github.io/pages/tenMinutePhysics/index.html) |
 | ○ | Fluid | Water, smoke and anything else that flows instead of keeping its shape |  | [docs index](../README.md) |
+| ◐ | Force-directed layout | Placing the nodes of a graph with a simulation: links pull like springs, and every node pushes the others away |  | [011](../logbook/011-the-living-map.md) |
 | ◐ | Forces | Pushes such as gravity or wind: they change velocity, and change a light object more than a heavy one | Simulation step | [001](../logbook/001-the-flip-book.md) |
 | ◐ | Friction | The force that resists sliding between two surfaces in contact |  | [004](../logbook/004-the-detour.md) |
 | ○ | Gauss-Seidel | Fixing constraints one after another, each using the latest results: converges fast, but it is sequential | Iterative solver | [004](../logbook/004-the-detour.md) |
@@ -138,6 +139,7 @@ How things move, collide and stay together.
 | ◐ | [Box2D, solver.c](https://github.com/erincatto/box2d/blob/main/src/solver.c) | Source code | The internal stages of the solver | Solver, Semi-implicit Euler | [001](../logbook/001-the-flip-book.md) |  |
 | ○ | [Bullet Physics](https://github.com/bulletphysics/bullet3) | Project | A long-lived open source C++ library: rigid bodies, collision detection and soft bodies | Rigid body, Collision detection, Soft body | [004](../logbook/004-the-detour.md) |  |
 | ○ | [cannon-es](https://github.com/pmndrs/cannon-es) | Project | A 3D physics engine written in JavaScript | Rigid body | [004](../logbook/004-the-detour.md) |  |
+| ○ | [d3-force-3d](https://github.com/vasturiano/d3-force-3d)<br>*Vasco Asturiano* | Project | A small library that simulates forces between points in 1, 2 or 3 dimensions, made to lay out graphs | Force-directed layout, Spring | [011](../logbook/011-the-living-map.md) | Parts |
 | ○ | [Detailed Rigid Body Simulation with Extended Position Based Dynamics](https://diglib.eg.org/items/114b20b0-8543-4c54-bd04-42ee60c71946)<br>*Matthias Müller, Miles Macklin, Nuttapong Chentanez, Stefan Jeschke, Tae-Yong Kim, 2020* | Paper | Rigid bodies, contacts and joints solved with XPBD, with implementation details | XPBD, Rigid body, Joint | [004](../logbook/004-the-detour.md) |  |
 | ○ | [Erin Catto, publications](https://box2d.org/publications/)<br>*Erin Catto* | Talk | GDC talks by the creator of Box2D on solvers and collisions | Solver, Collision detection | [001](../logbook/001-the-flip-book.md) |  |
 | ● | [Fix Your Timestep!](https://gafferongames.com/post/fix_your_timestep/) · **[our page](fixed-timestep.md)**<br>*Glenn Fiedler* | Article | Why the step must be fixed, and how to separate it from frames | Fixed timestep, Timestep, Time accumulator, Render interpolation, Spiral of death, Semi-fixed timestep | [001](../logbook/001-the-flip-book.md) |  |

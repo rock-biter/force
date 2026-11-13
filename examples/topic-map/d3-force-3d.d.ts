@@ -9,11 +9,16 @@ declare module 'd3-force-3d' {
     stop(): this
     /** Runs the simulation by hand, for a number of steps. */
     tick(iterations?: number): this
-    /** Sets how far a step may move the nodes: 1 at the start, cooling toward 0. */
+    /** How far a step may move the nodes: 1 at the start, cooling toward 0. */
+    alpha(): number
     alpha(alpha: number): this
+    /** Changes which nodes are simulated. Every force starts over with the new list. */
+    nodes(nodes: N[]): this
   }
 
   interface LinkForce<L> {
+    /** Changes which links pull. Each one names its two nodes by object. */
+    links(links: L[]): this
     distance(distance: Value<L>): this
     strength(strength: Value<L>): this
   }

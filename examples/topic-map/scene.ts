@@ -6,6 +6,11 @@
 // keep their colors, the ones two links away keep half of them, and the rest fades into the paper.
 // A click selects it: the highlight stays, the space around the node opens up (see layout.ts) and
 // the camera glides to it. From there, only the nodes still visible can be clicked.
+//
+// On the timeline the graph shows the map of a past day: the topics not yet on the map are not
+// drawn, and the layout is simulated live (see createGrowingLayout), so it reshapes as they come.
+// There the color has to be earned: a topic is grey while only mentioned, halfway to its color
+// when seen, and fully colored when studied. A link between two studied topics is colored too.
 
 import {
   BufferAttribute,
@@ -22,9 +27,9 @@ import {
 } from 'three'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 import { CSS2DObject, CSS2DRenderer } from 'three/addons/renderers/CSS2DRenderer.js'
-import { areaColor, INK, PAPER } from './colors.js'
+import { areaColor, GREY, INK, PAPER } from './colors.js'
 import type { Graph, Link, LinkType, Status } from './data.js'
-import type { Layout } from './layout.js'
+import { createGrowingLayout, type GrowingLayout, type Layout } from './layout.js'
 
 const STATUS_INDEX: Record<Status, number> = { mentioned: 0, seen: 1, studied: 2 }
 /** Diameter of a node, in the units of the layout. */
@@ -63,6 +68,10 @@ const FADE_TIME = 0.45
 const MOVE_TIME = 0.9
 /** How fast the camera reaches its goal: higher is faster. */
 const CAMERA_EASE = 6
+/** How fast a node grows to its size when it comes onto the map, or shrinks when it leaves. */
+const POP_EASE = 10
+/** How fast colors change on the timeline, where changes come too close together for a Tween. */
+const TIMELINE_EASE = 6
 
 /**
  * A list of numbers on its way from where it was to a goal, in a set time. It starts slowly,
@@ -80,6 +89,11 @@ class Tween {
   ) {
     this.from = values.slice()
     this.goal = values
+  }
+
+  /** Stops the trip where it is. */
+  cancel(): void {
+    this.progress = 1
   }
 
   /** Starts a trip from the values as they are now. */
@@ -108,6 +122,7 @@ const VERTEX = /* glsl */ `
   attribute float aSize;   // diameter, in layout units
   attribute vec3 aColor;   // the color of the topic's area
   attribute float aFocus;  // 0 faded, 0.5 two links away, 1 normal, 2 selected
+  attribute float aPresent; // 0 not on the map yet, 1 on the map: only the timeline changes it
   uniform float uSelectedScale;
   uniform float uScale;    // layout units to pixels, at distance 1
   uniform float uMinSize;  // pixels
@@ -127,12 +142,15 @@ const VERTEX = /* glsl */ `
     gl_Position = projectionMatrix * viewPosition;
     // Perspective by hand: a point gets smaller as it gets farther, like a mesh would.
     gl_PointSize = max(aSize * uScale / -viewPosition.z, uMinSize);
-    gl_PointSize *= mix(1.0, uSelectedScale, vSelected);
+    gl_PointSize *= mix(1.0, uSelectedScale, vSelected) * aPresent;
 
     // Faded nodes must not hide the others, even when they are closer. Depth goes from -1 (near)
     // to 1 (far): squeeze each group into a third of it, the faded nodes at the far end.
     float depth = gl_Position.z / gl_Position.w;
     gl_Position.z = (depth / 3.0 + mix(2.0 / 3.0, -2.0 / 3.0, vFocus)) * gl_Position.w;
+
+    // A point cannot have size 0: one that is not on the map is sent out of the view instead.
+    if (aPresent < 0.01) gl_Position = vec4(2.0, 2.0, 2.0, 1.0);
 
     vStatus = aStatus;
     vKind = aKind;
@@ -142,6 +160,8 @@ const VERTEX = /* glsl */ `
 
 const FRAGMENT = /* glsl */ `
   uniform vec3 uPaper;
+  uniform vec3 uGrey;
+  uniform float uEarned;  // 0: every node has its color. 1, on the timeline: color by status
   uniform float uOutline; // pixels
   uniform float uSelectedScale;
   uniform float uFaded;
@@ -170,8 +190,13 @@ const FRAGMENT = /* glsl */ `
     // studied: full. seen: outline and left half. mentioned: outline only.
     float fill = vStatus > 1.5 ? 1.0 : vStatus > 0.5 ? max(outline, leftHalf) : outline;
 
+    // On the timeline the color is earned: grey when mentioned, halfway when seen, full when
+    // studied.
+    float earned = vStatus > 1.5 ? 1.0 : vStatus > 0.5 ? 0.5 : 0.0;
+    vec3 own = mix(vColor, mix(uGrey, vColor, earned), uEarned);
+
     // Out of the selection: the ink loses its color, then most of its strength.
-    vec3 ink = mix(vec3(dot(vColor, vec3(0.2126, 0.7152, 0.0722))), vColor, vFocus);
+    vec3 ink = mix(vec3(dot(own, vec3(0.2126, 0.7152, 0.0722))), own, vFocus);
     // The empty part is paper, not a hole: the lines under a node stay hidden.
     vec3 color = mix(uPaper, ink, fill * mix(uFaded, 1.0, vFocus));
 
@@ -184,7 +209,7 @@ const FRAGMENT = /* glsl */ `
 
     float alpha = max(shape, disc);
     if (alpha <= 0.0) discard;
-    gl_FragColor = vec4(mix(mix(uPaper, vColor, ring), color, shape), alpha);
+    gl_FragColor = vec4(mix(mix(uPaper, own, ring), color, shape), alpha);
     #include <colorspace_fragment>
   }
 `
@@ -236,6 +261,19 @@ export class GraphScene {
   private readonly overviewDistance: number
   private lastTime = 0
 
+  /** The status each topic is drawn with. Null only on the timeline: not on the map yet. */
+  private statuses: (Status | null)[]
+  /** True while the graph shows a past day of the timeline. */
+  private onTimeline = false
+  /** The live layout of the timeline, made the first time it is needed. */
+  private growing: GrowingLayout | null = null
+  private readonly statusAttribute: BufferAttribute
+  private readonly sizeAttribute: BufferAttribute
+  /** Per node: 0 when it is not on the map, 1 when it is, and in between while it pops in. */
+  private readonly present: BufferAttribute
+  /** Per line vertex: the color of the area of the link's first topic. */
+  private readonly lineColorArea: Float32Array
+
   constructor(
     private readonly graph: Graph,
     private readonly layout: Layout,
@@ -243,6 +281,7 @@ export class GraphScene {
     private readonly onSelect: (index: number | null) => void,
   ) {
     const { topics, links } = graph
+    this.statuses = topics.map((topic) => topic.status)
     this.scene.background = new Color(PAPER)
 
     const positions = layout.rest.slice()
@@ -259,6 +298,7 @@ export class GraphScene {
     const linePositions = new Float32Array(links.length * 6)
     this.lineColorNormal = new Float32Array(links.length * 6)
     this.lineColorFaded = new Float32Array(links.length * 6)
+    this.lineColorArea = new Float32Array(links.length * 6)
     const paper = new Color(PAPER)
     links.forEach((link, index) => {
       const normal = paper.clone().lerp(new Color(INK), LINK_INK[link.type])
@@ -268,6 +308,7 @@ export class GraphScene {
         linePositions.set(positions.subarray(node * 3, node * 3 + 3), offset)
         normal.toArray(this.lineColorNormal, offset)
         faded.toArray(this.lineColorFaded, offset)
+        new Color(areaColor(topics[link.source].area)).toArray(this.lineColorArea, offset)
       }
     })
     this.lineColorGoal = this.lineColorNormal.slice()
@@ -301,18 +342,16 @@ export class GraphScene {
       )
     this.nodePosition = new BufferAttribute(positions, 3)
     nodeGeometry.setAttribute('position', this.nodePosition)
-    nodeGeometry.setAttribute(
-      'aStatus',
-      attribute((i) => STATUS_INDEX[topics[i].status]),
-    )
+    this.statusAttribute = attribute((i) => STATUS_INDEX[topics[i].status])
+    nodeGeometry.setAttribute('aStatus', this.statusAttribute)
     nodeGeometry.setAttribute(
       'aKind',
       attribute((i) => (topics[i].kind === 'concept' ? 0 : 1)),
     )
-    nodeGeometry.setAttribute(
-      'aSize',
-      attribute((i) => NODE_SIZE[topics[i].status]),
-    )
+    this.sizeAttribute = attribute((i) => NODE_SIZE[topics[i].status])
+    nodeGeometry.setAttribute('aSize', this.sizeAttribute)
+    this.present = attribute(() => 1)
+    nodeGeometry.setAttribute('aPresent', this.present)
     // three.js wants colors as "linear" numbers: Color does the conversion from the usual hex.
     const colors = new Float32Array(topics.length * 3)
     topics.forEach((topic, index) => {
@@ -329,6 +368,8 @@ export class GraphScene {
       fragmentShader: FRAGMENT,
       uniforms: {
         uPaper: { value: new Color(PAPER) },
+        uGrey: { value: new Color(GREY) },
+        uEarned: { value: 0 },
         uScale: { value: 1 },
         uMinSize: { value: 1 },
         uOutline: { value: 1 },
@@ -378,7 +419,7 @@ export class GraphScene {
 
   /** Selects a topic, or clears the selection with null. */
   select(index: number | null): void {
-    if (index === this.selected) return
+    if (index === this.selected || (this.onTimeline && index !== null)) return
     this.selected = index
     this.hover(null)
     this.highlight(index)
@@ -401,6 +442,51 @@ export class GraphScene {
       this.flight = { target, distance }
     }
     this.onSelect(index)
+  }
+
+  /**
+   * Shows the map of a past day: the status of each topic that day, null for a topic not on the
+   * map yet. With null, goes back to the map of today, and the nodes glide to their usual places.
+   */
+  setTimeline(statuses: (Status | null)[] | null): void {
+    const { topics } = this.graph
+    if (statuses === null) {
+      if (!this.onTimeline) return
+      this.onTimeline = false
+      this.positionTween.to(this.layout.rest)
+      this.lineColorGoal.set(this.lineColorNormal)
+      this.lineColorTween.to(this.lineColorGoal)
+    } else {
+      if (!this.onTimeline) {
+        this.select(null)
+        this.hover(null)
+        this.positionTween.cancel()
+      }
+      this.onTimeline = true
+      this.growing ??= createGrowingLayout(this.graph)
+      this.growing.set(statuses)
+    }
+
+    this.statuses = statuses ? [...statuses] : topics.map((topic) => topic.status)
+    this.statuses.forEach((status, index) => {
+      if (status === null) return
+      this.statusAttribute.array[index] = STATUS_INDEX[status]
+      this.sizeAttribute.array[index] = NODE_SIZE[status]
+      const name = `label ${status}`
+      const label = this.labels[index].element
+      if (label.className !== name) label.className = name
+    })
+    this.statusAttribute.needsUpdate = true
+    this.sizeAttribute.needsUpdate = true
+
+    // On the timeline, a link between two studied topics takes the color of the first of them.
+    if (!this.onTimeline) return
+    this.lineColorTween.cancel()
+    this.graph.links.forEach((link, line) => {
+      const studied = [link.source, link.target].every((node) => this.statuses[node] === 'studied')
+      const colors = studied ? this.lineColorArea : this.lineColorNormal
+      this.lineColorGoal.set(colors.subarray(line * 6, line * 6 + 6), line * 6)
+    })
   }
 
   /**
@@ -444,11 +530,15 @@ export class GraphScene {
     this.lineColorTween.to(this.lineColorGoal)
   }
 
-  /** Puts both ends of every line where its nodes are now. */
+  /**
+   * Puts both ends of every line where its nodes are now. A line to a topic that is not on the
+   * map gets both ends in the same place, so nothing is drawn.
+   */
   private updateLines(): void {
     const write = (attribute: BufferAttribute, lines: Link[]) => {
       lines.forEach((link, line) => {
-        for (const [end, node] of [link.source, link.target].entries()) {
+        const drawn = this.statuses[link.source] !== null && this.statuses[link.target] !== null
+        for (const [end, node] of [link.source, drawn ? link.target : link.source].entries()) {
           attribute.array.set(this.positions.subarray(node * 3, node * 3 + 3), line * 6 + end * 3)
         }
       })
@@ -509,6 +599,7 @@ export class GraphScene {
    */
   private pick(x: number, y: number): number | null {
     const { screen } = this
+    if (this.onTimeline) return null // the timeline is to watch: nothing to pick
     let best: number | null = null
     let bestDistance = Number.POSITIVE_INFINITY
     this.graph.topics.forEach((_, index) => {
@@ -530,7 +621,7 @@ export class GraphScene {
 
   /** The radius of a node on screen, in CSS pixels. */
   private nodeRadius(index: number): number {
-    const size = NODE_SIZE[this.graph.topics[index].status]
+    const size = NODE_SIZE[this.statuses[index] ?? 'mentioned']
     const pixels = Math.max((size * this.pixelScale) / this.screen[index * 3 + 2], MIN_NODE_PIXELS)
     return (pixels * (index === this.highlighted ? SELECTED_SCALE : 1)) / 2
   }
@@ -557,6 +648,7 @@ export class GraphScene {
     this.lastTime = time
 
     this.settle(elapsed)
+    this.grow(elapsed)
     this.fly(elapsed)
     this.orbit.update()
     this.camera.updateMatrixWorld()
@@ -571,13 +663,48 @@ export class GraphScene {
     if (this.lineColorTween.step(elapsed)) this.lineColor.needsUpdate = true
     if (this.spokesTween.step(elapsed)) this.spokes.material.opacity = this.spokesOpacity[0]
 
-    if (this.positionTween.step(elapsed)) {
-      this.nodePosition.needsUpdate = true
-      this.updateLines()
-      this.labels.forEach((label, index) => {
-        label.position.fromArray(this.positions, index * 3)
-      })
+    if (this.positionTween.step(elapsed)) this.moveNodes()
+  }
+
+  /** Tells three.js that the nodes moved, and takes lines and labels along. */
+  private moveNodes(): void {
+    this.nodePosition.needsUpdate = true
+    this.updateLines()
+    this.labels.forEach((label, index) => {
+      label.position.fromArray(this.positions, index * 3)
+    })
+  }
+
+  /** On the timeline: one more step of the live layout, and the nodes pop in or out. */
+  private grow(elapsed: number): void {
+    if (this.onTimeline && this.growing) {
+      this.growing.step()
+      this.positions.set(this.growing.positions)
+      this.moveNodes()
     }
+    // The colors of the timeline come in gently, and go the same way when it is left.
+    const colorShare = 1 - Math.exp(-elapsed * TIMELINE_EASE)
+    const earned = this.nodes.uniforms.uEarned
+    earned.value += ((this.onTimeline ? 1 : 0) - earned.value) * colorShare
+    if (this.onTimeline) {
+      const colors = this.lineColor.array
+      for (let i = 0; i < colors.length; i++) {
+        colors[i] += (this.lineColorGoal[i] - colors[i]) * colorShare
+      }
+      this.lineColor.needsUpdate = true
+    }
+
+    const present = this.present.array
+    const share = 1 - Math.exp(-elapsed * POP_EASE)
+    let moving = false
+    this.statuses.forEach((status, index) => {
+      const goal = status === null ? 0 : 1
+      if (present[index] === goal) return
+      present[index] += (goal - present[index]) * share
+      if (Math.abs(goal - present[index]) < 0.005) present[index] = goal
+      moving = true
+    })
+    if (moving) this.present.needsUpdate = true
   }
 
   /** Moves the camera toward the selected node, keeping the direction it looks from. */
@@ -622,7 +749,12 @@ export class GraphScene {
       // A node behind the camera gets depth 0: nothing to show, nothing to click.
       screen.set([x, y, point.z < 1 ? depth : 0], index * 3)
 
-      const [near, far] = LABEL_RANGE[topics[index].status]
+      const status = this.statuses[index]
+      if (status === null) {
+        label.visible = false // not on the map yet
+        return
+      }
+      const [near, far] = LABEL_RANGE[status]
       const byDistance = Math.min(Math.max((far * radius - depth) / ((far - near) * radius), 0), 1)
       const focus = this.focusGoal[index]
       const byHighlight = focus >= 1 ? 1 : focus === SECOND ? SECOND_LABEL : 0
@@ -638,7 +770,8 @@ export class GraphScene {
     candidates.sort(
       (a, b) =>
         this.focusGoal[b] - this.focusGoal[a] ||
-        STATUS_INDEX[topics[b].status] - STATUS_INDEX[topics[a].status] ||
+        STATUS_INDEX[this.statuses[b] ?? 'mentioned'] -
+          STATUS_INDEX[this.statuses[a] ?? 'mentioned'] ||
         screen[a * 3 + 2] - screen[b * 3 + 2],
     )
     const placed: [left: number, top: number, right: number, bottom: number][] = []
