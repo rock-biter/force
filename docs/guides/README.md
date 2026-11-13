@@ -8,6 +8,7 @@ Short guides, one concept each, built from the code of FORCE. They are written f
 | --- | --- |
 | [How do you get access to the GPU?](./adapter-and-device.md) | Adapter and device |
 | [How do you send data to the GPU?](./buffers.md) | Buffers |
+| [What does a compute shader look like?](./compute-shader.md) | Compute shaders and WGSL |
 
 ## Planned
 
@@ -15,7 +16,7 @@ The first series comes from [`examples/hello-compute`](../../examples/hello-comp
 
 - [x] How do you get access to the GPU? (adapter and device)
 - [x] How do you send data to the GPU? (buffers)
-- [ ] What does a compute shader look like? (WGSL)
+- [x] What does a compute shader look like? (WGSL)
 - [ ] How do you prepare a shader to run? (pipelines)
 - [ ] How does a shader find its data? (bind groups)
 - [ ] How do you make thousands of threads work? (dispatch and workgroups)

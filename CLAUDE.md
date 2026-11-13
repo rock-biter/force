@@ -9,6 +9,7 @@ Knows JavaScript, three.js and GLSL well. Starts from zero on WebGPU and physics
 
 ## How we work
 
+- **Start with a recap.** At the start of every session, before anything else, briefly recall the last things we did together (`recap` skill).
 - **One step at a time.** When a step is done, stop and wait. Do not run ahead to the next one.
 - **Explain from zero.** The idea with a concrete example first, the technical name after.
 - **Start from what is already known.** Connect new concepts to three.js and GLSL.

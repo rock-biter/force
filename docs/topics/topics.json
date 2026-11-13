@@ -366,9 +366,9 @@
       "id": "compute-shader",
       "kind": "concept",
       "title": "Compute shader",
-      "summary": "A GPU program that calculates instead of drawing",
+      "summary": "A GPU program that calculates instead of drawing: one function run by many threads at once, each with its own number, reading and writing buffers",
       "area": "gpu",
-      "status": "mentioned",
+      "status": "studied",
       "partOf": "webgpu",
       "related": ["gpu-parallelism", "wgsl"],
       "citedIn": [
@@ -377,7 +377,8 @@
         "chatgpt-research",
         "docs/guides/buffers.md"
       ],
-      "code": ["examples/hello-compute/free-fall.wgsl", "src/shaders/integrate.wgsl"]
+      "code": ["examples/hello-compute/free-fall.wgsl", "src/shaders/integrate.wgsl"],
+      "page": "docs/guides/compute-shader.md"
     },
     {
       "id": "wgsl",
@@ -385,9 +386,9 @@
       "title": "WGSL",
       "summary": "The shader language of WebGPU, the counterpart of GLSL",
       "area": "gpu",
-      "status": "mentioned",
+      "status": "seen",
       "partOf": "webgpu",
-      "citedIn": ["docs/guides/README.md", "chatgpt-research"],
+      "citedIn": ["docs/guides/README.md", "chatgpt-research", "docs/guides/compute-shader.md"],
       "code": ["examples/hello-compute/free-fall.wgsl", "src/shaders/integrate.wgsl"]
     },
     {
@@ -428,7 +429,7 @@
       "status": "mentioned",
       "partOf": "webgpu",
       "related": ["compute-pipeline"],
-      "citedIn": ["docs/guides/README.md"],
+      "citedIn": ["docs/guides/README.md", "docs/guides/compute-shader.md"],
       "code": [
         "examples/hello-compute/main.ts",
         "examples/hello-compute/free-fall.wgsl",
@@ -444,7 +445,7 @@
       "status": "mentioned",
       "partOf": "webgpu",
       "related": ["compute-shader"],
-      "citedIn": ["docs/guides/README.md"],
+      "citedIn": ["docs/guides/README.md", "docs/guides/compute-shader.md"],
       "code": [
         "examples/hello-compute/main.ts",
         "examples/hello-compute/free-fall.wgsl",
@@ -1226,7 +1227,7 @@
       "summary": "Memory updates that stay correct even when thousands of threads write to the same place",
       "area": "gpu",
       "status": "mentioned",
-      "citedIn": ["chatgpt-research"]
+      "citedIn": ["chatgpt-research", "wgsl-spec-var-declarations"]
     },
     {
       "id": "determinism",
@@ -1581,7 +1582,8 @@
         "command-queue",
         "buffer",
         "webgpu-errors",
-        "error-scope"
+        "error-scope",
+        "shader-module"
       ],
       "citedIn": [
         "README.md",
@@ -1590,7 +1592,8 @@
         "docs/logbook/008-the-first-loop.md",
         "docs/guides/adapter-and-device.md",
         "docs/logbook/009-the-first-picture.md",
-        "docs/guides/buffers.md"
+        "docs/guides/buffers.md",
+        "docs/guides/compute-shader.md"
       ],
       "url": "https://www.w3.org/TR/webgpu/",
       "claudeRead": "parts"
@@ -1601,9 +1604,14 @@
       "title": "WGSL specification",
       "summary": "The official definition of the shader language",
       "area": "gpu",
-      "status": "mentioned",
-      "about": ["wgsl", "memory-alignment"],
-      "citedIn": [".claude/skills/guide/SKILL.md", "chatgpt-research", "docs/guides/buffers.md"],
+      "status": "seen",
+      "about": ["wgsl", "memory-alignment", "compute-shader", "override-constant", "shader-module"],
+      "citedIn": [
+        ".claude/skills/guide/SKILL.md",
+        "chatgpt-research",
+        "docs/guides/buffers.md",
+        "docs/guides/compute-shader.md"
+      ],
       "url": "https://www.w3.org/TR/WGSL/",
       "claudeRead": "parts"
     },
@@ -2286,7 +2294,11 @@
       "area": "gpu",
       "status": "seen",
       "partOf": "wgsl",
-      "citedIn": ["docs/logbook/008-the-first-loop.md", "docs/guides/buffers.md"],
+      "citedIn": [
+        "docs/logbook/008-the-first-loop.md",
+        "docs/guides/buffers.md",
+        "wgsl-spec-var-declarations"
+      ],
       "code": ["src/shaders/integrate.wgsl", "src/world.ts"]
     },
     {
@@ -2297,7 +2309,12 @@
       "area": "gpu",
       "status": "mentioned",
       "partOf": "buffer",
-      "citedIn": ["docs/logbook/008-the-first-loop.md", "docs/guides/buffers.md"],
+      "citedIn": [
+        "docs/logbook/008-the-first-loop.md",
+        "docs/guides/buffers.md",
+        "docs/guides/compute-shader.md",
+        "wgsl-spec-var-declarations"
+      ],
       "code": ["src/world.ts", "src/shaders/integrate.wgsl"]
     },
     {
@@ -2306,12 +2323,14 @@
       "title": "Override constant",
       "summary": "A WGSL constant set from JavaScript when the pipeline is created, such as the workgroup size",
       "area": "gpu",
-      "status": "mentioned",
+      "status": "seen",
       "partOf": "wgsl",
       "citedIn": [
         "examples/hello-compute/free-fall.wgsl",
         "docs/logbook/008-the-first-loop.md",
-        "docs/logbook/010-the-ground.md"
+        "docs/logbook/010-the-ground.md",
+        "docs/guides/compute-shader.md",
+        "wgsl-spec-value-declarations"
       ],
       "code": ["examples/hello-compute/free-fall.wgsl", "src/shaders/integrate.wgsl"]
     },
@@ -2541,7 +2560,7 @@
       "area": "gpu",
       "status": "seen",
       "partOf": "webgpu",
-      "citedIn": ["docs/guides/buffers.md"]
+      "citedIn": ["docs/guides/buffers.md", "docs/guides/compute-shader.md"]
     },
     {
       "id": "mdn-create-buffer",
@@ -2619,6 +2638,327 @@
       "status": "mentioned",
       "partOf": "webgpu-errors",
       "citedIn": ["docs/guides/buffers.md"]
+    },
+    {
+      "id": "shader-module",
+      "kind": "concept",
+      "title": "Shader module",
+      "summary": "WGSL code handed to the device and compiled; a mistake in it does not throw, and getCompilationInfo() gives the compiler's messages",
+      "area": "gpu",
+      "status": "seen",
+      "partOf": "webgpu",
+      "related": ["compute-shader", "webgpu-errors"],
+      "citedIn": ["docs/guides/compute-shader.md"],
+      "code": ["src/world.ts", "examples/hello-compute/main.ts"]
+    },
+    {
+      "id": "wgsl-spec-value-declarations",
+      "kind": "spec",
+      "title": "WGSL specification, §7.2 Value Declarations",
+      "summary": "The names that stand for a value and never change (const, override, let, function parameters), and the moment each one is fixed",
+      "area": "gpu",
+      "status": "seen",
+      "partOf": "wgsl-spec",
+      "about": [
+        "value-declaration",
+        "shader-lifecycle",
+        "wgsl-const",
+        "const-expression",
+        "abstract-numeric-types",
+        "constructible-type",
+        "override-constant",
+        "override-expression",
+        "pipeline-constant-id",
+        "wgsl-let",
+        "wgsl-scope",
+        "wgsl-references-and-pointers"
+      ],
+      "citedIn": ["wgsl-spec"],
+      "url": "https://www.w3.org/TR/WGSL/#value-decls",
+      "claudeRead": "full"
+    },
+    {
+      "id": "wgsl-spec-var-declarations",
+      "kind": "spec",
+      "title": "WGSL specification, §7.3 var Declarations",
+      "summary": "Variables as named memory: where the memory lives (address space), who may write it (access mode), how long it lasts and what it holds at the start",
+      "area": "gpu",
+      "status": "seen",
+      "partOf": "wgsl-spec",
+      "about": [
+        "wgsl-var",
+        "wgsl-references-and-pointers",
+        "address-space",
+        "access-mode",
+        "uniform-buffer",
+        "storage-buffer",
+        "workgroup-variable",
+        "private-variable",
+        "immediate-data",
+        "textures-and-samplers",
+        "resource-interface",
+        "host-shareable-type",
+        "constructible-type",
+        "memory-alignment",
+        "variable-lifetime",
+        "zero-value",
+        "atomic-operations",
+        "wgsl-scope",
+        "override-expression"
+      ],
+      "citedIn": ["wgsl-spec"],
+      "url": "https://www.w3.org/TR/WGSL/#var-decls",
+      "claudeRead": "full"
+    },
+    {
+      "id": "value-declaration",
+      "kind": "concept",
+      "title": "Value declaration",
+      "summary": "A name for a value that can never change and has no memory behind it: const, override, let and function parameters",
+      "area": "gpu",
+      "status": "mentioned",
+      "partOf": "wgsl",
+      "related": ["wgsl-var"],
+      "citedIn": ["wgsl-spec-value-declarations"]
+    },
+    {
+      "id": "shader-lifecycle",
+      "kind": "concept",
+      "title": "Shader lifecycle",
+      "summary": "The three moments a shader goes through: created from its code, made into a pipeline, executed. Each kind of constant is fixed at one of them",
+      "area": "gpu",
+      "status": "mentioned",
+      "partOf": "wgsl",
+      "related": ["shader-module", "compute-pipeline"],
+      "citedIn": ["wgsl-spec-value-declarations"]
+    },
+    {
+      "id": "wgsl-const",
+      "kind": "concept",
+      "title": "const declaration",
+      "summary": "A WGSL constant fixed when the shader is compiled: it needs a value the compiler can work out by itself",
+      "area": "gpu",
+      "status": "mentioned",
+      "partOf": "value-declaration",
+      "citedIn": ["wgsl-spec-value-declarations"]
+    },
+    {
+      "id": "const-expression",
+      "kind": "concept",
+      "title": "Const-expression",
+      "summary": "An expression the compiler can evaluate while compiling the shader, such as 2 * 3 or vec3(1, 2, 3)",
+      "area": "gpu",
+      "status": "mentioned",
+      "partOf": "wgsl",
+      "related": ["override-expression"],
+      "citedIn": ["wgsl-spec-value-declarations"]
+    },
+    {
+      "id": "abstract-numeric-types",
+      "kind": "concept",
+      "title": "Abstract numeric types",
+      "summary": "The types of numbers written without a suffix (AbstractInt, AbstractFloat): they adapt to i32, u32 or f32 where they are used, which the spec calls concretization",
+      "area": "gpu",
+      "status": "mentioned",
+      "partOf": "wgsl",
+      "citedIn": ["wgsl-spec-value-declarations"]
+    },
+    {
+      "id": "constructible-type",
+      "kind": "concept",
+      "title": "Constructible type",
+      "summary": "A type whose values can be created, copied and passed around: scalars, vectors, matrices, fixed-size arrays and structs made of them",
+      "area": "gpu",
+      "status": "mentioned",
+      "partOf": "wgsl",
+      "citedIn": ["wgsl-spec-value-declarations", "wgsl-spec-var-declarations"]
+    },
+    {
+      "id": "override-expression",
+      "kind": "concept",
+      "title": "Override-expression",
+      "summary": "An expression built from override constants, known only when the pipeline is created: it can size an array or a workgroup",
+      "area": "gpu",
+      "status": "mentioned",
+      "partOf": "override-constant",
+      "citedIn": ["wgsl-spec-value-declarations", "wgsl-spec-var-declarations"]
+    },
+    {
+      "id": "pipeline-constant-id",
+      "kind": "concept",
+      "title": "Pipeline constant ID",
+      "summary": "The @id(n) attribute gives an override a number, and JavaScript then sets it by that number and not by its name",
+      "area": "gpu",
+      "status": "mentioned",
+      "partOf": "override-constant",
+      "citedIn": ["wgsl-spec-value-declarations"]
+    },
+    {
+      "id": "wgsl-let",
+      "kind": "concept",
+      "title": "let declaration",
+      "summary": "A name for a value computed while the shader runs and fixed from then on: only inside functions, and it can also hold a pointer",
+      "area": "gpu",
+      "status": "mentioned",
+      "partOf": "value-declaration",
+      "code": ["src/shaders/integrate.wgsl"],
+      "citedIn": ["wgsl-spec-value-declarations", "docs/guides/compute-shader.md"]
+    },
+    {
+      "id": "wgsl-scope",
+      "kind": "concept",
+      "title": "Module and function scope",
+      "summary": "Where a name can be used: everywhere in the shader if declared outside functions, or from its line to the closing brace if declared inside one",
+      "area": "gpu",
+      "status": "mentioned",
+      "partOf": "wgsl",
+      "citedIn": ["wgsl-spec-value-declarations", "wgsl-spec-var-declarations"]
+    },
+    {
+      "id": "wgsl-references-and-pointers",
+      "kind": "concept",
+      "title": "References and pointers",
+      "summary": "A variable is a reference to memory, typed ref<address space, type, access mode>: reading it is a load, assigning to it a store, and & turns it into a pointer. Values have no memory, so no pointer",
+      "area": "gpu",
+      "status": "mentioned",
+      "partOf": "wgsl",
+      "code": ["src/shaders/integrate.wgsl"],
+      "citedIn": [
+        "wgsl-spec-value-declarations",
+        "wgsl-spec-var-declarations",
+        "docs/guides/compute-shader.md"
+      ]
+    },
+    {
+      "id": "wgsl-var",
+      "kind": "concept",
+      "title": "var declaration",
+      "summary": "The only thing that can change in WGSL: a name for a piece of memory holding a value of one type (the store type)",
+      "area": "gpu",
+      "status": "mentioned",
+      "partOf": "wgsl",
+      "code": ["src/shaders/integrate.wgsl"],
+      "citedIn": ["wgsl-spec-var-declarations", "docs/guides/compute-shader.md"]
+    },
+    {
+      "id": "address-space",
+      "kind": "concept",
+      "title": "Address space",
+      "summary": "Where a variable's memory lives, written var<…>: function, private, workgroup, uniform, storage, immediate, or handle for textures and samplers",
+      "area": "gpu",
+      "status": "mentioned",
+      "partOf": "wgsl-var",
+      "related": ["access-mode"],
+      "code": ["src/shaders/integrate.wgsl"],
+      "citedIn": ["wgsl-spec-var-declarations"]
+    },
+    {
+      "id": "access-mode",
+      "kind": "concept",
+      "title": "Access mode",
+      "summary": "Whether a variable's memory can be read, written or both. Only storage buffers let you choose, and they are read-only unless you write read_write",
+      "area": "gpu",
+      "status": "mentioned",
+      "partOf": "wgsl-var",
+      "code": ["src/shaders/integrate.wgsl"],
+      "citedIn": ["wgsl-spec-var-declarations", "docs/guides/compute-shader.md"]
+    },
+    {
+      "id": "storage-buffer",
+      "kind": "concept",
+      "title": "Storage buffer",
+      "summary": "A buffer seen from the shader as var<storage>: it can be big, hold an array with no fixed length, and be written by the threads",
+      "area": "gpu",
+      "status": "mentioned",
+      "partOf": "buffer",
+      "related": ["uniform-buffer"],
+      "code": ["src/world.ts", "src/shaders/integrate.wgsl"],
+      "citedIn": ["wgsl-spec-var-declarations", "docs/guides/compute-shader.md"]
+    },
+    {
+      "id": "workgroup-variable",
+      "kind": "concept",
+      "title": "Workgroup variable",
+      "summary": "A var<workgroup>: memory shared by the threads of one workgroup, only in compute shaders, starting at zero",
+      "area": "gpu",
+      "status": "mentioned",
+      "partOf": "address-space",
+      "related": ["workgroup", "atomic-operations"],
+      "citedIn": ["wgsl-spec-var-declarations"]
+    },
+    {
+      "id": "private-variable",
+      "kind": "concept",
+      "title": "Private variable",
+      "summary": "A var<private>: a global variable of which every thread gets its own separate copy",
+      "area": "gpu",
+      "status": "mentioned",
+      "partOf": "address-space",
+      "citedIn": ["wgsl-spec-var-declarations"]
+    },
+    {
+      "id": "immediate-data",
+      "kind": "concept",
+      "title": "Immediate data",
+      "summary": "A var<immediate>: a few values set straight from the command encoder with setImmediates, with no buffer to create",
+      "area": "gpu",
+      "status": "mentioned",
+      "partOf": "address-space",
+      "related": ["uniform-buffer"],
+      "citedIn": ["wgsl-spec-var-declarations"]
+    },
+    {
+      "id": "textures-and-samplers",
+      "kind": "concept",
+      "title": "Textures and samplers in WGSL",
+      "summary": "Module-scope variables holding an opaque handle to a texture or a sampler; a storage texture can also be written, with textureStore",
+      "area": "gpu",
+      "status": "mentioned",
+      "partOf": "wgsl",
+      "citedIn": ["wgsl-spec-var-declarations"]
+    },
+    {
+      "id": "resource-interface",
+      "kind": "concept",
+      "title": "Resource interface",
+      "summary": "Everything a shader expects from outside: its uniform buffers, storage buffers, textures and samplers, each with a @group and a @binding",
+      "area": "gpu",
+      "status": "mentioned",
+      "partOf": "wgsl",
+      "related": ["bind-group"],
+      "code": ["src/shaders/integrate.wgsl"],
+      "citedIn": ["wgsl-spec-var-declarations"]
+    },
+    {
+      "id": "host-shareable-type",
+      "kind": "concept",
+      "title": "Host-shareable type",
+      "summary": "A type with a fixed layout in bytes, so JavaScript and the shader agree on it: the only kind allowed in a buffer",
+      "area": "gpu",
+      "status": "mentioned",
+      "partOf": "wgsl",
+      "related": ["memory-alignment"],
+      "citedIn": ["wgsl-spec-var-declarations"]
+    },
+    {
+      "id": "variable-lifetime",
+      "kind": "concept",
+      "title": "Variable lifetime",
+      "summary": "How long a variable keeps its memory: the whole run of the shader for globals, its block for locals. Two live variables never share memory, apart from resources",
+      "area": "gpu",
+      "status": "mentioned",
+      "partOf": "wgsl-var",
+      "citedIn": ["wgsl-spec-var-declarations"]
+    },
+    {
+      "id": "zero-value",
+      "kind": "concept",
+      "title": "Zero value",
+      "summary": "What a variable holds when it is declared with no initial value: all zeros, never garbage",
+      "area": "gpu",
+      "status": "mentioned",
+      "partOf": "wgsl-var",
+      "citedIn": ["wgsl-spec-var-declarations"]
     }
   ]
 }

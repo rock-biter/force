@@ -5,8 +5,8 @@
 Everything we have met while building FORCE, concepts and sources, and how far we went with each
 one. Use it to look up a term, to find what to read, or to pick what to explore next.
 
-- **135 concepts:** ● 14 studied · ◐ 51 seen · ○ 70 mentioned
-- **80 sources:** ● 5 studied · ◐ 11 seen · ○ 64 mentioned · read by Claude: 17 parts, 0 in full
+- **159 concepts:** ● 15 studied · ◐ 54 seen · ○ 90 mentioned
+- **82 sources:** ● 5 studied · ◐ 14 seen · ○ 63 mentioned · read by Claude: 17 parts, 2 in full
 
 | | Status | What it means |
 | --- | --- | --- |
@@ -194,7 +194,10 @@ WebGPU, WGSL and how to make thousands of threads work.
 
 | | Concept | In short | Part of | First cited in |
 | --- | --- | --- | --- | --- |
+| ○ | Abstract numeric types | The types of numbers written without a suffix (AbstractInt, AbstractFloat): they adapt to i32, u32 or f32 where they are used, which the spec calls concretization | WGSL | [WGSL specification, §7.2 Value Declarations](https://www.w3.org/TR/WGSL/#value-decls) |
+| ○ | Access mode | Whether a variable's memory can be read, written or both. Only storage buffers let you choose, and they are read-only unless you write read_write | var declaration | [WGSL specification, §7.3 var Declarations](https://www.w3.org/TR/WGSL/#var-decls) |
 | ● | **[Adapter and device](../guides/adapter-and-device.md)** | How a page gets the GPU: the adapter stands for a GPU on the system, the device is our own connection to it | WebGPU | [guides index](../guides/README.md) |
+| ○ | Address space | Where a variable's memory lives, written var<…>: function, private, workgroup, uniform, storage, immediate, or handle for textures and samplers | var declaration | [WGSL specification, §7.3 var Declarations](https://www.w3.org/TR/WGSL/#var-decls) |
 | ○ | Atomic operations | Memory updates that stay correct even when thousands of threads write to the same place |  | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |
 | ◐ | Billboard | A flat shape turned to face the camera in every frame, the base of most impostors | Impostor | [009](../logbook/009-the-first-picture.md) |
 | ○ | Bind group | Connects real buffers to the numbered slots a shader reads from | WebGPU | [guides index](../guides/README.md) |
@@ -202,28 +205,49 @@ WebGPU, WGSL and how to make thousands of threads work.
 | ○ | Commands and queue | GPU work is recorded first, and runs only when it is submitted to the queue | WebGPU | [guides index](../guides/README.md) |
 | ○ | Compatibility mode | A restricted WebGPU that also runs on older graphics APIs, such as OpenGL ES 3.1 | WebGPU | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |
 | ○ | Compute pipeline | A compiled shader plus its fixed settings, ready to run | WebGPU | [guides index](../guides/README.md) |
-| ○ | Compute shader | A GPU program that calculates instead of drawing | WebGPU | [000](../logbook/000-the-launch.md) |
+| ● | **[Compute shader](../guides/compute-shader.md)** | A GPU program that calculates instead of drawing: one function run by many threads at once, each with its own number, reading and writing buffers | WebGPU | [000](../logbook/000-the-launch.md) |
+| ○ | const declaration | A WGSL constant fixed when the shader is compiled: it needs a value the compiler can work out by itself | Value declaration | [WGSL specification, §7.2 Value Declarations](https://www.w3.org/TR/WGSL/#value-decls) |
+| ○ | Const-expression | An expression the compiler can evaluate while compiling the shader, such as 2 * 3 or vec3(1, 2, 3) | WGSL | [WGSL specification, §7.2 Value Declarations](https://www.w3.org/TR/WGSL/#value-decls) |
 | ○ | Constraint graph coloring | Splitting constraints into groups that share no body, so each group can be solved in parallel |  | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |
+| ○ | Constructible type | A type whose values can be created, copied and passed around: scalars, vectors, matrices, fixed-size arrays and structs made of them | WGSL | [WGSL specification, §7.2 Value Declarations](https://www.w3.org/TR/WGSL/#value-decls) |
 | ◐ | Device limits | What a given GPU guarantees, such as buffer sizes and workgroup memory: to check before choosing a pipeline | WebGPU | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |
 | ◐ | Device loss | The browser can take the GPU back at any time: every buffer and pipeline, and the data in them, must then be created again | Adapter and device | [adapter-and-device](../guides/adapter-and-device.md) |
 | ○ | Error scope | Catches WebGPU errors in code: push a scope before the calls, pop it after to get the first error, or null | WebGPU errors | [buffers](../guides/buffers.md) |
 | ○ | GPU-resident simulation | Keeping the simulation's data on the GPU, and not reading it back every frame |  | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |
+| ○ | Host-shareable type | A type with a fixed layout in bytes, so JavaScript and the shader agree on it: the only kind allowed in a buffer | WGSL | [WGSL specification, §7.3 var Declarations](https://www.w3.org/TR/WGSL/#var-decls) |
+| ○ | Immediate data | A var<immediate>: a few values set straight from the command encoder with setImmediates, with no buffer to create | Address space | [WGSL specification, §7.3 var Declarations](https://www.w3.org/TR/WGSL/#var-decls) |
 | ◐ | Impostor | A flat shape that a shader paints to look like a 3D object, such as a sphere drawn on one triangle |  | [009](../logbook/009-the-first-picture.md) |
 | ◐ | Instancing | Drawing the same geometry many times in one call, each copy with its own data, like InstancedMesh in three.js |  | [009](../logbook/009-the-first-picture.md) |
+| ○ | let declaration | A name for a value computed while the shader runs and fixed from then on: only inside functions, and it can also hold a pointer | Value declaration | [WGSL specification, §7.2 Value Declarations](https://www.w3.org/TR/WGSL/#value-decls) |
 | ◐ | Memory alignment | Where a value may start in memory: a vec3f starts on a multiple of 16 bytes, so in an array it takes 16 bytes, not 12 | WGSL | [008](../logbook/008-the-first-loop.md) |
-| ○ | Override constant | A WGSL constant set from JavaScript when the pipeline is created, such as the workgroup size | WGSL | [free-fall](../../examples/hello-compute/free-fall.wgsl) |
+| ○ | Module and function scope | Where a name can be used: everywhere in the shader if declared outside functions, or from its line to the closing brace if declared inside one | WGSL | [WGSL specification, §7.2 Value Declarations](https://www.w3.org/TR/WGSL/#value-decls) |
+| ◐ | Override constant | A WGSL constant set from JavaScript when the pipeline is created, such as the workgroup size | WGSL | [free-fall](../../examples/hello-compute/free-fall.wgsl) |
+| ○ | Override-expression | An expression built from override constants, known only when the pipeline is created: it can size an array or a workgroup | Override constant | [WGSL specification, §7.2 Value Declarations](https://www.w3.org/TR/WGSL/#value-decls) |
 | ○ | Parallel sorting | Sorting many keys at once on the GPU, for example objects by grid cell |  | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |
 | ◐ | Parallel work on the GPU | The GPU runs the same code on thousands of items at once, and is fastest when each one can go its own way |  | [001](../logbook/001-the-flip-book.md) |
+| ○ | Pipeline constant ID | The @id(n) attribute gives an override a number, and JavaScript then sets it by that number and not by its name | Override constant | [WGSL specification, §7.2 Value Declarations](https://www.w3.org/TR/WGSL/#value-decls) |
 | ○ | Prefix sum (scan) | Turning a list of counts into running totals, in parallel: the GPU's way of packing results |  | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |
+| ○ | Private variable | A var<private>: a global variable of which every thread gets its own separate copy | Address space | [WGSL specification, §7.3 var Declarations](https://www.w3.org/TR/WGSL/#var-decls) |
 | ○ | Readback | Copying results from the GPU back into JavaScript | WebGPU | [guides index](../guides/README.md) |
+| ○ | References and pointers | A variable is a reference to memory, typed ref<address space, type, access mode>: reading it is a load, assigning to it a store, and & turns it into a pointer. Values have no memory, so no pointer | WGSL | [WGSL specification, §7.2 Value Declarations](https://www.w3.org/TR/WGSL/#value-decls) |
+| ○ | Resource interface | Everything a shader expects from outside: its uniform buffers, storage buffers, textures and samplers, each with a @group and a @binding | WGSL | [WGSL specification, §7.3 var Declarations](https://www.w3.org/TR/WGSL/#var-decls) |
+| ○ | Shader lifecycle | The three moments a shader goes through: created from its code, made into a pipeline, executed. Each kind of constant is fixed at one of them | WGSL | [WGSL specification, §7.2 Value Declarations](https://www.w3.org/TR/WGSL/#value-decls) |
+| ◐ | Shader module | WGSL code handed to the device and compiled; a mistake in it does not throw, and getCompilationInfo() gives the compiler's messages | WebGPU | [compute-shader](../guides/compute-shader.md) |
+| ○ | Storage buffer | A buffer seen from the shader as var<storage>: it can be big, hold an array with no fixed length, and be written by the threads | Buffer | [WGSL specification, §7.3 var Declarations](https://www.w3.org/TR/WGSL/#var-decls) |
 | ◐ | Structure of arrays (SoA) | One array per property, all positions together and all velocities together, instead of one object per particle |  | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |
+| ○ | Textures and samplers in WGSL | Module-scope variables holding an opaque handle to a texture or a sampler; a storage texture can also be written, with textureStore | WGSL | [WGSL specification, §7.3 var Declarations](https://www.w3.org/TR/WGSL/#var-decls) |
 | ○ | TSL (Three Shading Language) | How three.js writes shaders in JavaScript, compiled to WGSL for its WebGPU renderer |  | [009](../logbook/009-the-first-picture.md) |
 | ○ | Uniform buffer | A small read-only buffer of values shared by every thread, like a GLSL uniform | Buffer | [008](../logbook/008-the-first-loop.md) |
 | ○ | Usage scope | A stretch of GPU work whose parts may run at the same time: in a compute pass, each dispatch is one | WebGPU | [WebGPU specification](https://www.w3.org/TR/webgpu/) |
+| ○ | Value declaration | A name for a value that can never change and has no memory behind it: const, override, let and function parameters | WGSL | [WGSL specification, §7.2 Value Declarations](https://www.w3.org/TR/WGSL/#value-decls) |
+| ○ | var declaration | The only thing that can change in WGSL: a name for a piece of memory holding a value of one type (the store type) | WGSL | [WGSL specification, §7.3 var Declarations](https://www.w3.org/TR/WGSL/#var-decls) |
+| ○ | Variable lifetime | How long a variable keeps its memory: the whole run of the shader for globals, its block for locals. Two live variables never share memory, apart from resources | var declaration | [WGSL specification, §7.3 var Declarations](https://www.w3.org/TR/WGSL/#var-decls) |
 | ○ | WebGPU | The browser API that lets a page use the GPU, both to draw and to calculate |  | [README](../../README.md) |
 | ◐ | WebGPU errors | Most mistakes do not throw: the call returns, the work is skipped, and the browser prints a warning in the console | WebGPU | [buffers](../guides/buffers.md) |
-| ○ | WGSL | The shader language of WebGPU, the counterpart of GLSL | WebGPU | [guides index](../guides/README.md) |
+| ◐ | WGSL | The shader language of WebGPU, the counterpart of GLSL | WebGPU | [guides index](../guides/README.md) |
+| ○ | Workgroup variable | A var<workgroup>: memory shared by the threads of one workgroup, only in compute shaders, starting at zero | Address space | [WGSL specification, §7.3 var Declarations](https://www.w3.org/TR/WGSL/#var-decls) |
 | ○ | Workgroups and dispatch | How the work is split into groups of threads and launched on the GPU | WebGPU | [guides index](../guides/README.md) |
+| ○ | Zero value | What a variable holds when it is declared with no initial value: all zeros, never garbage | var declaration | [WGSL specification, §7.3 var Declarations](https://www.w3.org/TR/WGSL/#var-decls) |
 
 | | Source | Kind | What it gives us | About | First cited in | Claude read |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -250,8 +274,10 @@ WebGPU, WGSL and how to make thousands of threads work.
 | ○ | [WebGPU Best Practices: Device Loss](https://toji.dev/webgpu-best-practices/device-loss) | Article | What makes a device get lost, how to recover, and how to test it | Device loss | [adapter-and-device](../guides/adapter-and-device.md) | Parts |
 | ○ | [WebGPU Fundamentals](https://webgpufundamentals.org/) | Course | Step-by-step lessons | WebGPU | [002](../logbook/002-the-toolbox.md) |  |
 | ○ | [WebGPU on web-features](https://web-platform-dx.github.io/web-features-explorer/features/webgpu/) | Documentation | Which browsers support WebGPU | WebGPU | [Research with ChatGPT](https://chatgpt.com/share/6af42854-7e34-83ed-b697-494a23d0345a) |  |
-| ○ | [WebGPU specification](https://www.w3.org/TR/webgpu/) | Specification | The official definition of the API | WebGPU, Device limits, Usage scope, Adapter and device, Device loss, Commands and queue, Buffer, WebGPU errors, Error scope | [README](../../README.md) | Parts |
-| ○ | [WGSL specification](https://www.w3.org/TR/WGSL/) | Specification | The official definition of the shader language | WGSL, Memory alignment | [guide skill](../../.claude/skills/guide/SKILL.md) | Parts |
+| ○ | [WebGPU specification](https://www.w3.org/TR/webgpu/) | Specification | The official definition of the API | WebGPU, Device limits, Usage scope, Adapter and device, Device loss, Commands and queue, Buffer, WebGPU errors, Error scope, Shader module | [README](../../README.md) | Parts |
+| ◐ | [WGSL specification](https://www.w3.org/TR/WGSL/) | Specification | The official definition of the shader language | WGSL, Memory alignment, Compute shader, Override constant, Shader module | [guide skill](../../.claude/skills/guide/SKILL.md) | Parts |
+| ◐ | [WGSL specification, §7.2 Value Declarations](https://www.w3.org/TR/WGSL/#value-decls) | Specification | The names that stand for a value and never change (const, override, let, function parameters), and the moment each one is fixed | Value declaration, Shader lifecycle, const declaration, Const-expression, Abstract numeric types, Constructible type, Override constant, Override-expression, Pipeline constant ID, let declaration, Module and function scope, References and pointers | [WGSL specification](https://www.w3.org/TR/WGSL/) | In full |
+| ◐ | [WGSL specification, §7.3 var Declarations](https://www.w3.org/TR/WGSL/#var-decls) | Specification | Variables as named memory: where the memory lives (address space), who may write it (access mode), how long it lasts and what it holds at the start | var declaration, References and pointers, Address space, Access mode, Uniform buffer, Storage buffer, Workgroup variable, Private variable, Immediate data, Textures and samplers in WGSL, Resource interface, Host-shareable type, Constructible type, Memory alignment, Variable lifetime, Zero value, Atomic operations, Module and function scope, Override-expression | [WGSL specification](https://www.w3.org/TR/WGSL/) | In full |
 
 ## Engine design
 
