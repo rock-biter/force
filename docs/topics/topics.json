@@ -417,7 +417,7 @@
       "status": "mentioned",
       "partOf": "webgpu",
       "related": ["compute-shader"],
-      "citedIn": ["docs/guides/README.md"],
+      "citedIn": ["docs/guides/README.md", "wgsl-spec-shader-lifecycle"],
       "code": ["examples/hello-compute/main.ts", "src/world.ts"]
     },
     {
@@ -445,7 +445,11 @@
       "status": "mentioned",
       "partOf": "webgpu",
       "related": ["compute-shader"],
-      "citedIn": ["docs/guides/README.md", "docs/guides/compute-shader.md"],
+      "citedIn": [
+        "docs/guides/README.md",
+        "docs/guides/compute-shader.md",
+        "wgsl-spec-shader-lifecycle"
+      ],
       "code": [
         "examples/hello-compute/main.ts",
         "examples/hello-compute/free-fall.wgsl",
@@ -2648,7 +2652,7 @@
       "status": "seen",
       "partOf": "webgpu",
       "related": ["compute-shader", "webgpu-errors"],
-      "citedIn": ["docs/guides/compute-shader.md"],
+      "citedIn": ["docs/guides/compute-shader.md", "wgsl-spec-shader-lifecycle"],
       "code": ["src/world.ts", "examples/hello-compute/main.ts"]
     },
     {
@@ -2725,12 +2729,13 @@
       "id": "shader-lifecycle",
       "kind": "concept",
       "title": "Shader lifecycle",
-      "summary": "The three moments a shader goes through: created from its code, made into a pipeline, executed. Each kind of constant is fixed at one of them",
+      "summary": "The four moments in the life of a shader: its code becomes a module, the module becomes a pipeline, a draw or dispatch starts it, and it ends when every thread is done. Each kind of constant is fixed at one of them",
       "area": "gpu",
-      "status": "mentioned",
+      "status": "seen",
       "partOf": "wgsl",
       "related": ["shader-module", "compute-pipeline"],
-      "citedIn": ["wgsl-spec-value-declarations"]
+      "citedIn": ["wgsl-spec-value-declarations", "wgsl-spec-shader-lifecycle"],
+      "code": ["src/world.ts"]
     },
     {
       "id": "wgsl-const",
@@ -2959,6 +2964,72 @@
       "status": "mentioned",
       "partOf": "wgsl-var",
       "citedIn": ["wgsl-spec-var-declarations"]
+    },
+    {
+      "id": "wgsl-spec-shader-lifecycle",
+      "kind": "spec",
+      "title": "WGSL specification, §2.1 Shader Lifecycle",
+      "summary": "The four moments in the life of a shader: module creation, pipeline creation, execution start, execution end",
+      "area": "gpu",
+      "status": "seen",
+      "partOf": "wgsl-spec",
+      "about": [
+        "shader-lifecycle",
+        "shader-module",
+        "compute-pipeline",
+        "render-pipeline",
+        "entry-point",
+        "shader-stage",
+        "workgroup",
+        "invocation"
+      ],
+      "citedIn": ["wgsl-spec"],
+      "url": "https://www.w3.org/TR/WGSL/#shader-lifecycle",
+      "claudeRead": "full"
+    },
+    {
+      "id": "entry-point",
+      "kind": "concept",
+      "title": "Entry point",
+      "summary": "The function where a shader starts, marked @compute, @vertex or @fragment. A pipeline compiles only the code its entry point reaches: the rest of the module is dropped",
+      "area": "gpu",
+      "status": "mentioned",
+      "partOf": "wgsl",
+      "citedIn": ["wgsl-spec-shader-lifecycle", "docs/guides/compute-shader.md"],
+      "code": ["src/shaders/integrate.wgsl"]
+    },
+    {
+      "id": "shader-stage",
+      "kind": "concept",
+      "title": "Shader stage",
+      "summary": "The kind of work a shader does in a pipeline: vertex, fragment or compute. Each stage is compiled on its own, even from the same module",
+      "area": "gpu",
+      "status": "mentioned",
+      "partOf": "wgsl",
+      "related": ["entry-point"],
+      "citedIn": ["wgsl-spec-shader-lifecycle"]
+    },
+    {
+      "id": "render-pipeline",
+      "kind": "concept",
+      "title": "Render pipeline",
+      "summary": "The pipeline that draws: a vertex and a fragment shader plus their fixed settings, made with createRenderPipeline()",
+      "area": "gpu",
+      "status": "mentioned",
+      "partOf": "webgpu",
+      "related": ["compute-pipeline"],
+      "citedIn": ["wgsl-spec-shader-lifecycle"]
+    },
+    {
+      "id": "invocation",
+      "kind": "concept",
+      "title": "Invocation",
+      "summary": "One run of an entry point: what our guides call a thread. A dispatch or a draw starts many, and the shader ends when all are done",
+      "area": "gpu",
+      "status": "mentioned",
+      "partOf": "wgsl",
+      "related": ["gpu-parallelism", "workgroup"],
+      "citedIn": ["wgsl-spec-shader-lifecycle", "docs/guides/compute-shader.md"]
     }
   ]
 }
