@@ -52,6 +52,8 @@
     "@tweakpane/plugin-essentials": "^0.2.1",
     "@types/three": "^0.187.0",
     "@types/web": "^0.0.360",
+    "d3-force-3d": "^3.0.6",
+    "marked": "^18.2.0",
     "three": "^0.187.0",
     "tweakpane": "^4.0.5",
     "typescript": "^7.0.2",

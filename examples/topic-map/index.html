@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>FORCE: topic map</title>
+    <style>
+      :root {
+        --paper: #f2f1ec;
+        --ink: #16161a;
+        --grey: #85857f;
+      }
+      body {
+        margin: 0;
+        overflow: hidden;
+        background: var(--paper);
+        color: var(--ink);
+        font: 11px / 1.5 ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+      }
+      canvas {
+        display: block;
+      }
+
+      /* The layer of labels sits over the canvas and lets the mouse through to it. */
+      .labels {
+        position: fixed;
+        inset: 0;
+        overflow: hidden;
+        pointer-events: none;
+      }
+      .label {
+        white-space: nowrap;
+        transition: opacity 0.2s;
+      }
+      .label.studied {
+        font-weight: 700;
+      }
+      .label.mentioned {
+        color: var(--grey);
+      }
+
+      .legend {
+        position: fixed;
+        top: 16px;
+        left: 16px;
+        margin: 0;
+        user-select: none;
+      }
+      .legend h1 {
+        margin: 0 0 8px;
+        font: inherit;
+        font-weight: 700;
+      }
+      .legend table {
+        border-collapse: collapse;
+      }
+      .legend td {
+        padding: 0 10px 0 0;
+      }
+      .legend td:last-child {
+        text-align: right;
+        color: var(--grey);
+      }
+      /* A little air between the groups of the legend. */
+      .legend .gap {
+        border-top: 8px solid transparent;
+      }
+
+      .panel {
+        position: fixed;
+        left: 16px;
+        bottom: 16px;
+        width: min(340px, calc(100vw - 58px));
+        padding: 12px;
+        border: 1px solid var(--ink);
+        background: var(--paper);
+      }
+      .panel h2,
+      .panel p {
+        margin: 0;
+        font: inherit;
+      }
+      .panel h2 {
+        font-weight: 700;
+      }
+      .panel .meta {
+        margin-bottom: 8px;
+        color: var(--grey);
+      }
+
+      /* The same shapes the shader draws. */
+      .mark {
+        display: inline-block;
+        width: 9px;
+        height: 9px;
+        box-sizing: border-box;
+        border: 1.25px solid var(--mark, var(--ink));
+        border-radius: 50%;
+        vertical-align: -1px;
+      }
+      .mark.square {
+        border-radius: 0;
+      }
+      .mark.studied {
+        background: var(--mark, var(--ink));
+      }
+      .mark.seen {
+        background: linear-gradient(to right, var(--mark, var(--ink)) 50%, transparent 50%);
+      }
+
+      .panel .actions {
+        display: flex;
+        gap: 16px;
+        margin-top: 10px;
+      }
+      button,
+      a {
+        padding: 0;
+        border: 0;
+        background: none;
+        color: inherit;
+        font: inherit;
+        text-decoration: underline;
+        text-underline-offset: 3px;
+        cursor: pointer;
+      }
+
+      /* The page of a topic, over the graph. */
+      .page {
+        width: min(760px, calc(100vw - 32px));
+        max-height: calc(100vh - 64px);
+        padding: 0;
+        border: 1px solid var(--ink);
+        background: var(--paper);
+        color: var(--ink);
+        font: 12px / 1.7 ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+      }
+      .page[open] {
+        display: flex;
+        flex-direction: column;
+      }
+      .page::backdrop {
+        background: rgb(242 241 236 / 0.85);
+      }
+      .page header {
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 10px 24px;
+        border-bottom: 1px solid var(--ink);
+        color: var(--grey);
+      }
+      .page article {
+        overflow: auto;
+        padding: 8px 24px 32px;
+      }
+      .page h1 {
+        font-size: 18px;
+        line-height: 1.3;
+      }
+      .page h2 {
+        margin-top: 32px;
+        font-size: 14px;
+      }
+      .page h3 {
+        font-size: 12px;
+      }
+      .page pre {
+        overflow: auto;
+        padding: 12px;
+        border: 1px solid var(--grey);
+      }
+      .page :not(pre) > code {
+        background: rgb(22 22 26 / 0.07);
+        padding: 1px 3px;
+      }
+      .page table {
+        border-collapse: collapse;
+      }
+      .page th,
+      .page td {
+        padding: 4px 10px;
+        border: 1px solid var(--grey);
+        text-align: left;
+        vertical-align: top;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="legend">
+      <h1>FORCE · topic map</h1>
+      <table>
+        <tr>
+          <td><span class="mark studied"></span></td>
+          <td>studied</td>
+          <td data-count="studied"></td>
+        </tr>
+        <tr>
+          <td><span class="mark seen"></span></td>
+          <td>seen</td>
+          <td data-count="seen"></td>
+        </tr>
+        <tr>
+          <td><span class="mark mentioned"></span></td>
+          <td>mentioned</td>
+          <td data-count="mentioned"></td>
+        </tr>
+        <tr class="gap">
+          <td><span class="mark"></span></td>
+          <td>concept</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td><span class="mark square"></span></td>
+          <td>source</td>
+          <td></td>
+        </tr>
+        <tbody class="areas"></tbody>
+      </table>
+    </div>
+    <aside class="panel" hidden></aside>
+    <dialog class="page">
+      <header>
+        <span class="path"></span>
+        <button class="close" type="button">close ×</button>
+      </header>
+      <article></article>
+    </dialog>
+    <script type="module" src="./main.ts"></script>
+  </body>
+</html>

@@ -12,7 +12,8 @@ description: >-
 # Topic
 
 The map answers one question at a glance: what have we really studied, and what have we only heard
-of? Later it will also feed an interactive 3D graph, so keep it accurate and its ids stable.
+of? It also feeds an interactive 3D graph (`examples/topic-map/`) and its timeline, so keep it
+accurate, its ids stable and its dates true.
 
 ## The map
 
@@ -28,6 +29,7 @@ code). Both live in the same list, so the graph can link them.
   "summary": "A rough check that discards pairs of objects too far apart to touch",
   "area": "physics",
   "status": "seen",
+  "since": { "mentioned": "2026-11-05", "seen": "2026-11-08" },
   "partOf": "collision-detection",
   "related": ["bounding-box"],
   "citedIn": ["docs/logbook/001-the-flip-book.md", "ten-minute-physics"],
@@ -44,6 +46,7 @@ code). Both live in the same list, so the graph can link them.
   "summary": "Why the step must be fixed, and how to separate it from frames",
   "area": "physics",
   "status": "seen",
+  "since": { "seen": "2026-11-05" },
   "about": ["fixed-timestep", "timestep"],
   "citedIn": ["docs/logbook/001-the-flip-book.md"],
   "url": "https://gafferongames.com/post/fix_your_timestep/",
@@ -58,6 +61,8 @@ Every topic:
 - `kind`: `concept`, or one of the source kinds listed under `kinds` at the top of the file.
 - `summary`: one line in plain words. For a concept it is our glossary; for a source, what it gives us.
 - `area`: one of the `areas` at the top of the file. Add an area only when a topic needs it.
+- `since`: **required.** The day the topic reached each status, lowest first, as `YYYY-MM-DD`. The
+  oldest day is the day it entered the map. See "Dates" below.
 - `citedIn`: **required.** Where we met it, first appearance first: a file of the repo (path from the
   root), or the id of another topic, such as the paper that cited this one.
 - `partOf`: the bigger topic it belongs to, one at most: a concept inside a concept, a source inside a
@@ -112,11 +117,32 @@ notes, or the theory page built on it.
 Be honest: the map is only useful if the statuses mean what they say. A status never goes down, and
 `studied` always comes with a `page`: the check enforces it.
 
+### Dates
+
+`since` is the story of a topic, and the timeline of the 3D graph replays it: on each day, the
+topics that entered the map and the ones that went one level deeper.
+
+- **The day is the day of the study**, not of the commit. Today's date, unless the user says the
+  study happened on another day.
+- **A new topic** gets one entry, for the status it enters with: `{ "mentioned": "2026-11-13" }`,
+  or `{ "seen": "2026-11-13" }` if it enters already seen.
+- **A higher status** adds an entry and keeps the old ones:
+  `{ "mentioned": "2026-11-05", "studied": "2026-11-13" }`.
+- **Two levels on the same day** are one step: keep only the higher one. Days must grow from one
+  entry to the next, and the check enforces it.
+- **Never rewrite an old day** to tidy up. If one was wrong, fix it and say so in the logbook.
+
+Everything before November 11, 2026, when the map was born, was rebuilt afterwards: from the
+dates of the first logbook chapters, and from the transcript of a ChatGPT session (answers 1 to 3
+on November 5, the rest on November 8, as the user remembered).
+
 ### Keeping it up to date
 
-- **Something new comes up** in chat, code, docs or a source: add it as `mentioned`. If it came up
-  only in chat, name it in the logbook chapter of the step and cite that chapter.
-- **It goes one level deeper:** raise its status, and add the new place to `citedIn`.
+- **Something new comes up** in chat, code, docs or a source: add it as `mentioned`, with today
+  in `since`. If it came up only in chat, name it in the logbook chapter of the step and cite
+  that chapter.
+- **It goes one level deeper:** raise its status, add the day to `since`, and add the new place to
+  `citedIn`.
 
 ### When a studied topic grows
 
@@ -131,7 +157,9 @@ Studying never really ends, so pages stay alive:
 - **The page outgrows 100 lines:** split it, one topic per page.
 
 What goes on the map: concepts of physics, math, GPU programming and our method, and everything worth
-reading or watching about them. Project tooling stays out.
+reading or watching about them. Project tooling stays out. So does a study session, such as a long
+chat with an assistant: it is not something to read, it is studying. Tell it in a logbook chapter,
+and let the topics it brought cite that chapter.
 
 Then run `npm run topics`: it formats the map, checks it and rewrites `docs/topics/README.md`, the
 readable index.

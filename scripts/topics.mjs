@@ -15,7 +15,17 @@ const ISSUES_URL = JSON.parse(readFileSync(join(ROOT, 'package.json'), 'utf8')).
 const GITHUB_USER = /^[a-z\d](?:[a-z\d]|-(?=[a-z\d])){0,38}$/i
 
 const ICONS = { studied: '●', seen: '◐', mentioned: '○' }
-const COMMON_FIELDS = ['id', 'kind', 'title', 'summary', 'area', 'status', 'partOf', 'related']
+const COMMON_FIELDS = [
+  'id',
+  'kind',
+  'title',
+  'summary',
+  'area',
+  'status',
+  'since',
+  'partOf',
+  'related',
+]
 const COMMON_FIELDS_END = ['citedIn', 'suggestedBy', 'page']
 const CONCEPT_FIELDS = [...COMMON_FIELDS, ...COMMON_FIELDS_END, 'code']
 const SOURCE_FIELDS = [
@@ -30,6 +40,14 @@ const SOURCE_FIELDS = [
 ]
 
 const isConcept = (topic) => topic.kind === 'concept'
+
+/** True for a real calendar day written as YYYY-MM-DD. */
+const isDay = (text) => {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(text)) return false
+  const date = new Date(`${text}T00:00:00Z`)
+  // "2026-02-30" parses to no date at all, or rolls over to March: neither is the day written.
+  return !Number.isNaN(date.getTime()) && date.toISOString().startsWith(text)
+}
 
 function check(map) {
   const errors = []
@@ -126,6 +144,26 @@ function check(map) {
         fail(`no heading "#${anchor}" in ${file}`)
       }
     }
+
+    // "since" tells the story of the topic: the day it reached each status, oldest first. The
+    // timeline of the 3D graph is built from it.
+    const statuses = Object.keys(map.statuses)
+    const reached = Object.entries(topic.since ?? {})
+    if (!topic.since?.[topic.status]) {
+      fail(`"since" must say when it became "${topic.status}"`)
+    }
+    for (const [status, day] of reached) {
+      if (!statuses.includes(status)) fail(`"since" has an unknown status "${status}"`)
+      else if (statuses.indexOf(status) > statuses.indexOf(topic.status))
+        fail(`"since" has "${status}", but the topic is only "${topic.status}"`)
+      if (!isDay(day)) fail(`"since.${status}" must be a day, like "2026-11-13"`)
+    }
+    const inOrder = reached.every(
+      ([status, day], i) =>
+        i === 0 ||
+        (statuses.indexOf(status) > statuses.indexOf(reached[i - 1][0]) && day > reached[i - 1][1]),
+    )
+    if (!inOrder) fail('"since" must go from the lowest status to the highest, each on a later day')
 
     // The one promise the map makes: "studied" always comes with a page to read.
     if ((topic.status === 'studied') !== Boolean(topic.page)) {
