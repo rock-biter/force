@@ -412,13 +412,23 @@
       "id": "compute-pipeline",
       "kind": "concept",
       "title": "Compute pipeline",
-      "summary": "A compiled shader plus its fixed settings, ready to run",
+      "summary": "A shader made ready to run: one module, one entry point, values for its constants and a layout for its buffers, compiled once and never changed",
       "area": "gpu",
-      "status": "mentioned",
+      "status": "studied",
       "partOf": "webgpu",
       "related": ["compute-shader"],
-      "citedIn": ["docs/guides/README.md", "wgsl-spec-shader-lifecycle"],
-      "code": ["examples/hello-compute/main.ts", "src/world.ts"]
+      "citedIn": [
+        "docs/guides/README.md",
+        "wgsl-spec-shader-lifecycle",
+        "docs/guides/pipelines.md",
+        "docs/guides/pipeline-creation.md"
+      ],
+      "code": [
+        "examples/hello-compute/main.ts",
+        "src/world.ts",
+        "examples/pipeline-creation/main.ts"
+      ],
+      "page": "docs/guides/pipelines.md"
     },
     {
       "id": "bind-group",
@@ -2334,7 +2344,8 @@
         "docs/logbook/008-the-first-loop.md",
         "docs/logbook/010-the-ground.md",
         "docs/guides/compute-shader.md",
-        "wgsl-spec-value-declarations"
+        "wgsl-spec-value-declarations",
+        "docs/guides/pipelines.md"
       ],
       "code": ["examples/hello-compute/free-fall.wgsl", "src/shaders/integrate.wgsl"]
     },
@@ -2641,7 +2652,7 @@
       "area": "gpu",
       "status": "mentioned",
       "partOf": "webgpu-errors",
-      "citedIn": ["docs/guides/buffers.md"]
+      "citedIn": ["docs/guides/buffers.md", "docs/guides/pipelines.md"]
     },
     {
       "id": "shader-module",
@@ -2652,7 +2663,11 @@
       "status": "seen",
       "partOf": "webgpu",
       "related": ["compute-shader", "webgpu-errors"],
-      "citedIn": ["docs/guides/compute-shader.md", "wgsl-spec-shader-lifecycle"],
+      "citedIn": [
+        "docs/guides/compute-shader.md",
+        "wgsl-spec-shader-lifecycle",
+        "docs/guides/pipelines.md"
+      ],
       "code": ["src/world.ts", "examples/hello-compute/main.ts"]
     },
     {
@@ -2993,9 +3008,13 @@
       "title": "Entry point",
       "summary": "The function where a shader starts, marked @compute, @vertex or @fragment. A pipeline compiles only the code its entry point reaches: the rest of the module is dropped",
       "area": "gpu",
-      "status": "mentioned",
+      "status": "seen",
       "partOf": "wgsl",
-      "citedIn": ["wgsl-spec-shader-lifecycle", "docs/guides/compute-shader.md"],
+      "citedIn": [
+        "wgsl-spec-shader-lifecycle",
+        "docs/guides/compute-shader.md",
+        "docs/guides/pipelines.md"
+      ],
       "code": ["src/shaders/integrate.wgsl"]
     },
     {
@@ -3007,7 +3026,7 @@
       "status": "mentioned",
       "partOf": "wgsl",
       "related": ["entry-point"],
-      "citedIn": ["wgsl-spec-shader-lifecycle"]
+      "citedIn": ["wgsl-spec-shader-lifecycle", "docs/guides/pipelines.md"]
     },
     {
       "id": "render-pipeline",
@@ -3018,7 +3037,7 @@
       "status": "mentioned",
       "partOf": "webgpu",
       "related": ["compute-pipeline"],
-      "citedIn": ["wgsl-spec-shader-lifecycle"]
+      "citedIn": ["wgsl-spec-shader-lifecycle", "docs/guides/pipelines.md"]
     },
     {
       "id": "invocation",
@@ -3030,6 +3049,164 @@
       "partOf": "wgsl",
       "related": ["gpu-parallelism", "workgroup"],
       "citedIn": ["wgsl-spec-shader-lifecycle", "docs/guides/compute-shader.md"]
+    },
+    {
+      "id": "pipeline-layout",
+      "kind": "concept",
+      "title": "Pipeline layout",
+      "summary": "Which buffers a pipeline expects and in which slots. 'auto' works it out from the shader, but its bind groups then work with that pipeline only; one made by hand with createPipelineLayout() can be given to several pipelines, which then share bind groups",
+      "area": "gpu",
+      "status": "seen",
+      "partOf": "compute-pipeline",
+      "related": ["bind-group"],
+      "citedIn": ["docs/guides/pipelines.md", "webgpu-spec-pipelines"],
+      "code": ["src/world.ts", "examples/hello-compute/main.ts"]
+    },
+    {
+      "id": "async-pipeline-creation",
+      "kind": "concept",
+      "title": "Async pipeline creation",
+      "summary": "createComputePipelineAsync() returns a promise that resolves when the pipeline is compiled. It is not faster: it lets the rest of the GPU work go on meanwhile, and a mistake rejects the promise with a GPUPipelineError",
+      "area": "gpu",
+      "status": "studied",
+      "partOf": "compute-pipeline",
+      "related": ["webgpu-errors"],
+      "citedIn": ["docs/guides/pipelines.md", "webgpu-spec-pipelines"],
+      "page": "docs/guides/pipeline-creation.md",
+      "code": ["examples/pipeline-creation/main.ts"]
+    },
+    {
+      "id": "webgpu-spec-pipelines",
+      "kind": "spec",
+      "title": "WebGPU specification, §10 Pipelines",
+      "summary": "What a pipeline is, the immediate and the async way to create one, how constants get their values, and what the 'auto' layout holds",
+      "area": "gpu",
+      "status": "seen",
+      "partOf": "webgpu-spec",
+      "about": [
+        "compute-pipeline",
+        "render-pipeline",
+        "override-constant",
+        "pipeline-layout",
+        "async-pipeline-creation"
+      ],
+      "citedIn": ["docs/guides/pipelines.md", "docs/guides/pipeline-creation.md"],
+      "url": "https://www.w3.org/TR/webgpu/#pipelines",
+      "claudeRead": "parts"
+    },
+    {
+      "id": "mdn-create-compute-pipeline",
+      "kind": "docs",
+      "title": "MDN, GPUDevice.createComputePipeline()",
+      "summary": "The descriptor of a compute pipeline, and what makes it invalid",
+      "area": "gpu",
+      "status": "studied",
+      "partOf": "mdn-webgpu",
+      "about": ["compute-pipeline"],
+      "citedIn": ["docs/guides/pipelines.md"],
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/GPUDevice/createComputePipeline",
+      "claudeRead": "parts",
+      "page": "docs/guides/pipelines.md"
+    },
+    {
+      "id": "mdn-create-compute-pipeline-async",
+      "kind": "docs",
+      "title": "MDN, GPUDevice.createComputePipelineAsync()",
+      "summary": "The promise version, and the GPUPipelineError it rejects with",
+      "area": "gpu",
+      "status": "studied",
+      "partOf": "mdn-webgpu",
+      "about": ["async-pipeline-creation", "compute-pipeline"],
+      "citedIn": ["docs/guides/pipelines.md", "docs/guides/pipeline-creation.md"],
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/GPUDevice/createComputePipelineAsync",
+      "claudeRead": "parts",
+      "page": "docs/guides/pipeline-creation.md"
+    },
+    {
+      "id": "threejs-webgl-renderer",
+      "kind": "code",
+      "title": "three.js r187, WebGLRenderer.js",
+      "summary": "compile() and compileAsync() build a scene's shader programs before the first frame: the three.js parallel of creating a pipeline ahead of time",
+      "area": "gpu",
+      "status": "mentioned",
+      "partOf": "three-js",
+      "about": ["compute-pipeline", "async-pipeline-creation"],
+      "citedIn": ["docs/guides/pipelines.md", "docs/guides/pipeline-creation.md"],
+      "url": "https://github.com/mrdoob/three.js/blob/r187/src/renderers/WebGLRenderer.js",
+      "claudeRead": "parts"
+    },
+    {
+      "id": "threejs-webgl-programs",
+      "kind": "code",
+      "title": "three.js r187, WebGLPrograms.js",
+      "summary": "A material's defines are part of the key that tells one compiled program from another",
+      "area": "gpu",
+      "status": "mentioned",
+      "partOf": "three-js",
+      "about": ["compute-pipeline"],
+      "citedIn": ["docs/guides/pipelines.md"],
+      "url": "https://github.com/mrdoob/three.js/blob/r187/src/renderers/webgl/WebGLPrograms.js",
+      "claudeRead": "parts"
+    },
+    {
+      "id": "webgpu-timelines",
+      "kind": "concept",
+      "title": "Timelines",
+      "summary": "The three places where WebGPU work happens: your script (content), the browser's part that creates GPU objects, often another process (device), and the GPU itself (queue). Why most calls return before the work is done",
+      "area": "gpu",
+      "status": "seen",
+      "partOf": "webgpu",
+      "related": ["async-pipeline-creation", "webgpu-errors"],
+      "citedIn": ["docs/guides/pipeline-creation.md", "webgpu-spec-timelines"]
+    },
+    {
+      "id": "shader-cache",
+      "kind": "concept",
+      "title": "Shader cache",
+      "summary": "Browsers keep what they have compiled: in Chrome a shader text seen before took 0.3 ms instead of 141. It makes naive timings lie",
+      "area": "gpu",
+      "status": "mentioned",
+      "partOf": "compute-pipeline",
+      "citedIn": ["docs/guides/pipeline-creation.md"],
+      "code": ["examples/pipeline-creation/main.ts"]
+    },
+    {
+      "id": "webgpu-spec-timelines",
+      "kind": "spec",
+      "title": "WebGPU specification, §3.4.1 Timelines",
+      "summary": "Content, device and queue timeline: which work happens where, and why async calls exist",
+      "area": "gpu",
+      "status": "mentioned",
+      "partOf": "webgpu-spec",
+      "about": ["webgpu-timelines"],
+      "citedIn": ["docs/guides/pipeline-creation.md"],
+      "url": "https://www.w3.org/TR/webgpu/#programming-model-timelines",
+      "claudeRead": "parts"
+    },
+    {
+      "id": "firefox-bug-1878449",
+      "kind": "article",
+      "title": "Firefox bug 1878449, comment 5",
+      "summary": "A Firefox engineer gives the async pipeline methods as best practice: the immediate ones are hard to keep from blocking the work that follows",
+      "area": "gpu",
+      "status": "mentioned",
+      "about": ["async-pipeline-creation"],
+      "citedIn": ["docs/guides/pipeline-creation.md"],
+      "url": "https://bugzilla.mozilla.org/show_bug.cgi?id=1878449#c5",
+      "authors": "Jim Blandy",
+      "claudeRead": "parts"
+    },
+    {
+      "id": "bind-group-layout",
+      "kind": "concept",
+      "title": "Bind group layout",
+      "summary": "The description of the slots of one bind group: for each binding, what kind of resource goes there and which shader stages see it. Made by hand with createBindGroupLayout(), or taken from a pipeline",
+      "area": "gpu",
+      "status": "mentioned",
+      "partOf": "bind-group",
+      "related": ["pipeline-layout"],
+      "citedIn": ["docs/guides/pipelines.md"],
+      "code": ["src/world.ts", "examples/hello-compute/main.ts"]
     }
   ]
 }

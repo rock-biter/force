@@ -9,6 +9,8 @@ Short guides, one concept each, built from the code of FORCE. They are written f
 | [How do you get access to the GPU?](./adapter-and-device.md) | Adapter and device |
 | [How do you send data to the GPU?](./buffers.md) | Buffers |
 | [What does a compute shader look like?](./compute-shader.md) | Compute shaders and WGSL |
+| [How do you prepare a shader to run?](./pipelines.md) | Pipelines |
+| [Create a pipeline now, or wait for it?](./pipeline-creation.md) | Immediate and async pipeline creation |
 
 ## Planned
 
@@ -17,7 +19,8 @@ The first series comes from [`examples/hello-compute`](../../examples/hello-comp
 - [x] How do you get access to the GPU? (adapter and device)
 - [x] How do you send data to the GPU? (buffers)
 - [x] What does a compute shader look like? (WGSL)
-- [ ] How do you prepare a shader to run? (pipelines)
+- [x] How do you prepare a shader to run? (pipelines)
+- [x] Create a pipeline now, or wait for it? (immediate and async pipeline creation, from [`examples/pipeline-creation`](../../examples/pipeline-creation/main.ts))
 - [ ] How does a shader find its data? (bind groups)
 - [ ] How do you make thousands of threads work? (dispatch and workgroups)
 - [ ] When does the GPU actually run? (commands and queue)
