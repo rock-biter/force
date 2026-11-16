@@ -18,6 +18,7 @@ This is where we tell how FORCE gets built, one step at a time. If you are new h
 | 009 | [The First Picture](./logbook/009-the-first-picture.md) | A debug viewer on three.js, drawing straight from the engine's GPU buffer |
 | 010 | [The Ground](./logbook/010-the-ground.md) | Particles bounce on a flat ground, the simplest way |
 | 011 | [The Living Map](./logbook/011-the-living-map.md) | The topic map as a graph in 3D, with its dates and a timeline to replay it |
+| 012 | [The Family Tree](./logbook/012-the-family-tree.md) | The papers behind particles and rigid bodies: two branches, a newcomer, and a warning about floats |
 
 ## For reference
 
@@ -29,7 +30,7 @@ This is where we tell how FORCE gets built, one step at a time. If you are new h
 ## Study route
 
 - [x] 1. What a physics engine is
-- [ ] 2. The foundational papers: which ones matter and why
+- [x] 2. The foundational papers: which ones matter and why
 - [ ] 3. The engines used in video games and what they can do
 - [ ] 4. Web projects, on CPU and on GPU
 - [ ] 5. How FORCE's features are built: rigid bodies, springs, cloth, fluids and farts

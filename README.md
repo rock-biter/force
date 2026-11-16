@@ -12,16 +12,16 @@ A GPU-first physics engine for the web, built on [WebGPU](https://www.w3.org/TR/
 
 *Updated November 16, 2026*
 
-**Latest step:** [the living map](./docs/logbook/011-the-living-map.md). The map of everything we
-have met while studying is now a graph in 3D: one point per topic, filled according to how far we
-went with it. You can click a topic to read its page, and replay day by day how the map grew. It
-runs with `npm run dev`, under `topic-map`. Before it, a first series of
-[WebGPU mini guides](./docs/guides/README.md): buffers, compute shaders and pipelines. The
-latest two are on [bind groups](./docs/guides/bind-groups.md), how a shader finds its data, and on
-[dispatch and workgroups](./docs/guides/dispatch-and-workgroups.md), how thousands of threads are
-put to work.
+**Latest step:** [the family tree](./docs/logbook/012-the-family-tree.md). We looked for the
+papers behind particles and rigid bodies, and found two branches: solvers that repair a broken
+rule by changing velocities, and solvers that move the positions straight back. Both now prefer
+many small steps, and both must be reshaped to run on thousands of GPU threads at once. One
+warning came with them: small steps need digits, and WebGPU shaders stop at 32-bit floats. Before
+it, the [WebGPU mini guides](./docs/guides/README.md) on
+[bind groups](./docs/guides/bind-groups.md) and on
+[dispatch and workgroups](./docs/guides/dispatch-and-workgroups.md).
 
-**Next:** more guides, with commands and the queue: when the GPU actually runs.
+**Next:** the engines used in video games: which solver each one runs, and what it can do.
 
 Every step, with what we learned and what went wrong, is in the [logbook](./docs/README.md).
 
