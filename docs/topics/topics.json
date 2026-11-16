@@ -503,22 +503,25 @@
       "id": "workgroup",
       "kind": "concept",
       "title": "Workgroups and dispatch",
-      "summary": "How the work is split into groups of threads and launched on the GPU",
+      "summary": "Threads start in blocks: the shader fixes the size of a block (a workgroup), and each dispatch says how many blocks to launch. Threads = size × count, so the count is rounded up and the extra threads return at once",
       "area": "gpu",
-      "status": "mentioned",
-      "since": { "mentioned": "2026-11-05" },
+      "status": "studied",
+      "since": { "mentioned": "2026-11-05", "studied": "2026-11-16" },
       "partOf": "webgpu",
-      "related": ["compute-shader"],
+      "related": ["compute-shader", "device-limits"],
       "citedIn": [
         "docs/guides/README.md",
         "docs/guides/compute-shader.md",
-        "wgsl-spec-shader-lifecycle"
+        "wgsl-spec-shader-lifecycle",
+        "docs/guides/dispatch-and-workgroups.md",
+        "wgsl-spec-compute-shader-workgroups"
       ],
       "code": [
         "examples/hello-compute/main.ts",
         "examples/hello-compute/free-fall.wgsl",
         "src/world.ts"
-      ]
+      ],
+      "page": "docs/guides/dispatch-and-workgroups.md"
     },
     {
       "id": "command-queue",
@@ -1448,7 +1451,8 @@
         "docs/logbook/008-the-first-loop.md",
         "docs/guides/adapter-and-device.md",
         "docs/guides/buffers.md",
-        "docs/guides/bind-groups.md"
+        "docs/guides/bind-groups.md",
+        "docs/guides/dispatch-and-workgroups.md"
       ],
       "code": ["src/world.ts"]
     },
@@ -1816,9 +1820,10 @@
       "area": "gpu",
       "status": "mentioned",
       "since": { "mentioned": "2026-11-05" },
-      "about": ["webgpu"],
-      "citedIn": ["docs/logbook/002-the-toolbox.md"],
-      "url": "https://webgpufundamentals.org/"
+      "about": ["webgpu", "workgroup"],
+      "citedIn": ["docs/logbook/002-the-toolbox.md", "docs/guides/dispatch-and-workgroups.md"],
+      "url": "https://webgpufundamentals.org/",
+      "claudeRead": "parts"
     },
     {
       "id": "diataxis",
@@ -2748,13 +2753,16 @@
       "id": "threejs-webgpu-backend",
       "kind": "code",
       "title": "three.js r187, WebGPUBackend.js",
-      "summary": "The WebGPU renderer accepts a device from outside, and destroys only a device it created",
+      "summary": "The WebGPU renderer accepts a device from outside, and destroys only a device it created. Its compute() turns a count into workgroups, rounded up and spread on y past the limit",
       "area": "gpu",
       "status": "mentioned",
       "since": { "mentioned": "2026-11-11" },
       "partOf": "three-js",
-      "about": ["adapter-and-device"],
-      "citedIn": ["docs/logbook/009-the-first-picture.md"],
+      "about": ["adapter-and-device", "workgroup"],
+      "citedIn": [
+        "docs/logbook/009-the-first-picture.md",
+        "docs/guides/dispatch-and-workgroups.md"
+      ],
       "url": "https://github.com/mrdoob/three.js/blob/r187/src/renderers/webgpu/WebGPUBackend.js",
       "claudeRead": "parts"
     },
@@ -3148,7 +3156,7 @@
       "since": { "mentioned": "2026-11-13" },
       "partOf": "address-space",
       "related": ["workgroup", "atomic-operations"],
-      "citedIn": ["wgsl-spec-var-declarations"]
+      "citedIn": ["wgsl-spec-var-declarations", "wgsl-spec-compute-shader-workgroups"]
     },
     {
       "id": "private-variable",
@@ -3303,11 +3311,15 @@
       "title": "Invocation",
       "summary": "One run of an entry point: what our guides call a thread. A dispatch or a draw starts many, and the shader ends when all are done",
       "area": "gpu",
-      "status": "mentioned",
-      "since": { "mentioned": "2026-11-13" },
+      "status": "seen",
+      "since": { "mentioned": "2026-11-13", "seen": "2026-11-16" },
       "partOf": "wgsl",
       "related": ["gpu-parallelism", "workgroup"],
-      "citedIn": ["wgsl-spec-shader-lifecycle", "docs/guides/compute-shader.md"]
+      "citedIn": [
+        "wgsl-spec-shader-lifecycle",
+        "docs/guides/compute-shader.md",
+        "docs/guides/dispatch-and-workgroups.md"
+      ]
     },
     {
       "id": "pipeline-layout",
@@ -3542,8 +3554,8 @@
       "title": "WebGPU specification, §8 Resource Binding",
       "summary": "What bind group layouts, bind groups and pipeline layouts are, the checks at bind group creation, and the advice to keep what changes least in the lowest groups",
       "area": "gpu",
-      "status": "seen",
-      "since": { "seen": "2026-11-16" },
+      "status": "mentioned",
+      "since": { "mentioned": "2026-11-16" },
       "partOf": "webgpu-spec",
       "about": ["bind-group", "bind-group-layout", "pipeline-layout"],
       "citedIn": ["docs/guides/bind-groups.md"],
@@ -3556,8 +3568,8 @@
       "title": "WebGPU specification, §14.1 Bind Groups",
       "summary": "setBindGroup(): a pass starts with no bind group, and before a dispatch every group of the pipeline must be set, fit its layout and not alias a writable buffer",
       "area": "gpu",
-      "status": "seen",
-      "since": { "seen": "2026-11-16" },
+      "status": "mentioned",
+      "since": { "mentioned": "2026-11-16" },
       "partOf": "webgpu-spec",
       "about": ["bind-group", "dynamic-offset", "writable-binding-aliasing"],
       "citedIn": ["docs/guides/bind-groups.md"],
@@ -3570,8 +3582,8 @@
       "title": "WGSL specification, §13.3.2 Resource Interface",
       "summary": "Every buffer, texture or sampler variable must have both @group and @binding, and no two may share the same pair",
       "area": "gpu",
-      "status": "seen",
-      "since": { "seen": "2026-11-16" },
+      "status": "mentioned",
+      "since": { "mentioned": "2026-11-16" },
       "partOf": "wgsl-spec",
       "about": ["resource-interface", "bind-group"],
       "citedIn": ["docs/guides/bind-groups.md"],
@@ -3637,6 +3649,113 @@
       "url": "https://github.com/mrdoob/three.js/blob/r187/src/renderers/webgl/WebGLUniforms.js",
       "claudeRead": "parts",
       "page": "docs/guides/bind-groups.md"
+    },
+    {
+      "id": "invocation-ids",
+      "kind": "concept",
+      "title": "Invocation ids",
+      "summary": "How a thread knows where it sits in a dispatch: workgroup_id is its block, local_invocation_id its place in the block, global_invocation_id its place in the whole dispatch",
+      "area": "gpu",
+      "status": "seen",
+      "since": { "seen": "2026-11-16" },
+      "partOf": "workgroup",
+      "related": ["invocation"],
+      "citedIn": ["docs/guides/dispatch-and-workgroups.md", "wgsl-spec-compute-shader-workgroups"],
+      "code": ["src/shaders/integrate.wgsl", "examples/hello-compute/free-fall.wgsl"]
+    },
+    {
+      "id": "out-of-bounds-access",
+      "kind": "concept",
+      "title": "Out-of-bounds access",
+      "summary": "Reading or writing past the end of an array in WGSL. It never touches memory outside the buffer, but what happens instead is not fixed: the write may be skipped or land on another element",
+      "area": "gpu",
+      "status": "seen",
+      "since": { "seen": "2026-11-16" },
+      "partOf": "wgsl",
+      "related": ["workgroup"],
+      "citedIn": ["docs/guides/dispatch-and-workgroups.md", "wgsl-spec-out-of-bounds-access"],
+      "code": ["src/shaders/integrate.wgsl"]
+    },
+    {
+      "id": "indirect-dispatch",
+      "kind": "concept",
+      "title": "Indirect dispatch",
+      "summary": "dispatchWorkgroupsIndirect(): the workgroup counts are read from a GPU buffer, so a shader can decide how much work the next one does",
+      "area": "gpu",
+      "status": "mentioned",
+      "since": { "mentioned": "2026-11-16" },
+      "partOf": "workgroup",
+      "citedIn": ["mdn-dispatch-workgroups", "threejs-webgpu-backend"]
+    },
+    {
+      "id": "wgsl-spec-compute-shader-workgroups",
+      "kind": "spec",
+      "title": "WGSL specification, §15.3 Compute Shaders and Workgroups",
+      "summary": "What a workgroup is, the grid of threads a dispatch runs, and how the global, local and workgroup ids follow from it",
+      "area": "gpu",
+      "status": "mentioned",
+      "since": { "mentioned": "2026-11-16" },
+      "partOf": "wgsl-spec",
+      "about": ["workgroup", "invocation", "invocation-ids", "workgroup-variable"],
+      "citedIn": ["docs/guides/dispatch-and-workgroups.md"],
+      "url": "https://www.w3.org/TR/WGSL/#compute-shader-workgroups",
+      "claudeRead": "full"
+    },
+    {
+      "id": "wgsl-spec-out-of-bounds-access",
+      "kind": "spec",
+      "title": "WGSL specification, §6.5.7 Out-of-Bounds Access",
+      "summary": "An access past the end is never done as written: the possible outcomes, from a skipped write to one that lands elsewhere in the same buffer",
+      "area": "gpu",
+      "status": "mentioned",
+      "since": { "mentioned": "2026-11-16" },
+      "partOf": "wgsl-spec",
+      "about": ["out-of-bounds-access"],
+      "citedIn": ["docs/guides/dispatch-and-workgroups.md"],
+      "url": "https://www.w3.org/TR/WGSL/#out-of-bounds-access",
+      "claudeRead": "full"
+    },
+    {
+      "id": "mdn-dispatch-workgroups",
+      "kind": "docs",
+      "title": "MDN, GPUComputePassEncoder.dispatchWorkgroups()",
+      "summary": "The three workgroup counts of a dispatch, and the note that they count workgroups, not shader runs",
+      "area": "gpu",
+      "status": "mentioned",
+      "since": { "mentioned": "2026-11-16" },
+      "partOf": "mdn-webgpu",
+      "about": ["workgroup", "indirect-dispatch"],
+      "citedIn": ["docs/guides/dispatch-and-workgroups.md"],
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/GPUComputePassEncoder/dispatchWorkgroups",
+      "claudeRead": "full"
+    },
+    {
+      "id": "webgpu-fundamentals-compute-shaders",
+      "kind": "article",
+      "title": "WebGPU Fundamentals, Compute Shader Basics",
+      "summary": "A first compute shader, the workgroup limits, the advice to pick a workgroup size of 64, and races between threads",
+      "area": "gpu",
+      "status": "mentioned",
+      "since": { "mentioned": "2026-11-16" },
+      "partOf": "webgpu-fundamentals",
+      "about": ["workgroup", "compute-shader"],
+      "citedIn": ["docs/guides/dispatch-and-workgroups.md"],
+      "url": "https://webgpufundamentals.org/webgpu/lessons/webgpu-compute-shaders.html",
+      "claudeRead": "parts"
+    },
+    {
+      "id": "threejs-compute-node",
+      "kind": "code",
+      "title": "three.js r187, ComputeNode.js",
+      "summary": "compute() in the node system: a default workgroup size of 64, and an early return added for the threads past the count",
+      "area": "gpu",
+      "status": "mentioned",
+      "since": { "mentioned": "2026-11-16" },
+      "partOf": "three-js",
+      "about": ["workgroup"],
+      "citedIn": ["docs/guides/dispatch-and-workgroups.md"],
+      "url": "https://github.com/mrdoob/three.js/blob/r187/src/nodes/gpgpu/ComputeNode.js",
+      "claudeRead": "parts"
     }
   ]
 }

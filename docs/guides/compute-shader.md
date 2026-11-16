@@ -62,7 +62,7 @@ From top to bottom, a shader file has four kinds of things:
 - **`struct`**: a type of your own, as in GLSL. Here it describes how the bytes of the `params` buffer are laid out.
 - **`override`**: a constant whose value arrives from JavaScript when the pipeline (the shader made ready to run) is created. With no default value, as here, JavaScript must give one: `constants: { WORKGROUP_SIZE: 64 }` in the call that creates the pipeline.
 - **The variables with `@group` and `@binding`**: the buffers, seen from the shader. `var<uniform>` is a few values every thread reads; `var<storage, read_write>` is an array every thread can read and write. `array<vec4f>` has no length: it is as long as the buffer JavaScript attaches. Each particle is a `vec4f`, four floats, though only `xyz` is used: why is in the [buffers guide](./buffers.md). `@group` and `@binding` number the slot each buffer goes in; JavaScript uses the same two numbers to attach it, with a [bind group](./bind-groups.md).
-- **The entry point**: `@compute` says it is a compute shader, and `@workgroup_size` how many threads are launched together, in blocks. How many blocks is up to JavaScript, each time it runs the shader (dispatch and workgroups, a guide still to write). A compute entry point never returns a value.
+- **The entry point**: `@compute` says it is a compute shader, and `@workgroup_size` how many threads are launched together, in blocks. How many blocks is up to JavaScript, each time it runs the shader: see [dispatch and workgroups](./dispatch-and-workgroups.md). A compute entry point never returns a value.
 
 Inside `main`:
 

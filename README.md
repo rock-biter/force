@@ -17,9 +17,11 @@ have met while studying is now a graph in 3D: one point per topic, filled accord
 went with it. You can click a topic to read its page, and replay day by day how the map grew. It
 runs with `npm run dev`, under `topic-map`. Before it, a first series of
 [WebGPU mini guides](./docs/guides/README.md): buffers, compute shaders and pipelines. The
-latest one is on [bind groups](./docs/guides/bind-groups.md): how a shader finds its data.
+latest two are on [bind groups](./docs/guides/bind-groups.md), how a shader finds its data, and on
+[dispatch and workgroups](./docs/guides/dispatch-and-workgroups.md), how thousands of threads are
+put to work.
 
-**Next:** more guides, with dispatch and workgroups: how to make thousands of threads work.
+**Next:** more guides, with commands and the queue: when the GPU actually runs.
 
 Every step, with what we learned and what went wrong, is in the [logbook](./docs/README.md).
 
