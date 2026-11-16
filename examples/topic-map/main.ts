@@ -7,14 +7,23 @@ import { createLayout } from './layout.js'
 import { mark, showTopic } from './panel.js'
 import { GraphScene } from './scene.js'
 import { createTimeline } from './timeline.js'
+import { createToc } from './toc.js'
 
 const graph = loadGraph()
 const scene = new GraphScene(graph, createLayout(graph), (index) => {
   const topic = index === null ? null : graph.topics[index]
   showTopic(topic)
+  toc?.select(index)
   // The address follows the selection, so a topic can be linked: /topic-map/#buffer
   history.replaceState(null, '', topic ? `#${topic.id}` : location.pathname)
 })
+
+// The list and the graph share one selection: a row of the list acts like its node in the graph.
+const toc = createToc(
+  graph,
+  (index) => scene.select(index),
+  (index) => scene.hover(index),
+)
 
 // Opening the page with a topic in the address selects it.
 const fromAddress = graph.topics.findIndex((topic) => topic.id === location.hash.slice(1))
@@ -33,12 +42,17 @@ for (const [area, { title }] of Object.entries(graph.areas)) {
   areas.append(row)
 }
 
-/** Counts the topics of each status and of each area. On the timeline, only those on the map. */
+/**
+ * Counts the topics: all of them, and those of each status and of each area. On the timeline,
+ * only those on the map.
+ */
 function count(statuses: (Status | null)[]): void {
   for (const cell of document.querySelectorAll<HTMLElement>('[data-count]')) {
     const key = cell.dataset.count
     const matches = graph.topics.filter(
-      (topic, index) => statuses[index] !== null && (statuses[index] === key || topic.area === key),
+      (topic, index) =>
+        statuses[index] !== null &&
+        (key === 'all' || statuses[index] === key || topic.area === key),
     )
     cell.textContent = String(matches.length)
   }

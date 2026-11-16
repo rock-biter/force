@@ -576,10 +576,11 @@ export class GraphScene {
   }
 
   /**
-   * Notes which node is under the pointer. The highlight comes only if the pointer is still on
-   * that node after a moment, so crossing the graph does not make it flash. It goes at once.
+   * Notes which node is under the pointer, in the graph or in the list of topics. The highlight
+   * comes only if the pointer is still on that node after a moment, so crossing the graph does not
+   * make it flash. It goes at once.
    */
-  private hover(node: number | null): void {
+  hover(node: number | null): void {
     if (node === this.hovered) return
     this.hovered = node
     window.clearTimeout(this.hoverTimer)

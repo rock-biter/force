@@ -39,17 +39,63 @@
         color: var(--grey);
       }
 
-      .legend {
+      /*
+       * The left column: the title at the top, the list of topics under it, and the panel of the
+       * selected topic at the bottom. The column itself lets the mouse through to the graph.
+       */
+      .side {
         position: fixed;
         top: 16px;
         left: 16px;
-        margin: 0;
+        bottom: 16px;
+        z-index: 1; /* over the labels of the graph */
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+        pointer-events: none;
+      }
+      .side > * {
+        flex: none;
+        pointer-events: auto;
+      }
+
+      /* The title, and under it how many topics are on the map. */
+      .title {
         user-select: none;
       }
-      .legend h1 {
-        margin: 0 0 8px;
+      .title h1,
+      .title p {
+        margin: 0;
         font: inherit;
+      }
+      .title h1 {
         font-weight: 700;
+      }
+      .title p {
+        color: var(--grey);
+      }
+
+      /* The legend sits in the corner the graph leaves free: bottom right. */
+      .legend {
+        position: fixed;
+        right: 16px;
+        bottom: 16px;
+        z-index: 1; /* over the labels of the graph */
+        user-select: none;
+      }
+      /* On a narrow window the panel takes the whole bottom: the legend goes under the title. */
+      @media (max-width: 720px) {
+        .legend {
+          top: 64px;
+          right: auto;
+          bottom: auto;
+          left: 16px;
+        }
+      }
+      /* On the timeline, it moves up to leave the bottom to the timeline bar. */
+      body[data-view="timeline"] .legend {
+        bottom: 88px;
       }
       .legend table {
         border-collapse: collapse;
@@ -58,6 +104,7 @@
         padding: 0 10px 0 0;
       }
       .legend td:last-child {
+        padding: 0;
         text-align: right;
         color: var(--grey);
       }
@@ -67,9 +114,7 @@
       }
 
       .panel {
-        position: fixed;
-        left: 16px;
-        bottom: 16px;
+        margin-top: auto; /* at the bottom of the column, with or without the list */
         width: min(340px, calc(100vw - 58px));
         padding: 12px;
         border: 1px solid var(--ink);
@@ -142,6 +187,97 @@
         color: var(--ink);
         font-weight: 700;
         text-decoration: underline;
+      }
+
+      /*
+       * The list of topics takes the room left between the title and the panel, and scrolls. It
+       * is as wide as the panel, border included.
+       */
+      .side > .toc {
+        flex: 0 1 auto;
+        box-sizing: border-box;
+        width: min(366px, calc(100vw - 32px));
+        min-height: 0;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        scrollbar-width: thin;
+        scrollbar-color: var(--grey) transparent;
+        border: 1px solid var(--ink);
+        background: var(--paper);
+        user-select: none;
+      }
+      /* The name of an area stays in sight while its topics scroll under it. */
+      .toc summary {
+        position: sticky;
+        top: 0;
+        z-index: 1;
+        display: flex;
+        gap: 6px;
+        padding: 4px 12px;
+        background: var(--paper);
+        font-weight: 700;
+        cursor: pointer;
+      }
+      .toc summary::-webkit-details-marker {
+        display: none;
+      }
+      .toc summary::before {
+        content: "▸";
+      }
+      .toc details[open] > summary::before {
+        content: "▾";
+      }
+      .toc summary .count {
+        margin-left: auto;
+        color: var(--grey);
+        font-weight: 400;
+      }
+      .toc ul {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+      .toc details > ul {
+        padding: 0 8px 8px;
+      }
+      /* The topics that are part of another: indented, with a line down from the mark above. */
+      .toc li > ul {
+        margin-left: 8px;
+        padding-left: 5px;
+        border-left: 1px solid rgb(22 22 26 / 0.15);
+      }
+      .toc li > button {
+        display: block;
+        width: 100%;
+        padding: 1px 4px;
+        overflow: hidden;
+        text-align: left;
+        text-decoration: none;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      /* The same weights as the labels of the graph. */
+      .toc button.studied {
+        font-weight: 700;
+      }
+      .toc button.mentioned {
+        color: var(--grey);
+      }
+      .toc li > button:hover {
+        background: rgb(22 22 26 / 0.06);
+      }
+      .toc li > button[aria-current] {
+        background: rgb(22 22 26 / 0.14);
+        color: var(--ink);
+      }
+      /* The list is there only in the map view, and only where there is room beside it. */
+      body:not([data-view="map"]) .toc {
+        display: none;
+      }
+      @media (max-width: 720px) {
+        .toc {
+          display: none;
+        }
       }
 
       /* The timeline: a play button, the day, the last change, and a slider with the days. */
@@ -256,8 +392,15 @@
     </style>
   </head>
   <body data-view="map">
+    <div class="side">
+      <header class="title">
+        <h1>FORCE · topic map</h1>
+        <p><span data-count="all"></span> topics</p>
+      </header>
+      <nav class="toc" aria-label="Topics"></nav>
+      <aside class="panel" hidden></aside>
+    </div>
     <div class="legend">
-      <h1>FORCE · topic map</h1>
       <table>
         <tr>
           <td><span class="mark studied"></span></td>
@@ -287,7 +430,6 @@
         <tbody class="areas"></tbody>
       </table>
     </div>
-    <aside class="panel" hidden></aside>
     <nav class="views">
       <button type="button" data-view="map" aria-pressed="true">map</button>
       <button type="button" data-view="timeline" aria-pressed="false">timeline</button>
