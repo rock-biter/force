@@ -35,7 +35,7 @@ this.pipeline = device.createComputePipeline({
 - `module`: the WGSL code, made into a shader module.
 - `entryPoint`: missing here. It is the name of the function to start from; with only one `@compute` function in the module, the browser finds it by itself.
 - `constants`: a value for each `override` constant of the shader, by name. Values are JavaScript numbers, converted to the constant's type: `GROUND` is a `bool` in the shader, so it gets 1 or 0. An override that the shader uses and that has no default value must be given here.
-- `layout`: which buffers the shader expects, and in which slots. `'auto'` lets WebGPU work it out from the `@group` and `@binding` lines of the shader, counting only the ones the entry point really uses. Attaching real buffers to those slots is the job of bind groups (a guide still to write).
+- `layout`: which buffers the shader expects, and in which slots. `'auto'` lets WebGPU work it out from the `@group` and `@binding` lines of the shader, counting only the ones the entry point really uses. Attaching real buffers to those slots is the job of [bind groups](./bind-groups.md).
 
 Then, on every frame, inside `update()`:
 
@@ -147,4 +147,4 @@ const layout = device.createPipelineLayout({ bindGroupLayouts: [slots] })
 const bindGroup = device.createBindGroup({ layout: slots, entries: [{ binding: 0, resource: { buffer } }] })
 ```
 
-That one `bindGroup` then works with `a` and with `b`: set it once, and switch only the pipeline between dispatches. What each line means is for the guide on bind groups, still to write.
+That one `bindGroup` then works with `a` and with `b`: set it once, and switch only the pipeline between dispatches. What a bind group and its layout are is in the [bind groups guide](./bind-groups.md).

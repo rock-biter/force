@@ -10,15 +10,16 @@ A GPU-first physics engine for the web, built on [WebGPU](https://www.w3.org/TR/
 
 ## Where we are
 
-*Updated November 14, 2026*
+*Updated November 16, 2026*
 
 **Latest step:** [the living map](./docs/logbook/011-the-living-map.md). The map of everything we
 have met while studying is now a graph in 3D: one point per topic, filled according to how far we
 went with it. You can click a topic to read its page, and replay day by day how the map grew. It
 runs with `npm run dev`, under `topic-map`. Before it, a first series of
-[WebGPU mini guides](./docs/guides/README.md): buffers, compute shaders and pipelines.
+[WebGPU mini guides](./docs/guides/README.md): buffers, compute shaders and pipelines. The
+latest one is on [bind groups](./docs/guides/bind-groups.md): how a shader finds its data.
 
-**Next:** back to the guides, with bind groups: how a shader finds its data.
+**Next:** more guides, with dispatch and workgroups: how to make thousands of threads work.
 
 Every step, with what we learned and what went wrong, is in the [logbook](./docs/README.md).
 

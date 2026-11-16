@@ -480,18 +480,24 @@
       "id": "bind-group",
       "kind": "concept",
       "title": "Bind group",
-      "summary": "Connects real buffers to the numbered slots a shader reads from",
+      "summary": "A fixed list that puts a real buffer in each numbered slot of one group of a shader. Made once, set before the shader runs: the pipeline is which program, the bind group is which data",
       "area": "gpu",
-      "status": "mentioned",
-      "since": { "mentioned": "2026-11-05" },
+      "status": "studied",
+      "since": { "mentioned": "2026-11-05", "studied": "2026-11-16" },
       "partOf": "webgpu",
-      "related": ["compute-pipeline"],
-      "citedIn": ["docs/guides/README.md", "docs/guides/compute-shader.md"],
+      "related": ["compute-pipeline", "resource-interface"],
+      "citedIn": [
+        "docs/guides/README.md",
+        "docs/guides/compute-shader.md",
+        "docs/guides/bind-groups.md",
+        "webgpu-spec-resource-binding"
+      ],
       "code": [
         "examples/hello-compute/main.ts",
         "examples/hello-compute/free-fall.wgsl",
         "src/world.ts"
-      ]
+      ],
+      "page": "docs/guides/bind-groups.md"
     },
     {
       "id": "workgroup",
@@ -1441,7 +1447,8 @@
         "docs/logbook/004-the-detour.md",
         "docs/logbook/008-the-first-loop.md",
         "docs/guides/adapter-and-device.md",
-        "docs/guides/buffers.md"
+        "docs/guides/buffers.md",
+        "docs/guides/bind-groups.md"
       ],
       "code": ["src/world.ts"]
     },
@@ -3183,12 +3190,15 @@
       "title": "Resource interface",
       "summary": "Everything a shader expects from outside: its uniform buffers, storage buffers, textures and samplers, each with a @group and a @binding",
       "area": "gpu",
-      "status": "mentioned",
-      "since": { "mentioned": "2026-11-13" },
+      "status": "seen",
+      "since": { "mentioned": "2026-11-13", "seen": "2026-11-16" },
       "partOf": "wgsl",
-      "related": ["bind-group"],
       "code": ["src/shaders/integrate.wgsl"],
-      "citedIn": ["wgsl-spec-var-declarations"]
+      "citedIn": [
+        "wgsl-spec-var-declarations",
+        "docs/guides/bind-groups.md",
+        "wgsl-spec-resource-interface"
+      ]
     },
     {
       "id": "host-shareable-type",
@@ -3309,7 +3319,11 @@
       "since": { "seen": "2026-11-13" },
       "partOf": "compute-pipeline",
       "related": ["bind-group"],
-      "citedIn": ["docs/guides/pipelines.md", "webgpu-spec-pipelines"],
+      "citedIn": [
+        "docs/guides/pipelines.md",
+        "webgpu-spec-pipelines",
+        "docs/guides/bind-groups.md"
+      ],
       "code": ["src/world.ts", "examples/hello-compute/main.ts"]
     },
     {
@@ -3462,11 +3476,15 @@
       "title": "Bind group layout",
       "summary": "The description of the slots of one bind group: for each binding, what kind of resource goes there and which shader stages see it. Made by hand with createBindGroupLayout(), or taken from a pipeline",
       "area": "gpu",
-      "status": "mentioned",
-      "since": { "mentioned": "2026-11-13" },
+      "status": "seen",
+      "since": { "mentioned": "2026-11-13", "seen": "2026-11-16" },
       "partOf": "bind-group",
       "related": ["pipeline-layout"],
-      "citedIn": ["docs/guides/pipelines.md"],
+      "citedIn": [
+        "docs/guides/pipelines.md",
+        "docs/guides/bind-groups.md",
+        "webgpu-spec-resource-binding"
+      ],
       "code": ["src/world.ts", "examples/hello-compute/main.ts"]
     },
     {
@@ -3494,6 +3512,131 @@
       "url": "https://github.com/vasturiano/d3-force-3d",
       "authors": "Vasco Asturiano",
       "claudeRead": "parts"
+    },
+    {
+      "id": "dynamic-offset",
+      "kind": "concept",
+      "title": "Dynamic offset",
+      "summary": "A buffer slot whose starting byte is given at setBindGroup() instead of when the bind group is made, so one bind group can serve many ranges of one buffer",
+      "area": "gpu",
+      "status": "mentioned",
+      "since": { "mentioned": "2026-11-16" },
+      "partOf": "bind-group",
+      "citedIn": ["webgpu-spec-bind-group-commands"]
+    },
+    {
+      "id": "writable-binding-aliasing",
+      "kind": "concept",
+      "title": "Writable binding aliasing",
+      "summary": "The same range of a buffer in two slots of a dispatch, with at least one writable: WebGPU refuses it. In Chrome: \"Writable storage buffer binding aliasing found\"",
+      "area": "gpu",
+      "status": "mentioned",
+      "since": { "mentioned": "2026-11-16" },
+      "partOf": "bind-group",
+      "related": ["usage-scope"],
+      "citedIn": ["webgpu-spec-bind-group-commands"]
+    },
+    {
+      "id": "webgpu-spec-resource-binding",
+      "kind": "spec",
+      "title": "WebGPU specification, §8 Resource Binding",
+      "summary": "What bind group layouts, bind groups and pipeline layouts are, the checks at bind group creation, and the advice to keep what changes least in the lowest groups",
+      "area": "gpu",
+      "status": "seen",
+      "since": { "seen": "2026-11-16" },
+      "partOf": "webgpu-spec",
+      "about": ["bind-group", "bind-group-layout", "pipeline-layout"],
+      "citedIn": ["docs/guides/bind-groups.md"],
+      "url": "https://www.w3.org/TR/webgpu/#bindings",
+      "claudeRead": "parts"
+    },
+    {
+      "id": "webgpu-spec-bind-group-commands",
+      "kind": "spec",
+      "title": "WebGPU specification, §14.1 Bind Groups",
+      "summary": "setBindGroup(): a pass starts with no bind group, and before a dispatch every group of the pipeline must be set, fit its layout and not alias a writable buffer",
+      "area": "gpu",
+      "status": "seen",
+      "since": { "seen": "2026-11-16" },
+      "partOf": "webgpu-spec",
+      "about": ["bind-group", "dynamic-offset", "writable-binding-aliasing"],
+      "citedIn": ["docs/guides/bind-groups.md"],
+      "url": "https://www.w3.org/TR/webgpu/#programmable-passes-bind-groups",
+      "claudeRead": "parts"
+    },
+    {
+      "id": "wgsl-spec-resource-interface",
+      "kind": "spec",
+      "title": "WGSL specification, §13.3.2 Resource Interface",
+      "summary": "Every buffer, texture or sampler variable must have both @group and @binding, and no two may share the same pair",
+      "area": "gpu",
+      "status": "seen",
+      "since": { "seen": "2026-11-16" },
+      "partOf": "wgsl-spec",
+      "about": ["resource-interface", "bind-group"],
+      "citedIn": ["docs/guides/bind-groups.md"],
+      "url": "https://www.w3.org/TR/WGSL/#resource-interface",
+      "claudeRead": "parts"
+    },
+    {
+      "id": "mdn-create-bind-group",
+      "kind": "docs",
+      "title": "MDN, GPUDevice.createBindGroup()",
+      "summary": "The descriptor of a bind group, the offset and size of a buffer binding, and the checks that make it invalid",
+      "area": "gpu",
+      "status": "studied",
+      "since": { "studied": "2026-11-16" },
+      "partOf": "mdn-webgpu",
+      "about": ["bind-group", "bind-group-layout"],
+      "citedIn": ["docs/guides/bind-groups.md"],
+      "page": "docs/guides/bind-groups.md",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/GPUDevice/createBindGroup",
+      "claudeRead": "full"
+    },
+    {
+      "id": "mdn-set-bind-group",
+      "kind": "docs",
+      "title": "MDN, GPUComputePassEncoder.setBindGroup()",
+      "summary": "Sets the bind group of one group index for the compute commands that follow",
+      "area": "gpu",
+      "status": "studied",
+      "since": { "studied": "2026-11-16" },
+      "partOf": "mdn-webgpu",
+      "about": ["bind-group", "dynamic-offset"],
+      "citedIn": ["docs/guides/bind-groups.md"],
+      "page": "docs/guides/bind-groups.md",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/GPUComputePassEncoder/setBindGroup",
+      "claudeRead": "full"
+    },
+    {
+      "id": "mdn-get-bind-group-layout",
+      "kind": "docs",
+      "title": "MDN, GPUComputePipeline.getBindGroupLayout()",
+      "summary": "Asks a pipeline for the layout of one of its groups: with layout 'auto', the only way to get it",
+      "area": "gpu",
+      "status": "studied",
+      "since": { "studied": "2026-11-16" },
+      "partOf": "mdn-webgpu",
+      "about": ["bind-group-layout", "pipeline-layout"],
+      "citedIn": ["docs/guides/bind-groups.md"],
+      "page": "docs/guides/bind-groups.md",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/GPUComputePipeline/getBindGroupLayout",
+      "claudeRead": "full"
+    },
+    {
+      "id": "threejs-webgl-uniforms",
+      "kind": "code",
+      "title": "three.js r187, WebGLUniforms.js",
+      "summary": "The WebGL renderer finds a program's uniforms by name and sets each from the material's entry of the same name: what WebGPU replaces with group and binding numbers",
+      "area": "gpu",
+      "status": "studied",
+      "since": { "studied": "2026-11-16" },
+      "partOf": "three-js",
+      "about": ["bind-group"],
+      "citedIn": ["docs/guides/bind-groups.md"],
+      "url": "https://github.com/mrdoob/three.js/blob/r187/src/renderers/webgl/WebGLUniforms.js",
+      "claudeRead": "parts",
+      "page": "docs/guides/bind-groups.md"
     }
   ]
 }

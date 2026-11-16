@@ -11,6 +11,7 @@ Short guides, one concept each, built from the code of FORCE. They are written f
 | [What does a compute shader look like?](./compute-shader.md) | Compute shaders and WGSL |
 | [How do you prepare a shader to run?](./pipelines.md) | Pipelines |
 | [Create a pipeline now, or wait for it?](./pipeline-creation.md) | Immediate and async pipeline creation |
+| [How does a shader find its data?](./bind-groups.md) | Bind groups |
 
 ## Planned
 
@@ -21,7 +22,7 @@ The first series comes from [`examples/hello-compute`](../../examples/hello-comp
 - [x] What does a compute shader look like? (WGSL)
 - [x] How do you prepare a shader to run? (pipelines)
 - [x] Create a pipeline now, or wait for it? (immediate and async pipeline creation, from [`examples/pipeline-creation`](../../examples/pipeline-creation/main.ts))
-- [ ] How does a shader find its data? (bind groups)
+- [x] How does a shader find its data? (bind groups)
 - [ ] How do you make thousands of threads work? (dispatch and workgroups)
 - [ ] When does the GPU actually run? (commands and queue)
 - [ ] How do you get the results back? (readback)
