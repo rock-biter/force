@@ -89,9 +89,7 @@
       "summary": "A program that works out how objects move, one small step at a time",
       "area": "physics",
       "status": "seen",
-      "since": {
-        "seen": "2026-11-05"
-      },
+      "since": { "seen": "2026-11-05" },
       "citedIn": [
         "docs/logbook/001-the-flip-book.md",
         "box2d-hello",
@@ -105,9 +103,7 @@
       "summary": "What an engine repeats over and over: apply forces, find contacts, fix them, move everything",
       "area": "physics",
       "status": "seen",
-      "since": {
-        "seen": "2026-11-05"
-      },
+      "since": { "seen": "2026-11-05" },
       "partOf": "physics-engine",
       "citedIn": [
         "docs/logbook/001-the-flip-book.md",
@@ -122,10 +118,7 @@
       "summary": "The jump in time of each step, often 1/60 of a second",
       "area": "physics",
       "status": "studied",
-      "since": {
-        "seen": "2026-11-05",
-        "studied": "2026-11-11"
-      },
+      "since": { "seen": "2026-11-05", "studied": "2026-11-11" },
       "partOf": "simulation-step",
       "related": ["integration"],
       "citedIn": [
@@ -143,10 +136,7 @@
       "summary": "Keeping every step the same length, and spending the time of each frame in equal steps",
       "area": "physics",
       "status": "studied",
-      "since": {
-        "seen": "2026-11-05",
-        "studied": "2026-11-11"
-      },
+      "since": { "seen": "2026-11-05", "studied": "2026-11-11" },
       "partOf": "timestep",
       "related": ["tunneling"],
       "citedIn": [
@@ -165,9 +155,7 @@
       "summary": "Pushes such as gravity or wind: they change velocity, and change a light object more than a heavy one",
       "area": "physics",
       "status": "seen",
-      "since": {
-        "seen": "2026-11-05"
-      },
+      "since": { "seen": "2026-11-05" },
       "partOf": "simulation-step",
       "citedIn": ["docs/logbook/001-the-flip-book.md", "docs/logbook/004-the-detour.md"]
     },
@@ -178,10 +166,7 @@
       "summary": "The force that pulls everything down: on Earth it adds 9.81 m/s of downward speed every second",
       "area": "physics",
       "status": "seen",
-      "since": {
-        "mentioned": "2026-11-05",
-        "seen": "2026-11-08"
-      },
+      "since": { "mentioned": "2026-11-05", "seen": "2026-11-08" },
       "partOf": "force",
       "citedIn": ["docs/logbook/001-the-flip-book.md", "docs/logbook/004-the-detour.md"],
       "code": [
@@ -197,9 +182,7 @@
       "summary": "Finding out which objects touch: first a rough pass, then a precise one",
       "area": "physics",
       "status": "seen",
-      "since": {
-        "seen": "2026-11-05"
-      },
+      "since": { "seen": "2026-11-05" },
       "partOf": "simulation-step",
       "citedIn": [
         "docs/logbook/001-the-flip-book.md",
@@ -215,9 +198,7 @@
       "summary": "A rough check that discards pairs of objects too far apart to touch",
       "area": "physics",
       "status": "seen",
-      "since": {
-        "seen": "2026-11-05"
-      },
+      "since": { "seen": "2026-11-05" },
       "partOf": "collision-detection",
       "related": ["bounding-box"],
       "citedIn": ["docs/logbook/001-the-flip-book.md", "docs/logbook/004-the-detour.md"]
@@ -229,9 +210,7 @@
       "summary": "An invisible box around an object: testing two boxes is much cheaper than testing two real shapes",
       "area": "physics",
       "status": "seen",
-      "since": {
-        "seen": "2026-11-05"
-      },
+      "since": { "seen": "2026-11-05" },
       "citedIn": ["docs/logbook/001-the-flip-book.md", "docs/logbook/004-the-detour.md"]
     },
     {
@@ -241,9 +220,7 @@
       "summary": "A precise check, on the real shapes, of the pairs that survived the broad phase",
       "area": "physics",
       "status": "seen",
-      "since": {
-        "seen": "2026-11-05"
-      },
+      "since": { "seen": "2026-11-05" },
       "partOf": "collision-detection",
       "related": ["contact"],
       "citedIn": ["docs/logbook/001-the-flip-book.md", "docs/logbook/004-the-detour.md"]
@@ -255,9 +232,7 @@
       "summary": "A fast object passing through a wall between two steps, without ever touching it",
       "area": "physics",
       "status": "seen",
-      "since": {
-        "seen": "2026-11-05"
-      },
+      "since": { "seen": "2026-11-05" },
       "partOf": "collision-detection",
       "citedIn": ["docs/logbook/001-the-flip-book.md", "docs/logbook/010-the-ground.md"]
     },
@@ -268,9 +243,7 @@
       "summary": "The result of a collision: where two objects touch, in which direction, and how far they overlap",
       "area": "physics",
       "status": "seen",
-      "since": {
-        "seen": "2026-11-05"
-      },
+      "since": { "seen": "2026-11-05" },
       "related": ["constraint"],
       "citedIn": [
         "docs/logbook/001-the-flip-book.md",
@@ -285,9 +258,7 @@
       "summary": "A rule objects must obey, such as \"do not pass through each other\"",
       "area": "physics",
       "status": "seen",
-      "since": {
-        "seen": "2026-11-05"
-      },
+      "since": { "seen": "2026-11-05" },
       "related": ["solver"],
       "citedIn": ["docs/logbook/001-the-flip-book.md", "docs/logbook/004-the-detour.md"]
     },
@@ -298,9 +269,7 @@
       "summary": "The part of the engine that corrects velocities so constraints are obeyed",
       "area": "physics",
       "status": "seen",
-      "since": {
-        "seen": "2026-11-05"
-      },
+      "since": { "seen": "2026-11-05" },
       "partOf": "simulation-step",
       "citedIn": ["docs/logbook/001-the-flip-book.md", "docs/logbook/004-the-detour.md"]
     },
@@ -311,9 +280,7 @@
       "summary": "Fixing one constraint at a time, going over all of them a few rounds, and stopping when it looks right",
       "area": "physics",
       "status": "seen",
-      "since": {
-        "seen": "2026-11-05"
-      },
+      "since": { "seen": "2026-11-05" },
       "partOf": "solver",
       "citedIn": [
         "docs/logbook/001-the-flip-book.md",
@@ -328,10 +295,7 @@
       "summary": "Moving a simulation forward in small steps, updating velocity and position from the current state",
       "area": "physics",
       "status": "studied",
-      "since": {
-        "seen": "2026-11-05",
-        "studied": "2026-11-11"
-      },
+      "since": { "seen": "2026-11-05", "studied": "2026-11-11" },
       "partOf": "simulation-step",
       "citedIn": ["docs/logbook/001-the-flip-book.md", "docs/logbook/004-the-detour.md"],
       "page": "docs/topics/integration.md",
@@ -344,10 +308,7 @@
       "summary": "A point that moves but has no size or shape: the simplest thing to simulate",
       "area": "physics",
       "status": "seen",
-      "since": {
-        "mentioned": "2026-11-04",
-        "seen": "2026-11-08"
-      },
+      "since": { "mentioned": "2026-11-04", "seen": "2026-11-08" },
       "related": ["rigid-body"],
       "citedIn": ["docs/logbook/000-the-launch.md", "docs/logbook/004-the-detour.md"],
       "code": ["examples/hello-compute/free-fall.wgsl"]
@@ -359,10 +320,7 @@
       "summary": "An object that moves and rotates but never bends, like a box or a ball",
       "area": "physics",
       "status": "seen",
-      "since": {
-        "mentioned": "2026-11-05",
-        "seen": "2026-11-08"
-      },
+      "since": { "mentioned": "2026-11-05", "seen": "2026-11-08" },
       "citedIn": ["docs/README.md", "ten-minute-physics", "docs/logbook/004-the-detour.md"]
     },
     {
@@ -372,10 +330,7 @@
       "summary": "A link that keeps two points near a rest distance, pulling when stretched and pushing when squeezed",
       "area": "physics",
       "status": "seen",
-      "since": {
-        "mentioned": "2026-11-05",
-        "seen": "2026-11-08"
-      },
+      "since": { "mentioned": "2026-11-05", "seen": "2026-11-08" },
       "related": ["cloth"],
       "citedIn": ["docs/README.md", "docs/logbook/004-the-detour.md"]
     },
@@ -386,9 +341,7 @@
       "summary": "A sheet that bends and folds, like a flag or a curtain",
       "area": "physics",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-05"
-      },
+      "since": { "mentioned": "2026-11-05" },
       "related": ["particle"],
       "citedIn": ["docs/README.md", "ten-minute-physics", "docs/logbook/004-the-detour.md"]
     },
@@ -399,9 +352,7 @@
       "summary": "Water, smoke and anything else that flows instead of keeping its shape",
       "area": "physics",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-05"
-      },
+      "since": { "mentioned": "2026-11-05" },
       "related": ["particle"],
       "citedIn": ["docs/README.md", "ten-minute-physics", "docs/logbook/004-the-detour.md"]
     },
@@ -412,9 +363,7 @@
       "summary": "The GPU runs the same code on thousands of items at once, and is fastest when each one can go its own way",
       "area": "gpu",
       "status": "seen",
-      "since": {
-        "seen": "2026-11-05"
-      },
+      "since": { "seen": "2026-11-05" },
       "related": ["solver", "workgroup"],
       "citedIn": ["docs/logbook/001-the-flip-book.md", "docs/logbook/004-the-detour.md"]
     },
@@ -425,9 +374,7 @@
       "summary": "The browser API that lets a page use the GPU, both to draw and to calculate",
       "area": "gpu",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-04"
-      },
+      "since": { "mentioned": "2026-11-04" },
       "citedIn": [
         "README.md",
         "docs/logbook/000-the-launch.md",
@@ -443,10 +390,7 @@
       "summary": "How a page gets the GPU: the adapter stands for a GPU on the system, the device is our own connection to it",
       "area": "gpu",
       "status": "studied",
-      "since": {
-        "mentioned": "2026-11-05",
-        "studied": "2026-11-11"
-      },
+      "since": { "mentioned": "2026-11-05", "studied": "2026-11-11" },
       "partOf": "webgpu",
       "citedIn": [
         "docs/guides/README.md",
@@ -463,10 +407,7 @@
       "summary": "A GPU program that calculates instead of drawing: one function run by many threads at once, each with its own number, reading and writing buffers",
       "area": "gpu",
       "status": "studied",
-      "since": {
-        "mentioned": "2026-11-04",
-        "studied": "2026-11-13"
-      },
+      "since": { "mentioned": "2026-11-04", "studied": "2026-11-13" },
       "partOf": "webgpu",
       "related": ["gpu-parallelism", "wgsl"],
       "citedIn": [
@@ -485,10 +426,7 @@
       "summary": "The shader language of WebGPU, the counterpart of GLSL",
       "area": "gpu",
       "status": "seen",
-      "since": {
-        "mentioned": "2026-11-05",
-        "seen": "2026-11-13"
-      },
+      "since": { "mentioned": "2026-11-05", "seen": "2026-11-13" },
       "partOf": "webgpu",
       "citedIn": [
         "docs/guides/README.md",
@@ -504,10 +442,7 @@
       "summary": "A block of GPU memory holding raw bytes, declared up front with everything it will be used for",
       "area": "gpu",
       "status": "studied",
-      "since": {
-        "mentioned": "2026-11-05",
-        "studied": "2026-11-11"
-      },
+      "since": { "mentioned": "2026-11-05", "studied": "2026-11-11" },
       "partOf": "webgpu",
       "related": ["bind-group", "readback", "webgpu-errors"],
       "citedIn": [
@@ -525,10 +460,7 @@
       "summary": "A shader made ready to run: one module, one entry point, values for its constants and a layout for its buffers, compiled once and never changed",
       "area": "gpu",
       "status": "studied",
-      "since": {
-        "mentioned": "2026-11-05",
-        "studied": "2026-11-13"
-      },
+      "since": { "mentioned": "2026-11-05", "studied": "2026-11-13" },
       "partOf": "webgpu",
       "related": ["compute-shader"],
       "citedIn": [
@@ -551,10 +483,7 @@
       "summary": "A fixed list that puts a real buffer in each numbered slot of one group of a shader. Made once, set before the shader runs: the pipeline is which program, the bind group is which data",
       "area": "gpu",
       "status": "studied",
-      "since": {
-        "mentioned": "2026-11-05",
-        "studied": "2026-11-16"
-      },
+      "since": { "mentioned": "2026-11-05", "studied": "2026-11-16" },
       "partOf": "webgpu",
       "related": ["compute-pipeline", "resource-interface"],
       "citedIn": [
@@ -577,10 +506,7 @@
       "summary": "Threads start in blocks: the shader fixes the size of a block (a workgroup), and each dispatch says how many blocks to launch. Threads = size × count, so the count is rounded up and the extra threads return at once",
       "area": "gpu",
       "status": "studied",
-      "since": {
-        "mentioned": "2026-11-05",
-        "studied": "2026-11-16"
-      },
+      "since": { "mentioned": "2026-11-05", "studied": "2026-11-16" },
       "partOf": "webgpu",
       "related": ["compute-shader", "device-limits"],
       "citedIn": [
@@ -604,9 +530,7 @@
       "summary": "GPU work is recorded first, and runs only when it is submitted to the queue",
       "area": "gpu",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-05"
-      },
+      "since": { "mentioned": "2026-11-05" },
       "partOf": "webgpu",
       "citedIn": [
         "docs/guides/README.md",
@@ -623,9 +547,7 @@
       "summary": "Copying results from the GPU back into JavaScript",
       "area": "gpu",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-05"
-      },
+      "since": { "mentioned": "2026-11-05" },
       "partOf": "webgpu",
       "citedIn": [
         "docs/guides/README.md",
@@ -641,9 +563,7 @@
       "summary": "Moving points straight to where the constraints want them, instead of going through forces: simple and stable",
       "area": "physics",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-05"
-      },
+      "since": { "mentioned": "2026-11-05" },
       "related": ["constraint", "cloth", "soft-body"],
       "citedIn": [
         "ten-minute-physics",
@@ -658,9 +578,7 @@
       "summary": "An object that squashes and bounces back, like jelly",
       "area": "physics",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-05"
-      },
+      "since": { "mentioned": "2026-11-05" },
       "citedIn": ["ten-minute-physics", "docs/logbook/004-the-detour.md"]
     },
     {
@@ -670,9 +588,7 @@
       "summary": "A broad phase that sorts objects along an axis, so only neighbours in the list need checking",
       "area": "physics",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-05"
-      },
+      "since": { "mentioned": "2026-11-05" },
       "partOf": "broad-phase",
       "citedIn": ["ten-minute-physics", "docs/logbook/004-the-detour.md"]
     },
@@ -683,9 +599,7 @@
       "summary": "Boxes nested inside boxes: a tree that skips whole groups of far-away objects at once",
       "area": "physics",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-05"
-      },
+      "since": { "mentioned": "2026-11-05" },
       "partOf": "broad-phase",
       "related": ["bounding-box"],
       "citedIn": ["ten-minute-physics", "docs/logbook/004-the-detour.md"]
@@ -697,9 +611,7 @@
       "summary": "A link that holds two bodies together but lets them move in some ways, like a hinge",
       "area": "physics",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-05"
-      },
+      "since": { "mentioned": "2026-11-05" },
       "related": ["constraint", "rigid-body"],
       "citedIn": ["ten-minute-physics", "docs/logbook/004-the-detour.md"]
     },
@@ -710,10 +622,7 @@
       "summary": "Uses the force at the end of the step: stable with stiff springs, but it must solve equations and it drains energy",
       "area": "physics",
       "status": "studied",
-      "since": {
-        "mentioned": "2026-11-05",
-        "studied": "2026-11-11"
-      },
+      "since": { "mentioned": "2026-11-05", "studied": "2026-11-11" },
       "partOf": "integration",
       "related": ["spring"],
       "citedIn": ["physically-based-modeling", "integration-basics"],
@@ -726,9 +635,7 @@
       "summary": "A fluid simulated on a fixed grid, tracking what flows through each cell",
       "area": "physics",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-05"
-      },
+      "since": { "mentioned": "2026-11-05" },
       "partOf": "fluid",
       "citedIn": ["ten-minute-physics"]
     },
@@ -739,9 +646,7 @@
       "summary": "Water simulated with particles that carry the motion, plus a grid that keeps it from compressing",
       "area": "physics",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-05"
-      },
+      "since": { "mentioned": "2026-11-05" },
       "partOf": "fluid",
       "related": ["particle"],
       "citedIn": ["ten-minute-physics", "docs/logbook/004-the-detour.md"]
@@ -753,9 +658,7 @@
       "summary": "Texts for learning, for doing, for looking up and for understanding work best kept apart",
       "area": "method",
       "status": "seen",
-      "since": {
-        "seen": "2026-11-05"
-      },
+      "since": { "seen": "2026-11-05" },
       "citedIn": ["docs/logbook/002-the-toolbox.md", "diataxis"]
     },
     {
@@ -765,9 +668,7 @@
       "summary": "How fast a quantity changes at an instant: velocity is the derivative of position, acceleration that of velocity",
       "area": "math",
       "status": "seen",
-      "since": {
-        "seen": "2026-11-08"
-      },
+      "since": { "seen": "2026-11-08" },
       "related": ["integral"],
       "citedIn": ["docs/logbook/004-the-detour.md"]
     },
@@ -778,10 +679,7 @@
       "summary": "The reverse of a derivative: adding up small changes over time, such as velocity into position",
       "area": "math",
       "status": "seen",
-      "since": {
-        "mentioned": "2026-11-05",
-        "seen": "2026-11-08"
-      },
+      "since": { "mentioned": "2026-11-05", "seen": "2026-11-08" },
       "related": ["integration"],
       "citedIn": ["docs/logbook/004-the-detour.md"]
     },
@@ -792,10 +690,7 @@
       "summary": "Numbers on a computer have a limited number of digits: 32-bit floats are fast on the GPU, but rounding errors add up",
       "area": "math",
       "status": "seen",
-      "since": {
-        "mentioned": "2026-11-05",
-        "seen": "2026-11-11"
-      },
+      "since": { "mentioned": "2026-11-05", "seen": "2026-11-11" },
       "citedIn": [
         "docs/logbook/004-the-detour.md",
         "docs/logbook/008-the-first-loop.md",
@@ -809,10 +704,7 @@
       "summary": "Move with the old velocity, then update the velocity: simple, but it makes oscillations gain energy",
       "area": "physics",
       "status": "studied",
-      "since": {
-        "seen": "2026-11-08",
-        "studied": "2026-11-11"
-      },
+      "since": { "seen": "2026-11-08", "studied": "2026-11-11" },
       "partOf": "integration",
       "related": ["semi-implicit-euler"],
       "citedIn": ["docs/logbook/004-the-detour.md", "integration-basics"],
@@ -825,11 +717,7 @@
       "summary": "Update the velocity first, then move with the new one: a small swap that keeps a spring's energy bounded when the step is small enough",
       "area": "physics",
       "status": "studied",
-      "since": {
-        "mentioned": "2026-11-05",
-        "seen": "2026-11-08",
-        "studied": "2026-11-11"
-      },
+      "since": { "mentioned": "2026-11-05", "seen": "2026-11-08", "studied": "2026-11-11" },
       "partOf": "integration",
       "citedIn": [
         "docs/logbook/004-the-detour.md",
@@ -847,9 +735,7 @@
       "summary": "Uses the acceleration both before and after moving: more accurate, but forces are computed twice",
       "area": "physics",
       "status": "seen",
-      "since": {
-        "seen": "2026-11-08"
-      },
+      "since": { "seen": "2026-11-08" },
       "partOf": "integration",
       "citedIn": ["docs/logbook/004-the-detour.md"]
     },
@@ -860,11 +746,7 @@
       "summary": "Whether a simulation's errors stay small or grow until it explodes: not the same thing as accuracy",
       "area": "physics",
       "status": "studied",
-      "since": {
-        "mentioned": "2026-11-05",
-        "seen": "2026-11-08",
-        "studied": "2026-11-11"
-      },
+      "since": { "mentioned": "2026-11-05", "seen": "2026-11-08", "studied": "2026-11-11" },
       "related": ["explicit-euler", "stiffness"],
       "citedIn": ["docs/logbook/004-the-detour.md"],
       "page": "docs/topics/integration.md#when-it-fails-stability"
@@ -876,10 +758,7 @@
       "summary": "How strongly a spring or constraint resists: the stiffer it is, the faster it oscillates and the smaller the safe timestep",
       "area": "physics",
       "status": "studied",
-      "since": {
-        "seen": "2026-11-08",
-        "studied": "2026-11-11"
-      },
+      "since": { "seen": "2026-11-08", "studied": "2026-11-11" },
       "related": ["spring", "substepping"],
       "citedIn": ["docs/logbook/004-the-detour.md"],
       "page": "docs/topics/integration.md#the-step-limit"
@@ -891,11 +770,7 @@
       "summary": "Splitting each step into smaller ones, to follow fast motion and stiff constraints",
       "area": "physics",
       "status": "studied",
-      "since": {
-        "mentioned": "2026-11-05",
-        "seen": "2026-11-08",
-        "studied": "2026-11-11"
-      },
+      "since": { "mentioned": "2026-11-05", "seen": "2026-11-08", "studied": "2026-11-11" },
       "partOf": "timestep",
       "related": ["numerical-stability"],
       "citedIn": [
@@ -913,10 +788,7 @@
       "summary": "Keeps the real time not simulated yet, and spends it in fixed steps",
       "area": "physics",
       "status": "studied",
-      "since": {
-        "seen": "2026-11-08",
-        "studied": "2026-11-11"
-      },
+      "since": { "seen": "2026-11-08", "studied": "2026-11-11" },
       "partOf": "fixed-timestep",
       "citedIn": ["docs/logbook/004-the-detour.md", "docs/logbook/008-the-first-loop.md"],
       "page": "docs/topics/fixed-timestep.md#the-accumulator",
@@ -929,10 +801,7 @@
       "summary": "Drawing a blend of the last two physics states, so motion looks smooth between steps",
       "area": "physics",
       "status": "studied",
-      "since": {
-        "seen": "2026-11-08",
-        "studied": "2026-11-11"
-      },
+      "since": { "seen": "2026-11-08", "studied": "2026-11-11" },
       "partOf": "fixed-timestep",
       "citedIn": ["docs/logbook/004-the-detour.md", "docs/logbook/009-the-first-picture.md"],
       "page": "docs/topics/fixed-timestep.md#render-interpolation"
@@ -944,10 +813,7 @@
       "summary": "When catching up on physics takes so long that every frame falls further behind",
       "area": "physics",
       "status": "studied",
-      "since": {
-        "seen": "2026-11-08",
-        "studied": "2026-11-11"
-      },
+      "since": { "seen": "2026-11-08", "studied": "2026-11-11" },
       "partOf": "fixed-timestep",
       "citedIn": ["docs/logbook/004-the-detour.md"],
       "page": "docs/topics/fixed-timestep.md#the-spiral-of-death",
@@ -960,10 +826,7 @@
       "summary": "Force equals mass times acceleration (F = ma): the same push moves a light object more",
       "area": "physics",
       "status": "seen",
-      "since": {
-        "mentioned": "2026-11-05",
-        "seen": "2026-11-08"
-      },
+      "since": { "mentioned": "2026-11-05", "seen": "2026-11-08" },
       "partOf": "force",
       "citedIn": ["docs/logbook/004-the-detour.md"]
     },
@@ -974,9 +837,7 @@
       "summary": "A spring pulls back in proportion to how far it is stretched (F = −kx)",
       "area": "physics",
       "status": "seen",
-      "since": {
-        "seen": "2026-11-08"
-      },
+      "since": { "seen": "2026-11-08" },
       "partOf": "spring",
       "citedIn": ["docs/logbook/004-the-detour.md"]
     },
@@ -987,9 +848,7 @@
       "summary": "Without friction, the energy of motion plus the stored energy stays constant: a simple test for an integrator",
       "area": "physics",
       "status": "seen",
-      "since": {
-        "seen": "2026-11-08"
-      },
+      "since": { "seen": "2026-11-08" },
       "related": ["numerical-stability"],
       "citedIn": ["docs/logbook/004-the-detour.md"]
     },
@@ -1000,9 +859,7 @@
       "summary": "Games need motion that looks right, fast and stable, more than exact physics",
       "area": "physics",
       "status": "seen",
-      "since": {
-        "seen": "2026-11-05"
-      },
+      "since": { "seen": "2026-11-05" },
       "partOf": "physics-engine",
       "related": ["iterative-solver"],
       "citedIn": ["docs/logbook/001-the-flip-book.md", "docs/logbook/004-the-detour.md"]
@@ -1014,9 +871,7 @@
       "summary": "The balance point of an object: a rigid body's position, and the point it spins around when free",
       "area": "physics",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-08"
-      },
+      "since": { "mentioned": "2026-11-08" },
       "partOf": "rigid-body",
       "citedIn": ["docs/logbook/004-the-detour.md"]
     },
@@ -1027,9 +882,7 @@
       "summary": "The turning effect of a force: the same push turns more the farther it is from the center (τ = r × F)",
       "area": "physics",
       "status": "seen",
-      "since": {
-        "seen": "2026-11-08"
-      },
+      "since": { "seen": "2026-11-08" },
       "partOf": "rigid-body",
       "citedIn": ["docs/logbook/004-the-detour.md"]
     },
@@ -1040,9 +893,7 @@
       "summary": "How hard an object is to spin: it depends on its mass and on how far that mass is from the axis",
       "area": "physics",
       "status": "seen",
-      "since": {
-        "seen": "2026-11-08"
-      },
+      "since": { "seen": "2026-11-08" },
       "partOf": "rigid-body",
       "related": ["torque"],
       "citedIn": ["docs/logbook/004-the-detour.md"]
@@ -1054,9 +905,7 @@
       "summary": "The moment of inertia in 3D: a 3×3 matrix, because the resistance to spinning changes with the axis",
       "area": "physics",
       "status": "seen",
-      "since": {
-        "seen": "2026-11-08"
-      },
+      "since": { "seen": "2026-11-08" },
       "partOf": "moment-of-inertia",
       "citedIn": ["docs/logbook/004-the-detour.md"]
     },
@@ -1067,9 +916,7 @@
       "summary": "How fast a body spins and around which axis, as one vector in radians per second",
       "area": "physics",
       "status": "seen",
-      "since": {
-        "seen": "2026-11-08"
-      },
+      "since": { "seen": "2026-11-08" },
       "partOf": "rigid-body",
       "citedIn": ["docs/logbook/004-the-detour.md"]
     },
@@ -1080,9 +927,7 @@
       "summary": "Inertia times angular velocity: the quantity a torque changes over time",
       "area": "physics",
       "status": "seen",
-      "since": {
-        "seen": "2026-11-08"
-      },
+      "since": { "seen": "2026-11-08" },
       "partOf": "rigid-body",
       "related": ["inertia-tensor"],
       "citedIn": ["docs/logbook/004-the-detour.md"]
@@ -1094,10 +939,7 @@
       "summary": "How a body is rotated, stored as a quaternion and updated each step by a small rotation",
       "area": "physics",
       "status": "seen",
-      "since": {
-        "mentioned": "2026-11-05",
-        "seen": "2026-11-08"
-      },
+      "since": { "mentioned": "2026-11-05", "seen": "2026-11-08" },
       "partOf": "rigid-body",
       "related": ["angular-velocity"],
       "citedIn": ["docs/logbook/004-the-detour.md"]
@@ -1109,10 +951,7 @@
       "summary": "Storing 1/m instead of m: no divisions in hot loops, and zero means a body that never moves",
       "area": "physics",
       "status": "seen",
-      "since": {
-        "mentioned": "2026-11-05",
-        "seen": "2026-11-08"
-      },
+      "since": { "mentioned": "2026-11-05", "seen": "2026-11-08" },
       "partOf": "rigid-body",
       "citedIn": ["docs/logbook/004-the-detour.md"]
     },
@@ -1123,9 +962,7 @@
       "summary": "Space split into equal cells: only objects in the same or nearby cells get compared",
       "area": "physics",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-05"
-      },
+      "since": { "mentioned": "2026-11-05" },
       "partOf": "broad-phase",
       "citedIn": ["docs/logbook/004-the-detour.md"]
     },
@@ -1136,9 +973,7 @@
       "summary": "A uniform grid stored in a hash table, so it can cover endless space with little memory",
       "area": "physics",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-05"
-      },
+      "since": { "mentioned": "2026-11-05" },
       "partOf": "broad-phase",
       "related": ["uniform-grid", "neighbour-search"],
       "citedIn": ["docs/logbook/004-the-detour.md"]
@@ -1150,9 +985,7 @@
       "summary": "A test that tells whether two convex shapes overlap, using only their farthest points in each direction",
       "area": "physics",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-05"
-      },
+      "since": { "mentioned": "2026-11-05" },
       "partOf": "narrow-phase",
       "citedIn": ["docs/logbook/004-the-detour.md"]
     },
@@ -1163,9 +996,7 @@
       "summary": "Run after GJK when two shapes overlap, to find how deep and in which direction",
       "area": "physics",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-05"
-      },
+      "since": { "mentioned": "2026-11-05" },
       "partOf": "narrow-phase",
       "related": ["gjk"],
       "citedIn": ["docs/logbook/004-the-detour.md"]
@@ -1177,9 +1008,7 @@
       "summary": "Describing a shape by the distance from it at every point of space, so a contact test becomes a lookup",
       "area": "physics",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-05"
-      },
+      "since": { "mentioned": "2026-11-05" },
       "partOf": "narrow-phase",
       "citedIn": ["docs/logbook/004-the-detour.md"]
     },
@@ -1190,9 +1019,7 @@
       "summary": "Checking the whole path between two steps, so fast objects cannot tunnel through walls",
       "area": "physics",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-05"
-      },
+      "since": { "mentioned": "2026-11-05" },
       "partOf": "collision-detection",
       "related": ["tunneling"],
       "citedIn": ["docs/logbook/004-the-detour.md"]
@@ -1204,9 +1031,7 @@
       "summary": "All the contact points between two touching shapes, such as the four corners of a box resting on the floor",
       "area": "physics",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-05"
-      },
+      "since": { "mentioned": "2026-11-05" },
       "related": ["contact"],
       "citedIn": ["docs/logbook/004-the-detour.md"]
     },
@@ -1217,10 +1042,7 @@
       "summary": "The force that resists sliding between two surfaces in contact",
       "area": "physics",
       "status": "seen",
-      "since": {
-        "mentioned": "2026-11-05",
-        "seen": "2026-11-11"
-      },
+      "since": { "mentioned": "2026-11-05", "seen": "2026-11-11" },
       "related": ["contact"],
       "citedIn": ["docs/logbook/004-the-detour.md", "docs/logbook/010-the-ground.md"],
       "code": ["src/shaders/integrate.wgsl"]
@@ -1232,10 +1054,7 @@
       "summary": "How bouncy a collision is: how much speed comes back after the impact",
       "area": "physics",
       "status": "seen",
-      "since": {
-        "mentioned": "2026-11-05",
-        "seen": "2026-11-11"
-      },
+      "since": { "mentioned": "2026-11-05", "seen": "2026-11-11" },
       "related": ["contact"],
       "citedIn": ["docs/logbook/004-the-detour.md", "docs/logbook/010-the-ground.md"],
       "code": ["src/shaders/integrate.wgsl"]
@@ -1247,9 +1066,7 @@
       "summary": "Shooting a line into the world to find what it hits first, for aiming, picking or line of sight",
       "area": "physics",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-08"
-      },
+      "since": { "mentioned": "2026-11-08" },
       "related": ["collision-detection"],
       "citedIn": ["docs/logbook/004-the-detour.md"]
     },
@@ -1260,9 +1077,7 @@
       "summary": "Telling game code when two objects start or stop touching",
       "area": "physics",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-05"
-      },
+      "since": { "mentioned": "2026-11-05" },
       "related": ["contact"],
       "citedIn": ["docs/logbook/004-the-detour.md"]
     },
@@ -1273,9 +1088,7 @@
       "summary": "Resolving collisions by changing velocities at once, with an instant kick called an impulse",
       "area": "physics",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-05"
-      },
+      "since": { "mentioned": "2026-11-05" },
       "related": ["solver"],
       "citedIn": ["docs/logbook/004-the-detour.md", "docs/decisions/013-a-flat-ground.md"]
     },
@@ -1286,9 +1099,7 @@
       "summary": "Applying impulses to one contact or joint at a time, over several rounds: the classic rigid body solver",
       "area": "physics",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-05"
-      },
+      "since": { "mentioned": "2026-11-05" },
       "partOf": "iterative-solver",
       "related": ["impulse-based-dynamics", "warm-starting"],
       "citedIn": ["docs/logbook/004-the-detour.md"]
@@ -1300,9 +1111,7 @@
       "summary": "Fixing constraints one after another, each using the latest results: converges fast, but it is sequential",
       "area": "physics",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-05"
-      },
+      "since": { "mentioned": "2026-11-05" },
       "partOf": "iterative-solver",
       "related": ["jacobi"],
       "citedIn": ["docs/logbook/004-the-detour.md"]
@@ -1314,9 +1123,7 @@
       "summary": "Fixing every constraint at once from the same old state, then combining: parallel, but slower to converge",
       "area": "physics",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-05"
-      },
+      "since": { "mentioned": "2026-11-05" },
       "partOf": "iterative-solver",
       "related": ["gpu-parallelism"],
       "citedIn": ["docs/logbook/004-the-detour.md"]
@@ -1328,9 +1135,7 @@
       "summary": "PhysX's temporal Gauss-Seidel solver, designed to converge better with complex constraints",
       "area": "physics",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-08"
-      },
+      "since": { "mentioned": "2026-11-08" },
       "partOf": "solver",
       "related": ["gauss-seidel"],
       "citedIn": ["docs/logbook/004-the-detour.md"]
@@ -1342,9 +1147,7 @@
       "summary": "Starting the solver from the previous step's answer, so fewer rounds are needed",
       "area": "physics",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-05"
-      },
+      "since": { "mentioned": "2026-11-05" },
       "partOf": "solver",
       "citedIn": ["docs/logbook/004-the-detour.md"]
     },
@@ -1355,9 +1158,7 @@
       "summary": "Groups of bodies that touch each other, solved apart from the rest",
       "area": "physics",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-05"
-      },
+      "since": { "mentioned": "2026-11-05" },
       "partOf": "solver",
       "related": ["sleeping"],
       "citedIn": ["docs/logbook/004-the-detour.md"]
@@ -1369,9 +1170,7 @@
       "summary": "Pausing bodies that have come to rest, until something wakes them up",
       "area": "physics",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-05"
-      },
+      "since": { "mentioned": "2026-11-05" },
       "citedIn": ["docs/logbook/004-the-detour.md"]
     },
     {
@@ -1381,9 +1180,7 @@
       "summary": "The solver of recent Box2D versions, built around substeps",
       "area": "physics",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-05"
-      },
+      "since": { "mentioned": "2026-11-05" },
       "partOf": "solver",
       "related": ["substepping"],
       "citedIn": ["docs/logbook/004-the-detour.md"]
@@ -1395,9 +1192,7 @@
       "summary": "A rule that keeps two points at a fixed distance: the building block of chains, ropes and cloth",
       "area": "physics",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-05"
-      },
+      "since": { "mentioned": "2026-11-05" },
       "partOf": "constraint",
       "citedIn": ["docs/logbook/004-the-detour.md"]
     },
@@ -1408,9 +1203,7 @@
       "summary": "Splitting constraints into groups that share no body, so each group can be solved in parallel",
       "area": "gpu",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-05"
-      },
+      "since": { "mentioned": "2026-11-05" },
       "related": ["gauss-seidel", "solver"],
       "citedIn": ["docs/logbook/004-the-detour.md"]
     },
@@ -1421,9 +1214,7 @@
       "summary": "Extended PBD: each constraint gets a softness, called compliance, so stiffness no longer depends on step size or rounds",
       "area": "physics",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-05"
-      },
+      "since": { "mentioned": "2026-11-05" },
       "partOf": "position-based-dynamics",
       "citedIn": ["docs/logbook/004-the-detour.md"]
     },
@@ -1434,9 +1225,7 @@
       "summary": "Pulling a group of particles back toward the best rigid fit of their original shape",
       "area": "physics",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-05"
-      },
+      "since": { "mentioned": "2026-11-05" },
       "related": ["soft-body", "position-based-dynamics"],
       "citedIn": ["docs/logbook/004-the-detour.md"]
     },
@@ -1447,9 +1236,7 @@
       "summary": "Building every material, from solids to cloth and fluids, out of particles held by constraints",
       "area": "physics",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-05"
-      },
+      "since": { "mentioned": "2026-11-05" },
       "related": ["particle", "position-based-dynamics"],
       "citedIn": ["docs/logbook/004-the-detour.md"]
     },
@@ -1460,9 +1247,7 @@
       "summary": "Turning a mesh's surface or volume into points, for example to build a body out of particles",
       "area": "physics",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-05"
-      },
+      "since": { "mentioned": "2026-11-05" },
       "related": ["unified-particle-physics"],
       "citedIn": ["docs/logbook/004-the-detour.md"]
     },
@@ -1473,9 +1258,7 @@
       "summary": "Particles linked by springs: the simplest model of cloth and soft bodies",
       "area": "physics",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-05"
-      },
+      "since": { "mentioned": "2026-11-05" },
       "related": ["spring", "cloth"],
       "citedIn": ["docs/logbook/004-the-detour.md"]
     },
@@ -1486,9 +1269,7 @@
       "summary": "Splitting a solid into small pieces, such as tetrahedra, and working out how each one deforms",
       "area": "physics",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-05"
-      },
+      "since": { "mentioned": "2026-11-05" },
       "related": ["soft-body"],
       "citedIn": ["docs/logbook/004-the-detour.md"]
     },
@@ -1499,9 +1280,7 @@
       "summary": "Cloth or a soft body hitting itself",
       "area": "physics",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-05"
-      },
+      "since": { "mentioned": "2026-11-05" },
       "partOf": "cloth",
       "citedIn": ["docs/logbook/004-the-detour.md", "ten-minute-physics"]
     },
@@ -1512,9 +1291,7 @@
       "summary": "Smoothed particle hydrodynamics: a fluid's density and pressure at each particle, estimated from its neighbours",
       "area": "physics",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-05"
-      },
+      "since": { "mentioned": "2026-11-05" },
       "partOf": "fluid",
       "citedIn": ["docs/logbook/004-the-detour.md"]
     },
@@ -1525,9 +1302,7 @@
       "summary": "Fluids kept from compressing with position constraints, the PBD way",
       "area": "physics",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-05"
-      },
+      "since": { "mentioned": "2026-11-05" },
       "partOf": "fluid",
       "related": ["position-based-dynamics"],
       "citedIn": ["docs/logbook/004-the-detour.md"]
@@ -1539,9 +1314,7 @@
       "summary": "Particles carry the material while a grid works out the forces: good for snow, sand and deformables",
       "area": "physics",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-05"
-      },
+      "since": { "mentioned": "2026-11-05" },
       "related": ["flip-fluid", "granular-material"],
       "citedIn": ["docs/logbook/004-the-detour.md"]
     },
@@ -1552,9 +1325,7 @@
       "summary": "Finding the particles near each particle: a major cost of particle fluids",
       "area": "physics",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-05"
-      },
+      "since": { "mentioned": "2026-11-05" },
       "related": ["sph"],
       "citedIn": ["docs/logbook/004-the-detour.md"]
     },
@@ -1565,9 +1336,7 @@
       "summary": "Sand, snow and grains: solid up close, flowing in bulk",
       "area": "physics",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-05"
-      },
+      "since": { "mentioned": "2026-11-05" },
       "citedIn": ["docs/logbook/004-the-detour.md"]
     },
     {
@@ -1577,9 +1346,7 @@
       "summary": "Different materials pushing on each other both ways, like a ball floating on water",
       "area": "physics",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-05"
-      },
+      "since": { "mentioned": "2026-11-05" },
       "related": ["unified-particle-physics"],
       "citedIn": ["docs/logbook/004-the-detour.md"]
     },
@@ -1590,9 +1357,7 @@
       "summary": "Breaking objects into pieces while the game runs",
       "area": "physics",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-05"
-      },
+      "since": { "mentioned": "2026-11-05" },
       "citedIn": ["docs/logbook/004-the-detour.md"]
     },
     {
@@ -1602,9 +1367,7 @@
       "summary": "Chains of bodies linked by joints, such as robots and ragdolls",
       "area": "physics",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-05"
-      },
+      "since": { "mentioned": "2026-11-05" },
       "related": ["joint"],
       "citedIn": ["docs/logbook/004-the-detour.md"]
     },
@@ -1615,9 +1378,7 @@
       "summary": "Memory updates that stay correct even when thousands of threads write to the same place",
       "area": "gpu",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-05"
-      },
+      "since": { "mentioned": "2026-11-05" },
       "citedIn": [
         "docs/logbook/004-the-detour.md",
         "wgsl-spec-var-declarations",
@@ -1631,9 +1392,7 @@
       "summary": "Two runs from the same start give exactly the same numbers. On the GPU, threads adding floats to the same body in a different order each run can break it",
       "area": "engine",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-12"
-      },
+      "since": { "mentioned": "2026-11-12" },
       "related": ["atomic-operations", "float-precision"],
       "citedIn": ["docs/logbook/010-the-ground.md"]
     },
@@ -1644,9 +1403,7 @@
       "summary": "Turning a list of counts into running totals, in parallel: the GPU's way of packing results",
       "area": "gpu",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-08"
-      },
+      "since": { "mentioned": "2026-11-08" },
       "citedIn": ["docs/logbook/004-the-detour.md"]
     },
     {
@@ -1656,9 +1413,7 @@
       "summary": "Sorting many keys at once on the GPU, for example objects by grid cell",
       "area": "gpu",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-08"
-      },
+      "since": { "mentioned": "2026-11-08" },
       "related": ["uniform-grid"],
       "citedIn": ["docs/logbook/004-the-detour.md"]
     },
@@ -1669,10 +1424,7 @@
       "summary": "One array per property, all positions together and all velocities together, instead of one object per particle",
       "area": "gpu",
       "status": "seen",
-      "since": {
-        "mentioned": "2026-11-05",
-        "seen": "2026-11-11"
-      },
+      "since": { "mentioned": "2026-11-05", "seen": "2026-11-11" },
       "citedIn": ["docs/logbook/004-the-detour.md", "docs/logbook/008-the-first-loop.md"],
       "related": ["memory-alignment"],
       "code": ["src/world.ts", "src/shaders/integrate.wgsl"]
@@ -1684,9 +1436,7 @@
       "summary": "Keeping the simulation's data on the GPU, and not reading it back every frame",
       "area": "gpu",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-05"
-      },
+      "since": { "mentioned": "2026-11-05" },
       "related": ["readback", "buffer"],
       "citedIn": ["docs/logbook/004-the-detour.md"]
     },
@@ -1697,10 +1447,7 @@
       "summary": "What a given GPU guarantees, such as buffer sizes and workgroup memory: to check before choosing a pipeline",
       "area": "gpu",
       "status": "seen",
-      "since": {
-        "mentioned": "2026-11-05",
-        "seen": "2026-11-11"
-      },
+      "since": { "mentioned": "2026-11-05", "seen": "2026-11-11" },
       "partOf": "webgpu",
       "related": ["adapter-and-device"],
       "citedIn": [
@@ -1720,9 +1467,7 @@
       "summary": "A restricted WebGPU that also runs on older graphics APIs, such as OpenGL ES 3.1",
       "area": "gpu",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-05"
-      },
+      "since": { "mentioned": "2026-11-05" },
       "partOf": "webgpu",
       "citedIn": ["docs/logbook/004-the-detour.md", "new-in-webgpu-146"]
     },
@@ -1733,9 +1478,7 @@
       "summary": "The same simulation at different costs: fewer particles, substeps and solver rounds on weaker devices",
       "area": "engine",
       "status": "seen",
-      "since": {
-        "seen": "2026-11-05"
-      },
+      "since": { "seen": "2026-11-05" },
       "citedIn": ["docs/logbook/004-the-detour.md"]
     },
     {
@@ -1745,9 +1488,7 @@
       "summary": "The slice of each frame the physics may use, for example 2 to 4 ms of the 16.7 ms available at 60 FPS",
       "area": "engine",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-05"
-      },
+      "since": { "mentioned": "2026-11-05" },
       "citedIn": ["docs/logbook/004-the-detour.md"]
     },
     {
@@ -1757,9 +1498,7 @@
       "summary": "Standard test scenes, such as a stack of boxes or a dam break, to compare algorithms fairly",
       "area": "engine",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-05"
-      },
+      "since": { "mentioned": "2026-11-05" },
       "citedIn": ["docs/logbook/004-the-detour.md"]
     },
     {
@@ -1769,9 +1508,7 @@
       "summary": "Phones slow down as they heat up, so speed must be measured over minutes, not seconds",
       "area": "engine",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-05"
-      },
+      "since": { "mentioned": "2026-11-05" },
       "citedIn": ["docs/logbook/004-the-detour.md"]
     },
     {
@@ -1781,9 +1518,7 @@
       "summary": "Organizing a game as plain data components processed by systems, instead of objects with methods",
       "area": "engine",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-05"
-      },
+      "since": { "mentioned": "2026-11-05" },
       "citedIn": ["docs/logbook/004-the-detour.md"]
     },
     {
@@ -1793,9 +1528,7 @@
       "summary": "Splitting the work of a step into small jobs spread over the CPU cores",
       "area": "engine",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-05"
-      },
+      "since": { "mentioned": "2026-11-05" },
       "citedIn": ["docs/logbook/004-the-detour.md"]
     },
     {
@@ -1805,9 +1538,7 @@
       "summary": "An integrator that keeps energy steady on average over long runs, such as semi-implicit Euler or Verlet",
       "area": "physics",
       "status": "seen",
-      "since": {
-        "seen": "2026-11-11"
-      },
+      "since": { "seen": "2026-11-11" },
       "partOf": "integration",
       "citedIn": ["integration-basics"]
     },
@@ -1818,9 +1549,7 @@
       "summary": "Samples the rate of change four times per step: very accurate, but four times the work, and it slowly loses energy",
       "area": "physics",
       "status": "seen",
-      "since": {
-        "seen": "2026-11-11"
-      },
+      "since": { "seen": "2026-11-11" },
       "partOf": "integration",
       "citedIn": ["integration-basics"]
     },
@@ -1831,9 +1560,7 @@
       "summary": "Splitting long frames into steps no longer than a maximum: safer, but steps still differ in length",
       "area": "physics",
       "status": "seen",
-      "since": {
-        "seen": "2026-11-11"
-      },
+      "since": { "seen": "2026-11-11" },
       "partOf": "fixed-timestep",
       "citedIn": ["fix-your-timestep"]
     },
@@ -1844,9 +1571,7 @@
       "summary": "A rigid body's shape approximated by spheres, so every collision becomes a cheap test between spheres",
       "area": "physics",
       "status": "seen",
-      "since": {
-        "seen": "2026-11-11"
-      },
+      "since": { "seen": "2026-11-11" },
       "partOf": "rigid-body",
       "related": ["mesh-sampling", "uniform-grid"],
       "citedIn": ["gpu-gems-rigid-bodies", "docs/logbook/005-the-first-pages.md"]
@@ -1858,9 +1583,7 @@
       "summary": "Particles that push each other apart when they overlap, like small springs, with dampers to absorb the bounce",
       "area": "physics",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-11"
-      },
+      "since": { "mentioned": "2026-11-11" },
       "related": ["particle-rigid-bodies", "granular-material"],
       "citedIn": ["gpu-gems-rigid-bodies"]
     },
@@ -1871,9 +1594,7 @@
       "summary": "A short page per design choice: what we chose, why, and what we left out, so nobody has to accept or reverse it blindly",
       "area": "method",
       "status": "seen",
-      "since": {
-        "seen": "2026-11-11"
-      },
+      "since": { "seen": "2026-11-11" },
       "related": ["documentation-kinds"],
       "citedIn": ["docs/logbook/006-the-decision-log.md", "nygard-adr"]
     },
@@ -1884,9 +1605,7 @@
       "summary": "One of the most widely used 2D physics engines, open source",
       "area": "physics",
       "status": "seen",
-      "since": {
-        "seen": "2026-11-05"
-      },
+      "since": { "seen": "2026-11-05" },
       "about": ["physics-engine", "simulation-step", "solver"],
       "citedIn": ["docs/logbook/001-the-flip-book.md", "docs/logbook/004-the-detour.md"],
       "url": "https://github.com/erincatto/box2d",
@@ -1899,9 +1618,7 @@
       "summary": "The flip book comparison, and the 1/60 second step",
       "area": "physics",
       "status": "seen",
-      "since": {
-        "seen": "2026-11-05"
-      },
+      "since": { "seen": "2026-11-05" },
       "partOf": "box2d",
       "about": ["physics-engine", "timestep"],
       "citedIn": ["docs/logbook/001-the-flip-book.md"],
@@ -1914,9 +1631,7 @@
       "summary": "The real order of the steps: broad phase, collisions, solver",
       "area": "physics",
       "status": "seen",
-      "since": {
-        "seen": "2026-11-05"
-      },
+      "since": { "seen": "2026-11-05" },
       "partOf": "box2d",
       "about": ["simulation-step"],
       "citedIn": ["docs/logbook/001-the-flip-book.md"],
@@ -1929,9 +1644,7 @@
       "summary": "The internal stages of the solver",
       "area": "physics",
       "status": "seen",
-      "since": {
-        "seen": "2026-11-05"
-      },
+      "since": { "seen": "2026-11-05" },
       "partOf": "box2d",
       "about": ["solver", "semi-implicit-euler"],
       "citedIn": ["docs/logbook/001-the-flip-book.md"],
@@ -1944,9 +1657,7 @@
       "summary": "An open source 2D and 3D physics engine written in Rust",
       "area": "physics",
       "status": "seen",
-      "since": {
-        "seen": "2026-11-05"
-      },
+      "since": { "seen": "2026-11-05" },
       "about": ["physics-engine", "solver"],
       "citedIn": ["docs/logbook/001-the-flip-book.md", "docs/logbook/004-the-detour.md"],
       "url": "https://github.com/dimforge/rapier"
@@ -1958,9 +1669,7 @@
       "summary": "The solver repeats 4 rounds by default",
       "area": "physics",
       "status": "seen",
-      "since": {
-        "seen": "2026-11-05"
-      },
+      "since": { "seen": "2026-11-05" },
       "partOf": "rapier",
       "about": ["iterative-solver"],
       "citedIn": ["docs/logbook/001-the-flip-book.md"],
@@ -1973,10 +1682,7 @@
       "summary": "Why the step must be fixed, and how to separate it from frames",
       "area": "physics",
       "status": "studied",
-      "since": {
-        "seen": "2026-11-05",
-        "studied": "2026-11-11"
-      },
+      "since": { "seen": "2026-11-05", "studied": "2026-11-11" },
       "about": [
         "fixed-timestep",
         "timestep",
@@ -1997,9 +1703,7 @@
       "summary": "GDC talks by the creator of Box2D on solvers and collisions",
       "area": "physics",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-05"
-      },
+      "since": { "mentioned": "2026-11-05" },
       "about": ["solver", "collision-detection"],
       "related": ["box2d"],
       "citedIn": ["docs/logbook/001-the-flip-book.md"],
@@ -2013,9 +1717,7 @@
       "summary": "Short videos with JavaScript demos: PBD, cloth, soft bodies, fluids, rigid bodies, collisions and the GPU",
       "area": "physics",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-05"
-      },
+      "since": { "mentioned": "2026-11-05" },
       "about": [
         "position-based-dynamics",
         "cloth",
@@ -2036,9 +1738,7 @@
       "summary": "The classic SIGGRAPH course notes: particles, rigid bodies, constraints and implicit methods",
       "area": "physics",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-05"
-      },
+      "since": { "mentioned": "2026-11-05" },
       "about": [
         "particle",
         "rigid-body",
@@ -2060,9 +1760,7 @@
       "summary": "The official definition of the API",
       "area": "gpu",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-04"
-      },
+      "since": { "mentioned": "2026-11-04" },
       "about": [
         "webgpu",
         "device-limits",
@@ -2095,10 +1793,7 @@
       "summary": "The official definition of the shader language",
       "area": "gpu",
       "status": "seen",
-      "since": {
-        "mentioned": "2026-11-05",
-        "seen": "2026-11-13"
-      },
+      "since": { "mentioned": "2026-11-05", "seen": "2026-11-13" },
       "about": ["wgsl", "memory-alignment", "compute-shader", "override-constant", "shader-module"],
       "citedIn": [
         ".claude/skills/guide/SKILL.md",
@@ -2116,9 +1811,7 @@
       "summary": "A readable API reference",
       "area": "gpu",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-05"
-      },
+      "since": { "mentioned": "2026-11-05" },
       "about": ["webgpu"],
       "citedIn": [".claude/skills/guide/SKILL.md"],
       "url": "https://developer.mozilla.org/en-US/docs/Web/API/WebGPU_API"
@@ -2130,9 +1823,7 @@
       "summary": "Step-by-step lessons",
       "area": "gpu",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-05"
-      },
+      "since": { "mentioned": "2026-11-05" },
       "about": ["webgpu", "workgroup"],
       "citedIn": ["docs/logbook/002-the-toolbox.md", "docs/guides/dispatch-and-workgroups.md"],
       "url": "https://webgpufundamentals.org/",
@@ -2145,9 +1836,7 @@
       "summary": "Keeping what you read to learn apart from what you look up",
       "area": "method",
       "status": "seen",
-      "since": {
-        "seen": "2026-11-05"
-      },
+      "since": { "seen": "2026-11-05" },
       "about": ["documentation-kinds"],
       "citedIn": ["docs/logbook/002-the-toolbox.md"],
       "url": "https://diataxis.fr/"
@@ -2159,9 +1848,7 @@
       "summary": "The paper behind NVIDIA FleX: solids, cloth and fluids as particles and constraints, solved in parallel",
       "area": "physics",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-05"
-      },
+      "since": { "mentioned": "2026-11-05" },
       "about": ["unified-particle-physics", "position-based-dynamics", "two-way-coupling"],
       "citedIn": ["docs/logbook/004-the-detour.md"],
       "url": "https://doi.org/10.1145/2601097.2601152",
@@ -2175,9 +1862,7 @@
       "summary": "Adds compliance to PBD, so stiffness stops depending on the timestep and the number of rounds",
       "area": "physics",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-05"
-      },
+      "since": { "mentioned": "2026-11-05" },
       "about": ["xpbd"],
       "citedIn": ["docs/logbook/004-the-detour.md"],
       "url": "https://matthias-research.github.io/pages/publications/XPBD.pdf",
@@ -2191,9 +1876,7 @@
       "summary": "Rigid bodies, contacts and joints solved with XPBD, with implementation details",
       "area": "physics",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-05"
-      },
+      "since": { "mentioned": "2026-11-05" },
       "about": ["xpbd", "rigid-body", "joint"],
       "citedIn": ["docs/logbook/004-the-detour.md"],
       "url": "https://diglib.eg.org/items/114b20b0-8543-4c54-bd04-42ee60c71946",
@@ -2207,9 +1890,7 @@
       "summary": "The paper that introduced moving positions directly to satisfy constraints",
       "area": "physics",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-05"
-      },
+      "since": { "mentioned": "2026-11-05" },
       "about": ["position-based-dynamics"],
       "citedIn": ["docs/logbook/004-the-detour.md"],
       "url": "https://doi.org/10.1016/j.jvcir.2007.01.005",
@@ -2223,9 +1904,7 @@
       "summary": "An overview of the whole position based family",
       "area": "physics",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-05"
-      },
+      "since": { "mentioned": "2026-11-05" },
       "about": ["position-based-dynamics"],
       "citedIn": ["docs/logbook/004-the-detour.md"],
       "url": "https://doi.org/10.1111/cgf.12346",
@@ -2239,9 +1918,7 @@
       "summary": "PBD constraints that control stretching in any direction, not only along the edges of the mesh",
       "area": "physics",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-05"
-      },
+      "since": { "mentioned": "2026-11-05" },
       "about": ["position-based-dynamics", "cloth", "soft-body"],
       "citedIn": ["docs/logbook/004-the-detour.md"],
       "url": "https://matthias-research.github.io/pages/publications/strainBasedDynamics.pdf",
@@ -2255,9 +1932,7 @@
       "summary": "Deformable objects made of points pulled back toward their rest shape",
       "area": "physics",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-05"
-      },
+      "since": { "mentioned": "2026-11-05" },
       "about": ["shape-matching", "soft-body"],
       "citedIn": ["docs/logbook/004-the-detour.md"],
       "url": "https://doi.org/10.1145/1073204.1073216",
@@ -2271,9 +1946,7 @@
       "summary": "Many substeps with one solver round each can beat one step with many rounds",
       "area": "physics",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-05"
-      },
+      "since": { "mentioned": "2026-11-05" },
       "about": ["substepping", "xpbd", "iterative-solver"],
       "citedIn": ["docs/logbook/004-the-detour.md"],
       "url": "https://mmacklin.com/smallsteps.pdf",
@@ -2287,9 +1960,7 @@
       "summary": "Fluids that do not compress, built on position constraints, for real time",
       "area": "physics",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-05"
-      },
+      "since": { "mentioned": "2026-11-05" },
       "about": ["position-based-fluids"],
       "citedIn": ["docs/logbook/004-the-detour.md"],
       "url": "https://mmacklin.com/pbf_sig_preprint.pdf",
@@ -2303,9 +1974,7 @@
       "summary": "SPH fluids fast enough for interactive use",
       "area": "physics",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-05"
-      },
+      "since": { "mentioned": "2026-11-05" },
       "about": ["sph"],
       "citedIn": ["docs/logbook/004-the-detour.md"],
       "url": "https://matthias-research.github.io/pages/publications/sca03.pdf",
@@ -2319,9 +1988,7 @@
       "summary": "A grid fluid method that stays stable even with large timesteps",
       "area": "physics",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-05"
-      },
+      "since": { "mentioned": "2026-11-05" },
       "about": ["eulerian-fluid", "numerical-stability"],
       "citedIn": ["docs/logbook/004-the-detour.md"],
       "url": "https://doi.org/10.1145/311535.311548",
@@ -2335,9 +2002,7 @@
       "summary": "The material point method applied to snow",
       "area": "physics",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-05"
-      },
+      "since": { "mentioned": "2026-11-05" },
       "about": ["material-point-method", "granular-material"],
       "citedIn": ["docs/logbook/004-the-detour.md"],
       "url": "https://doi.org/10.1145/2461912.2461948",
@@ -2351,9 +2016,7 @@
       "summary": "Sand simulated with a mix of particles and a grid",
       "area": "physics",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-05"
-      },
+      "since": { "mentioned": "2026-11-05" },
       "about": ["granular-material", "flip-fluid"],
       "citedIn": ["docs/logbook/004-the-detour.md"],
       "url": "https://doi.org/10.1145/1073204.1073298",
@@ -2367,9 +2030,7 @@
       "summary": "NVIDIA's free book of GPU techniques, with a whole part on physics simulation",
       "area": "gpu",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-08"
-      },
+      "since": { "mentioned": "2026-11-08" },
       "about": ["gpu-parallelism"],
       "citedIn": ["docs/logbook/004-the-detour.md"],
       "url": "https://developer.nvidia.com/gpugems/gpugems3",
@@ -2382,9 +2043,7 @@
       "summary": "A parallel broad phase built from spatial subdivision, sorting and prefix sums",
       "area": "gpu",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-08"
-      },
+      "since": { "mentioned": "2026-11-08" },
       "partOf": "gpu-gems-3",
       "about": ["broad-phase", "uniform-grid", "parallel-sort", "prefix-sum"],
       "citedIn": ["docs/logbook/004-the-detour.md"],
@@ -2399,10 +2058,7 @@
       "summary": "Rigid bodies built from particles: collisions found on a uniform grid and pushed apart with springs and dampers, all on the GPU",
       "area": "gpu",
       "status": "seen",
-      "since": {
-        "mentioned": "2026-11-08",
-        "seen": "2026-11-11"
-      },
+      "since": { "mentioned": "2026-11-08", "seen": "2026-11-11" },
       "partOf": "gpu-gems-3",
       "about": [
         "rigid-body",
@@ -2424,10 +2080,7 @@
       "summary": "How numerical integrators behave, explained for game developers",
       "area": "physics",
       "status": "studied",
-      "since": {
-        "mentioned": "2026-11-08",
-        "studied": "2026-11-11"
-      },
+      "since": { "mentioned": "2026-11-08", "studied": "2026-11-11" },
       "about": [
         "integration",
         "numerical-stability",
@@ -2451,9 +2104,7 @@
       "summary": "How Jolt is built: AABB trees, GJK and EPA, sequential impulses, islands, sleeping and jobs",
       "area": "physics",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-05"
-      },
+      "since": { "mentioned": "2026-11-05" },
       "partOf": "jolt",
       "about": [
         "bounding-volume-hierarchy",
@@ -2475,9 +2126,7 @@
       "summary": "Which parts of PhysX run on the GPU with CUDA",
       "area": "physics",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-05"
-      },
+      "since": { "mentioned": "2026-11-05" },
       "partOf": "physx",
       "about": ["gpu-parallelism", "rigid-body"],
       "citedIn": ["docs/logbook/004-the-detour.md"],
@@ -2490,9 +2139,7 @@
       "summary": "The PhysX guide to rigid bodies, and to its two solvers, PGS and TGS",
       "area": "physics",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-05"
-      },
+      "since": { "mentioned": "2026-11-05" },
       "partOf": "physx",
       "about": ["rigid-body", "sequential-impulses", "tgs-solver"],
       "citedIn": ["docs/logbook/004-the-detour.md"],
@@ -2505,9 +2152,7 @@
       "summary": "How FleX turns materials into particles, and why it is meant for effects more than gameplay",
       "area": "physics",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-05"
-      },
+      "since": { "mentioned": "2026-11-05" },
       "partOf": "flex",
       "about": ["unified-particle-physics", "shape-matching"],
       "citedIn": ["docs/logbook/004-the-detour.md"],
@@ -2520,9 +2165,7 @@
       "summary": "Creating particle assets from a mesh: voxels, surface sampling and clusters",
       "area": "physics",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-05"
-      },
+      "since": { "mentioned": "2026-11-05" },
       "partOf": "flex",
       "about": ["mesh-sampling", "shape-matching"],
       "citedIn": ["docs/logbook/004-the-detour.md"],
@@ -2535,9 +2178,7 @@
       "summary": "Box2D's guide to the world and its step, including substeps",
       "area": "physics",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-05"
-      },
+      "since": { "mentioned": "2026-11-05" },
       "partOf": "box2d",
       "about": ["substepping", "soft-step"],
       "citedIn": ["docs/logbook/004-the-detour.md"],
@@ -2550,9 +2191,7 @@
       "summary": "The manual page of Unity's rigid body component",
       "area": "physics",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-05"
-      },
+      "since": { "mentioned": "2026-11-05" },
       "partOf": "unity",
       "about": ["rigid-body"],
       "citedIn": ["docs/logbook/004-the-detour.md"],
@@ -2565,9 +2204,7 @@
       "summary": "How Unity exposes a body's inertia tensor, and lets you change it",
       "area": "physics",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-05"
-      },
+      "since": { "mentioned": "2026-11-05" },
       "partOf": "unity",
       "about": ["inertia-tensor"],
       "citedIn": ["docs/logbook/004-the-detour.md"],
@@ -2580,9 +2217,7 @@
       "summary": "Which browsers support WebGPU",
       "area": "gpu",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-05"
-      },
+      "since": { "mentioned": "2026-11-05" },
       "about": ["webgpu"],
       "citedIn": ["docs/logbook/004-the-detour.md"],
       "url": "https://web-platform-dx.github.io/web-features-explorer/features/webgpu/"
@@ -2594,9 +2229,7 @@
       "summary": "Chrome's introduction to WebGPU",
       "area": "gpu",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-05"
-      },
+      "since": { "mentioned": "2026-11-05" },
       "about": ["webgpu"],
       "citedIn": ["docs/logbook/004-the-detour.md"],
       "url": "https://developer.chrome.com/docs/web-platform/webgpu/overview"
@@ -2608,10 +2241,7 @@
       "summary": "Chrome 146 brings WebGPU compatibility mode to OpenGL ES 3.1",
       "area": "gpu",
       "status": "seen",
-      "since": {
-        "mentioned": "2026-11-05",
-        "seen": "2026-11-11"
-      },
+      "since": { "mentioned": "2026-11-05", "seen": "2026-11-11" },
       "about": ["compatibility-mode", "webgpu"],
       "citedIn": ["docs/logbook/004-the-detour.md"],
       "url": "https://developer.chrome.com/blog/new-in-webgpu-146"
@@ -2623,9 +2253,7 @@
       "summary": "Game engine: PhysX for 3D physics, Box2D for 2D",
       "area": "physics",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-05"
-      },
+      "since": { "mentioned": "2026-11-05" },
       "about": ["physics-engine", "ecs"],
       "related": ["physx", "box2d", "havok"],
       "citedIn": ["docs/logbook/004-the-detour.md"],
@@ -2638,9 +2266,7 @@
       "summary": "Game engine with its own physics system, Chaos, which also covers destruction, cloth and fluids",
       "area": "physics",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-05"
-      },
+      "since": { "mentioned": "2026-11-05" },
       "about": ["physics-engine", "destruction", "cloth", "fluid"],
       "citedIn": ["docs/logbook/004-the-detour.md"],
       "url": "https://dev.epicgames.com/documentation/unreal-engine/physics-in-unreal-engine"
@@ -2652,9 +2278,7 @@
       "summary": "Open source game engine with its own physics, and alternative backends",
       "area": "physics",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-05"
-      },
+      "since": { "mentioned": "2026-11-05" },
       "about": ["physics-engine"],
       "citedIn": ["docs/logbook/004-the-detour.md"],
       "url": "https://godotengine.org/"
@@ -2666,9 +2290,7 @@
       "summary": "A Rust game engine built on ECS, with physics from plugins such as Rapier and Avian",
       "area": "physics",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-05"
-      },
+      "since": { "mentioned": "2026-11-05" },
       "about": ["ecs"],
       "related": ["rapier", "avian"],
       "citedIn": ["docs/logbook/004-the-detour.md"],
@@ -2681,9 +2303,7 @@
       "summary": "A physics engine for Bevy, written in Rust",
       "area": "physics",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-05"
-      },
+      "since": { "mentioned": "2026-11-05" },
       "about": ["physics-engine", "ecs"],
       "citedIn": ["docs/logbook/004-the-detour.md"],
       "url": "https://github.com/avianphysics/avian"
@@ -2695,9 +2315,7 @@
       "summary": "Open 3D Engine, an open source game engine that uses PhysX",
       "area": "physics",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-05"
-      },
+      "since": { "mentioned": "2026-11-05" },
       "about": ["physics-engine"],
       "related": ["physx"],
       "citedIn": ["docs/logbook/004-the-detour.md"],
@@ -2710,9 +2328,7 @@
       "summary": "NVIDIA's physics SDK: rigid bodies, particles and soft bodies, partly accelerated on the GPU with CUDA",
       "area": "physics",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-05"
-      },
+      "since": { "mentioned": "2026-11-05" },
       "about": ["rigid-body", "gpu-parallelism", "tgs-solver", "finite-element-method"],
       "citedIn": ["docs/logbook/004-the-detour.md"],
       "url": "https://developer.nvidia.com/physx-sdk"
@@ -2724,9 +2340,7 @@
       "summary": "A long-lived open source C++ library: rigid bodies, collision detection and soft bodies",
       "area": "physics",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-05"
-      },
+      "since": { "mentioned": "2026-11-05" },
       "about": ["rigid-body", "collision-detection", "soft-body"],
       "citedIn": ["docs/logbook/004-the-detour.md"],
       "url": "https://github.com/bulletphysics/bullet3"
@@ -2738,9 +2352,7 @@
       "summary": "A fast C++ engine for rigid bodies in games",
       "area": "physics",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-05"
-      },
+      "since": { "mentioned": "2026-11-05" },
       "about": ["rigid-body", "bounding-volume-hierarchy", "sequential-impulses", "job-system"],
       "citedIn": ["docs/logbook/004-the-detour.md"],
       "url": "https://github.com/jrouwe/JoltPhysics"
@@ -2752,9 +2364,7 @@
       "summary": "Jolt compiled to WebAssembly, for the browser",
       "area": "physics",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-05"
-      },
+      "since": { "mentioned": "2026-11-05" },
       "partOf": "jolt",
       "about": ["physics-engine"],
       "citedIn": ["docs/logbook/004-the-detour.md"],
@@ -2767,9 +2377,7 @@
       "summary": "A physics engine for robotics: contacts and articulated systems",
       "area": "physics",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-05"
-      },
+      "since": { "mentioned": "2026-11-05" },
       "about": ["articulated-body", "contact"],
       "citedIn": ["docs/logbook/004-the-detour.md"],
       "url": "https://github.com/google-deepmind/mujoco"
@@ -2781,9 +2389,7 @@
       "summary": "NVIDIA's unified particle library: rigid bodies, cloth and fluids all made of particles",
       "area": "physics",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-05"
-      },
+      "since": { "mentioned": "2026-11-05" },
       "about": ["unified-particle-physics", "shape-matching", "mesh-sampling"],
       "citedIn": ["docs/logbook/004-the-detour.md"],
       "url": "https://developer.nvidia.com/flex"
@@ -2795,9 +2401,7 @@
       "summary": "A C++ engine for multibody dynamics and engineering simulation",
       "area": "physics",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-05"
-      },
+      "since": { "mentioned": "2026-11-05" },
       "about": ["articulated-body"],
       "citedIn": ["docs/logbook/004-the-detour.md"],
       "url": "https://projectchrono.org/"
@@ -2809,9 +2413,7 @@
       "summary": "An open source C++ library of position based methods: PBD, XPBD, cloth and deformables",
       "area": "physics",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-05"
-      },
+      "since": { "mentioned": "2026-11-05" },
       "about": ["position-based-dynamics", "xpbd", "cloth", "soft-body"],
       "citedIn": ["docs/logbook/004-the-detour.md"],
       "url": "https://github.com/InteractiveComputerGraphics/PositionBasedDynamics"
@@ -2823,9 +2425,7 @@
       "summary": "A language embedded in Python for writing parallel simulations that run on the GPU",
       "area": "gpu",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-05"
-      },
+      "since": { "mentioned": "2026-11-05" },
       "about": ["gpu-parallelism"],
       "citedIn": ["docs/logbook/004-the-detour.md"],
       "url": "https://github.com/taichi-dev/taichi"
@@ -2837,9 +2437,7 @@
       "summary": "A commercial physics engine, available as an option in Unity",
       "area": "physics",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-05"
-      },
+      "since": { "mentioned": "2026-11-05" },
       "about": ["physics-engine"],
       "citedIn": ["docs/logbook/004-the-detour.md"],
       "url": "https://www.havok.com/"
@@ -2851,9 +2449,7 @@
       "summary": "Bullet compiled to JavaScript for the browser",
       "area": "physics",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-05"
-      },
+      "since": { "mentioned": "2026-11-05" },
       "about": ["physics-engine"],
       "related": ["bullet"],
       "citedIn": ["docs/logbook/004-the-detour.md"],
@@ -2866,9 +2462,7 @@
       "summary": "A 3D physics engine written in JavaScript",
       "area": "physics",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-05"
-      },
+      "since": { "mentioned": "2026-11-05" },
       "about": ["rigid-body"],
       "citedIn": ["docs/logbook/004-the-detour.md"],
       "url": "https://github.com/pmndrs/cannon-es"
@@ -2880,9 +2474,7 @@
       "summary": "A 2D physics engine written in JavaScript",
       "area": "physics",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-05"
-      },
+      "since": { "mentioned": "2026-11-05" },
       "about": ["rigid-body"],
       "citedIn": ["docs/logbook/004-the-detour.md"],
       "url": "https://github.com/liabru/matter-js"
@@ -2894,9 +2486,7 @@
       "summary": "A JavaScript rewrite of Box2D",
       "area": "physics",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-05"
-      },
+      "since": { "mentioned": "2026-11-05" },
       "about": ["rigid-body"],
       "related": ["box2d"],
       "citedIn": ["docs/logbook/004-the-detour.md"],
@@ -2909,9 +2499,7 @@
       "summary": "The post that proposed decision records: context, decision, status and consequences, superseded but never deleted",
       "area": "method",
       "status": "seen",
-      "since": {
-        "seen": "2026-11-11"
-      },
+      "since": { "seen": "2026-11-11" },
       "about": ["decision-record"],
       "citedIn": ["docs/logbook/006-the-decision-log.md"],
       "url": "https://www.cognitect.com/blog/2011/11/15/documenting-architecture-decisions",
@@ -2925,9 +2513,7 @@
       "summary": "Where a value may start in memory: a vec3f starts on a multiple of 16 bytes, so in an array it takes 16 bytes, not 12",
       "area": "gpu",
       "status": "seen",
-      "since": {
-        "seen": "2026-11-11"
-      },
+      "since": { "seen": "2026-11-11" },
       "partOf": "wgsl",
       "citedIn": [
         "docs/logbook/008-the-first-loop.md",
@@ -2943,9 +2529,7 @@
       "summary": "A small read-only buffer of values shared by every thread, like a GLSL uniform",
       "area": "gpu",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-11"
-      },
+      "since": { "mentioned": "2026-11-11" },
       "partOf": "buffer",
       "citedIn": [
         "docs/logbook/008-the-first-loop.md",
@@ -2962,10 +2546,7 @@
       "summary": "A WGSL constant set from JavaScript when the pipeline is created, such as the workgroup size",
       "area": "gpu",
       "status": "seen",
-      "since": {
-        "mentioned": "2026-11-11",
-        "seen": "2026-11-13"
-      },
+      "since": { "mentioned": "2026-11-11", "seen": "2026-11-13" },
       "partOf": "wgsl",
       "citedIn": [
         "examples/hello-compute/free-fall.wgsl",
@@ -2984,9 +2565,7 @@
       "summary": "A stretch of GPU work whose parts may run at the same time: in a compute pass, each dispatch is one",
       "area": "gpu",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-11"
-      },
+      "since": { "mentioned": "2026-11-11" },
       "partOf": "webgpu",
       "citedIn": ["webgpu-spec", "docs/logbook/008-the-first-loop.md"],
       "code": ["src/world.ts"]
@@ -2998,9 +2577,7 @@
       "summary": "Engines tune their tolerances for one size of object: meters and everyday objects, from soup cans to buses",
       "area": "physics",
       "status": "seen",
-      "since": {
-        "seen": "2026-11-11"
-      },
+      "since": { "seen": "2026-11-11" },
       "partOf": "physics-engine",
       "citedIn": ["box2d-overview", "docs/logbook/008-the-first-loop.md"],
       "code": ["src/world.ts"]
@@ -3012,9 +2589,7 @@
       "summary": "The units Box2D is tuned for, and the size of objects it handles well",
       "area": "physics",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-11"
-      },
+      "since": { "mentioned": "2026-11-11" },
       "partOf": "box2d",
       "about": ["units-and-scale"],
       "citedIn": ["docs/logbook/008-the-first-loop.md"],
@@ -3028,9 +2603,7 @@
       "summary": "The browser can take the GPU back at any time: every buffer and pipeline, and the data in them, must then be created again",
       "area": "gpu",
       "status": "seen",
-      "since": {
-        "seen": "2026-11-11"
-      },
+      "since": { "seen": "2026-11-11" },
       "partOf": "adapter-and-device",
       "citedIn": ["docs/guides/adapter-and-device.md"]
     },
@@ -3041,9 +2614,7 @@
       "summary": "How to ask for an adapter, and why it can be null",
       "area": "gpu",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-11"
-      },
+      "since": { "mentioned": "2026-11-11" },
       "partOf": "mdn-webgpu",
       "about": ["adapter-and-device"],
       "citedIn": ["docs/guides/adapter-and-device.md"],
@@ -3057,9 +2628,7 @@
       "summary": "How to ask for a device, its options, and why a second call rejects",
       "area": "gpu",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-11"
-      },
+      "since": { "mentioned": "2026-11-11" },
       "partOf": "mdn-webgpu",
       "about": ["adapter-and-device", "device-limits"],
       "citedIn": ["docs/guides/adapter-and-device.md"],
@@ -3073,9 +2642,7 @@
       "summary": "When a device is lost, and how to start over",
       "area": "gpu",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-11"
-      },
+      "since": { "mentioned": "2026-11-11" },
       "partOf": "mdn-webgpu",
       "about": ["device-loss"],
       "citedIn": ["docs/guides/adapter-and-device.md"],
@@ -3089,9 +2656,7 @@
       "summary": "The entry point of WebGPU, only on HTTPS or localhost",
       "area": "gpu",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-11"
-      },
+      "since": { "mentioned": "2026-11-11" },
       "partOf": "mdn-webgpu",
       "about": ["webgpu"],
       "citedIn": ["docs/guides/adapter-and-device.md"],
@@ -3105,9 +2670,7 @@
       "summary": "Every limit with its default value",
       "area": "gpu",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-11"
-      },
+      "since": { "mentioned": "2026-11-11" },
       "partOf": "mdn-webgpu",
       "about": ["device-limits"],
       "citedIn": ["docs/guides/adapter-and-device.md"],
@@ -3121,9 +2684,7 @@
       "summary": "What makes a device get lost, how to recover, and how to test it",
       "area": "gpu",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-11"
-      },
+      "since": { "mentioned": "2026-11-11" },
       "about": ["device-loss"],
       "citedIn": ["docs/guides/adapter-and-device.md"],
       "url": "https://toji.dev/webgpu-best-practices/device-loss",
@@ -3136,9 +2697,7 @@
       "summary": "A flat shape that a shader paints to look like a 3D object, such as a sphere drawn on one triangle",
       "area": "gpu",
       "status": "seen",
-      "since": {
-        "seen": "2026-11-11"
-      },
+      "since": { "seen": "2026-11-11" },
       "related": ["instancing"],
       "citedIn": ["docs/logbook/009-the-first-picture.md"],
       "code": ["examples/debug/particles.ts"]
@@ -3150,9 +2709,7 @@
       "summary": "A flat shape turned to face the camera in every frame, the base of most impostors",
       "area": "gpu",
       "status": "seen",
-      "since": {
-        "seen": "2026-11-11"
-      },
+      "since": { "seen": "2026-11-11" },
       "partOf": "impostor",
       "citedIn": ["docs/logbook/009-the-first-picture.md"],
       "code": ["examples/debug/particles.ts"]
@@ -3164,9 +2721,7 @@
       "summary": "Drawing the same geometry many times in one call, each copy with its own data, like InstancedMesh in three.js",
       "area": "gpu",
       "status": "seen",
-      "since": {
-        "seen": "2026-11-11"
-      },
+      "since": { "seen": "2026-11-11" },
       "citedIn": ["docs/logbook/009-the-first-picture.md"],
       "code": ["examples/debug/particles.ts"]
     },
@@ -3177,9 +2732,7 @@
       "summary": "How three.js writes shaders in JavaScript, compiled to WGSL for its WebGPU renderer",
       "area": "gpu",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-11"
-      },
+      "since": { "mentioned": "2026-11-11" },
       "related": ["wgsl"],
       "citedIn": ["docs/logbook/009-the-first-picture.md"],
       "code": ["examples/debug/particles.ts"]
@@ -3191,9 +2744,7 @@
       "summary": "The 3D library for the web; its WebGPU renderer draws our debug viewer, on the same device as FORCE",
       "area": "gpu",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-11"
-      },
+      "since": { "mentioned": "2026-11-11" },
       "about": ["adapter-and-device", "buffer", "instancing", "tsl"],
       "citedIn": [
         "docs/decisions/010-device-from-outside.md",
@@ -3209,9 +2760,7 @@
       "summary": "The WebGPU renderer accepts a device from outside, and destroys only a device it created. Its compute() turns a count into workgroups, rounded up and spread on y past the limit",
       "area": "gpu",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-11"
-      },
+      "since": { "mentioned": "2026-11-11" },
       "partOf": "three-js",
       "about": ["adapter-and-device", "workgroup"],
       "citedIn": [
@@ -3228,9 +2777,7 @@
       "summary": "createAttribute() makes a GPU buffer for an attribute only when it has none yet",
       "area": "gpu",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-11"
-      },
+      "since": { "mentioned": "2026-11-11" },
       "partOf": "three-js",
       "about": ["buffer"],
       "citedIn": ["docs/logbook/009-the-first-picture.md"],
@@ -3244,9 +2791,7 @@
       "summary": "What to do once a contact is found: push the objects apart and change their velocities",
       "area": "physics",
       "status": "seen",
-      "since": {
-        "seen": "2026-11-11"
-      },
+      "since": { "seen": "2026-11-11" },
       "partOf": "simulation-step",
       "related": ["contact", "restitution", "friction"],
       "citedIn": ["docs/logbook/010-the-ground.md"],
@@ -3259,9 +2804,7 @@
       "summary": "Most mistakes do not throw: the call returns, the work is skipped, and the browser prints a warning in the console",
       "area": "gpu",
       "status": "seen",
-      "since": {
-        "seen": "2026-11-11"
-      },
+      "since": { "seen": "2026-11-11" },
       "partOf": "webgpu",
       "citedIn": ["docs/guides/buffers.md", "docs/guides/compute-shader.md"]
     },
@@ -3272,9 +2815,7 @@
       "summary": "How to create a buffer, and which usage flags may go together",
       "area": "gpu",
       "status": "studied",
-      "since": {
-        "studied": "2026-11-11"
-      },
+      "since": { "studied": "2026-11-11" },
       "partOf": "mdn-webgpu",
       "about": ["buffer"],
       "citedIn": ["docs/guides/buffers.md"],
@@ -3289,9 +2830,7 @@
       "summary": "How to fill a buffer from JavaScript: offsets in bytes or elements, and what throws",
       "area": "gpu",
       "status": "studied",
-      "since": {
-        "studied": "2026-11-11"
-      },
+      "since": { "studied": "2026-11-11" },
       "partOf": "mdn-webgpu",
       "about": ["buffer", "webgpu-errors"],
       "citedIn": ["docs/guides/buffers.md"],
@@ -3306,9 +2845,7 @@
       "summary": "Every buffer usage flag and what it allows",
       "area": "gpu",
       "status": "studied",
-      "since": {
-        "studied": "2026-11-11"
-      },
+      "since": { "studied": "2026-11-11" },
       "partOf": "mdn-webgpu",
       "about": ["buffer"],
       "citedIn": ["docs/guides/buffers.md"],
@@ -3323,9 +2860,7 @@
       "summary": "How WebGL fills a buffer; its usage is only an intended pattern, for speed",
       "area": "gpu",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-11"
-      },
+      "since": { "mentioned": "2026-11-11" },
       "about": ["buffer"],
       "citedIn": ["docs/guides/buffers.md"],
       "url": "https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/bufferData",
@@ -3338,9 +2873,7 @@
       "summary": "How the WebGL renderer uploads a BufferAttribute, and uploads it again after needsUpdate",
       "area": "gpu",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-11"
-      },
+      "since": { "mentioned": "2026-11-11" },
       "partOf": "three-js",
       "about": ["buffer"],
       "citedIn": ["docs/guides/buffers.md"],
@@ -3354,9 +2887,7 @@
       "summary": "Catches WebGPU errors in code: push a scope before the calls, pop it after to get the first error, or null",
       "area": "gpu",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-11"
-      },
+      "since": { "mentioned": "2026-11-11" },
       "partOf": "webgpu-errors",
       "citedIn": ["docs/guides/buffers.md", "docs/guides/pipelines.md"]
     },
@@ -3367,9 +2898,7 @@
       "summary": "WGSL code handed to the device and compiled; a mistake in it does not throw, and getCompilationInfo() gives the compiler's messages",
       "area": "gpu",
       "status": "seen",
-      "since": {
-        "seen": "2026-11-13"
-      },
+      "since": { "seen": "2026-11-13" },
       "partOf": "webgpu",
       "related": ["compute-shader", "webgpu-errors"],
       "citedIn": [
@@ -3386,9 +2915,7 @@
       "summary": "The names that stand for a value and never change (const, override, let, function parameters), and the moment each one is fixed",
       "area": "gpu",
       "status": "seen",
-      "since": {
-        "seen": "2026-11-13"
-      },
+      "since": { "seen": "2026-11-13" },
       "partOf": "wgsl-spec",
       "about": [
         "value-declaration",
@@ -3415,9 +2942,7 @@
       "summary": "Variables as named memory: where the memory lives (address space), who may write it (access mode), how long it lasts and what it holds at the start",
       "area": "gpu",
       "status": "seen",
-      "since": {
-        "seen": "2026-11-13"
-      },
+      "since": { "seen": "2026-11-13" },
       "partOf": "wgsl-spec",
       "about": [
         "wgsl-var",
@@ -3451,9 +2976,7 @@
       "summary": "A name for a value that can never change and has no memory behind it: const, override, let and function parameters",
       "area": "gpu",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-13"
-      },
+      "since": { "mentioned": "2026-11-13" },
       "partOf": "wgsl",
       "related": ["wgsl-var"],
       "citedIn": ["wgsl-spec-value-declarations"]
@@ -3465,9 +2988,7 @@
       "summary": "The four moments in the life of a shader: its code becomes a module, the module becomes a pipeline, a draw or dispatch starts it, and it ends when every thread is done. Each kind of constant is fixed at one of them",
       "area": "gpu",
       "status": "seen",
-      "since": {
-        "seen": "2026-11-13"
-      },
+      "since": { "seen": "2026-11-13" },
       "partOf": "wgsl",
       "related": ["shader-module", "compute-pipeline"],
       "citedIn": ["wgsl-spec-value-declarations", "wgsl-spec-shader-lifecycle"],
@@ -3480,9 +3001,7 @@
       "summary": "A WGSL constant fixed when the shader is compiled: it needs a value the compiler can work out by itself",
       "area": "gpu",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-13"
-      },
+      "since": { "mentioned": "2026-11-13" },
       "partOf": "value-declaration",
       "citedIn": ["wgsl-spec-value-declarations"]
     },
@@ -3493,9 +3012,7 @@
       "summary": "An expression the compiler can evaluate while compiling the shader, such as 2 * 3 or vec3(1, 2, 3)",
       "area": "gpu",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-13"
-      },
+      "since": { "mentioned": "2026-11-13" },
       "partOf": "wgsl",
       "related": ["override-expression"],
       "citedIn": ["wgsl-spec-value-declarations"]
@@ -3507,9 +3024,7 @@
       "summary": "The types of numbers written without a suffix (AbstractInt, AbstractFloat): they adapt to i32, u32 or f32 where they are used, which the spec calls concretization",
       "area": "gpu",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-13"
-      },
+      "since": { "mentioned": "2026-11-13" },
       "partOf": "wgsl",
       "citedIn": ["wgsl-spec-value-declarations"]
     },
@@ -3520,9 +3035,7 @@
       "summary": "A type whose values can be created, copied and passed around: scalars, vectors, matrices, fixed-size arrays and structs made of them",
       "area": "gpu",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-13"
-      },
+      "since": { "mentioned": "2026-11-13" },
       "partOf": "wgsl",
       "citedIn": ["wgsl-spec-value-declarations", "wgsl-spec-var-declarations"]
     },
@@ -3533,9 +3046,7 @@
       "summary": "An expression built from override constants, known only when the pipeline is created: it can size an array or a workgroup",
       "area": "gpu",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-13"
-      },
+      "since": { "mentioned": "2026-11-13" },
       "partOf": "override-constant",
       "citedIn": ["wgsl-spec-value-declarations", "wgsl-spec-var-declarations"]
     },
@@ -3546,9 +3057,7 @@
       "summary": "The @id(n) attribute gives an override a number, and JavaScript then sets it by that number and not by its name",
       "area": "gpu",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-13"
-      },
+      "since": { "mentioned": "2026-11-13" },
       "partOf": "override-constant",
       "citedIn": ["wgsl-spec-value-declarations"]
     },
@@ -3559,9 +3068,7 @@
       "summary": "A name for a value computed while the shader runs and fixed from then on: only inside functions, and it can also hold a pointer",
       "area": "gpu",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-13"
-      },
+      "since": { "mentioned": "2026-11-13" },
       "partOf": "value-declaration",
       "code": ["src/shaders/integrate.wgsl"],
       "citedIn": ["wgsl-spec-value-declarations", "docs/guides/compute-shader.md"]
@@ -3573,9 +3080,7 @@
       "summary": "Where a name can be used: everywhere in the shader if declared outside functions, or from its line to the closing brace if declared inside one",
       "area": "gpu",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-13"
-      },
+      "since": { "mentioned": "2026-11-13" },
       "partOf": "wgsl",
       "citedIn": ["wgsl-spec-value-declarations", "wgsl-spec-var-declarations"]
     },
@@ -3586,9 +3091,7 @@
       "summary": "A variable is a reference to memory, typed ref<address space, type, access mode>: reading it is a load, assigning to it a store, and & turns it into a pointer. Values have no memory, so no pointer",
       "area": "gpu",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-13"
-      },
+      "since": { "mentioned": "2026-11-13" },
       "partOf": "wgsl",
       "code": ["src/shaders/integrate.wgsl"],
       "citedIn": [
@@ -3604,9 +3107,7 @@
       "summary": "The only thing that can change in WGSL: a name for a piece of memory holding a value of one type (the store type)",
       "area": "gpu",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-13"
-      },
+      "since": { "mentioned": "2026-11-13" },
       "partOf": "wgsl",
       "code": ["src/shaders/integrate.wgsl"],
       "citedIn": ["wgsl-spec-var-declarations", "docs/guides/compute-shader.md"]
@@ -3618,9 +3119,7 @@
       "summary": "Where a variable's memory lives, written var<…>: function, private, workgroup, uniform, storage, immediate, or handle for textures and samplers",
       "area": "gpu",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-13"
-      },
+      "since": { "mentioned": "2026-11-13" },
       "partOf": "wgsl-var",
       "related": ["access-mode"],
       "code": ["src/shaders/integrate.wgsl"],
@@ -3633,9 +3132,7 @@
       "summary": "Whether a variable's memory can be read, written or both. Only storage buffers let you choose, and they are read-only unless you write read_write",
       "area": "gpu",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-13"
-      },
+      "since": { "mentioned": "2026-11-13" },
       "partOf": "wgsl-var",
       "code": ["src/shaders/integrate.wgsl"],
       "citedIn": ["wgsl-spec-var-declarations", "docs/guides/compute-shader.md"]
@@ -3647,9 +3144,7 @@
       "summary": "A buffer seen from the shader as var<storage>: it can be big, hold an array with no fixed length, and be written by the threads",
       "area": "gpu",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-13"
-      },
+      "since": { "mentioned": "2026-11-13" },
       "partOf": "buffer",
       "related": ["uniform-buffer"],
       "code": ["src/world.ts", "src/shaders/integrate.wgsl"],
@@ -3662,10 +3157,7 @@
       "summary": "A var<workgroup>: memory shared by the threads of one workgroup, only in compute shaders, starting at zero",
       "area": "gpu",
       "status": "seen",
-      "since": {
-        "mentioned": "2026-11-13",
-        "seen": "2026-11-16"
-      },
+      "since": { "mentioned": "2026-11-13", "seen": "2026-11-16" },
       "partOf": "address-space",
       "related": ["workgroup", "atomic-operations"],
       "citedIn": [
@@ -3681,9 +3173,7 @@
       "summary": "A var<private>: a global variable of which every thread gets its own separate copy",
       "area": "gpu",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-13"
-      },
+      "since": { "mentioned": "2026-11-13" },
       "partOf": "address-space",
       "citedIn": ["wgsl-spec-var-declarations"]
     },
@@ -3694,9 +3184,7 @@
       "summary": "A var<immediate>: a few values set straight from the command encoder with setImmediates, with no buffer to create",
       "area": "gpu",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-13"
-      },
+      "since": { "mentioned": "2026-11-13" },
       "partOf": "address-space",
       "related": ["uniform-buffer"],
       "citedIn": ["wgsl-spec-var-declarations"]
@@ -3708,9 +3196,7 @@
       "summary": "Module-scope variables holding an opaque handle to a texture or a sampler; a storage texture can also be written, with textureStore",
       "area": "gpu",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-13"
-      },
+      "since": { "mentioned": "2026-11-13" },
       "partOf": "wgsl",
       "citedIn": ["wgsl-spec-var-declarations"]
     },
@@ -3721,10 +3207,7 @@
       "summary": "Everything a shader expects from outside: its uniform buffers, storage buffers, textures and samplers, each with a @group and a @binding",
       "area": "gpu",
       "status": "seen",
-      "since": {
-        "mentioned": "2026-11-13",
-        "seen": "2026-11-16"
-      },
+      "since": { "mentioned": "2026-11-13", "seen": "2026-11-16" },
       "partOf": "wgsl",
       "code": ["src/shaders/integrate.wgsl"],
       "citedIn": [
@@ -3740,9 +3223,7 @@
       "summary": "A type with a fixed layout in bytes, so JavaScript and the shader agree on it: the only kind allowed in a buffer",
       "area": "gpu",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-13"
-      },
+      "since": { "mentioned": "2026-11-13" },
       "partOf": "wgsl",
       "related": ["memory-alignment"],
       "citedIn": ["wgsl-spec-var-declarations"]
@@ -3754,9 +3235,7 @@
       "summary": "How long a variable keeps its memory: the whole run of the shader for globals, its block for locals. Two live variables never share memory, apart from resources",
       "area": "gpu",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-13"
-      },
+      "since": { "mentioned": "2026-11-13" },
       "partOf": "wgsl-var",
       "citedIn": ["wgsl-spec-var-declarations"]
     },
@@ -3767,9 +3246,7 @@
       "summary": "What a variable holds when it is declared with no initial value: all zeros, never garbage",
       "area": "gpu",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-13"
-      },
+      "since": { "mentioned": "2026-11-13" },
       "partOf": "wgsl-var",
       "citedIn": ["wgsl-spec-var-declarations"]
     },
@@ -3780,9 +3257,7 @@
       "summary": "The four moments in the life of a shader: module creation, pipeline creation, execution start, execution end",
       "area": "gpu",
       "status": "seen",
-      "since": {
-        "seen": "2026-11-13"
-      },
+      "since": { "seen": "2026-11-13" },
       "partOf": "wgsl-spec",
       "about": [
         "shader-lifecycle",
@@ -3805,9 +3280,7 @@
       "summary": "The function where a shader starts, marked @compute, @vertex or @fragment. A pipeline compiles only the code its entry point reaches: the rest of the module is dropped",
       "area": "gpu",
       "status": "seen",
-      "since": {
-        "seen": "2026-11-13"
-      },
+      "since": { "seen": "2026-11-13" },
       "partOf": "wgsl",
       "citedIn": [
         "wgsl-spec-shader-lifecycle",
@@ -3823,9 +3296,7 @@
       "summary": "The kind of work a shader does in a pipeline: vertex, fragment or compute. Each stage is compiled on its own, even from the same module",
       "area": "gpu",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-13"
-      },
+      "since": { "mentioned": "2026-11-13" },
       "partOf": "wgsl",
       "related": ["entry-point"],
       "citedIn": ["wgsl-spec-shader-lifecycle", "docs/guides/pipelines.md"]
@@ -3837,9 +3308,7 @@
       "summary": "The pipeline that draws: a vertex and a fragment shader plus their fixed settings, made with createRenderPipeline()",
       "area": "gpu",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-13"
-      },
+      "since": { "mentioned": "2026-11-13" },
       "partOf": "webgpu",
       "related": ["compute-pipeline"],
       "citedIn": ["wgsl-spec-shader-lifecycle", "docs/guides/pipelines.md"]
@@ -3851,10 +3320,7 @@
       "summary": "One run of an entry point: what our guides call a thread. A dispatch or a draw starts many, and the shader ends when all are done",
       "area": "gpu",
       "status": "seen",
-      "since": {
-        "mentioned": "2026-11-13",
-        "seen": "2026-11-16"
-      },
+      "since": { "mentioned": "2026-11-13", "seen": "2026-11-16" },
       "partOf": "wgsl",
       "related": ["gpu-parallelism", "workgroup"],
       "citedIn": [
@@ -3870,9 +3336,7 @@
       "summary": "Which buffers a pipeline expects and in which slots. 'auto' works it out from the shader, but its bind groups then work with that pipeline only; one made by hand with createPipelineLayout() can be given to several pipelines, which then share bind groups",
       "area": "gpu",
       "status": "seen",
-      "since": {
-        "seen": "2026-11-13"
-      },
+      "since": { "seen": "2026-11-13" },
       "partOf": "compute-pipeline",
       "related": ["bind-group"],
       "citedIn": [
@@ -3889,9 +3353,7 @@
       "summary": "createComputePipelineAsync() returns a promise that resolves when the pipeline is compiled. It is not faster: it lets the rest of the GPU work go on meanwhile, and a mistake rejects the promise with a GPUPipelineError",
       "area": "gpu",
       "status": "studied",
-      "since": {
-        "studied": "2026-11-13"
-      },
+      "since": { "studied": "2026-11-13" },
       "partOf": "compute-pipeline",
       "related": ["webgpu-errors"],
       "citedIn": ["docs/guides/pipelines.md", "webgpu-spec-pipelines"],
@@ -3905,9 +3367,7 @@
       "summary": "What a pipeline is, the immediate and the async way to create one, how constants get their values, and what the 'auto' layout holds",
       "area": "gpu",
       "status": "seen",
-      "since": {
-        "seen": "2026-11-13"
-      },
+      "since": { "seen": "2026-11-13" },
       "partOf": "webgpu-spec",
       "about": [
         "compute-pipeline",
@@ -3927,9 +3387,7 @@
       "summary": "The descriptor of a compute pipeline, and what makes it invalid",
       "area": "gpu",
       "status": "studied",
-      "since": {
-        "studied": "2026-11-13"
-      },
+      "since": { "studied": "2026-11-13" },
       "partOf": "mdn-webgpu",
       "about": ["compute-pipeline"],
       "citedIn": ["docs/guides/pipelines.md"],
@@ -3944,9 +3402,7 @@
       "summary": "The promise version, and the GPUPipelineError it rejects with",
       "area": "gpu",
       "status": "studied",
-      "since": {
-        "studied": "2026-11-13"
-      },
+      "since": { "studied": "2026-11-13" },
       "partOf": "mdn-webgpu",
       "about": ["async-pipeline-creation", "compute-pipeline"],
       "citedIn": ["docs/guides/pipelines.md", "docs/guides/pipeline-creation.md"],
@@ -3961,9 +3417,7 @@
       "summary": "compile() and compileAsync() build a scene's shader programs before the first frame: the three.js parallel of creating a pipeline ahead of time",
       "area": "gpu",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-13"
-      },
+      "since": { "mentioned": "2026-11-13" },
       "partOf": "three-js",
       "about": ["compute-pipeline", "async-pipeline-creation"],
       "citedIn": ["docs/guides/pipelines.md", "docs/guides/pipeline-creation.md"],
@@ -3977,9 +3431,7 @@
       "summary": "A material's defines are part of the key that tells one compiled program from another",
       "area": "gpu",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-13"
-      },
+      "since": { "mentioned": "2026-11-13" },
       "partOf": "three-js",
       "about": ["compute-pipeline"],
       "citedIn": ["docs/guides/pipelines.md"],
@@ -3993,9 +3445,7 @@
       "summary": "The three places where WebGPU work happens: your script (content), the browser's part that creates GPU objects, often another process (device), and the GPU itself (queue). Why most calls return before the work is done",
       "area": "gpu",
       "status": "seen",
-      "since": {
-        "seen": "2026-11-13"
-      },
+      "since": { "seen": "2026-11-13" },
       "partOf": "webgpu",
       "related": ["async-pipeline-creation", "webgpu-errors"],
       "citedIn": ["docs/guides/pipeline-creation.md", "webgpu-spec-timelines"]
@@ -4007,9 +3457,7 @@
       "summary": "Browsers keep what they have compiled: in Chrome a shader text seen before took 0.3 ms instead of 141. It makes naive timings lie",
       "area": "gpu",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-13"
-      },
+      "since": { "mentioned": "2026-11-13" },
       "partOf": "compute-pipeline",
       "citedIn": ["docs/guides/pipeline-creation.md"],
       "code": ["examples/pipeline-creation/main.ts"]
@@ -4021,9 +3469,7 @@
       "summary": "Content, device and queue timeline: which work happens where, and why async calls exist",
       "area": "gpu",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-13"
-      },
+      "since": { "mentioned": "2026-11-13" },
       "partOf": "webgpu-spec",
       "about": ["webgpu-timelines"],
       "citedIn": ["docs/guides/pipeline-creation.md"],
@@ -4037,9 +3483,7 @@
       "summary": "A Firefox engineer gives the async pipeline methods as best practice: the immediate ones are hard to keep from blocking the work that follows",
       "area": "gpu",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-13"
-      },
+      "since": { "mentioned": "2026-11-13" },
       "about": ["async-pipeline-creation"],
       "citedIn": ["docs/guides/pipeline-creation.md"],
       "url": "https://bugzilla.mozilla.org/show_bug.cgi?id=1878449#c5",
@@ -4053,10 +3497,7 @@
       "summary": "The description of the slots of one bind group: for each binding, what kind of resource goes there and which shader stages see it. Made by hand with createBindGroupLayout(), or taken from a pipeline",
       "area": "gpu",
       "status": "seen",
-      "since": {
-        "mentioned": "2026-11-13",
-        "seen": "2026-11-16"
-      },
+      "since": { "mentioned": "2026-11-13", "seen": "2026-11-16" },
       "partOf": "bind-group",
       "related": ["pipeline-layout"],
       "citedIn": [
@@ -4073,9 +3514,7 @@
       "summary": "Placing the nodes of a graph with a simulation: links pull like springs, and every node pushes the others away",
       "area": "physics",
       "status": "seen",
-      "since": {
-        "seen": "2026-11-14"
-      },
+      "since": { "seen": "2026-11-14" },
       "related": ["spring"],
       "citedIn": ["docs/logbook/011-the-living-map.md"],
       "code": ["examples/topic-map/layout.ts"]
@@ -4087,9 +3526,7 @@
       "summary": "A small library that simulates forces between points in 1, 2 or 3 dimensions, made to lay out graphs",
       "area": "physics",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-14"
-      },
+      "since": { "mentioned": "2026-11-14" },
       "about": ["force-directed-layout", "spring"],
       "citedIn": ["docs/logbook/011-the-living-map.md"],
       "url": "https://github.com/vasturiano/d3-force-3d",
@@ -4103,9 +3540,7 @@
       "summary": "A buffer slot whose starting byte is given at setBindGroup() instead of when the bind group is made, so one bind group can serve many ranges of one buffer",
       "area": "gpu",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-16"
-      },
+      "since": { "mentioned": "2026-11-16" },
       "partOf": "bind-group",
       "citedIn": ["webgpu-spec-bind-group-commands"]
     },
@@ -4116,9 +3551,7 @@
       "summary": "The same range of a buffer in two slots of a dispatch, with at least one writable: WebGPU refuses it. In Chrome: \"Writable storage buffer binding aliasing found\"",
       "area": "gpu",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-16"
-      },
+      "since": { "mentioned": "2026-11-16" },
       "partOf": "bind-group",
       "related": ["usage-scope"],
       "citedIn": ["webgpu-spec-bind-group-commands"]
@@ -4130,9 +3563,7 @@
       "summary": "What bind group layouts, bind groups and pipeline layouts are, the checks at bind group creation, and the advice to keep what changes least in the lowest groups",
       "area": "gpu",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-16"
-      },
+      "since": { "mentioned": "2026-11-16" },
       "partOf": "webgpu-spec",
       "about": ["bind-group", "bind-group-layout", "pipeline-layout"],
       "citedIn": ["docs/guides/bind-groups.md"],
@@ -4146,9 +3577,7 @@
       "summary": "setBindGroup(): a pass starts with no bind group, and before a dispatch every group of the pipeline must be set, fit its layout and not alias a writable buffer",
       "area": "gpu",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-16"
-      },
+      "since": { "mentioned": "2026-11-16" },
       "partOf": "webgpu-spec",
       "about": ["bind-group", "dynamic-offset", "writable-binding-aliasing"],
       "citedIn": ["docs/guides/bind-groups.md"],
@@ -4162,9 +3591,7 @@
       "summary": "Every buffer, texture or sampler variable must have both @group and @binding, and no two may share the same pair",
       "area": "gpu",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-16"
-      },
+      "since": { "mentioned": "2026-11-16" },
       "partOf": "wgsl-spec",
       "about": ["resource-interface", "bind-group"],
       "citedIn": ["docs/guides/bind-groups.md"],
@@ -4178,9 +3605,7 @@
       "summary": "The descriptor of a bind group, the offset and size of a buffer binding, and the checks that make it invalid",
       "area": "gpu",
       "status": "studied",
-      "since": {
-        "studied": "2026-11-16"
-      },
+      "since": { "studied": "2026-11-16" },
       "partOf": "mdn-webgpu",
       "about": ["bind-group", "bind-group-layout"],
       "citedIn": ["docs/guides/bind-groups.md"],
@@ -4195,9 +3620,7 @@
       "summary": "Sets the bind group of one group index for the compute commands that follow",
       "area": "gpu",
       "status": "studied",
-      "since": {
-        "studied": "2026-11-16"
-      },
+      "since": { "studied": "2026-11-16" },
       "partOf": "mdn-webgpu",
       "about": ["bind-group", "dynamic-offset"],
       "citedIn": ["docs/guides/bind-groups.md"],
@@ -4212,9 +3635,7 @@
       "summary": "Asks a pipeline for the layout of one of its groups: with layout 'auto', the only way to get it",
       "area": "gpu",
       "status": "studied",
-      "since": {
-        "studied": "2026-11-16"
-      },
+      "since": { "studied": "2026-11-16" },
       "partOf": "mdn-webgpu",
       "about": ["bind-group-layout", "pipeline-layout"],
       "citedIn": ["docs/guides/bind-groups.md"],
@@ -4229,9 +3650,7 @@
       "summary": "The WebGL renderer finds a program's uniforms by name and sets each from the material's entry of the same name: what WebGPU replaces with group and binding numbers",
       "area": "gpu",
       "status": "studied",
-      "since": {
-        "studied": "2026-11-16"
-      },
+      "since": { "studied": "2026-11-16" },
       "partOf": "three-js",
       "about": ["bind-group"],
       "citedIn": ["docs/guides/bind-groups.md"],
@@ -4246,9 +3665,7 @@
       "summary": "How a thread knows where it sits in a dispatch: workgroup_id is its block, local_invocation_id its place in the block, global_invocation_id its place in the whole dispatch",
       "area": "gpu",
       "status": "seen",
-      "since": {
-        "seen": "2026-11-16"
-      },
+      "since": { "seen": "2026-11-16" },
       "partOf": "workgroup",
       "related": ["invocation"],
       "citedIn": ["docs/guides/dispatch-and-workgroups.md", "wgsl-spec-compute-shader-workgroups"],
@@ -4261,9 +3678,7 @@
       "summary": "Reading or writing past the end of an array in WGSL. It never touches memory outside the buffer, but what happens instead is not fixed: the write may be skipped or land on another element",
       "area": "gpu",
       "status": "seen",
-      "since": {
-        "seen": "2026-11-16"
-      },
+      "since": { "seen": "2026-11-16" },
       "partOf": "wgsl",
       "related": ["workgroup"],
       "citedIn": ["docs/guides/dispatch-and-workgroups.md", "wgsl-spec-out-of-bounds-access"],
@@ -4276,9 +3691,7 @@
       "summary": "dispatchWorkgroupsIndirect(): the workgroup counts are read from a GPU buffer, so a shader can decide how much work the next one does",
       "area": "gpu",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-16"
-      },
+      "since": { "mentioned": "2026-11-16" },
       "partOf": "workgroup",
       "citedIn": ["mdn-dispatch-workgroups", "threejs-webgpu-backend"]
     },
@@ -4289,9 +3702,7 @@
       "summary": "What a workgroup is, the grid of threads a dispatch runs, and how the global, local and workgroup ids follow from it",
       "area": "gpu",
       "status": "studied",
-      "since": {
-        "studied": "2026-11-16"
-      },
+      "since": { "studied": "2026-11-16" },
       "partOf": "wgsl-spec",
       "about": ["workgroup", "invocation", "invocation-ids", "workgroup-variable"],
       "citedIn": ["docs/guides/dispatch-and-workgroups.md"],
@@ -4306,9 +3717,7 @@
       "summary": "An access past the end is never done as written: the possible outcomes, from a skipped write to one that lands elsewhere in the same buffer",
       "area": "gpu",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-16"
-      },
+      "since": { "mentioned": "2026-11-16" },
       "partOf": "wgsl-spec",
       "about": ["out-of-bounds-access"],
       "citedIn": ["docs/guides/dispatch-and-workgroups.md"],
@@ -4322,9 +3731,7 @@
       "summary": "The three workgroup counts of a dispatch, and the note that they count workgroups, not shader runs",
       "area": "gpu",
       "status": "studied",
-      "since": {
-        "studied": "2026-11-16"
-      },
+      "since": { "studied": "2026-11-16" },
       "partOf": "mdn-webgpu",
       "about": ["workgroup", "indirect-dispatch"],
       "citedIn": ["docs/guides/dispatch-and-workgroups.md"],
@@ -4339,9 +3746,7 @@
       "summary": "A first compute shader, the workgroup limits, the advice to pick a workgroup size of 64, and races between threads",
       "area": "gpu",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-16"
-      },
+      "since": { "mentioned": "2026-11-16" },
       "partOf": "webgpu-fundamentals",
       "about": ["workgroup", "compute-shader"],
       "citedIn": ["docs/guides/dispatch-and-workgroups.md"],
@@ -4355,9 +3760,7 @@
       "summary": "compute() in the node system: a default workgroup size of 64, and an early return added for the threads past the count",
       "area": "gpu",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-16"
-      },
+      "since": { "mentioned": "2026-11-16" },
       "partOf": "three-js",
       "about": ["workgroup"],
       "citedIn": ["docs/guides/dispatch-and-workgroups.md"],
@@ -4371,9 +3774,7 @@
       "summary": "workgroupBarrier(), storageBarrier() and textureBarrier(): a line in a compute shader that the threads of a workgroup cross together, so that what any of them wrote before it is visible to all of them after it",
       "area": "gpu",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-16"
-      },
+      "since": { "mentioned": "2026-11-16" },
       "partOf": "workgroup",
       "related": ["workgroup-variable", "atomic-operations"],
       "citedIn": ["docs/guides/dispatch-and-workgroups.md", "wgsl-spec-synchronization-functions"]
@@ -4385,9 +3786,7 @@
       "summary": "Code that all the threads of a workgroup run together, not inside a branch that only some of them take: the only place where a barrier may be called",
       "area": "gpu",
       "status": "mentioned",
-      "since": {
-        "mentioned": "2026-11-16"
-      },
+      "since": { "mentioned": "2026-11-16" },
       "partOf": "wgsl",
       "related": ["barrier"],
       "citedIn": ["wgsl-spec-synchronization-functions"]
@@ -4399,9 +3798,7 @@
       "summary": "The three barriers, for storage buffers, textures and workgroup variables, and workgroupUniformLoad(), which reads a workgroup variable and gives every thread of the workgroup the same value",
       "area": "gpu",
       "status": "seen",
-      "since": {
-        "seen": "2026-11-16"
-      },
+      "since": { "seen": "2026-11-16" },
       "partOf": "wgsl-spec",
       "about": ["barrier", "uniform-control-flow", "workgroup-variable", "atomic-operations"],
       "citedIn": ["docs/guides/dispatch-and-workgroups.md"],
