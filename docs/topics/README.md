@@ -5,8 +5,8 @@
 Everything we have met while building FORCE, concepts and sources, and how far we went with each
 one. Use it to look up a term, to find what to read, or to pick what to explore next.
 
-- **174 concepts:** ● 19 studied · ◐ 64 seen · ○ 91 mentioned
-- **102 sources:** ● 11 studied · ◐ 15 seen · ○ 76 mentioned · read by Claude: 32 parts, 9 in full
+- **174 concepts:** ● 19 studied · ◐ 65 seen · ○ 90 mentioned
+- **102 sources:** ● 12 studied · ◐ 15 seen · ○ 75 mentioned · read by Claude: 32 parts, 9 in full
 
 | | Status | What it means |
 | --- | --- | --- |
@@ -259,7 +259,7 @@ WebGPU, WGSL and how to make thousands of threads work.
 | ○ | WebGPU | The browser API that lets a page use the GPU, both to draw and to calculate |  | [README](../../README.md) |
 | ◐ | WebGPU errors | Most mistakes do not throw: the call returns, the work is skipped, and the browser prints a warning in the console | WebGPU | [buffers](../guides/buffers.md) |
 | ◐ | WGSL | The shader language of WebGPU, the counterpart of GLSL | WebGPU | [guides index](../guides/README.md) |
-| ○ | Workgroup variable | A var<workgroup>: memory shared by the threads of one workgroup, only in compute shaders, starting at zero | Address space | [WGSL specification, §7.3 var Declarations](https://www.w3.org/TR/WGSL/#var-decls) |
+| ◐ | Workgroup variable | A var<workgroup>: memory shared by the threads of one workgroup, only in compute shaders, starting at zero | Address space | [WGSL specification, §7.3 var Declarations](https://www.w3.org/TR/WGSL/#var-decls) |
 | ● | **[Workgroups and dispatch](../guides/dispatch-and-workgroups.md)** | Threads start in blocks: the shader fixes the size of a block (a workgroup), and each dispatch says how many blocks to launch. Threads = size × count, so the count is rounded up and the extra threads return at once | WebGPU | [guides index](../guides/README.md) |
 | ○ | Writable binding aliasing | The same range of a buffer in two slots of a dispatch, with at least one writable: WebGPU refuses it. In Chrome: "Writable storage buffer binding aliasing found" | Bind group | [WebGPU specification, §14.1 Bind Groups](https://www.w3.org/TR/webgpu/#programmable-passes-bind-groups) |
 | ○ | Zero value | What a variable holds when it is declared with no initial value: all zeros, never garbage | var declaration | [WGSL specification, §7.3 var Declarations](https://www.w3.org/TR/WGSL/#var-decls) |
@@ -274,7 +274,7 @@ WebGPU, WGSL and how to make thousands of threads work.
 | ○ | [MDN, GPU.requestAdapter()](https://developer.mozilla.org/en-US/docs/Web/API/GPU/requestAdapter) | Documentation | How to ask for an adapter, and why it can be null | Adapter and device | [adapter-and-device](../guides/adapter-and-device.md) | Parts |
 | ○ | [MDN, GPUAdapter.requestDevice()](https://developer.mozilla.org/en-US/docs/Web/API/GPUAdapter/requestDevice) | Documentation | How to ask for a device, its options, and why a second call rejects | Adapter and device, Device limits | [adapter-and-device](../guides/adapter-and-device.md) | Parts |
 | ● | [MDN, GPUBuffer.usage](https://developer.mozilla.org/en-US/docs/Web/API/GPUBuffer/usage) · **[our page](../guides/buffers.md)** | Documentation | Every buffer usage flag and what it allows | Buffer | [buffers](../guides/buffers.md) | Parts |
-| ○ | [MDN, GPUComputePassEncoder.dispatchWorkgroups()](https://developer.mozilla.org/en-US/docs/Web/API/GPUComputePassEncoder/dispatchWorkgroups) | Documentation | The three workgroup counts of a dispatch, and the note that they count workgroups, not shader runs | Workgroups and dispatch, Indirect dispatch | [dispatch-and-workgroups](../guides/dispatch-and-workgroups.md) | In full |
+| ● | [MDN, GPUComputePassEncoder.dispatchWorkgroups()](https://developer.mozilla.org/en-US/docs/Web/API/GPUComputePassEncoder/dispatchWorkgroups) · **[our page](../guides/dispatch-and-workgroups.md)** | Documentation | The three workgroup counts of a dispatch, and the note that they count workgroups, not shader runs | Workgroups and dispatch, Indirect dispatch | [dispatch-and-workgroups](../guides/dispatch-and-workgroups.md) | In full |
 | ● | [MDN, GPUComputePassEncoder.setBindGroup()](https://developer.mozilla.org/en-US/docs/Web/API/GPUComputePassEncoder/setBindGroup) · **[our page](../guides/bind-groups.md)** | Documentation | Sets the bind group of one group index for the compute commands that follow | Bind group, Dynamic offset | [bind-groups](../guides/bind-groups.md) | In full |
 | ● | [MDN, GPUComputePipeline.getBindGroupLayout()](https://developer.mozilla.org/en-US/docs/Web/API/GPUComputePipeline/getBindGroupLayout) · **[our page](../guides/bind-groups.md)** | Documentation | Asks a pipeline for the layout of one of its groups: with layout 'auto', the only way to get it | Bind group layout, Pipeline layout | [bind-groups](../guides/bind-groups.md) | In full |
 | ● | [MDN, GPUDevice.createBindGroup()](https://developer.mozilla.org/en-US/docs/Web/API/GPUDevice/createBindGroup) · **[our page](../guides/bind-groups.md)** | Documentation | The descriptor of a bind group, the offset and size of a buffer binding, and the checks that make it invalid | Bind group, Bind group layout | [bind-groups](../guides/bind-groups.md) | In full |

@@ -128,8 +128,8 @@ Every thread signs its element: the tens are its workgroup, the units its seat. 
 ## Sources
 
 - [MDN, GPUComputePassEncoder.dispatchWorkgroups()](https://developer.mozilla.org/en-US/docs/Web/API/GPUComputePassEncoder/dispatchWorkgroups): the three counts, the last two 1 by default, and the note that they count workgroups, not shader runs.
-- [WGSL specification](https://www.w3.org/TR/WGSL/): a workgroup is "a set of invocations which concurrently execute a compute shader stage entry point, and share access to shader variables in the workgroup address space", a dispatch runs the entry point once for each point of a grid of workgroup size × workgroup count, and each thread's global, local and workgroup ids follow from its place in that grid ([compute shaders and workgroups](https://www.w3.org/TR/WGSL/#compute-shader-workgroups)); `@workgroup_size` takes one to three numbers, the missing ones being 1 ([workgroup_size](https://www.w3.org/TR/WGSL/#workgroup-size-attr)); an access past the end of an array is never done as written, and a write may land elsewhere in the same buffer or not happen ([out-of-bounds access](https://www.w3.org/TR/WGSL/#out-of-bounds-access)).
-- [WebGPU specification](https://www.w3.org/TR/webgpu/): each count of a dispatch must stay within `maxComputeWorkgroupsPerDimension` ([dispatchWorkgroups](https://www.w3.org/TR/webgpu/#dom-gpucomputepassencoder-dispatchworkgroups)), and the default values of the limits ([limits](https://www.w3.org/TR/webgpu/#limits)).
+- [WGSL specification](https://www.w3.org/TR/WGSL/): a workgroup is "a set of invocations which concurrently execute a compute shader stage entry point, and share access to shader variables in the workgroup address space", a dispatch runs the entry point once for each point of a grid of workgroup size × workgroup count, and each thread's global, local and workgroup ids follow from its place in that grid ([compute shaders and workgroups](https://www.w3.org/TR/WGSL/#compute-shader-workgroups)); `@workgroup_size` takes one to three numbers, the missing ones being 1 ([workgroup_size](https://www.w3.org/TR/WGSL/#workgroup-size-attr)); an access past the end of an array is never done as written, and a write may land elsewhere in the same buffer or not happen ([out-of-bounds access](https://www.w3.org/TR/WGSL/#out-of-bounds-access)); `global_invocation_id` is `workgroup_id * workgroup_size + local_invocation_id`; threads of the same workgroup share the variables of the workgroup address space and those of different workgroups do not ([overview](https://www.w3.org/TR/WGSL/#overview)), such a variable starts at its zero value and can be used only in a compute shader ([var declarations](https://www.w3.org/TR/WGSL/#var-decls)), and `workgroupBarrier()` orders what the threads of a workgroup wrote there ([synchronization functions](https://www.w3.org/TR/WGSL/#sync-builtin-functions)).
+- [WebGPU specification](https://www.w3.org/TR/webgpu/): each count of a dispatch must stay within `maxComputeWorkgroupsPerDimension` ([dispatchWorkgroups](https://www.w3.org/TR/webgpu/#dom-gpucomputepassencoder-dispatchworkgroups)), and the default values of the limits, among them the 16 384 bytes of `maxComputeWorkgroupStorageSize` ([limits](https://www.w3.org/TR/webgpu/#limits)).
 - [WebGPU Fundamentals, compute shader basics](https://webgpufundamentals.org/webgpu/lessons/webgpu-compute-shaders.html): "the general advice for WebGPU is to choose a workgroup size of 64", since the best size depends on the GPU and WebGPU cannot tell you.
 - [three.js r187, ComputeNode.js](https://github.com/mrdoob/three.js/blob/r187/src/nodes/gpgpu/ComputeNode.js): `compute()` has a default workgroup size of `[64]`, and adds an early return for the threads past `count`. In [WebGPUBackend.js](https://github.com/mrdoob/three.js/blob/r187/src/renderers/webgpu/WebGPUBackend.js), the count becomes `Math.ceil(count / size)` workgroups, spread on y when they pass the device's limit.
 - The error messages, the results and the timings are the ones Chrome 157 gave us on November 16, 2026, on a Mac with an Apple GPU. The timings are five rounds for each size: between 65 and 80 ms for sizes 4 to 256, between 108 and 114 ms for size 1, which needs the y dimension to reach that many threads. For the missing guard, every thread wrote its own number: the last element kept 999 in 20 runs out of 20.
@@ -139,3 +139,37 @@ Every thread signs its element: the tens are its workgroup, the units its seat. 
 - **Hook:** you have 1000 particles, and the GPU will not let you ask for 1000 threads.
 - **Show:** the coaches: 64 seats, 16 coaches, 24 empty seats. Then the console snippet, where every thread signs with its coach and its seat.
 - **Takeaway:** threads = workgroup size × workgroup count. Round the count up, and guard the shader against the extra threads.
+
+## Questions
+
+*Asked while reading this guide, and answered after checking the sources.*
+
+### A workgroup can have up to three dimensions, and so can a dispatch. What is the advantage, and when would you use a grid in 2D or 3D?
+
+The dimensions give the threads the shape of your data. The number of threads is always the product, so nothing more runs: what changes is the id each thread receives.
+
+A fragment shader gets `gl_FragCoord.xy` and knows which pixel it is. `@workgroup_size(8, 8)` with `dispatchWorkgroups(240, 135)` gives the same to a compute shader: 1920 × 1080 threads, and `global_invocation_id.xy` is the pixel. With one dimension each thread would get a single index, and would have to work out its row and column with a division and a remainder.
+
+So the shape follows the data:
+
+- **1D** for a list: particles, as in FORCE.
+- **2D** for an image, a height map, or a cloth stored as rows and columns.
+- **3D** for voxels, or smoke and fluids on a grid.
+
+There is a practical gain too. Each number of a dispatch stops at 65 535, so a second dimension reaches past that: three.js moves to y when a list needs more workgroups than the limit.
+
+We have not measured whether the shape alone changes the speed.
+
+### Do the threads of one workgroup really share memory?
+
+Yes. A variable declared with `var<workgroup>`, outside any function, exists once for each workgroup, and all the threads of that workgroup read and write it:
+
+```wgsl
+var<workgroup> tile: array<vec4f, 64>;
+```
+
+In the coach of this guide it is a whiteboard at the front: everyone on board sees it, the other coaches do not, and it starts clean, since the variable begins at zero. With `dispatchWorkgroups(16)` there are 16 whiteboards. It exists only in compute shaders, and all the workgroup variables of a shader may take 16 384 bytes at most by default (`maxComputeWorkgroupStorageSize`). A fragment shader has nothing like it: each pixel is alone.
+
+It is where the shape of a workgroup starts to matter. In a blur by tiles of 8 × 8, each thread could load its pixel on the whiteboard, and then read its neighbours from there. The snippet and the blur are examples: FORCE has no workgroup variable, and we have not run one yet.
+
+Threads run at the same time, so two of them writing the same place is a race. WGSL has two tools for that, atomic types and `workgroupBarrier()`, which makes what was written before it visible to the whole workgroup. They are a concept of their own, for another guide.

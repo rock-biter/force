@@ -3152,11 +3152,15 @@
       "title": "Workgroup variable",
       "summary": "A var<workgroup>: memory shared by the threads of one workgroup, only in compute shaders, starting at zero",
       "area": "gpu",
-      "status": "mentioned",
-      "since": { "mentioned": "2026-11-13" },
+      "status": "seen",
+      "since": { "mentioned": "2026-11-13", "seen": "2026-11-16" },
       "partOf": "address-space",
       "related": ["workgroup", "atomic-operations"],
-      "citedIn": ["wgsl-spec-var-declarations", "wgsl-spec-compute-shader-workgroups"]
+      "citedIn": [
+        "wgsl-spec-var-declarations",
+        "wgsl-spec-compute-shader-workgroups",
+        "docs/guides/dispatch-and-workgroups.md"
+      ]
     },
     {
       "id": "private-variable",
@@ -3721,11 +3725,12 @@
       "title": "MDN, GPUComputePassEncoder.dispatchWorkgroups()",
       "summary": "The three workgroup counts of a dispatch, and the note that they count workgroups, not shader runs",
       "area": "gpu",
-      "status": "mentioned",
-      "since": { "mentioned": "2026-11-16" },
+      "status": "studied",
+      "since": { "studied": "2026-11-16" },
       "partOf": "mdn-webgpu",
       "about": ["workgroup", "indirect-dispatch"],
       "citedIn": ["docs/guides/dispatch-and-workgroups.md"],
+      "page": "docs/guides/dispatch-and-workgroups.md",
       "url": "https://developer.mozilla.org/en-US/docs/Web/API/GPUComputePassEncoder/dispatchWorkgroups",
       "claudeRead": "full"
     },
