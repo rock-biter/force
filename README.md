@@ -12,15 +12,15 @@ A GPU-first physics engine for the web, built on [WebGPU](https://www.w3.org/TR/
 
 *Updated November 17, 2026*
 
-**Latest step:** [the stiff spring](./docs/logbook/015-the-stiff-spring.md). We opened Box2D, a
-widely used 2D physics engine, to see how it repairs a broken rule today, such as "do not pass
-through the floor". Its solver, Soft Step, takes four small steps instead of going round the rules
-many times, and treats every rule as a very stiff spring. On our test, a pendulum that should
-swing forever, it keeps 99.7% of its height after 30 seconds, against 42% for the method of 2005.
-On a chain that carries a heavy weight it does not blow up, but it sags like the spring it is. The
-[theory page](./docs/topics/soft-step.md) comes with a script that recomputes every number.
+**Latest step:** [the same road](./docs/logbook/016-the-same-road.md). After Box2D, we looked at
+how three other engines used in games repair a broken rule, such as "do not pass through the
+floor". Jolt goes round the rules many times in one step, the way of 2005. PhysX has both ways
+and is moving to a few small steps with one round each. Rapier took the small steps of Box2D
+whole, down to its numbers, and dropped the old way. The chapter before,
+[the stiff spring](./docs/logbook/015-the-stiff-spring.md), tells how those small steps work, with
+a [theory page](./docs/topics/soft-step.md) and a script that recomputes every number.
 
-**Next:** the other engines used in video games, PhysX, Jolt and Rapier: do they run the same idea?
+**Next:** how PhysX runs its solver on the GPU.
 
 Every step, with what we learned and what went wrong, is in the [logbook](./docs/README.md).
 

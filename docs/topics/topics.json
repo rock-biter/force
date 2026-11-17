@@ -962,7 +962,11 @@
         "solver2d-post",
         "box2d-solver",
         "box2d-simulation",
-        "docs/logbook/015-the-stiff-spring.md"
+        "docs/logbook/015-the-stiff-spring.md",
+        "physx-rigid-body-dynamics",
+        "jolt-architecture",
+        "rapier-staged-solver",
+        "docs/logbook/016-the-same-road.md"
       ],
       "page": "docs/topics/integration.md#substeps",
       "code": ["src/world.ts"]
@@ -1382,7 +1386,9 @@
       "citedIn": [
         "docs/logbook/004-the-detour.md",
         "docs/logbook/012-the-family-tree.md",
-        "iterative-dynamics-paper"
+        "iterative-dynamics-paper",
+        "jolt-architecture",
+        "docs/logbook/016-the-same-road.md"
       ]
     },
     {
@@ -1430,15 +1436,21 @@
       "id": "tgs-solver",
       "kind": "concept",
       "title": "TGS solver",
-      "summary": "PhysX's name for a solver that prefers substeps to rounds over the rules",
+      "summary": "PhysX's solver with substeps: one round over the rules in each, and the rounds without correction at the end of the step",
       "area": "physics",
-      "status": "mentioned",
+      "status": "seen",
       "since": {
-        "mentioned": "2026-11-08"
+        "mentioned": "2026-11-08",
+        "seen": "2026-11-17"
       },
       "partOf": "solver",
-      "related": ["gauss-seidel"],
-      "citedIn": ["docs/logbook/004-the-detour.md", "solver2d-post"]
+      "related": ["gauss-seidel", "soft-step"],
+      "citedIn": [
+        "docs/logbook/004-the-detour.md",
+        "solver2d-post",
+        "physx-rigid-body-dynamics",
+        "docs/logbook/016-the-same-road.md"
+      ]
     },
     {
       "id": "warm-starting",
@@ -1458,7 +1470,8 @@
         "advanced-character-physics",
         "docs/logbook/014-the-mirror.md",
         "box2d-contact-solver",
-        "docs/logbook/015-the-stiff-spring.md"
+        "docs/logbook/015-the-stiff-spring.md",
+        "jolt-physics-settings"
       ]
     },
     {
@@ -1509,7 +1522,10 @@
         "solver2d-post",
         "box2d-solver",
         "box2d-contact-solver",
-        "docs/logbook/015-the-stiff-spring.md"
+        "docs/logbook/015-the-stiff-spring.md",
+        "rapier-integration-parameters",
+        "rapier-changelog",
+        "docs/logbook/016-the-same-road.md"
       ],
       "page": "docs/topics/soft-step.md"
     },
@@ -1548,7 +1564,8 @@
         "docs/logbook/004-the-detour.md",
         "docs/logbook/012-the-family-tree.md",
         "box2d-constraint-graph",
-        "docs/logbook/015-the-stiff-spring.md"
+        "docs/logbook/015-the-stiff-spring.md",
+        "jolt-architecture"
       ]
     },
     {
@@ -2109,24 +2126,36 @@
       "since": {
         "seen": "2026-11-05"
       },
-      "about": ["physics-engine", "solver"],
-      "citedIn": ["docs/logbook/001-the-flip-book.md", "docs/logbook/004-the-detour.md"],
+      "about": ["physics-engine", "solver", "soft-step"],
+      "citedIn": [
+        "docs/logbook/001-the-flip-book.md",
+        "docs/logbook/004-the-detour.md",
+        "docs/logbook/016-the-same-road.md"
+      ],
       "url": "https://github.com/dimforge/rapier"
     },
     {
       "id": "rapier-integration-parameters",
       "kind": "code",
       "title": "Rapier, integration_parameters.rs",
-      "summary": "The solver repeats 4 rounds by default",
+      "summary": "The defaults of Rapier's solver: 4 substeps, contacts as springs of 30 Hz, the numbers of Box2D's Soft Step",
       "area": "physics",
       "status": "seen",
       "since": {
         "seen": "2026-11-05"
       },
       "partOf": "rapier",
-      "about": ["iterative-solver"],
-      "citedIn": ["docs/logbook/001-the-flip-book.md"],
-      "url": "https://github.com/dimforge/rapier/blob/master/src/dynamics/integration_parameters.rs"
+      "about": [
+        "iterative-solver",
+        "soft-step",
+        "soft-constraint",
+        "relax-pass",
+        "substepping",
+        "warm-starting"
+      ],
+      "citedIn": ["docs/logbook/001-the-flip-book.md", "docs/logbook/016-the-same-road.md"],
+      "url": "https://github.com/dimforge/rapier/blob/master/src/dynamics/integration_parameters.rs",
+      "claudeRead": "parts"
     },
     {
       "id": "fix-your-timestep",
@@ -2657,10 +2686,15 @@
         "warm-starting",
         "island",
         "sleeping",
-        "job-system"
+        "job-system",
+        "ngs-solver",
+        "graph-coloring",
+        "substepping",
+        "soft-constraint"
       ],
-      "citedIn": ["docs/logbook/004-the-detour.md"],
-      "url": "https://github.com/jrouwe/JoltPhysics/blob/master/Docs/Architecture.md"
+      "citedIn": ["docs/logbook/004-the-detour.md", "docs/logbook/016-the-same-road.md"],
+      "url": "https://github.com/jrouwe/JoltPhysics/blob/master/Docs/Architecture.md",
+      "claudeRead": "parts"
     },
     {
       "id": "physx-gpu-rigid-bodies",
@@ -2688,9 +2722,18 @@
         "mentioned": "2026-11-05"
       },
       "partOf": "physx",
-      "about": ["rigid-body", "sequential-impulses", "tgs-solver"],
-      "citedIn": ["docs/logbook/004-the-detour.md"],
-      "url": "https://nvidia-omniverse.github.io/PhysX/physx/5.2.1/docs/RigidBodyDynamics.html"
+      "about": [
+        "rigid-body",
+        "sequential-impulses",
+        "tgs-solver",
+        "relax-pass",
+        "substepping",
+        "mass-ratio",
+        "split-impulse"
+      ],
+      "citedIn": ["docs/logbook/004-the-detour.md", "docs/logbook/016-the-same-road.md"],
+      "url": "https://nvidia-omniverse.github.io/PhysX/physx/5.6.1/docs/RigidBodyDynamics.html",
+      "claudeRead": "parts"
     },
     {
       "id": "flex-manual",
@@ -2909,7 +2952,7 @@
         "mentioned": "2026-11-05"
       },
       "about": ["rigid-body", "gpu-parallelism", "tgs-solver", "finite-element-method"],
-      "citedIn": ["docs/logbook/004-the-detour.md"],
+      "citedIn": ["docs/logbook/004-the-detour.md", "docs/logbook/016-the-same-road.md"],
       "url": "https://developer.nvidia.com/physx-sdk"
     },
     {
@@ -2936,8 +2979,14 @@
       "since": {
         "mentioned": "2026-11-05"
       },
-      "about": ["rigid-body", "bounding-volume-hierarchy", "sequential-impulses", "job-system"],
-      "citedIn": ["docs/logbook/004-the-detour.md"],
+      "about": [
+        "rigid-body",
+        "bounding-volume-hierarchy",
+        "sequential-impulses",
+        "job-system",
+        "ngs-solver"
+      ],
+      "citedIn": ["docs/logbook/004-the-detour.md", "docs/logbook/016-the-same-road.md"],
       "url": "https://github.com/jrouwe/JoltPhysics"
     },
     {
@@ -4648,7 +4697,8 @@
         "avbd-paper",
         "docs/logbook/012-the-family-tree.md",
         "docs/logbook/014-the-mirror.md",
-        "docs/logbook/015-the-stiff-spring.md"
+        "docs/logbook/015-the-stiff-spring.md",
+        "physx-rigid-body-dynamics"
       ]
     },
     {
@@ -4711,7 +4761,9 @@
         "advanced-character-physics",
         "box2d-contact-solver",
         "box2d-distance-joint",
-        "docs/logbook/015-the-stiff-spring.md"
+        "docs/logbook/015-the-stiff-spring.md",
+        "rapier-integration-parameters",
+        "jolt-architecture"
       ]
     },
     {
@@ -4731,7 +4783,8 @@
         "advanced-character-physics",
         "iterative-dynamics-paper",
         "docs/logbook/014-the-mirror.md",
-        "docs/logbook/015-the-stiff-spring.md"
+        "docs/logbook/015-the-stiff-spring.md",
+        "jolt-physics-settings"
       ]
     },
     {
@@ -5754,7 +5807,13 @@
       },
       "partOf": "soft-step",
       "related": ["relaxation", "baumgarte-stabilization"],
-      "citedIn": ["solver2d-post", "box2d-solver", "docs/logbook/015-the-stiff-spring.md"]
+      "citedIn": [
+        "solver2d-post",
+        "box2d-solver",
+        "docs/logbook/015-the-stiff-spring.md",
+        "physx-rigid-body-dynamics",
+        "rapier-integration-parameters"
+      ]
     },
     {
       "id": "damping-ratio",
@@ -5809,7 +5868,7 @@
       },
       "partOf": "contact",
       "related": ["continuous-collision-detection"],
-      "citedIn": ["box2d-contact-solver"]
+      "citedIn": ["box2d-contact-solver", "jolt-physics-settings"]
     },
     {
       "id": "accumulated-impulse",
@@ -5829,15 +5888,20 @@
       "id": "ngs-solver",
       "kind": "concept",
       "title": "Nonlinear Gauss-Seidel (NGS)",
-      "summary": "A second solver pass that fixes positions directly, apart from the velocities, as Box2D did before version 3",
+      "summary": "A second solver pass that moves positions directly, apart from the velocities: Box2D before version 3, and Jolt today",
       "area": "physics",
-      "status": "mentioned",
+      "status": "seen",
       "since": {
-        "mentioned": "2026-11-17"
+        "seen": "2026-11-17"
       },
       "partOf": "solver",
       "related": ["projected-gauss-seidel", "projection"],
-      "citedIn": ["solver2d-post"]
+      "citedIn": [
+        "solver2d-post",
+        "jolt-architecture",
+        "jolt-physics-settings",
+        "docs/logbook/016-the-same-road.md"
+      ]
     },
     {
       "id": "block-solver",
@@ -5939,7 +6003,7 @@
         "mentioned": "2026-11-17"
       },
       "about": ["graph-coloring", "gpu-parallelism"],
-      "citedIn": ["box2d-constraint-graph"],
+      "citedIn": ["box2d-constraint-graph", "jolt-architecture"],
       "url": "https://doi.org/10.1535/itj.1103.08",
       "year": 2007
     },
@@ -5973,6 +6037,106 @@
       "citedIn": ["solver2d-post"],
       "url": "https://www.bepuentertainment.com/",
       "authors": "Ross Nordby"
+    },
+    {
+      "id": "split-impulse",
+      "kind": "concept",
+      "title": "Split impulse",
+      "summary": "PhysX's name for solving the position error and the velocity error in separate rounds, so the correction does not stay in the final velocity",
+      "area": "physics",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-17"
+      },
+      "partOf": "solver",
+      "related": ["relax-pass", "ngs-solver"],
+      "citedIn": ["physx-rigid-body-dynamics"]
+    },
+    {
+      "id": "jolt-physics-settings",
+      "kind": "code",
+      "title": "Jolt Physics, PhysicsSettings.h",
+      "summary": "The defaults of Jolt's solver: 10 rounds on velocities, 2 on positions, stored pushes",
+      "area": "physics",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-17"
+      },
+      "partOf": "jolt",
+      "about": [
+        "sequential-impulses",
+        "ngs-solver",
+        "baumgarte-stabilization",
+        "warm-starting",
+        "speculative-contact"
+      ],
+      "citedIn": ["docs/logbook/016-the-same-road.md"],
+      "url": "https://github.com/jrouwe/JoltPhysics/blob/master/Jolt/Physics/PhysicsSettings.h",
+      "claudeRead": "parts"
+    },
+    {
+      "id": "jolt-contact-constraints",
+      "kind": "code",
+      "title": "Jolt Physics, ContactConstraintManager.cpp",
+      "summary": "Where Jolt fixes overlap: in the position rounds, a share of the error at a time, not in the velocity rounds",
+      "area": "physics",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-17"
+      },
+      "partOf": "jolt",
+      "about": ["ngs-solver", "baumgarte-stabilization", "speculative-contact", "restitution"],
+      "citedIn": ["docs/logbook/016-the-same-road.md"],
+      "url": "https://github.com/jrouwe/JoltPhysics/blob/master/Jolt/Physics/Constraints/ContactConstraintManager.cpp",
+      "claudeRead": "parts"
+    },
+    {
+      "id": "rapier-changelog",
+      "kind": "docs",
+      "title": "Rapier, changelog",
+      "summary": "When Rapier got its new solver (January 2024), and when it dropped the old one (September 2025)",
+      "area": "physics",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-17"
+      },
+      "partOf": "rapier",
+      "about": ["soft-step", "tgs-solver", "block-solver", "warm-starting"],
+      "citedIn": ["docs/logbook/016-the-same-road.md"],
+      "url": "https://github.com/dimforge/rapier/blob/master/CHANGELOG.md",
+      "claudeRead": "parts"
+    },
+    {
+      "id": "rapier-staged-solver",
+      "kind": "code",
+      "title": "Rapier, staged_island_solver",
+      "summary": "Where Rapier divides the step by the number of solver iterations: they are substeps",
+      "area": "physics",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-17"
+      },
+      "partOf": "rapier",
+      "about": ["substepping", "soft-step"],
+      "citedIn": ["docs/logbook/016-the-same-road.md"],
+      "url": "https://github.com/dimforge/rapier/tree/master/src/dynamics/solver/staged_island_solver",
+      "claudeRead": "parts"
+    },
+    {
+      "id": "modeling-constraints-talk",
+      "kind": "talk",
+      "title": "Modeling and Solving Constraints",
+      "summary": "Catto's talk of 2009 that Jolt names as the description of its solver",
+      "area": "physics",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-17"
+      },
+      "about": ["sequential-impulses", "warm-starting"],
+      "citedIn": ["jolt-architecture"],
+      "url": "https://box2d.org/files/ErinCatto_ModelingAndSolvingConstraints_GDC2009.pdf",
+      "authors": "Erin Catto",
+      "year": 2009
     }
   ]
 }
