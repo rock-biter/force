@@ -5,8 +5,8 @@
 Everything we have met while building FORCE, concepts and sources, and how far we went with each
 one. Use it to look up a term, to find what to read, or to pick what to explore next.
 
-- **226 concepts:** ● 19 studied · ◐ 103 seen · ○ 104 mentioned
-- **120 sources:** ● 15 studied · ◐ 16 seen · ○ 89 mentioned · read by Claude: 45 parts, 12 in full
+- **235 concepts:** ● 20 studied · ◐ 107 seen · ○ 108 mentioned
+- **126 sources:** ● 15 studied · ◐ 16 seen · ○ 95 mentioned · read by Claude: 47 parts, 13 in full
 
 | | Status | What it means |
 | --- | --- | --- |
@@ -28,10 +28,12 @@ How things move, collide and stay together.
 
 | | Concept | In short | Part of | First cited in |
 | --- | --- | --- | --- | --- |
+| ◐ | Accumulated impulse | Keeping the total push of a rule and clamping that, not each round alone, so a later round can take part of it back | Sequential impulses (PGS) | [Iterative Dynamics with Temporal Coherence](https://box2d.org/files/ErinCatto_IterativeDynamics_GDC2005.pdf) |
 | ◐ | Angular momentum | Inertia times angular velocity: the quantity a torque changes over time | Rigid body | [004](../logbook/004-the-detour.md) |
 | ◐ | Angular velocity | How fast a body spins and around which axis, as one vector in radians per second | Rigid body | [004](../logbook/004-the-detour.md) |
 | ◐ | Articulated bodies | Chains of bodies linked by joints, such as robots and ragdolls |  | [004](../logbook/004-the-detour.md) |
 | ◐ | Baumgarte stabilization | A classic way to remove overlap in a velocity solver: push back in proportion to the error |  | [Solver2D](https://box2d.org/posts/2024/02/solver2d/) |
+| ○ | Block solver | Solving the two contact points of a pair of bodies together and exactly, for steadier stacks | Solver | [Solver2D](https://box2d.org/posts/2024/02/solver2d/) |
 | ◐ | Bounding box | An invisible box around an object: testing two boxes is much cheaper than testing two real shapes |  | [001](../logbook/001-the-flip-book.md) |
 | ○ | Bounding volume hierarchy (BVH) | Boxes nested inside boxes: a tree that skips whole groups of far-away objects at once | Broad phase | [Ten Minute Physics](https://matthias-research.github.io/pages/tenMinutePhysics/index.html) |
 | ◐ | Broad phase | A rough check that discards pairs of objects too far apart to touch | Collision detection | [001](../logbook/001-the-flip-book.md) |
@@ -50,11 +52,13 @@ How things move, collide and stay together.
 | ◐ | Contact caching | Keeping the push of each contact point from one step to the next, with a label to find the same point again | Warm starting | [Iterative Dynamics with Temporal Coherence](https://box2d.org/files/ErinCatto_IterativeDynamics_GDC2005.pdf) |
 | ○ | Contact events | Telling game code when two objects start or stop touching |  | [004](../logbook/004-the-detour.md) |
 | ○ | Contact manifold | All the contact points between two touching shapes, such as the four corners of a box resting on the floor |  | [004](../logbook/004-the-detour.md) |
+| ◐ | Contact point update | Keeping each contact point as two anchors, one on each body, so a substep can measure its depth again without new collision detection | Substepping | [Solver2D](https://box2d.org/posts/2024/02/solver2d/) |
 | ○ | Contact reduction | Keeping only the few contact points that matter between two shapes | Contact manifold | [Iterative Dynamics with Temporal Coherence](https://box2d.org/files/ErinCatto_IterativeDynamics_GDC2005.pdf) |
 | ○ | Continuous collision detection | Checking the whole path between two steps, so fast objects cannot tunnel through walls | Collision detection | [004](../logbook/004-the-detour.md) |
 | ○ | Convexity | A shape with no dents: the segment between any two of its points stays inside. Many collision shortcuts only work for these | Collision detection | [Advanced Character Physics](https://edelkas.github.io/n/files/bib/jakobsen.pdf) |
 | ◐ | Coulomb friction | The classic law of friction: it can resist sliding up to a limit in proportion to how hard the surfaces press together | Friction | [010](../logbook/010-the-ground.md) |
 | ○ | Damping | Taking away a little speed at every step, like air drag, so that motion dies out |  | [Advanced Character Physics](https://edelkas.github.io/n/files/bib/jakobsen.pdf) |
+| ◐ | Damping ratio | How fast a spring's swing dies: 0 swings forever, 1 comes back without overshooting | Soft constraint | [Solver2D](https://box2d.org/posts/2024/02/solver2d/) |
 | ○ | Degrees of freedom | How many independent numbers describe where a thing is: 6 for a rigid body, 3 to place it and 3 to turn it | Rigid body | [Advanced Character Physics](https://edelkas.github.io/n/files/bib/jakobsen.pdf) |
 | ○ | Destruction | Breaking objects into pieces while the game runs |  | [004](../logbook/004-the-detour.md) |
 | ○ | Discrete element method (DEM) | Particles that push each other apart when they overlap, like small springs, with dampers to absorb the bounce |  | [Real-Time Rigid Body Simulation on GPUs](https://developer.nvidia.com/gpugems/gpugems3/part-v-physics-simulation/chapter-29-real-time-rigid-body-simulation-gpus) |
@@ -75,6 +79,7 @@ How things move, collide and stay together.
 | ◐ | Gravity | The force that pulls everything down: on Earth it adds 9.81 m/s of downward speed every second | Forces | [001](../logbook/001-the-flip-book.md) |
 | ○ | Grid fluid (Eulerian) | A fluid simulated on a fixed grid, tracking what flows through each cell | Fluid | [Ten Minute Physics](https://matthias-research.github.io/pages/tenMinutePhysics/index.html) |
 | ○ | Gyroscopic torque | The term that makes a spinning body wobble when its mass is uneven: often dropped in games, because it can blow up |  | [Iterative Dynamics with Temporal Coherence](https://box2d.org/files/ErinCatto_IterativeDynamics_GDC2005.pdf) |
+| ○ | Harmonic oscillator | A mass on a spring with a brake: the model behind soft constraints |  | [Solver2D](https://box2d.org/posts/2024/02/solver2d/) |
 | ◐ | Hooke's law | A spring pulls back in proportion to how far it is stretched (F = −kx) | Spring | [004](../logbook/004-the-detour.md) |
 | ● | **[Implicit integration](integration.md#implicit-euler)** | Uses the force at the end of the step: stable with stiff springs, but it must solve equations and it drains energy | Integration | [Physically Based Modeling: Principles and Practice](https://www.cs.cmu.edu/~baraff/sigcourse/) |
 | ◐ | Impulse-based dynamics | Resolving collisions by changing velocities at once, with an instant kick called an impulse |  | [004](../logbook/004-the-detour.md) |
@@ -99,6 +104,7 @@ How things move, collide and stay together.
 | ◐ | Narrow phase | A precise check, on the real shapes, of the pairs that survived the broad phase | Collision detection | [001](../logbook/001-the-flip-book.md) |
 | ○ | Neighbour search | Finding the particles near each particle: a major cost of particle fluids |  | [004](../logbook/004-the-detour.md) |
 | ◐ | Newton's second law | Force equals mass times acceleration (F = ma): the same push moves a light object more | Forces | [004](../logbook/004-the-detour.md) |
+| ○ | Nonlinear Gauss-Seidel (NGS) | A second solver pass that fixes positions directly, apart from the velocities, as Box2D did before version 3 | Solver | [Solver2D](https://box2d.org/posts/2024/02/solver2d/) |
 | ◐ | Numerical damping | Energy lost because of the method and not of the physics: each projection deletes the speed that went against a rule |  | [Advanced Character Physics](https://edelkas.github.io/n/files/bib/jakobsen.pdf) |
 | ● | **[Numerical stability](integration.md#when-it-fails-stability)** | Whether a simulation's errors stay small or grow until it explodes: not the same thing as accuracy |  | [004](../logbook/004-the-detour.md) |
 | ○ | Octree | A box split into eight smaller boxes, again and again, to find quickly what is near what |  | [Advanced Character Physics](https://edelkas.github.io/n/files/bib/jakobsen.pdf) |
@@ -119,6 +125,7 @@ How things move, collide and stay together.
 | ◐ | Ragdoll | A character body made of parts and joints that falls by physics instead of by animation | Articulated bodies | [Advanced Character Physics](https://edelkas.github.io/n/files/bib/jakobsen.pdf) |
 | ○ | Raycast | Shooting a line into the world to find what it hits first, for aiming, picking or line of sight |  | [004](../logbook/004-the-detour.md) |
 | ○ | Redundant constraints | More rules than needed for the same job, like a table on six legs: many answers are right, and the solver must cope | Constraint | [Iterative Dynamics with Temporal Coherence](https://box2d.org/files/ErinCatto_IterativeDynamics_GDC2005.pdf) |
+| ◐ | Relax pass | One more round over the rules with the position correction switched off, to take back the speed that correction added | Soft Step | [Solver2D](https://box2d.org/posts/2024/02/solver2d/) |
 | ◐ | Relaxation | Fixing one rule at a time and going round again, because each fix breaks a neighbour a little less than before | Iterative solver | [Advanced Character Physics](https://edelkas.github.io/n/files/bib/jakobsen.pdf) |
 | ● | **[Render interpolation](fixed-timestep.md#render-interpolation)** | Drawing a blend of the last two physics states, so motion looks smooth between steps | Fixed timestep | [004](../logbook/004-the-detour.md) |
 | ○ | Resting contact | Two things that touch without bouncing, like a box lying on the floor: the hard case for a stable solver | Contact | [Advanced Character Physics](https://edelkas.github.io/n/files/bib/jakobsen.pdf) |
@@ -132,14 +139,16 @@ How things move, collide and stay together.
 | ● | **[Semi-implicit Euler](integration.md#semi-implicit-euler)** | Update the velocity first, then move with the new one: a small swap that keeps a spring's energy bounded when the step is small enough | Integration | [004](../logbook/004-the-detour.md) |
 | ◐ | Sequential impulses (PGS) | Applying impulses to one contact or joint at a time, over several rounds: the classic rigid body solver | Iterative solver | [004](../logbook/004-the-detour.md) |
 | ○ | Shape matching | Pulling a group of particles back toward the best rigid fit of their original shape |  | [004](../logbook/004-the-detour.md) |
+| ○ | Shock propagation | A solver variation for stacks that Catto lists as still to try: only the name so far | Solver | [Solver2D](https://box2d.org/posts/2024/02/solver2d/) |
 | ○ | Signed distance field collision | Describing a shape by the distance from it at every point of space, so a contact test becomes a lookup | Narrow phase | [004](../logbook/004-the-detour.md) |
 | ◐ | Simulation step | What an engine repeats over and over: apply forces, find contacts, fix them, move everything | Physics engine | [001](../logbook/001-the-flip-book.md) |
 | ○ | Sleeping | Pausing bodies that have come to rest, until something wakes them up |  | [004](../logbook/004-the-detour.md) |
 | ○ | Soft body | An object that squashes and bounces back, like jelly |  | [Ten Minute Physics](https://matthias-research.github.io/pages/tenMinutePhysics/index.html) |
-| ○ | Soft constraint | A constraint allowed to give a little, like a spring with a damper, instead of being perfectly rigid | Constraint | [Solver2D](https://box2d.org/posts/2024/02/solver2d/) |
-| ◐ | Soft Step | The solver of recent Box2D versions, built around substeps | Solver | [004](../logbook/004-the-detour.md) |
+| ◐ | Soft constraint | A constraint allowed to give a little, like a spring with a damper, instead of being perfectly rigid | Constraint | [Solver2D](https://box2d.org/posts/2024/02/solver2d/) |
+| ● | **[Soft Step](soft-step.md)** | The solver of Box2D since version 3: every rule is a stiff spring, solved once in each of a few substeps, with a relax pass | Solver | [004](../logbook/004-the-detour.md) |
 | ◐ | Solver | The part of the engine that corrects velocities so constraints are obeyed | Simulation step | [001](../logbook/001-the-flip-book.md) |
 | ○ | Spatial hashing | A uniform grid stored in a hash table, so it can cover endless space with little memory | Broad phase | [004](../logbook/004-the-detour.md) |
+| ○ | Speculative contact | A contact kept before the bodies touch: it only removes the speed that would make them overlap within the step | Contact | [Box2D, contact_solver.c](https://github.com/erincatto/box2d/blob/main/src/contact_solver.c) |
 | ○ | SPH | Smoothed particle hydrodynamics: a fluid's density and pressure at each particle, estimated from its neighbours | Fluid | [004](../logbook/004-the-detour.md) |
 | ● | **[Spiral of death](fixed-timestep.md#the-spiral-of-death)** | When catching up on physics takes so long that every frame falls further behind | Fixed timestep | [004](../logbook/004-the-detour.md) |
 | ◐ | Spring | A link that keeps two points near a rest distance, pulling when stretched and pushing when squeezed |  | [docs index](../README.md) |
@@ -149,7 +158,7 @@ How things move, collide and stay together.
 | ○ | Sweep and prune | A broad phase that sorts objects along an axis, so only neighbours in the list need checking | Broad phase | [Ten Minute Physics](https://matthias-research.github.io/pages/tenMinutePhysics/index.html) |
 | ◐ | Symplectic integrator | An integrator that keeps energy steady on average over long runs, such as semi-implicit Euler or Verlet | Integration | [Integration Basics](https://gafferongames.com/post/integration_basics/) |
 | ◐ | Temporal coherence | A scene changes little from one step to the next, so the last answer is a good first guess |  | [Iterative Dynamics with Temporal Coherence](https://box2d.org/files/ErinCatto_IterativeDynamics_GDC2005.pdf) |
-| ○ | TGS solver | PhysX's temporal Gauss-Seidel solver, designed to converge better with complex constraints | Solver | [004](../logbook/004-the-detour.md) |
+| ○ | TGS solver | PhysX's name for a solver that prefers substeps to rounds over the rules | Solver | [004](../logbook/004-the-detour.md) |
 | ● | **[Time accumulator](fixed-timestep.md#the-accumulator)** | Keeps the real time not simulated yet, and spends it in fixed steps | Fixed timestep | [004](../logbook/004-the-detour.md) |
 | ○ | Time of impact | Rewinding the step to the exact moment two things touch and handling the hit there: precise, but slow when hits are many | Collision response | [Advanced Character Physics](https://edelkas.github.io/n/files/bib/jakobsen.pdf) |
 | ● | **[Timestep](fixed-timestep.md)** | The jump in time of each step, often 1/60 of a second | Simulation step | [001](../logbook/001-the-flip-book.md) |
@@ -176,13 +185,17 @@ How things move, collide and stay together.
 | ○ | [Animating Sand as a Fluid](https://doi.org/10.1145/1073204.1073298)<br>*Yongning Zhu, Robert Bridson, 2005* | Paper | Sand simulated with a mix of particles and a grid | Granular materials, FLIP water | [004](../logbook/004-the-detour.md) |  |
 | ○ | [Augmented Vertex Block Descent](https://graphics.cs.utah.edu/research/projects/avbd/)<br>*Chris Giles, Elie Diaz, Cem Yuksel, 2025* | Paper | Rigid bodies, joints and stacks solved on the GPU one color of bodies at a time, with hard constraints and few rounds | Vertex block descent (VBD), Constraint graph coloring, Mass ratio, Primal and dual solvers, Rigid body, Warm starting | [012](../logbook/012-the-family-tree.md) | Parts |
 | ○ | [Avian](https://github.com/avianphysics/avian) | Project | A physics engine for Bevy, written in Rust | Physics engine, Entity component system (ECS) | [004](../logbook/004-the-detour.md) |  |
+| ○ | [Bepu physics](https://www.bepuentertainment.com/)<br>*Ross Nordby* | Project | A 3D engine with a substepping solver, whose author found the three numbers of the soft constraint that Box2D uses | Soft constraint, Substepping, Contact point update | [Solver2D](https://box2d.org/posts/2024/02/solver2d/) |  |
 | ○ | [Bevy](https://bevy.org/) | Project | A Rust game engine built on ECS, with physics from plugins such as Rapier and Avian | Entity component system (ECS) | [004](../logbook/004-the-detour.md) |  |
 | ◐ | [Box2D](https://github.com/erincatto/box2d)<br>*Erin Catto* | Project | One of the most widely used 2D physics engines, open source | Physics engine, Simulation step, Solver | [001](../logbook/001-the-flip-book.md) |  |
+| ○ | [Box2D, constraint_graph.c](https://github.com/erincatto/box2d/blob/main/src/constraint_graph.c)<br>*Erin Catto* | Source code | How contacts and joints get a color, so that each color can be solved on many threads | Constraint graph coloring | [015](../logbook/015-the-stiff-spring.md) | Parts |
+| ○ | [Box2D, contact_solver.c](https://github.com/erincatto/box2d/blob/main/src/contact_solver.c)<br>*Erin Catto* | Source code | The pushes of a contact: the soft push, the relax round with friction, the bounce at the end | Soft Step, Soft constraint, Relax pass, Contact point update, Speculative contact, Accumulated impulse, Warm starting, Coulomb friction, Restitution | [015](../logbook/015-the-stiff-spring.md) | Parts |
+| ○ | [Box2D, distance_joint.c](https://github.com/erincatto/box2d/blob/main/src/distance_joint.c)<br>*Erin Catto* | Source code | A stick between two bodies, rigid or springy, solved with the soft push | Distance constraint, Soft constraint, Relax pass | [015](../logbook/015-the-stiff-spring.md) | Parts |
 | ◐ | [Box2D, Hello Box2D](https://github.com/erincatto/box2d/blob/main/docs/hello.md) | Documentation | The flip book comparison, and the 1/60 second step | Physics engine, Timestep | [001](../logbook/001-the-flip-book.md) |  |
 | ○ | [Box2D, Overview](https://github.com/erincatto/box2d/blob/main/docs/overview.md) | Documentation | The units Box2D is tuned for, and the size of objects it handles well | Units and scale | [008](../logbook/008-the-first-loop.md) | Parts |
 | ◐ | [Box2D, physics_world.c](https://github.com/erincatto/box2d/blob/main/src/physics_world.c) | Source code | The real order of the steps: broad phase, collisions, solver | Simulation step | [001](../logbook/001-the-flip-book.md) |  |
 | ○ | [Box2D, Simulation](https://github.com/erincatto/box2d/blob/main/docs/simulation.md) | Documentation | Box2D's guide to the world and its step, including substeps | Substepping, Soft Step | [004](../logbook/004-the-detour.md) | Parts |
-| ◐ | [Box2D, solver.c](https://github.com/erincatto/box2d/blob/main/src/solver.c) | Source code | The internal stages of the solver | Solver, Semi-implicit Euler, Soft Step, Substepping | [001](../logbook/001-the-flip-book.md) | Parts |
+| ◐ | [Box2D, solver.c](https://github.com/erincatto/box2d/blob/main/src/solver.c) | Source code | The internal stages of the solver | Solver, Semi-implicit Euler, Soft Step, Substepping, Relax pass, Warm starting, Constraint graph coloring | [001](../logbook/001-the-flip-book.md) | Parts |
 | ○ | [Bullet Physics](https://github.com/bulletphysics/bullet3) | Project | A long-lived open source C++ library: rigid bodies, collision detection and soft bodies | Rigid body, Collision detection, Soft body | [004](../logbook/004-the-detour.md) |  |
 | ○ | [cannon-es](https://github.com/pmndrs/cannon-es) | Project | A 3D physics engine written in JavaScript | Rigid body | [004](../logbook/004-the-detour.md) |  |
 | ○ | [Computer "Experiments" on Classical Fluids. I. Thermodynamical Properties of Lennard-Jones Molecules](https://doi.org/10.1103/PhysRev.159.98)<br>*Loup Verlet, 1967* | Paper | The paper the Verlet integrator is named after: a simulation of molecules, from 1967 | Verlet integration | [Advanced Character Physics](https://edelkas.github.io/n/files/bib/jakobsen.pdf) |  |
@@ -225,7 +238,8 @@ How things move, collide and stay together.
 | ◐ | [Rapier](https://github.com/dimforge/rapier) | Project | An open source 2D and 3D physics engine written in Rust | Physics engine, Solver | [001](../logbook/001-the-flip-book.md) |  |
 | ◐ | [Rapier, integration_parameters.rs](https://github.com/dimforge/rapier/blob/master/src/dynamics/integration_parameters.rs) | Source code | The solver repeats 4 rounds by default | Iterative solver | [001](../logbook/001-the-flip-book.md) |  |
 | ○ | [Small Steps in Physics Simulation](https://mmacklin.com/smallsteps.pdf)<br>*Miles Macklin, Kier Storey, Michelle Lu, Pierre Terdiman, Nuttapong Chentanez, Stefan Jeschke, Matthias Müller, 2019* | Paper | Many substeps with one solver round each can beat one step with many rounds | Substepping, XPBD, Iterative solver, Floating point precision | [004](../logbook/004-the-detour.md) | Parts |
-| ○ | [Solver2D](https://box2d.org/posts/2024/02/solver2d/)<br>*Erin Catto, 2024* | Article | Eight rigid body solvers compared in one test bed, and the one Box2D 3 was built on: soft constraints with substeps | Soft Step, TGS solver, Sequential impulses (PGS), XPBD, Substepping, Soft constraint, Baumgarte stabilization, Warm starting | [012](../logbook/012-the-family-tree.md) | Parts |
+| ○ | [Soft Constraints](https://box2d.org/files/ErinCatto_SoftConstraints_GDC2011.pdf)<br>*Erin Catto, 2011* | Talk | Catto's talk of 2011 on rules that behave like a spring with a damper | Soft constraint, Harmonic oscillator, Damping ratio | [Solver2D](https://box2d.org/posts/2024/02/solver2d/) |  |
+| ○ | [Solver2D](https://box2d.org/posts/2024/02/solver2d/)<br>*Erin Catto, 2024* | Article | Eight rigid body solvers compared in one test bed, and the one Box2D 3 was built on: soft constraints with substeps | Soft Step, TGS solver, Sequential impulses (PGS), XPBD, Substepping, Soft constraint, Baumgarte stabilization, Warm starting, Relax pass, Contact point update, Accumulated impulse, Damping ratio, Harmonic oscillator, Nonlinear Gauss-Seidel (NGS), Block solver, Shock propagation, Projected Gauss-Seidel, Floating point precision, Jacobi | [012](../logbook/012-the-family-tree.md) | In full |
 | ○ | [Stabilization of Constraints and Integrals of Motion in Dynamical Systems](https://doi.org/10.1016/0045-7825(72)90018-7)<br>*J. Baumgarte, 1972* | Paper | The paper of 1972 behind the nudge that pushes a broken rule back in proportion to its error | Baumgarte stabilization, Constraint drift | [Iterative Dynamics with Temporal Coherence](https://box2d.org/files/ErinCatto_IterativeDynamics_GDC2005.pdf) |  |
 | ○ | [Stable Fluids](https://doi.org/10.1145/311535.311548)<br>*Jos Stam, 1999* | Paper | A grid fluid method that stays stable even with large timesteps | Grid fluid (Eulerian), Numerical stability | [004](../logbook/004-the-detour.md) |  |
 | ○ | [Strain Based Dynamics](https://matthias-research.github.io/pages/publications/strainBasedDynamics.pdf)<br>*Matthias Müller, Nuttapong Chentanez, Tae-Yong Kim, Miles Macklin, 2014* | Paper | PBD constraints that control stretching in any direction, not only along the edges of the mesh | Position based dynamics (PBD), Cloth, Soft body | [004](../logbook/004-the-detour.md) |  |
@@ -339,6 +353,7 @@ WebGPU, WGSL and how to make thousands of threads work.
 | ◐ | [Chrome, What's New in WebGPU 146](https://developer.chrome.com/blog/new-in-webgpu-146) | Documentation | Chrome 146 brings WebGPU compatibility mode to OpenGL ES 3.1 | Compatibility mode, WebGPU | [004](../logbook/004-the-detour.md) |  |
 | ○ | [Firefox bug 1878449, comment 5](https://bugzilla.mozilla.org/show_bug.cgi?id=1878449#c5)<br>*Jim Blandy* | Article | A Firefox engineer gives the async pipeline methods as best practice: the immediate ones are hard to keep from blocking the work that follows | Async pipeline creation | [pipeline-creation](../guides/pipeline-creation.md) | Parts |
 | ○ | [GPU Gems 3](https://developer.nvidia.com/gpugems/gpugems3)<br>*2007* | Book | NVIDIA's free book of GPU techniques, with a whole part on physics simulation | Parallel work on the GPU | [004](../logbook/004-the-detour.md) |  |
+| ○ | [High-Performance Physical Simulations on Next-Generation Architecture with Many Cores](https://doi.org/10.1535/itj.1103.08)<br>*2007* | Paper | The paper Box2D's constraint graph cites for solving rules in parallel by colors | Constraint graph coloring, Parallel work on the GPU | [Box2D, constraint_graph.c](https://github.com/erincatto/box2d/blob/main/src/constraint_graph.c) |  |
 | ○ | [MDN, GPU.requestAdapter()](https://developer.mozilla.org/en-US/docs/Web/API/GPU/requestAdapter) | Documentation | How to ask for an adapter, and why it can be null | Adapter and device | [adapter-and-device](../guides/adapter-and-device.md) | Parts |
 | ○ | [MDN, GPUAdapter.requestDevice()](https://developer.mozilla.org/en-US/docs/Web/API/GPUAdapter/requestDevice) | Documentation | How to ask for a device, its options, and why a second call rejects | Adapter and device, Device limits | [adapter-and-device](../guides/adapter-and-device.md) | Parts |
 | ● | [MDN, GPUBuffer.usage](https://developer.mozilla.org/en-US/docs/Web/API/GPUBuffer/usage) · **[our page](../guides/buffers.md)** | Documentation | Every buffer usage flag and what it allows | Buffer | [buffers](../guides/buffers.md) | Parts |

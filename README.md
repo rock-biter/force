@@ -12,16 +12,15 @@ A GPU-first physics engine for the web, built on [WebGPU](https://www.w3.org/TR/
 
 *Updated November 17, 2026*
 
-**Latest step:** [the mirror](./docs/logbook/014-the-mirror.md). We read the two papers behind
-the two ways a game engine repairs a broken rule, such as "do not pass through the floor".
-Thomas Jakobsen's, from 2001, moves the positions straight back. Erin Catto's, from 2005, changes
-the velocities instead. They turned out to be one loop seen in a mirror: one rule at a time, a
-few rounds, and the rest of the work left to the next frames. On our test, a pendulum that should
-swing forever, the first keeps 0.4% of its height after 30 seconds and the second 42%, but with a
-rod that is never exactly as long as it should be. Both sets of
-[reading notes](./docs/topics/README.md) come with a script that recomputes every number.
+**Latest step:** [the stiff spring](./docs/logbook/015-the-stiff-spring.md). We opened Box2D, a
+widely used 2D physics engine, to see how it repairs a broken rule today, such as "do not pass
+through the floor". Its solver, Soft Step, takes four small steps instead of going round the rules
+many times, and treats every rule as a very stiff spring. On our test, a pendulum that should
+swing forever, it keeps 99.7% of its height after 30 seconds, against 42% for the method of 2005.
+On a chain that carries a heavy weight it does not blow up, but it sags like the spring it is. The
+[theory page](./docs/topics/soft-step.md) comes with a script that recomputes every number.
 
-**Next:** the engines used in video games: which of the two each one runs, and what it can do.
+**Next:** the other engines used in video games, PhysX, Jolt and Rapier: do they run the same idea?
 
 Every step, with what we learned and what went wrong, is in the [logbook](./docs/README.md).
 
