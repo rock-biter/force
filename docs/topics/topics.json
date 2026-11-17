@@ -688,7 +688,8 @@
         "docs/decisions/013-a-flat-ground.md",
         "docs/logbook/012-the-family-tree.md",
         "advanced-character-physics",
-        "docs/logbook/013-the-hidden-brake.md"
+        "docs/logbook/013-the-hidden-brake.md",
+        "docs/logbook/016-the-same-road.md"
       ]
     },
     {
@@ -1580,7 +1581,11 @@
         "seen": "2026-11-16"
       },
       "partOf": "position-based-dynamics",
-      "citedIn": ["docs/logbook/004-the-detour.md", "docs/logbook/012-the-family-tree.md"]
+      "citedIn": [
+        "docs/logbook/004-the-detour.md",
+        "docs/logbook/012-the-family-tree.md",
+        "docs/logbook/016-the-same-road.md"
+      ]
     },
     {
       "id": "shape-matching",
@@ -2873,14 +2878,21 @@
       "id": "unreal",
       "kind": "project",
       "title": "Unreal Engine",
-      "summary": "Game engine with its own physics system, Chaos, which also covers destruction, cloth and fluids",
+      "summary": "Game engine with its own physics system, Chaos, based on position based dynamics according to its developers, which also covers destruction, cloth and fluids",
       "area": "physics",
       "status": "mentioned",
       "since": {
         "mentioned": "2026-11-05"
       },
-      "about": ["physics-engine", "destruction", "cloth", "fluid"],
-      "citedIn": ["docs/logbook/004-the-detour.md"],
+      "about": [
+        "physics-engine",
+        "destruction",
+        "cloth",
+        "fluid",
+        "position-based-dynamics",
+        "xpbd"
+      ],
+      "citedIn": ["docs/logbook/004-the-detour.md", "docs/logbook/016-the-same-road.md"],
       "url": "https://dev.epicgames.com/documentation/unreal-engine/physics-in-unreal-engine"
     },
     {
@@ -6137,6 +6149,39 @@
       "url": "https://box2d.org/files/ErinCatto_ModelingAndSolvingConstraints_GDC2009.pdf",
       "authors": "Erin Catto",
       "year": 2009
+    },
+    {
+      "id": "chaos-physics-aua",
+      "kind": "article",
+      "title": "Ask Unreal Anything: Physics",
+      "summary": "Epic staff answer questions on the Unreal forums: Chaos is based on PBD, with constraint errors linearized for speed",
+      "area": "physics",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-17"
+      },
+      "partOf": "unreal",
+      "about": ["position-based-dynamics", "xpbd", "substepping"],
+      "citedIn": ["docs/logbook/016-the-same-road.md"],
+      "url": "https://forums.unrealengine.com/t/ask-unreal-anything-physics-september-28-2022-at-1pm-edt/654248?page=4",
+      "year": 2022,
+      "claudeRead": "parts"
+    },
+    {
+      "id": "unreal-physics-settings",
+      "kind": "docs",
+      "title": "Unreal Engine, physics settings",
+      "summary": "The knobs of Chaos: solver iterations, push out iterations that fix what the main rounds left, and experimental substepping",
+      "area": "physics",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-17"
+      },
+      "partOf": "unreal",
+      "about": ["iterative-solver", "substepping"],
+      "citedIn": ["docs/logbook/016-the-same-road.md"],
+      "url": "https://dev.epicgames.com/documentation/unreal-engine/physics-settings-in-the-unreal-engine-project-settings",
+      "claudeRead": "parts"
     }
   ]
 }

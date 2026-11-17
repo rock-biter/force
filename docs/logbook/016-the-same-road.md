@@ -47,6 +47,7 @@ A reminder of the words. A *solver* repairs broken rules, such as "do not pass t
 - How does PhysX run a solver that fixes one rule at a time on a GPU? Its guide to GPU rigid bodies is on our map, unread.
 - We did not check whether PhysX stores how hard each rule pushed, as a first guess for the next step. The other three do.
 - We read guides, settings and a changelog, and little code: one file of Jolt's contacts, one of Rapier's solver. We did not open the discussion where Rapier's new solver was proposed.
+- Unreal's engine, Chaos, came up in chat at the end. An Epic engineer wrote in 2022 that it "is actually based on PBD", the family that corrects positions ([chapter 013](./013-the-hidden-brake.md)), with shortcuts taken for speed. So it sits on the other branch from these four. A forum answer and a settings page are all we opened: to study later.
 - What each engine can do, beyond its solver, is still to see: the third stop of our [study route](../README.md) stays open.
 
 ## Sources
@@ -55,6 +56,7 @@ A reminder of the words. A *solver* repairs broken rules, such as "do not pass t
 - PhysX 5.6.1, [Rigid Body Dynamics](https://nvidia-omniverse.github.io/PhysX/physx/5.6.1/docs/RigidBodyDynamics.html): the section on the constraint solver.
 - Rapier at commit [475caa3](https://github.com/dimforge/rapier/tree/475caa3ff4646fd9a796b67d14116256f4962bc7): [integration_parameters.rs](https://github.com/dimforge/rapier/blob/475caa3ff4646fd9a796b67d14116256f4962bc7/src/dynamics/integration_parameters.rs), the defaults, [CHANGELOG.md](https://github.com/dimforge/rapier/blob/475caa3ff4646fd9a796b67d14116256f4962bc7/CHANGELOG.md), the dates, and [staged_island_solver](https://github.com/dimforge/rapier/tree/475caa3ff4646fd9a796b67d14116256f4962bc7/src/dynamics/solver/staged_island_solver), where the step is divided.
 - Box2D's column comes from our [theory page](../topics/soft-step.md).
+- For Chaos: an [answer by Epic staff](https://forums.unrealengine.com/t/ask-unreal-anything-physics-september-28-2022-at-1pm-edt/654248?page=4) on the Unreal forums, 2022, and the [physics settings](https://dev.epicgames.com/documentation/unreal-engine/physics-settings-in-the-unreal-engine-project-settings) of Unreal Engine 5.9.
 
 ## Next step
 
