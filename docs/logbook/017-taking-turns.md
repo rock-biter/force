@@ -41,6 +41,7 @@
 
 - With copies, a rule learns what the others did only after the average. How many more rounds does that cost, and does a stack still stand?
 - Can the sum of the copies be done with atomics on integers, without losing too much precision?
+- How will a game on the CPU learn that two bodies touched, for sensors and game logic, when reading from the GPU arrives a frame late? PhysX copies back only the pairs that began or stopped touching. The user's idea is a hybrid: the few bodies that matter to the game also live on the CPU. Far from now, and a decision for the engine when it comes.
 - How many dispatches per step can WebGPU take? PhysX's solver with substeps ([chapter 016](./016-the-same-road.md)) runs 5 rounds per step by default, 4 substeps and a last round, and each round is 8 launches for the groups and 1 for the average: at least 45 launches per step, by our count of its loop.
 
 ## Sources

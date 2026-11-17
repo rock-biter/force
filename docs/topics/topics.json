@@ -1357,7 +1357,7 @@
         "mentioned": "2026-11-05"
       },
       "related": ["contact"],
-      "citedIn": ["docs/logbook/004-the-detour.md"]
+      "citedIn": ["docs/logbook/004-the-detour.md", "docs/logbook/017-taking-turns.md"]
     },
     {
       "id": "impulse-based-dynamics",
