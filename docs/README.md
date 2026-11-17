@@ -23,6 +23,7 @@ This is where we tell how FORCE gets built, one step at a time. If you are new h
 | 014 | [The Mirror](./logbook/014-the-mirror.md) | Catto's paper of 2005: the same loop on velocities, a memory to build, and a smaller brake |
 | 015 | [The Stiff Spring](./logbook/015-the-stiff-spring.md) | Box2D's Soft Step: small steps instead of rounds, rules as stiff springs, and a chain that sags |
 | 016 | [The Same Road](./logbook/016-the-same-road.md) | Jolt, PhysX and Rapier: the many rounds of 2005, a move to small steps, and Soft Step taken whole |
+| 017 | [Taking Turns](./logbook/017-taking-turns.md) | PhysX on the GPU: rules take turns picked on the CPU, copies past a ceiling, and an explanation left halfway |
 
 ## For reference
 

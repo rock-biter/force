@@ -12,15 +12,14 @@ A GPU-first physics engine for the web, built on [WebGPU](https://www.w3.org/TR/
 
 *Updated November 17, 2026*
 
-**Latest step:** [the same road](./docs/logbook/016-the-same-road.md). After Box2D, we looked at
-how three other engines used in games repair a broken rule, such as "do not pass through the
-floor". Jolt goes round the rules many times in one step, the way of 2005. PhysX has both ways
-and is moving to a few small steps with one round each. Rapier took the small steps of Box2D
-whole, down to its numbers, and dropped the old way. The chapter before,
-[the stiff spring](./docs/logbook/015-the-stiff-spring.md), tells how those small steps work, with
-a [theory page](./docs/topics/soft-step.md) and a script that recomputes every number.
+**Latest step:** [taking turns](./docs/logbook/017-taking-turns.md). A physics engine repairs
+its rules one at a time, and a GPU runs thousands of threads at once. We read how PhysX, the
+engine by NVIDIA, does both: rules that touch the same body take turns, the turns are decided on
+the CPU at every step, and when they would be too many each rule works on a copy of the body and
+the copies are averaged. The turns need a trip to the CPU that is cheap for PhysX and costly on
+the web. We stopped halfway through the copies: it was a long day.
 
-**Next:** how PhysX runs its solver on the GPU.
+**Next:** pick up the copies again, then try turns and copies side by side on a hanging chain.
 
 Every step, with what we learned and what went wrong, is in the [logbook](./docs/README.md).
 

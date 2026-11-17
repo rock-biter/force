@@ -452,7 +452,11 @@
         "seen": "2026-11-05"
       },
       "related": ["solver", "workgroup"],
-      "citedIn": ["docs/logbook/001-the-flip-book.md", "docs/logbook/004-the-detour.md"]
+      "citedIn": [
+        "docs/logbook/001-the-flip-book.md",
+        "docs/logbook/004-the-detour.md",
+        "docs/logbook/017-taking-turns.md"
+      ]
     },
     {
       "id": "webgpu",
@@ -666,7 +670,9 @@
       "citedIn": [
         "docs/guides/README.md",
         "docs/logbook/004-the-detour.md",
-        "docs/guides/buffers.md"
+        "docs/guides/buffers.md",
+        "physx-gpu-narrowphase",
+        "docs/logbook/017-taking-turns.md"
       ],
       "code": ["examples/hello-compute/main.ts", "src/world.ts"]
     },
@@ -1430,7 +1436,8 @@
         "docs/logbook/004-the-detour.md",
         "docs/logbook/012-the-family-tree.md",
         "advanced-character-physics",
-        "solver2d-post"
+        "solver2d-post",
+        "docs/logbook/017-taking-turns.md"
       ]
     },
     {
@@ -1450,7 +1457,8 @@
         "docs/logbook/004-the-detour.md",
         "solver2d-post",
         "physx-rigid-body-dynamics",
-        "docs/logbook/016-the-same-road.md"
+        "docs/logbook/016-the-same-road.md",
+        "physx-gpu-solver"
       ]
     },
     {
@@ -1566,7 +1574,9 @@
         "docs/logbook/012-the-family-tree.md",
         "box2d-constraint-graph",
         "docs/logbook/015-the-stiff-spring.md",
-        "jolt-architecture"
+        "jolt-architecture",
+        "physx-gpu-solver",
+        "docs/logbook/017-taking-turns.md"
       ]
     },
     {
@@ -1788,7 +1798,9 @@
         "docs/logbook/004-the-detour.md",
         "wgsl-spec-var-declarations",
         "wgsl-spec-synchronization-functions",
-        "particle-simulation-cuda"
+        "particle-simulation-cuda",
+        "wgsl-spec-atomic-types",
+        "docs/logbook/017-taking-turns.md"
       ]
     },
     {
@@ -2713,8 +2725,9 @@
       },
       "partOf": "physx",
       "about": ["gpu-parallelism", "rigid-body"],
-      "citedIn": ["docs/logbook/004-the-detour.md"],
-      "url": "https://nvidia-omniverse.github.io/PhysX/physx/5.7.0/docs/GPURigidBodies.html"
+      "citedIn": ["docs/logbook/004-the-detour.md", "docs/logbook/017-taking-turns.md"],
+      "url": "https://nvidia-omniverse.github.io/PhysX/physx/5.6.1/docs/GPURigidBodies.html",
+      "claudeRead": "parts"
     },
     {
       "id": "physx-rigid-body-dynamics",
@@ -2963,8 +2976,19 @@
       "since": {
         "mentioned": "2026-11-05"
       },
-      "about": ["rigid-body", "gpu-parallelism", "tgs-solver", "finite-element-method"],
-      "citedIn": ["docs/logbook/004-the-detour.md", "docs/logbook/016-the-same-road.md"],
+      "about": [
+        "rigid-body",
+        "gpu-parallelism",
+        "tgs-solver",
+        "finite-element-method",
+        "graph-coloring",
+        "mass-splitting"
+      ],
+      "citedIn": [
+        "docs/logbook/004-the-detour.md",
+        "docs/logbook/016-the-same-road.md",
+        "docs/logbook/017-taking-turns.md"
+      ],
       "url": "https://developer.nvidia.com/physx-sdk"
     },
     {
@@ -4690,7 +4714,11 @@
       },
       "partOf": "jacobi",
       "related": ["gpu-parallelism"],
-      "citedIn": ["docs/logbook/012-the-family-tree.md", "unified-particle-physics-paper"]
+      "citedIn": [
+        "docs/logbook/012-the-family-tree.md",
+        "unified-particle-physics-paper",
+        "docs/logbook/017-taking-turns.md"
+      ]
     },
     {
       "id": "mass-ratio",
@@ -5216,7 +5244,8 @@
         "shock-propagation",
         "projected-gauss-seidel",
         "float-precision",
-        "jacobi"
+        "jacobi",
+        "mass-splitting"
       ],
       "citedIn": ["docs/logbook/012-the-family-tree.md", "docs/logbook/015-the-stiff-spring.md"],
       "url": "https://box2d.org/posts/2024/02/solver2d/",
@@ -5801,8 +5830,8 @@
       "since": {
         "mentioned": "2026-11-16"
       },
-      "about": ["constraint-averaging", "jacobi", "rigid-body"],
-      "citedIn": ["unified-particle-physics-paper"],
+      "about": ["constraint-averaging", "jacobi", "rigid-body", "mass-splitting"],
+      "citedIn": ["unified-particle-physics-paper", "physx-gpu-solver"],
       "url": "https://doi.org/10.1145/2185520.2185601",
       "authors": "Richard Tonge, Feodor Benevolenski, Andrey Voroshilov",
       "year": 2012
@@ -6181,6 +6210,73 @@
       "about": ["iterative-solver", "substepping"],
       "citedIn": ["docs/logbook/016-the-same-road.md"],
       "url": "https://dev.epicgames.com/documentation/unreal-engine/physics-settings-in-the-unreal-engine-project-settings",
+      "claudeRead": "parts"
+    },
+    {
+      "id": "mass-splitting",
+      "kind": "concept",
+      "title": "Mass splitting",
+      "summary": "Giving each rule that touches a body its own copy of it, with a share of its mass, then averaging the copies: rules can run together without taking turns",
+      "area": "gpu",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-17"
+      },
+      "partOf": "solver",
+      "related": ["constraint-averaging", "jacobi", "graph-coloring"],
+      "citedIn": [
+        "mass-splitting-paper",
+        "solver2d-post",
+        "physx-gpu-solver",
+        "docs/logbook/017-taking-turns.md"
+      ]
+    },
+    {
+      "id": "physx-gpu-solver",
+      "kind": "code",
+      "title": "PhysX, gpusolver",
+      "summary": "The GPU solver of PhysX: rules sorted into groups on the CPU, one launch per group, and an average for bodies with too many rules",
+      "area": "gpu",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-17"
+      },
+      "partOf": "physx",
+      "about": ["graph-coloring", "mass-splitting", "tgs-solver", "gpu-parallelism", "island"],
+      "citedIn": ["docs/logbook/017-taking-turns.md"],
+      "url": "https://github.com/NVIDIA-Omniverse/PhysX/tree/main/physx/source/gpusolver",
+      "claudeRead": "parts"
+    },
+    {
+      "id": "physx-gpu-narrowphase",
+      "kind": "code",
+      "title": "PhysX, gpunarrowphase",
+      "summary": "Contact finding on the GPU, and the copies that bring its results back to the CPU",
+      "area": "gpu",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-17"
+      },
+      "partOf": "physx",
+      "about": ["narrow-phase", "readback"],
+      "citedIn": ["docs/logbook/017-taking-turns.md"],
+      "url": "https://github.com/NVIDIA-Omniverse/PhysX/tree/main/physx/source/gpunarrowphase",
+      "claudeRead": "parts"
+    },
+    {
+      "id": "wgsl-spec-atomic-types",
+      "kind": "spec",
+      "title": "WGSL, atomic types",
+      "summary": "Atomics hold integers only, u32 or i32, and live in workgroup variables or read-write storage buffers",
+      "area": "gpu",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-17"
+      },
+      "partOf": "wgsl-spec",
+      "about": ["atomic-operations"],
+      "citedIn": ["docs/logbook/017-taking-turns.md"],
+      "url": "https://www.w3.org/TR/WGSL/#atomic-types",
       "claudeRead": "parts"
     }
   ]
