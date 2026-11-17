@@ -259,7 +259,11 @@
         "seen": "2026-11-05"
       },
       "partOf": "collision-detection",
-      "citedIn": ["docs/logbook/001-the-flip-book.md", "docs/logbook/010-the-ground.md"]
+      "citedIn": [
+        "docs/logbook/001-the-flip-book.md",
+        "docs/logbook/010-the-ground.md",
+        "advanced-character-physics"
+      ]
     },
     {
       "id": "contact",
@@ -292,7 +296,8 @@
       "citedIn": [
         "docs/logbook/001-the-flip-book.md",
         "docs/logbook/004-the-detour.md",
-        "docs/logbook/012-the-family-tree.md"
+        "docs/logbook/012-the-family-tree.md",
+        "advanced-character-physics"
       ]
     },
     {
@@ -326,7 +331,8 @@
       "citedIn": [
         "docs/logbook/001-the-flip-book.md",
         "rapier-integration-parameters",
-        "docs/logbook/004-the-detour.md"
+        "docs/logbook/004-the-detour.md",
+        "advanced-character-physics"
       ]
     },
     {
@@ -375,7 +381,8 @@
         "docs/README.md",
         "ten-minute-physics",
         "docs/logbook/004-the-detour.md",
-        "docs/logbook/012-the-family-tree.md"
+        "docs/logbook/012-the-family-tree.md",
+        "advanced-character-physics"
       ]
     },
     {
@@ -390,7 +397,7 @@
         "seen": "2026-11-08"
       },
       "related": ["cloth"],
-      "citedIn": ["docs/README.md", "docs/logbook/004-the-detour.md"]
+      "citedIn": ["docs/README.md", "docs/logbook/004-the-detour.md", "advanced-character-physics"]
     },
     {
       "id": "cloth",
@@ -398,12 +405,18 @@
       "title": "Cloth",
       "summary": "A sheet that bends and folds, like a flag or a curtain",
       "area": "physics",
-      "status": "mentioned",
+      "status": "seen",
       "since": {
-        "mentioned": "2026-11-05"
+        "mentioned": "2026-11-05",
+        "seen": "2026-11-17"
       },
       "related": ["particle"],
-      "citedIn": ["docs/README.md", "ten-minute-physics", "docs/logbook/004-the-detour.md"]
+      "citedIn": [
+        "docs/README.md",
+        "ten-minute-physics",
+        "docs/logbook/004-the-detour.md",
+        "advanced-character-physics"
+      ]
     },
     {
       "id": "fluid",
@@ -663,7 +676,8 @@
         "ten-minute-physics",
         "docs/logbook/004-the-detour.md",
         "docs/decisions/013-a-flat-ground.md",
-        "docs/logbook/012-the-family-tree.md"
+        "docs/logbook/012-the-family-tree.md",
+        "advanced-character-physics"
       ]
     },
     {
@@ -711,12 +725,17 @@
       "title": "Joint",
       "summary": "A link that holds two bodies together but lets them move in some ways, like a hinge",
       "area": "physics",
-      "status": "mentioned",
+      "status": "seen",
       "since": {
-        "mentioned": "2026-11-05"
+        "mentioned": "2026-11-05",
+        "seen": "2026-11-17"
       },
       "related": ["constraint", "rigid-body"],
-      "citedIn": ["ten-minute-physics", "docs/logbook/004-the-detour.md"]
+      "citedIn": [
+        "ten-minute-physics",
+        "docs/logbook/004-the-detour.md",
+        "advanced-character-physics"
+      ]
     },
     {
       "id": "implicit-integration",
@@ -860,14 +879,14 @@
       "id": "velocity-verlet",
       "kind": "concept",
       "title": "Velocity Verlet",
-      "summary": "Uses the acceleration both before and after moving: more accurate, but forces are computed twice",
+      "summary": "Uses the force both before and after moving: more accurate, with one force computation per step, reused by the next",
       "area": "physics",
       "status": "seen",
       "since": {
         "seen": "2026-11-08"
       },
       "partOf": "integration",
-      "citedIn": ["docs/logbook/004-the-detour.md"]
+      "citedIn": ["docs/logbook/004-the-detour.md", "advanced-character-physics"]
     },
     {
       "id": "numerical-stability",
@@ -897,7 +916,7 @@
         "studied": "2026-11-11"
       },
       "related": ["spring", "substepping"],
-      "citedIn": ["docs/logbook/004-the-detour.md"],
+      "citedIn": ["docs/logbook/004-the-detour.md", "advanced-character-physics"],
       "page": "docs/topics/integration.md#the-step-limit"
     },
     {
@@ -1008,7 +1027,7 @@
         "seen": "2026-11-08"
       },
       "related": ["numerical-stability"],
-      "citedIn": ["docs/logbook/004-the-detour.md"]
+      "citedIn": ["docs/logbook/004-the-detour.md", "advanced-character-physics"]
     },
     {
       "id": "plausibility",
@@ -1131,7 +1150,7 @@
         "seen": "2026-11-08"
       },
       "partOf": "rigid-body",
-      "citedIn": ["docs/logbook/004-the-detour.md"]
+      "citedIn": ["docs/logbook/004-the-detour.md", "advanced-character-physics"]
     },
     {
       "id": "uniform-grid",
@@ -1213,7 +1232,7 @@
       },
       "partOf": "collision-detection",
       "related": ["tunneling"],
-      "citedIn": ["docs/logbook/004-the-detour.md"]
+      "citedIn": ["docs/logbook/004-the-detour.md", "advanced-character-physics"]
     },
     {
       "id": "contact-manifold",
@@ -1240,7 +1259,11 @@
         "seen": "2026-11-11"
       },
       "related": ["contact"],
-      "citedIn": ["docs/logbook/004-the-detour.md", "docs/logbook/010-the-ground.md"],
+      "citedIn": [
+        "docs/logbook/004-the-detour.md",
+        "docs/logbook/010-the-ground.md",
+        "advanced-character-physics"
+      ],
       "code": ["src/shaders/integrate.wgsl"]
     },
     {
@@ -1255,7 +1278,11 @@
         "seen": "2026-11-11"
       },
       "related": ["contact"],
-      "citedIn": ["docs/logbook/004-the-detour.md", "docs/logbook/010-the-ground.md"],
+      "citedIn": [
+        "docs/logbook/004-the-detour.md",
+        "docs/logbook/010-the-ground.md",
+        "advanced-character-physics"
+      ],
       "code": ["src/shaders/integrate.wgsl"]
     },
     {
@@ -1330,7 +1357,11 @@
       },
       "partOf": "iterative-solver",
       "related": ["jacobi"],
-      "citedIn": ["docs/logbook/004-the-detour.md", "docs/logbook/012-the-family-tree.md"]
+      "citedIn": [
+        "docs/logbook/004-the-detour.md",
+        "docs/logbook/012-the-family-tree.md",
+        "advanced-character-physics"
+      ]
     },
     {
       "id": "jacobi",
@@ -1345,7 +1376,11 @@
       },
       "partOf": "iterative-solver",
       "related": ["gpu-parallelism"],
-      "citedIn": ["docs/logbook/004-the-detour.md", "docs/logbook/012-the-family-tree.md"]
+      "citedIn": [
+        "docs/logbook/004-the-detour.md",
+        "docs/logbook/012-the-family-tree.md",
+        "advanced-character-physics"
+      ]
     },
     {
       "id": "tgs-solver",
@@ -1372,7 +1407,11 @@
         "mentioned": "2026-11-05"
       },
       "partOf": "solver",
-      "citedIn": ["docs/logbook/004-the-detour.md", "iterative-dynamics-paper"]
+      "citedIn": [
+        "docs/logbook/004-the-detour.md",
+        "iterative-dynamics-paper",
+        "advanced-character-physics"
+      ]
     },
     {
       "id": "island",
@@ -1398,7 +1437,7 @@
       "since": {
         "mentioned": "2026-11-05"
       },
-      "citedIn": ["docs/logbook/004-the-detour.md"]
+      "citedIn": ["docs/logbook/004-the-detour.md", "advanced-character-physics"]
     },
     {
       "id": "soft-step",
@@ -1426,7 +1465,11 @@
         "seen": "2026-11-16"
       },
       "partOf": "constraint",
-      "citedIn": ["docs/logbook/004-the-detour.md", "docs/logbook/012-the-family-tree.md"]
+      "citedIn": [
+        "docs/logbook/004-the-detour.md",
+        "docs/logbook/012-the-family-tree.md",
+        "advanced-character-physics"
+      ]
     },
     {
       "id": "graph-coloring",
@@ -1501,12 +1544,13 @@
       "title": "Mass-spring system",
       "summary": "Particles linked by springs: the simplest model of cloth and soft bodies",
       "area": "physics",
-      "status": "mentioned",
+      "status": "seen",
       "since": {
-        "mentioned": "2026-11-05"
+        "mentioned": "2026-11-05",
+        "seen": "2026-11-17"
       },
       "related": ["spring", "cloth"],
-      "citedIn": ["docs/logbook/004-the-detour.md"]
+      "citedIn": ["docs/logbook/004-the-detour.md", "advanced-character-physics"]
     },
     {
       "id": "finite-element-method",
@@ -1532,7 +1576,11 @@
         "mentioned": "2026-11-05"
       },
       "partOf": "cloth",
-      "citedIn": ["docs/logbook/004-the-detour.md", "ten-minute-physics"]
+      "citedIn": [
+        "docs/logbook/004-the-detour.md",
+        "ten-minute-physics",
+        "advanced-character-physics"
+      ]
     },
     {
       "id": "sph",
@@ -1630,12 +1678,13 @@
       "title": "Articulated bodies",
       "summary": "Chains of bodies linked by joints, such as robots and ragdolls",
       "area": "physics",
-      "status": "mentioned",
+      "status": "seen",
       "since": {
-        "mentioned": "2026-11-05"
+        "mentioned": "2026-11-05",
+        "seen": "2026-11-17"
       },
       "related": ["joint"],
-      "citedIn": ["docs/logbook/004-the-detour.md"]
+      "citedIn": ["docs/logbook/004-the-detour.md", "advanced-character-physics"]
     },
     {
       "id": "atomic-operations",
@@ -2086,7 +2135,8 @@
       "citedIn": [
         "docs/logbook/001-the-flip-book.md",
         "docs/logbook/004-the-detour.md",
-        "docs/logbook/012-the-family-tree.md"
+        "docs/logbook/012-the-family-tree.md",
+        "advanced-character-physics"
       ],
       "url": "https://www.cs.cmu.edu/~baraff/sigcourse/",
       "file": "library/physically-based-modeling",
@@ -3314,7 +3364,7 @@
       },
       "partOf": "simulation-step",
       "related": ["contact", "restitution", "friction"],
-      "citedIn": ["docs/logbook/010-the-ground.md"],
+      "citedIn": ["docs/logbook/010-the-ground.md", "advanced-character-physics"],
       "code": ["src/shaders/integrate.wgsl"]
     },
     {
@@ -4567,7 +4617,7 @@
       },
       "partOf": "constraint",
       "related": ["soft-step", "compliance"],
-      "citedIn": ["solver2d-post"]
+      "citedIn": ["solver2d-post", "advanced-character-physics"]
     },
     {
       "id": "baumgarte-stabilization",
@@ -4580,7 +4630,7 @@
         "mentioned": "2026-11-16"
       },
       "related": ["sequential-impulses", "soft-constraint"],
-      "citedIn": ["solver2d-post"]
+      "citedIn": ["solver2d-post", "advanced-character-physics"]
     },
     {
       "id": "verlet-integration",
@@ -4588,12 +4638,13 @@
       "title": "Verlet integration",
       "summary": "Keeping the previous position instead of the velocity: the velocity is the difference between the two",
       "area": "physics",
-      "status": "mentioned",
+      "status": "seen",
       "since": {
-        "mentioned": "2026-11-16"
+        "mentioned": "2026-11-16",
+        "seen": "2026-11-17"
       },
       "partOf": "integration",
-      "related": ["velocity-verlet", "position-based-dynamics"],
+      "related": ["velocity-verlet", "position-based-dynamics", "semi-implicit-euler"],
       "citedIn": ["advanced-character-physics", "pbd-paper"]
     },
     {
@@ -4654,17 +4705,480 @@
       "title": "Advanced Character Physics",
       "summary": "The physics of the game Hitman: move the points, then push them back where the rules hold. PBD before it had a name",
       "area": "physics",
-      "status": "mentioned",
+      "status": "studied",
       "since": {
-        "mentioned": "2026-11-16"
+        "mentioned": "2026-11-16",
+        "studied": "2026-11-17"
       },
-      "about": ["position-based-dynamics", "distance-constraint", "verlet-integration"],
+      "about": [
+        "position-based-dynamics",
+        "distance-constraint",
+        "verlet-integration",
+        "projection",
+        "penalty-method",
+        "relaxation",
+        "gauss-seidel",
+        "inverse-mass",
+        "cloth",
+        "newton-raphson",
+        "taylor-expansion",
+        "particle-rigid-bodies",
+        "rigid-body",
+        "joint",
+        "articulated-body",
+        "friction",
+        "soft-constraint",
+        "sleeping",
+        "continuous-collision-detection",
+        "baumgarte-stabilization",
+        "self-collision",
+        "degrees-of-freedom",
+        "penetration-depth",
+        "ragdoll",
+        "capsule",
+        "inequality-constraint",
+        "inverse-kinematics",
+        "mass-spring-system",
+        "restitution",
+        "jacobi",
+        "constraint",
+        "iterative-solver",
+        "warm-starting",
+        "tunneling",
+        "stiffness",
+        "spring",
+        "velocity-verlet",
+        "collision-response",
+        "energy-conservation",
+        "numerical-damping",
+        "damping",
+        "leapfrog-integration",
+        "time-of-impact",
+        "resting-contact",
+        "stacking",
+        "constrained-particle-body",
+        "convexity",
+        "barycentric-coordinates",
+        "joint-limit",
+        "octree",
+        "over-relaxation",
+        "jacobian",
+        "conjugate-gradient"
+      ],
       "citedIn": ["docs/logbook/012-the-family-tree.md", "pbd-paper", "iterative-dynamics-paper"],
       "url": "https://edelkas.github.io/n/files/bib/jakobsen.pdf",
       "file": "library/advanced-character-physics.pdf",
       "authors": "Thomas Jakobsen",
       "year": 2001,
-      "claudeRead": "parts"
+      "claudeRead": "full",
+      "page": "docs/topics/advanced-character-physics.md"
+    },
+    {
+      "id": "numerical-damping",
+      "kind": "concept",
+      "title": "Numerical damping",
+      "summary": "Energy lost because of the method and not of the physics: each projection deletes the speed that went against a rule",
+      "area": "physics",
+      "status": "seen",
+      "since": {
+        "seen": "2026-11-17"
+      },
+      "related": ["energy-conservation", "projection", "substepping"],
+      "citedIn": ["advanced-character-physics"]
+    },
+    {
+      "id": "damping",
+      "kind": "concept",
+      "title": "Damping",
+      "summary": "Taking away a little speed at every step, like air drag, so that motion dies out",
+      "area": "physics",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-17"
+      },
+      "related": ["numerical-damping"],
+      "citedIn": ["advanced-character-physics"]
+    },
+    {
+      "id": "leapfrog-integration",
+      "kind": "concept",
+      "title": "Leapfrog integration",
+      "summary": "A variant of Verlet where the velocity lives halfway between two positions",
+      "area": "physics",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-17"
+      },
+      "partOf": "integration",
+      "related": ["verlet-integration", "velocity-verlet"],
+      "citedIn": ["advanced-character-physics"]
+    },
+    {
+      "id": "time-of-impact",
+      "kind": "concept",
+      "title": "Time of impact",
+      "summary": "Rewinding the step to the exact moment two things touch and handling the hit there: precise, but slow when hits are many",
+      "area": "physics",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-17"
+      },
+      "partOf": "collision-response",
+      "related": ["continuous-collision-detection"],
+      "citedIn": ["advanced-character-physics"]
+    },
+    {
+      "id": "resting-contact",
+      "kind": "concept",
+      "title": "Resting contact",
+      "summary": "Two things that touch without bouncing, like a box lying on the floor: the hard case for a stable solver",
+      "area": "physics",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-17"
+      },
+      "partOf": "contact",
+      "citedIn": ["advanced-character-physics"]
+    },
+    {
+      "id": "stacking",
+      "kind": "concept",
+      "title": "Stacking",
+      "summary": "Boxes resting on boxes: a classic stress test for a solver",
+      "area": "physics",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-17"
+      },
+      "related": ["resting-contact", "mass-ratio"],
+      "citedIn": ["advanced-character-physics"]
+    },
+    {
+      "id": "constrained-particle-body",
+      "kind": "concept",
+      "title": "Rigid body from particles and sticks",
+      "summary": "A rigid body built from four particles and six distance constraints, with no rotation math: only as stiff as the solver makes it",
+      "area": "physics",
+      "status": "seen",
+      "since": {
+        "seen": "2026-11-17"
+      },
+      "partOf": "rigid-body",
+      "related": ["particle-rigid-bodies", "distance-constraint", "shape-matching"],
+      "citedIn": ["advanced-character-physics"]
+    },
+    {
+      "id": "convexity",
+      "kind": "concept",
+      "title": "Convexity",
+      "summary": "A shape with no dents: the segment between any two of its points stays inside. Many collision shortcuts only work for these",
+      "area": "physics",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-17"
+      },
+      "partOf": "collision-detection",
+      "citedIn": ["advanced-character-physics"]
+    },
+    {
+      "id": "barycentric-coordinates",
+      "kind": "concept",
+      "title": "Barycentric coordinates",
+      "summary": "A point described as a mix of the corners around it, with weights that sum to 1, like the interpolation of varyings in a fragment shader",
+      "area": "math",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-17"
+      },
+      "citedIn": ["advanced-character-physics"]
+    },
+    {
+      "id": "joint-limit",
+      "kind": "concept",
+      "title": "Joint limit",
+      "summary": "A rule that stops a joint from bending too far, like a knee that cannot fold backwards",
+      "area": "physics",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-17"
+      },
+      "partOf": "joint",
+      "related": ["inequality-constraint"],
+      "citedIn": ["advanced-character-physics"]
+    },
+    {
+      "id": "octree",
+      "kind": "concept",
+      "title": "Octree",
+      "summary": "A box split into eight smaller boxes, again and again, to find quickly what is near what",
+      "area": "physics",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-17"
+      },
+      "related": ["broad-phase", "uniform-grid"],
+      "citedIn": ["advanced-character-physics"]
+    },
+    {
+      "id": "over-relaxation",
+      "kind": "concept",
+      "title": "Over-relaxation",
+      "summary": "Correcting a little more than needed at each round, to get there in fewer rounds",
+      "area": "physics",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-17"
+      },
+      "partOf": "relaxation",
+      "citedIn": ["advanced-character-physics"]
+    },
+    {
+      "id": "jacobian",
+      "kind": "concept",
+      "title": "Jacobian",
+      "summary": "The table of how much each rule changes when each coordinate moves: it gives the directions a solver pushes along",
+      "area": "math",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-17"
+      },
+      "related": ["constraint"],
+      "citedIn": ["advanced-character-physics"]
+    },
+    {
+      "id": "conjugate-gradient",
+      "kind": "concept",
+      "title": "Conjugate gradient",
+      "summary": "A way to solve a big system of equations in rounds, where each round avoids undoing the ones before",
+      "area": "math",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-17"
+      },
+      "related": ["iterative-solver"],
+      "citedIn": ["advanced-character-physics"]
+    },
+    {
+      "id": "verlet-paper",
+      "kind": "paper",
+      "title": "Computer \"Experiments\" on Classical Fluids. I. Thermodynamical Properties of Lennard-Jones Molecules",
+      "summary": "The paper the Verlet integrator is named after: a simulation of molecules, from 1967",
+      "area": "physics",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-17"
+      },
+      "about": ["verlet-integration"],
+      "citedIn": ["advanced-character-physics"],
+      "url": "https://doi.org/10.1103/PhysRev.159.98",
+      "authors": "Loup Verlet",
+      "year": 1967
+    },
+    {
+      "id": "stewart-trinkle-paper",
+      "kind": "paper",
+      "title": "An Implicit Time-Stepping Scheme for Rigid Body Dynamics with Inelastic Collisions and Coulomb Friction",
+      "summary": "The math Jakobsen points to for his method: rigid bodies, contacts and friction solved together at each step",
+      "area": "physics",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-17"
+      },
+      "about": ["rigid-body", "contact", "friction"],
+      "citedIn": ["advanced-character-physics"],
+      "url": "https://doi.org/10.1002/(SICI)1097-0207(19960815)39:15%3C2673::AID-NME972%3E3.0.CO;2-I",
+      "authors": "D. E. Stewart, J. C. Trinkle",
+      "year": 1996
+    },
+    {
+      "id": "baraff-thesis",
+      "kind": "paper",
+      "title": "Dynamic Simulation of Non-Penetrating Rigid Bodies",
+      "summary": "David Baraff's Ph.D. thesis on rigid bodies that touch without overlapping: one of the precise methods that games simplify",
+      "area": "physics",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-17"
+      },
+      "about": ["rigid-body", "contact", "resting-contact"],
+      "citedIn": ["advanced-character-physics"],
+      "url": "https://www.cs.cmu.edu/~baraff/papers/index.html",
+      "authors": "David Baraff",
+      "year": 1992
+    },
+    {
+      "id": "mirtich-thesis",
+      "kind": "paper",
+      "title": "Impulse-based Dynamic Simulation of Rigid Body Systems",
+      "summary": "Brian Mirtich's Ph.D. thesis: rigid bodies moved by impulses at the moments they hit",
+      "area": "physics",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-17"
+      },
+      "about": ["impulse-based-dynamics", "rigid-body"],
+      "citedIn": ["advanced-character-physics"],
+      "url": "https://people.eecs.berkeley.edu/~jfc/mirtich/thesis/mirtichThesis.pdf",
+      "authors": "Brian Mirtich",
+      "year": 1996
+    },
+    {
+      "id": "numerical-recipes",
+      "kind": "book",
+      "title": "Numerical Recipes",
+      "summary": "The reference book Jakobsen cites for relaxation and over-relaxation",
+      "area": "physics",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-17"
+      },
+      "about": ["relaxation", "over-relaxation", "gauss-seidel", "jacobi"],
+      "citedIn": ["advanced-character-physics"],
+      "url": "https://numerical.recipes/",
+      "authors": "William H. Press and others"
+    },
+    {
+      "id": "degrees-of-freedom",
+      "kind": "concept",
+      "title": "Degrees of freedom",
+      "summary": "How many independent numbers describe where a thing is: 6 for a rigid body, 3 to place it and 3 to turn it",
+      "area": "physics",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-17"
+      },
+      "partOf": "rigid-body",
+      "citedIn": ["advanced-character-physics"]
+    },
+    {
+      "id": "penetration-depth",
+      "kind": "concept",
+      "title": "Penetration depth",
+      "summary": "How far two shapes overlap: the shortest move that takes them apart",
+      "area": "physics",
+      "status": "seen",
+      "since": {
+        "seen": "2026-11-17"
+      },
+      "partOf": "contact",
+      "citedIn": ["advanced-character-physics"]
+    },
+    {
+      "id": "ragdoll",
+      "kind": "concept",
+      "title": "Ragdoll",
+      "summary": "A character body made of parts and joints that falls by physics instead of by animation",
+      "area": "physics",
+      "status": "seen",
+      "since": {
+        "seen": "2026-11-17"
+      },
+      "partOf": "articulated-body",
+      "citedIn": ["advanced-character-physics"]
+    },
+    {
+      "id": "capsule",
+      "kind": "concept",
+      "title": "Capsule",
+      "summary": "A cylinder with round caps: a cheap collision shape for limbs and characters",
+      "area": "physics",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-17"
+      },
+      "citedIn": ["advanced-character-physics"]
+    },
+    {
+      "id": "inequality-constraint",
+      "kind": "concept",
+      "title": "Inequality constraint",
+      "summary": "A rule that only works one way, such as \"at least this far apart\": it acts only when broken",
+      "area": "physics",
+      "status": "seen",
+      "since": {
+        "seen": "2026-11-17"
+      },
+      "partOf": "constraint",
+      "citedIn": ["advanced-character-physics"]
+    },
+    {
+      "id": "inverse-kinematics",
+      "kind": "concept",
+      "title": "Inverse kinematics",
+      "summary": "Fixing where a hand or foot must be and letting the rest of the chain follow",
+      "area": "physics",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-17"
+      },
+      "citedIn": ["advanced-character-physics"]
+    },
+    {
+      "id": "projection",
+      "kind": "concept",
+      "title": "Projection",
+      "summary": "Moving a point as little as possible until it obeys a rule again, such as straight out of an obstacle",
+      "area": "physics",
+      "status": "seen",
+      "since": {
+        "seen": "2026-11-17"
+      },
+      "partOf": "collision-response",
+      "related": ["position-based-dynamics", "verlet-integration", "penalty-method"],
+      "citedIn": ["advanced-character-physics"]
+    },
+    {
+      "id": "relaxation",
+      "kind": "concept",
+      "title": "Relaxation",
+      "summary": "Fixing one rule at a time and going round again, because each fix breaks a neighbour a little less than before",
+      "area": "physics",
+      "status": "seen",
+      "since": {
+        "seen": "2026-11-17"
+      },
+      "partOf": "iterative-solver",
+      "related": ["gauss-seidel", "jacobi", "projection", "distance-constraint"],
+      "citedIn": ["advanced-character-physics"]
+    },
+    {
+      "id": "newton-raphson",
+      "kind": "concept",
+      "title": "Newton-Raphson method",
+      "summary": "Improving a guess step by step: for a square root, average the guess with the number divided by the guess",
+      "area": "math",
+      "status": "seen",
+      "since": {
+        "seen": "2026-11-17"
+      },
+      "related": ["taylor-expansion"],
+      "citedIn": ["advanced-character-physics"]
+    },
+    {
+      "id": "taylor-expansion",
+      "kind": "concept",
+      "title": "Taylor expansion",
+      "summary": "Replacing a curve, near a point where you know it, with something simpler: at first order, its tangent line",
+      "area": "math",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-17"
+      },
+      "related": ["derivative"],
+      "citedIn": ["advanced-character-physics"]
+    },
+    {
+      "id": "penalty-method",
+      "kind": "concept",
+      "title": "Penalty method",
+      "summary": "Handling a contact with a spring where the objects overlap: simple, but too soft it sinks and too stiff it blows up",
+      "area": "physics",
+      "status": "seen",
+      "since": {
+        "seen": "2026-11-17"
+      },
+      "partOf": "collision-response",
+      "citedIn": ["advanced-character-physics"]
     },
     {
       "id": "avbd-paper",

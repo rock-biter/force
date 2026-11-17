@@ -5,8 +5,8 @@
 Everything we have met while building FORCE, concepts and sources, and how far we went with each
 one. Use it to look up a term, to find what to read, or to pick what to explore next.
 
-- **185 concepts:** ● 19 studied · ◐ 76 seen · ○ 90 mentioned
-- **110 sources:** ● 13 studied · ◐ 16 seen · ○ 81 mentioned · read by Claude: 45 parts, 10 in full
+- **210 concepts:** ● 19 studied · ◐ 90 seen · ○ 101 mentioned
+- **115 sources:** ● 14 studied · ◐ 16 seen · ○ 85 mentioned · read by Claude: 44 parts, 11 in full
 
 | | Status | What it means |
 | --- | --- | --- |
@@ -30,13 +30,14 @@ How things move, collide and stay together.
 | --- | --- | --- | --- | --- |
 | ◐ | Angular momentum | Inertia times angular velocity: the quantity a torque changes over time | Rigid body | [004](../logbook/004-the-detour.md) |
 | ◐ | Angular velocity | How fast a body spins and around which axis, as one vector in radians per second | Rigid body | [004](../logbook/004-the-detour.md) |
-| ○ | Articulated bodies | Chains of bodies linked by joints, such as robots and ragdolls |  | [004](../logbook/004-the-detour.md) |
+| ◐ | Articulated bodies | Chains of bodies linked by joints, such as robots and ragdolls |  | [004](../logbook/004-the-detour.md) |
 | ○ | Baumgarte stabilization | A classic way to remove overlap in a velocity solver: push back in proportion to the error |  | [Solver2D](https://box2d.org/posts/2024/02/solver2d/) |
 | ◐ | Bounding box | An invisible box around an object: testing two boxes is much cheaper than testing two real shapes |  | [001](../logbook/001-the-flip-book.md) |
 | ○ | Bounding volume hierarchy (BVH) | Boxes nested inside boxes: a tree that skips whole groups of far-away objects at once | Broad phase | [Ten Minute Physics](https://matthias-research.github.io/pages/tenMinutePhysics/index.html) |
 | ◐ | Broad phase | A rough check that discards pairs of objects too far apart to touch | Collision detection | [001](../logbook/001-the-flip-book.md) |
+| ○ | Capsule | A cylinder with round caps: a cheap collision shape for limbs and characters |  | [Advanced Character Physics](https://edelkas.github.io/n/files/bib/jakobsen.pdf) |
 | ○ | Center of mass | The balance point of an object: a rigid body's position, and the point it spins around when free | Rigid body | [004](../logbook/004-the-detour.md) |
-| ○ | Cloth | A sheet that bends and folds, like a flag or a curtain |  | [docs index](../README.md) |
+| ◐ | Cloth | A sheet that bends and folds, like a flag or a curtain |  | [docs index](../README.md) |
 | ◐ | Collision detection | Finding out which objects touch: first a rough pass, then a precise one | Simulation step | [001](../logbook/001-the-flip-book.md) |
 | ◐ | Collision response | What to do once a contact is found: push the objects apart and change their velocities | Simulation step | [010](../logbook/010-the-ground.md) |
 | ◐ | Compliance | The softness XPBD gives each constraint, the inverse of stiffness: zero means perfectly rigid | XPBD | [012](../logbook/012-the-family-tree.md) |
@@ -47,6 +48,9 @@ How things move, collide and stay together.
 | ○ | Contact events | Telling game code when two objects start or stop touching |  | [004](../logbook/004-the-detour.md) |
 | ○ | Contact manifold | All the contact points between two touching shapes, such as the four corners of a box resting on the floor |  | [004](../logbook/004-the-detour.md) |
 | ○ | Continuous collision detection | Checking the whole path between two steps, so fast objects cannot tunnel through walls | Collision detection | [004](../logbook/004-the-detour.md) |
+| ○ | Convexity | A shape with no dents: the segment between any two of its points stays inside. Many collision shortcuts only work for these | Collision detection | [Advanced Character Physics](https://edelkas.github.io/n/files/bib/jakobsen.pdf) |
+| ○ | Damping | Taking away a little speed at every step, like air drag, so that motion dies out |  | [Advanced Character Physics](https://edelkas.github.io/n/files/bib/jakobsen.pdf) |
+| ○ | Degrees of freedom | How many independent numbers describe where a thing is: 6 for a rigid body, 3 to place it and 3 to turn it | Rigid body | [Advanced Character Physics](https://edelkas.github.io/n/files/bib/jakobsen.pdf) |
 | ○ | Destruction | Breaking objects into pieces while the game runs |  | [004](../logbook/004-the-detour.md) |
 | ○ | Discrete element method (DEM) | Particles that push each other apart when they overlap, like small springs, with dampers to absorb the bounce |  | [Real-Time Rigid Body Simulation on GPUs](https://developer.nvidia.com/gpugems/gpugems3/part-v-physics-simulation/chapter-29-real-time-rigid-body-simulation-gpus) |
 | ◐ | Distance constraint | A rule that keeps two points at a fixed distance: the building block of chains, ropes and cloth | Constraint | [004](../logbook/004-the-detour.md) |
@@ -67,35 +71,49 @@ How things move, collide and stay together.
 | ◐ | Hooke's law | A spring pulls back in proportion to how far it is stretched (F = −kx) | Spring | [004](../logbook/004-the-detour.md) |
 | ● | **[Implicit integration](integration.md#implicit-euler)** | Uses the force at the end of the step: stable with stiff springs, but it must solve equations and it drains energy | Integration | [Physically Based Modeling: Principles and Practice](https://www.cs.cmu.edu/~baraff/sigcourse/) |
 | ◐ | Impulse-based dynamics | Resolving collisions by changing velocities at once, with an instant kick called an impulse |  | [004](../logbook/004-the-detour.md) |
+| ◐ | Inequality constraint | A rule that only works one way, such as "at least this far apart": it acts only when broken | Constraint | [Advanced Character Physics](https://edelkas.github.io/n/files/bib/jakobsen.pdf) |
 | ◐ | Inertia tensor | The moment of inertia in 3D: a 3×3 matrix, because the resistance to spinning changes with the axis | Moment of inertia | [004](../logbook/004-the-detour.md) |
 | ● | **[Integration](integration.md)** | Moving a simulation forward in small steps, updating velocity and position from the current state | Simulation step | [001](../logbook/001-the-flip-book.md) |
+| ○ | Inverse kinematics | Fixing where a hand or foot must be and letting the rest of the chain follow |  | [Advanced Character Physics](https://edelkas.github.io/n/files/bib/jakobsen.pdf) |
 | ◐ | Inverse mass | Storing 1/m instead of m: no divisions in hot loops, and zero means a body that never moves | Rigid body | [004](../logbook/004-the-detour.md) |
 | ○ | Islands | Groups of bodies that touch each other, solved apart from the rest | Solver | [004](../logbook/004-the-detour.md) |
 | ◐ | Iterative solver | Fixing one constraint at a time, going over all of them a few rounds, and stopping when it looks right | Solver | [001](../logbook/001-the-flip-book.md) |
 | ◐ | Jacobi | Fixing every constraint at once from the same old state, then combining: parallel, but slower to converge | Iterative solver | [004](../logbook/004-the-detour.md) |
-| ○ | Joint | A link that holds two bodies together but lets them move in some ways, like a hinge |  | [Ten Minute Physics](https://matthias-research.github.io/pages/tenMinutePhysics/index.html) |
+| ◐ | Joint | A link that holds two bodies together but lets them move in some ways, like a hinge |  | [Ten Minute Physics](https://matthias-research.github.io/pages/tenMinutePhysics/index.html) |
+| ○ | Joint limit | A rule that stops a joint from bending too far, like a knee that cannot fold backwards | Joint | [Advanced Character Physics](https://edelkas.github.io/n/files/bib/jakobsen.pdf) |
 | ○ | Lagrange multiplier | The number a solver finds for each constraint: how hard that constraint has to push |  | [XPBD: Position-Based Simulation of Compliant Constrained Dynamics](https://matthias-research.github.io/pages/publications/XPBD.pdf) |
+| ○ | Leapfrog integration | A variant of Verlet where the velocity lives halfway between two positions | Integration | [Advanced Character Physics](https://edelkas.github.io/n/files/bib/jakobsen.pdf) |
 | ○ | Mass ratio | How much heavier one body is than the one it rests on or pulls: large ratios make iterative solvers struggle |  | [Iterative Dynamics with Temporal Coherence](https://box2d.org/files/ErinCatto_IterativeDynamics_GDC2005.pdf) |
-| ○ | Mass-spring system | Particles linked by springs: the simplest model of cloth and soft bodies |  | [004](../logbook/004-the-detour.md) |
+| ◐ | Mass-spring system | Particles linked by springs: the simplest model of cloth and soft bodies |  | [004](../logbook/004-the-detour.md) |
 | ○ | Material point method (MPM) | Particles carry the material while a grid works out the forces: good for snow, sand and deformables |  | [004](../logbook/004-the-detour.md) |
 | ○ | Mesh sampling | Turning a mesh's surface or volume into points, for example to build a body out of particles |  | [004](../logbook/004-the-detour.md) |
 | ◐ | Moment of inertia | How hard an object is to spin: it depends on its mass and on how far that mass is from the axis | Rigid body | [004](../logbook/004-the-detour.md) |
 | ◐ | Narrow phase | A precise check, on the real shapes, of the pairs that survived the broad phase | Collision detection | [001](../logbook/001-the-flip-book.md) |
 | ○ | Neighbour search | Finding the particles near each particle: a major cost of particle fluids |  | [004](../logbook/004-the-detour.md) |
 | ◐ | Newton's second law | Force equals mass times acceleration (F = ma): the same push moves a light object more | Forces | [004](../logbook/004-the-detour.md) |
+| ◐ | Numerical damping | Energy lost because of the method and not of the physics: each projection deletes the speed that went against a rule |  | [Advanced Character Physics](https://edelkas.github.io/n/files/bib/jakobsen.pdf) |
 | ● | **[Numerical stability](integration.md#when-it-fails-stability)** | Whether a simulation's errors stay small or grow until it explodes: not the same thing as accuracy |  | [004](../logbook/004-the-detour.md) |
+| ○ | Octree | A box split into eight smaller boxes, again and again, to find quickly what is near what |  | [Advanced Character Physics](https://edelkas.github.io/n/files/bib/jakobsen.pdf) |
 | ◐ | Orientation | How a body is rotated, stored as a quaternion and updated each step by a small rotation | Rigid body | [004](../logbook/004-the-detour.md) |
+| ○ | Over-relaxation | Correcting a little more than needed at each round, to get there in fewer rounds | Relaxation | [Advanced Character Physics](https://edelkas.github.io/n/files/bib/jakobsen.pdf) |
 | ◐ | Particle | A point that moves but has no size or shape: the simplest thing to simulate |  | [000](../logbook/000-the-launch.md) |
 | ◐ | Particle-based rigid bodies | A rigid body's shape approximated by spheres, so every collision becomes a cheap test between spheres | Rigid body | [Real-Time Rigid Body Simulation on GPUs](https://developer.nvidia.com/gpugems/gpugems3/part-v-physics-simulation/chapter-29-real-time-rigid-body-simulation-gpus) |
+| ◐ | Penalty method | Handling a contact with a spring where the objects overlap: simple, but too soft it sinks and too stiff it blows up | Collision response | [Advanced Character Physics](https://edelkas.github.io/n/files/bib/jakobsen.pdf) |
+| ◐ | Penetration depth | How far two shapes overlap: the shortest move that takes them apart | Contact | [Advanced Character Physics](https://edelkas.github.io/n/files/bib/jakobsen.pdf) |
 | ◐ | Physics engine | A program that works out how objects move, one small step at a time |  | [001](../logbook/001-the-flip-book.md) |
 | ◐ | Plausibility over accuracy | Games need motion that looks right, fast and stable, more than exact physics | Physics engine | [001](../logbook/001-the-flip-book.md) |
 | ◐ | Position based dynamics (PBD) | Moving points straight to where the constraints want them, instead of going through forces: simple and stable |  | [Ten Minute Physics](https://matthias-research.github.io/pages/tenMinutePhysics/index.html) |
 | ○ | Position based fluids (PBF) | Fluids kept from compressing with position constraints, the PBD way | Fluid | [004](../logbook/004-the-detour.md) |
 | ○ | Primal and dual solvers | Two ways to pose the same problem: dual solvers look for the constraint forces and suffer with large mass ratios, primal ones look for the positions and suffer with large stiffness ratios | Solver | [Augmented Vertex Block Descent](https://graphics.cs.utah.edu/research/projects/avbd/) |
+| ◐ | Projection | Moving a point as little as possible until it obeys a rule again, such as straight out of an obstacle | Collision response | [Advanced Character Physics](https://edelkas.github.io/n/files/bib/jakobsen.pdf) |
+| ◐ | Ragdoll | A character body made of parts and joints that falls by physics instead of by animation | Articulated bodies | [Advanced Character Physics](https://edelkas.github.io/n/files/bib/jakobsen.pdf) |
 | ○ | Raycast | Shooting a line into the world to find what it hits first, for aiming, picking or line of sight |  | [004](../logbook/004-the-detour.md) |
+| ◐ | Relaxation | Fixing one rule at a time and going round again, because each fix breaks a neighbour a little less than before | Iterative solver | [Advanced Character Physics](https://edelkas.github.io/n/files/bib/jakobsen.pdf) |
 | ● | **[Render interpolation](fixed-timestep.md#render-interpolation)** | Drawing a blend of the last two physics states, so motion looks smooth between steps | Fixed timestep | [004](../logbook/004-the-detour.md) |
+| ○ | Resting contact | Two things that touch without bouncing, like a box lying on the floor: the hard case for a stable solver | Contact | [Advanced Character Physics](https://edelkas.github.io/n/files/bib/jakobsen.pdf) |
 | ◐ | Restitution | How bouncy a collision is: how much speed comes back after the impact |  | [004](../logbook/004-the-detour.md) |
 | ◐ | Rigid body | An object that moves and rotates but never bends, like a box or a ball |  | [docs index](../README.md) |
+| ◐ | Rigid body from particles and sticks | A rigid body built from four particles and six distance constraints, with no rotation math: only as stiff as the solver makes it | Rigid body | [Advanced Character Physics](https://edelkas.github.io/n/files/bib/jakobsen.pdf) |
 | ◐ | Runge-Kutta 4 (RK4) | Samples the rate of change four times per step: very accurate, but four times the work, and it slowly loses energy | Integration | [Integration Basics](https://gafferongames.com/post/integration_basics/) |
 | ○ | Self-collision | Cloth or a soft body hitting itself | Cloth | [004](../logbook/004-the-detour.md) |
 | ◐ | Semi-fixed timestep | Splitting long frames into steps no longer than a maximum: safer, but steps still differ in length | Fixed timestep | [Fix Your Timestep!](https://gafferongames.com/post/fix_your_timestep/) |
@@ -113,12 +131,14 @@ How things move, collide and stay together.
 | ○ | SPH | Smoothed particle hydrodynamics: a fluid's density and pressure at each particle, estimated from its neighbours | Fluid | [004](../logbook/004-the-detour.md) |
 | ● | **[Spiral of death](fixed-timestep.md#the-spiral-of-death)** | When catching up on physics takes so long that every frame falls further behind | Fixed timestep | [004](../logbook/004-the-detour.md) |
 | ◐ | Spring | A link that keeps two points near a rest distance, pulling when stretched and pushing when squeezed |  | [docs index](../README.md) |
+| ○ | Stacking | Boxes resting on boxes: a classic stress test for a solver |  | [Advanced Character Physics](https://edelkas.github.io/n/files/bib/jakobsen.pdf) |
 | ● | **[Stiffness](integration.md#the-step-limit)** | How strongly a spring or constraint resists: the stiffer it is, the faster it oscillates and the smaller the safe timestep |  | [004](../logbook/004-the-detour.md) |
 | ● | **[Substepping](integration.md#substeps)** | Splitting each step into smaller ones, to follow fast motion and stiff constraints | Timestep | [004](../logbook/004-the-detour.md) |
 | ○ | Sweep and prune | A broad phase that sorts objects along an axis, so only neighbours in the list need checking | Broad phase | [Ten Minute Physics](https://matthias-research.github.io/pages/tenMinutePhysics/index.html) |
 | ◐ | Symplectic integrator | An integrator that keeps energy steady on average over long runs, such as semi-implicit Euler or Verlet | Integration | [Integration Basics](https://gafferongames.com/post/integration_basics/) |
 | ○ | TGS solver | PhysX's temporal Gauss-Seidel solver, designed to converge better with complex constraints | Solver | [004](../logbook/004-the-detour.md) |
 | ● | **[Time accumulator](fixed-timestep.md#the-accumulator)** | Keeps the real time not simulated yet, and spends it in fixed steps | Fixed timestep | [004](../logbook/004-the-detour.md) |
+| ○ | Time of impact | Rewinding the step to the exact moment two things touch and handling the hit there: precise, but slow when hits are many | Collision response | [Advanced Character Physics](https://edelkas.github.io/n/files/bib/jakobsen.pdf) |
 | ● | **[Timestep](fixed-timestep.md)** | The jump in time of each step, often 1/60 of a second | Simulation step | [001](../logbook/001-the-flip-book.md) |
 | ◐ | Torque | The turning effect of a force: the same push turns more the farther it is from the center (τ = r × F) | Rigid body | [004](../logbook/004-the-detour.md) |
 | ◐ | Tunneling | A fast object passing through a wall between two steps, without ever touching it | Collision detection | [001](../logbook/001-the-flip-book.md) |
@@ -126,8 +146,8 @@ How things move, collide and stay together.
 | ○ | Unified particle physics | Building every material, from solids to cloth and fluids, out of particles held by constraints |  | [004](../logbook/004-the-detour.md) |
 | ◐ | Uniform grid | Space split into equal cells: only objects in the same or nearby cells get compared | Broad phase | [004](../logbook/004-the-detour.md) |
 | ◐ | Units and scale | Engines tune their tolerances for one size of object: meters and everyday objects, from soup cans to buses | Physics engine | [Box2D, Overview](https://github.com/erincatto/box2d/blob/main/docs/overview.md) |
-| ◐ | Velocity Verlet | Uses the acceleration both before and after moving: more accurate, but forces are computed twice | Integration | [004](../logbook/004-the-detour.md) |
-| ○ | Verlet integration | Keeping the previous position instead of the velocity: the velocity is the difference between the two | Integration | [Advanced Character Physics](https://edelkas.github.io/n/files/bib/jakobsen.pdf) |
+| ◐ | Velocity Verlet | Uses the force both before and after moving: more accurate, with one force computation per step, reused by the next | Integration | [004](../logbook/004-the-detour.md) |
+| ◐ | Verlet integration | Keeping the previous position instead of the velocity: the velocity is the difference between the two | Integration | [Advanced Character Physics](https://edelkas.github.io/n/files/bib/jakobsen.pdf) |
 | ○ | Vertex block descent (VBD) | A solver that moves one body or vertex at a time toward the place where all its forces balance, instead of repairing one constraint at a time | Solver | [Augmented Vertex Block Descent](https://graphics.cs.utah.edu/research/projects/avbd/) |
 | ○ | Warm starting | Starting the solver from the previous step's answer, so fewer rounds are needed | Solver | [004](../logbook/004-the-detour.md) |
 | ◐ | XPBD | Extended PBD: each constraint gets a softness, called compliance, so stiffness no longer depends on step size or rounds | Position based dynamics (PBD) | [004](../logbook/004-the-detour.md) |
@@ -136,8 +156,9 @@ How things move, collide and stay together.
 | --- | --- | --- | --- | --- | --- | --- |
 | ○ | [A Material Point Method for Snow Simulation](https://doi.org/10.1145/2461912.2461948)<br>*Alexey Stomakhin, Craig Schroeder, Lawrence Chai, Joseph Teran, Andrew Selle, 2013* | Paper | The material point method applied to snow | Material point method (MPM), Granular materials | [004](../logbook/004-the-detour.md) |  |
 | ○ | [A Survey on Position-Based Simulation Methods in Computer Graphics](https://doi.org/10.1111/cgf.12346)<br>*Jan Bender, Matthias Müller, Miguel A. Otaduy, Matthias Teschner, Miles Macklin, 2014* | Paper | An overview of the whole position based family | Position based dynamics (PBD) | [004](../logbook/004-the-detour.md) |  |
-| ○ | [Advanced Character Physics](https://edelkas.github.io/n/files/bib/jakobsen.pdf)<br>*Thomas Jakobsen, 2001* | Paper | The physics of the game Hitman: move the points, then push them back where the rules hold. PBD before it had a name | Position based dynamics (PBD), Distance constraint, Verlet integration | [012](../logbook/012-the-family-tree.md) | Parts |
+| ● | [Advanced Character Physics](https://edelkas.github.io/n/files/bib/jakobsen.pdf) · **[our page](advanced-character-physics.md)**<br>*Thomas Jakobsen, 2001* | Paper | The physics of the game Hitman: move the points, then push them back where the rules hold. PBD before it had a name | Position based dynamics (PBD), Distance constraint, Verlet integration, Projection, Penalty method, Relaxation, Gauss-Seidel, Inverse mass, Cloth, Newton-Raphson method, Taylor expansion, Particle-based rigid bodies, Rigid body, Joint, Articulated bodies, Friction, Soft constraint, Sleeping, Continuous collision detection, Baumgarte stabilization, Self-collision, Degrees of freedom, Penetration depth, Ragdoll, Capsule, Inequality constraint, Inverse kinematics, Mass-spring system, Restitution, Jacobi, Constraint, Iterative solver, Warm starting, Tunneling, Stiffness, Spring, Velocity Verlet, Collision response, Conservation of energy, Numerical damping, Damping, Leapfrog integration, Time of impact, Resting contact, Stacking, Rigid body from particles and sticks, Convexity, Barycentric coordinates, Joint limit, Octree, Over-relaxation, Jacobian, Conjugate gradient | [012](../logbook/012-the-family-tree.md) | In full |
 | ○ | [Ammo.js](https://github.com/kripken/ammo.js) | Project | Bullet compiled to JavaScript for the browser | Physics engine | [004](../logbook/004-the-detour.md) |  |
+| ○ | [An Implicit Time-Stepping Scheme for Rigid Body Dynamics with Inelastic Collisions and Coulomb Friction](https://doi.org/10.1002/(SICI)1097-0207(19960815)39:15%3C2673::AID-NME972%3E3.0.CO;2-I)<br>*D. E. Stewart, J. C. Trinkle, 1996* | Paper | The math Jakobsen points to for his method: rigid bodies, contacts and friction solved together at each step | Rigid body, Contact, Friction | [Advanced Character Physics](https://edelkas.github.io/n/files/bib/jakobsen.pdf) |  |
 | ○ | [Animating Sand as a Fluid](https://doi.org/10.1145/1073204.1073298)<br>*Yongning Zhu, Robert Bridson, 2005* | Paper | Sand simulated with a mix of particles and a grid | Granular materials, FLIP water | [004](../logbook/004-the-detour.md) |  |
 | ○ | [Augmented Vertex Block Descent](https://graphics.cs.utah.edu/research/projects/avbd/)<br>*Chris Giles, Elie Diaz, Cem Yuksel, 2025* | Paper | Rigid bodies, joints and stacks solved on the GPU one color of bodies at a time, with hard constraints and few rounds | Vertex block descent (VBD), Constraint graph coloring, Mass ratio, Primal and dual solvers, Rigid body, Warm starting | [012](../logbook/012-the-family-tree.md) | Parts |
 | ○ | [Avian](https://github.com/avianphysics/avian) | Project | A physics engine for Bevy, written in Rust | Physics engine, Entity component system (ECS) | [004](../logbook/004-the-detour.md) |  |
@@ -150,12 +171,15 @@ How things move, collide and stay together.
 | ◐ | [Box2D, solver.c](https://github.com/erincatto/box2d/blob/main/src/solver.c) | Source code | The internal stages of the solver | Solver, Semi-implicit Euler | [001](../logbook/001-the-flip-book.md) |  |
 | ○ | [Bullet Physics](https://github.com/bulletphysics/bullet3) | Project | A long-lived open source C++ library: rigid bodies, collision detection and soft bodies | Rigid body, Collision detection, Soft body | [004](../logbook/004-the-detour.md) |  |
 | ○ | [cannon-es](https://github.com/pmndrs/cannon-es) | Project | A 3D physics engine written in JavaScript | Rigid body | [004](../logbook/004-the-detour.md) |  |
+| ○ | [Computer "Experiments" on Classical Fluids. I. Thermodynamical Properties of Lennard-Jones Molecules](https://doi.org/10.1103/PhysRev.159.98)<br>*Loup Verlet, 1967* | Paper | The paper the Verlet integrator is named after: a simulation of molecules, from 1967 | Verlet integration | [Advanced Character Physics](https://edelkas.github.io/n/files/bib/jakobsen.pdf) |  |
 | ○ | [d3-force-3d](https://github.com/vasturiano/d3-force-3d)<br>*Vasco Asturiano* | Project | A small library that simulates forces between points in 1, 2 or 3 dimensions, made to lay out graphs | Force-directed layout, Spring | [011](../logbook/011-the-living-map.md) | Parts |
 | ○ | [Detailed Rigid Body Simulation with Extended Position Based Dynamics](https://diglib.eg.org/items/114b20b0-8543-4c54-bd04-42ee60c71946)<br>*Matthias Müller, Miles Macklin, Nuttapong Chentanez, Stefan Jeschke, Tae-Yong Kim, 2020* | Paper | Rigid bodies, contacts and joints solved with XPBD, with implementation details | XPBD, Rigid body, Joint, Contact, Substepping, Floating point precision | [004](../logbook/004-the-detour.md) | Parts |
+| ○ | [Dynamic Simulation of Non-Penetrating Rigid Bodies](https://www.cs.cmu.edu/~baraff/papers/index.html)<br>*David Baraff, 1992* | Paper | David Baraff's Ph.D. thesis on rigid bodies that touch without overlapping: one of the precise methods that games simplify | Rigid body, Contact, Resting contact | [Advanced Character Physics](https://edelkas.github.io/n/files/bib/jakobsen.pdf) |  |
 | ○ | [Erin Catto, publications](https://box2d.org/publications/)<br>*Erin Catto* | Talk | GDC talks by the creator of Box2D on solvers and collisions | Solver, Collision detection | [001](../logbook/001-the-flip-book.md) | Parts |
 | ● | [Fix Your Timestep!](https://gafferongames.com/post/fix_your_timestep/) · **[our page](fixed-timestep.md)**<br>*Glenn Fiedler* | Article | Why the step must be fixed, and how to separate it from frames | Fixed timestep, Timestep, Time accumulator, Render interpolation, Spiral of death, Semi-fixed timestep | [001](../logbook/001-the-flip-book.md) |  |
 | ○ | [Godot](https://godotengine.org/) | Project | Open source game engine with its own physics, and alternative backends | Physics engine | [004](../logbook/004-the-detour.md) |  |
 | ○ | [Havok](https://www.havok.com/) | Project | A commercial physics engine, available as an option in Unity | Physics engine | [004](../logbook/004-the-detour.md) |  |
+| ○ | [Impulse-based Dynamic Simulation of Rigid Body Systems](https://people.eecs.berkeley.edu/~jfc/mirtich/thesis/mirtichThesis.pdf)<br>*Brian Mirtich, 1996* | Paper | Brian Mirtich's Ph.D. thesis: rigid bodies moved by impulses at the moments they hit | Impulse-based dynamics, Rigid body | [Advanced Character Physics](https://edelkas.github.io/n/files/bib/jakobsen.pdf) |  |
 | ● | [Integration Basics](https://gafferongames.com/post/integration_basics/) · **[our page](integration.md)**<br>*Glenn Fiedler* | Article | How numerical integrators behave, explained for game developers | Integration, Numerical stability, Explicit Euler, Semi-implicit Euler, Implicit integration, Runge-Kutta 4 (RK4), Symplectic integrator, Stiffness, Hooke's law | [004](../logbook/004-the-detour.md) |  |
 | ○ | [Iterative Dynamics with Temporal Coherence](https://box2d.org/files/ErinCatto_IterativeDynamics_GDC2005.pdf)<br>*Erin Catto, 2005* | Paper | The contact solver behind most game engines: one contact at a time, for several rounds, starting from the answer of the last step | Sequential impulses (PGS), Impulse-based dynamics, Gauss-Seidel, Warm starting, Mass ratio | [012](../logbook/012-the-family-tree.md) | Parts |
 | ○ | [Jolt Physics](https://github.com/jrouwe/JoltPhysics) | Project | A fast C++ engine for rigid bodies in games | Rigid body, Bounding volume hierarchy (BVH), Sequential impulses (PGS), Job system | [004](../logbook/004-the-detour.md) |  |
@@ -165,6 +189,7 @@ How things move, collide and stay together.
 | ○ | [Matter.js](https://github.com/liabru/matter-js) | Project | A 2D physics engine written in JavaScript | Rigid body | [004](../logbook/004-the-detour.md) |  |
 | ○ | [Meshless Deformations Based on Shape Matching](https://doi.org/10.1145/1073204.1073216)<br>*Matthias Müller, Bruno Heidelberger, Matthias Teschner, Markus Gross, 2005* | Paper | Deformable objects made of points pulled back toward their rest shape | Shape matching, Soft body | [004](../logbook/004-the-detour.md) |  |
 | ○ | [MuJoCo](https://github.com/google-deepmind/mujoco) | Project | A physics engine for robotics: contacts and articulated systems | Articulated bodies, Contact | [004](../logbook/004-the-detour.md) |  |
+| ○ | [Numerical Recipes](https://numerical.recipes/)<br>*William H. Press and others* | Book | The reference book Jakobsen cites for relaxation and over-relaxation | Relaxation, Over-relaxation, Gauss-Seidel, Jacobi | [Advanced Character Physics](https://edelkas.github.io/n/files/bib/jakobsen.pdf) |  |
 | ○ | [NVIDIA FleX](https://developer.nvidia.com/flex) | Project | NVIDIA's unified particle library: rigid bodies, cloth and fluids all made of particles | Unified particle physics, Shape matching, Mesh sampling | [004](../logbook/004-the-detour.md) |  |
 | ○ | [NVIDIA FleX, extensions API](https://gameworksdocs.nvidia.com/FleX/1.2/lib_docs/_static/api/_nv_flex_ext_8h.html) | Documentation | Creating particle assets from a mesh: voxels, surface sampling and clusters | Mesh sampling, Shape matching | [004](../logbook/004-the-detour.md) |  |
 | ○ | [NVIDIA FleX, manual](https://gameworksdocs.nvidia.com/FleX/1.2/lib_docs/manual.html) | Documentation | How FleX turns materials into particles, and why it is meant for effects more than gameplay | Unified particle physics, Shape matching | [004](../logbook/004-the-detour.md) |  |
@@ -200,9 +225,14 @@ The math behind motion: change over time, rotations, numbers on a computer.
 
 | | Concept | In short | Part of | First cited in |
 | --- | --- | --- | --- | --- |
+| ○ | Barycentric coordinates | A point described as a mix of the corners around it, with weights that sum to 1, like the interpolation of varyings in a fragment shader |  | [Advanced Character Physics](https://edelkas.github.io/n/files/bib/jakobsen.pdf) |
+| ○ | Conjugate gradient | A way to solve a big system of equations in rounds, where each round avoids undoing the ones before |  | [Advanced Character Physics](https://edelkas.github.io/n/files/bib/jakobsen.pdf) |
 | ◐ | Derivative | How fast a quantity changes at an instant: velocity is the derivative of position, acceleration that of velocity |  | [004](../logbook/004-the-detour.md) |
 | ◐ | Floating point precision | Numbers on a computer have a limited number of digits: 32-bit floats are fast on the GPU, but rounding errors add up |  | [004](../logbook/004-the-detour.md) |
 | ◐ | Integral | The reverse of a derivative: adding up small changes over time, such as velocity into position |  | [004](../logbook/004-the-detour.md) |
+| ○ | Jacobian | The table of how much each rule changes when each coordinate moves: it gives the directions a solver pushes along |  | [Advanced Character Physics](https://edelkas.github.io/n/files/bib/jakobsen.pdf) |
+| ◐ | Newton-Raphson method | Improving a guess step by step: for a square root, average the guess with the number divided by the guess |  | [Advanced Character Physics](https://edelkas.github.io/n/files/bib/jakobsen.pdf) |
+| ○ | Taylor expansion | Replacing a curve, near a point where you know it, with something simpler: at first order, its tangent line |  | [Advanced Character Physics](https://edelkas.github.io/n/files/bib/jakobsen.pdf) |
 
 ## GPU
 
