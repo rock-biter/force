@@ -20,6 +20,7 @@ This is where we tell how FORCE gets built, one step at a time. If you are new h
 | 011 | [The Living Map](./logbook/011-the-living-map.md) | The topic map as a graph in 3D, with its dates and a timeline to replay it |
 | 012 | [The Family Tree](./logbook/012-the-family-tree.md) | The papers behind particles and rigid bodies: two branches, a newcomer, and a warning about floats |
 | 013 | [The Hidden Brake](./logbook/013-the-hidden-brake.md) | Our first paper read in full: Jakobsen's Verlet is our integrator, and projection hides a brake |
+| 014 | [The Mirror](./logbook/014-the-mirror.md) | Catto's paper of 2005: the same loop on velocities, a memory to build, and a smaller brake |
 
 ## For reference
 

@@ -153,7 +153,8 @@
         "docs/logbook/001-the-flip-book.md",
         "fix-your-timestep",
         "docs/logbook/004-the-detour.md",
-        "docs/logbook/008-the-first-loop.md"
+        "docs/logbook/008-the-first-loop.md",
+        "iterative-dynamics-paper"
       ],
       "page": "docs/topics/fixed-timestep.md",
       "code": ["src/fixed-timestep.ts", "src/world.ts"]
@@ -246,7 +247,11 @@
       },
       "partOf": "collision-detection",
       "related": ["contact"],
-      "citedIn": ["docs/logbook/001-the-flip-book.md", "docs/logbook/004-the-detour.md"]
+      "citedIn": [
+        "docs/logbook/001-the-flip-book.md",
+        "docs/logbook/004-the-detour.md",
+        "iterative-dynamics-paper"
+      ]
     },
     {
       "id": "tunneling",
@@ -297,7 +302,9 @@
         "docs/logbook/001-the-flip-book.md",
         "docs/logbook/004-the-detour.md",
         "docs/logbook/012-the-family-tree.md",
-        "advanced-character-physics"
+        "advanced-character-physics",
+        "iterative-dynamics-paper",
+        "docs/logbook/014-the-mirror.md"
       ]
     },
     {
@@ -332,7 +339,8 @@
         "docs/logbook/001-the-flip-book.md",
         "rapier-integration-parameters",
         "docs/logbook/004-the-detour.md",
-        "advanced-character-physics"
+        "advanced-character-physics",
+        "iterative-dynamics-paper"
       ]
     },
     {
@@ -382,7 +390,8 @@
         "ten-minute-physics",
         "docs/logbook/004-the-detour.md",
         "docs/logbook/012-the-family-tree.md",
-        "advanced-character-physics"
+        "advanced-character-physics",
+        "iterative-dynamics-paper"
       ]
     },
     {
@@ -736,7 +745,8 @@
       "citedIn": [
         "ten-minute-physics",
         "docs/logbook/004-the-detour.md",
-        "advanced-character-physics"
+        "advanced-character-physics",
+        "iterative-dynamics-paper"
       ]
     },
     {
@@ -873,7 +883,9 @@
         "integration-basics",
         "box2d-solver",
         "docs/logbook/008-the-first-loop.md",
-        "docs/logbook/013-the-hidden-brake.md"
+        "docs/logbook/013-the-hidden-brake.md",
+        "iterative-dynamics-paper",
+        "docs/logbook/014-the-mirror.md"
       ],
       "page": "docs/topics/integration.md#semi-implicit-euler",
       "code": ["src/shaders/integrate.wgsl"]
@@ -1079,7 +1091,7 @@
         "seen": "2026-11-08"
       },
       "partOf": "rigid-body",
-      "citedIn": ["docs/logbook/004-the-detour.md"]
+      "citedIn": ["docs/logbook/004-the-detour.md", "iterative-dynamics-paper"]
     },
     {
       "id": "moment-of-inertia",
@@ -1106,7 +1118,7 @@
         "seen": "2026-11-08"
       },
       "partOf": "moment-of-inertia",
-      "citedIn": ["docs/logbook/004-the-detour.md"]
+      "citedIn": ["docs/logbook/004-the-detour.md", "iterative-dynamics-paper"]
     },
     {
       "id": "angular-velocity",
@@ -1119,7 +1131,7 @@
         "seen": "2026-11-08"
       },
       "partOf": "rigid-body",
-      "citedIn": ["docs/logbook/004-the-detour.md"]
+      "citedIn": ["docs/logbook/004-the-detour.md", "iterative-dynamics-paper"]
     },
     {
       "id": "angular-momentum",
@@ -1148,7 +1160,7 @@
       },
       "partOf": "rigid-body",
       "related": ["angular-velocity"],
-      "citedIn": ["docs/logbook/004-the-detour.md"]
+      "citedIn": ["docs/logbook/004-the-detour.md", "iterative-dynamics-paper"]
     },
     {
       "id": "inverse-mass",
@@ -1244,7 +1256,11 @@
       },
       "partOf": "collision-detection",
       "related": ["tunneling"],
-      "citedIn": ["docs/logbook/004-the-detour.md", "advanced-character-physics"]
+      "citedIn": [
+        "docs/logbook/004-the-detour.md",
+        "advanced-character-physics",
+        "iterative-dynamics-paper"
+      ]
     },
     {
       "id": "contact-manifold",
@@ -1257,7 +1273,7 @@
         "mentioned": "2026-11-05"
       },
       "related": ["contact"],
-      "citedIn": ["docs/logbook/004-the-detour.md"]
+      "citedIn": ["docs/logbook/004-the-detour.md", "iterative-dynamics-paper"]
     },
     {
       "id": "friction",
@@ -1274,7 +1290,9 @@
       "citedIn": [
         "docs/logbook/004-the-detour.md",
         "docs/logbook/010-the-ground.md",
-        "advanced-character-physics"
+        "advanced-character-physics",
+        "iterative-dynamics-paper",
+        "docs/logbook/014-the-mirror.md"
       ],
       "code": ["src/shaders/integrate.wgsl"]
     },
@@ -1293,7 +1311,8 @@
       "citedIn": [
         "docs/logbook/004-the-detour.md",
         "docs/logbook/010-the-ground.md",
-        "advanced-character-physics"
+        "advanced-character-physics",
+        "iterative-dynamics-paper"
       ],
       "code": ["src/shaders/integrate.wgsl"]
     },
@@ -1354,7 +1373,11 @@
       },
       "partOf": "iterative-solver",
       "related": ["impulse-based-dynamics", "warm-starting"],
-      "citedIn": ["docs/logbook/004-the-detour.md", "docs/logbook/012-the-family-tree.md"]
+      "citedIn": [
+        "docs/logbook/004-the-detour.md",
+        "docs/logbook/012-the-family-tree.md",
+        "iterative-dynamics-paper"
+      ]
     },
     {
       "id": "gauss-seidel",
@@ -1372,7 +1395,9 @@
       "citedIn": [
         "docs/logbook/004-the-detour.md",
         "docs/logbook/012-the-family-tree.md",
-        "advanced-character-physics"
+        "advanced-character-physics",
+        "iterative-dynamics-paper",
+        "docs/logbook/014-the-mirror.md"
       ]
     },
     {
@@ -1414,15 +1439,17 @@
       "title": "Warm starting",
       "summary": "Starting the solver from the previous step's answer, so fewer rounds are needed",
       "area": "physics",
-      "status": "mentioned",
+      "status": "seen",
       "since": {
-        "mentioned": "2026-11-05"
+        "mentioned": "2026-11-05",
+        "seen": "2026-11-17"
       },
       "partOf": "solver",
       "citedIn": [
         "docs/logbook/004-the-detour.md",
         "iterative-dynamics-paper",
-        "advanced-character-physics"
+        "advanced-character-physics",
+        "docs/logbook/014-the-mirror.md"
       ]
     },
     {
@@ -1449,7 +1476,11 @@
       "since": {
         "mentioned": "2026-11-05"
       },
-      "citedIn": ["docs/logbook/004-the-detour.md", "advanced-character-physics"]
+      "citedIn": [
+        "docs/logbook/004-the-detour.md",
+        "advanced-character-physics",
+        "iterative-dynamics-paper"
+      ]
     },
     {
       "id": "soft-step",
@@ -1727,7 +1758,7 @@
         "mentioned": "2026-11-12"
       },
       "related": ["atomic-operations", "float-precision"],
-      "citedIn": ["docs/logbook/010-the-ground.md"]
+      "citedIn": ["docs/logbook/010-the-ground.md", "iterative-dynamics-paper"]
     },
     {
       "id": "prefix-sum",
@@ -4570,12 +4601,18 @@
       "title": "Mass ratio",
       "summary": "How much heavier one body is than the one it rests on or pulls: large ratios make iterative solvers struggle",
       "area": "physics",
-      "status": "mentioned",
+      "status": "seen",
       "since": {
-        "mentioned": "2026-11-16"
+        "mentioned": "2026-11-16",
+        "seen": "2026-11-17"
       },
       "related": ["iterative-solver"],
-      "citedIn": ["iterative-dynamics-paper", "avbd-paper", "docs/logbook/012-the-family-tree.md"]
+      "citedIn": [
+        "iterative-dynamics-paper",
+        "avbd-paper",
+        "docs/logbook/012-the-family-tree.md",
+        "docs/logbook/014-the-mirror.md"
+      ]
     },
     {
       "id": "vertex-block-descent",
@@ -4611,12 +4648,13 @@
       "title": "Lagrange multiplier",
       "summary": "The number a solver finds for each constraint: how hard that constraint has to push",
       "area": "physics",
-      "status": "mentioned",
+      "status": "seen",
       "since": {
-        "mentioned": "2026-11-16"
+        "mentioned": "2026-11-16",
+        "seen": "2026-11-17"
       },
       "related": ["constraint", "compliance"],
-      "citedIn": ["xpbd-paper"]
+      "citedIn": ["xpbd-paper", "iterative-dynamics-paper", "docs/logbook/014-the-mirror.md"]
     },
     {
       "id": "soft-constraint",
@@ -4638,12 +4676,18 @@
       "title": "Baumgarte stabilization",
       "summary": "A classic way to remove overlap in a velocity solver: push back in proportion to the error",
       "area": "physics",
-      "status": "mentioned",
+      "status": "seen",
       "since": {
-        "mentioned": "2026-11-16"
+        "mentioned": "2026-11-16",
+        "seen": "2026-11-17"
       },
       "related": ["sequential-impulses", "soft-constraint"],
-      "citedIn": ["solver2d-post", "advanced-character-physics"]
+      "citedIn": [
+        "solver2d-post",
+        "advanced-character-physics",
+        "iterative-dynamics-paper",
+        "docs/logbook/014-the-mirror.md"
+      ]
     },
     {
       "id": "verlet-integration",
@@ -4658,7 +4702,12 @@
       },
       "partOf": "integration",
       "related": ["velocity-verlet", "position-based-dynamics", "semi-implicit-euler"],
-      "citedIn": ["advanced-character-physics", "pbd-paper", "docs/logbook/013-the-hidden-brake.md"]
+      "citedIn": [
+        "advanced-character-physics",
+        "pbd-paper",
+        "docs/logbook/013-the-hidden-brake.md",
+        "iterative-dynamics-paper"
+      ]
     },
     {
       "id": "iterative-dynamics-paper",
@@ -4666,24 +4715,365 @@
       "title": "Iterative Dynamics with Temporal Coherence",
       "summary": "The contact solver behind most game engines: one contact at a time, for several rounds, starting from the answer of the last step",
       "area": "physics",
-      "status": "mentioned",
+      "status": "studied",
       "since": {
-        "mentioned": "2026-11-16"
+        "mentioned": "2026-11-16",
+        "studied": "2026-11-17"
       },
       "about": [
         "sequential-impulses",
         "impulse-based-dynamics",
         "gauss-seidel",
         "warm-starting",
-        "mass-ratio"
+        "mass-ratio",
+        "velocity-constraint",
+        "lagrange-multiplier",
+        "jacobian",
+        "inequality-constraint",
+        "projected-gauss-seidel",
+        "linear-complementarity-problem",
+        "semi-implicit-euler",
+        "iterative-solver",
+        "constraint-bias",
+        "baumgarte-stabilization",
+        "friction",
+        "penetration-depth",
+        "contact-caching",
+        "stacking",
+        "contact-manifold",
+        "constraint",
+        "rigid-body",
+        "joint",
+        "determinism",
+        "fixed-timestep",
+        "sleeping",
+        "damping",
+        "orientation",
+        "inertia-tensor",
+        "angular-velocity",
+        "restitution",
+        "continuous-collision-detection",
+        "verlet-integration",
+        "narrow-phase",
+        "torque",
+        "constraint-drift",
+        "temporal-coherence",
+        "coulomb-friction",
+        "revolute-joint",
+        "prismatic-joint",
+        "joint-motor",
+        "gyroscopic-torque",
+        "mass-matrix",
+        "redundant-constraints",
+        "contact-reduction",
+        "face-clipping"
       ],
-      "citedIn": ["docs/logbook/012-the-family-tree.md"],
+      "citedIn": ["docs/logbook/012-the-family-tree.md", "docs/logbook/014-the-mirror.md"],
       "url": "https://box2d.org/files/ErinCatto_IterativeDynamics_GDC2005.pdf",
       "partOf": "catto-publications",
       "file": "library/iterative-dynamics.pdf",
       "authors": "Erin Catto",
       "year": 2005,
-      "claudeRead": "parts"
+      "claudeRead": "full",
+      "page": "docs/topics/iterative-dynamics-paper.md"
+    },
+    {
+      "id": "constraint-drift",
+      "kind": "concept",
+      "title": "Constraint drift",
+      "summary": "A rule kept only on velocities slowly comes apart on positions: nothing pulls the error back",
+      "area": "physics",
+      "status": "seen",
+      "since": {
+        "seen": "2026-11-17"
+      },
+      "partOf": "velocity-constraint",
+      "related": ["baumgarte-stabilization"],
+      "citedIn": ["iterative-dynamics-paper", "docs/logbook/014-the-mirror.md"]
+    },
+    {
+      "id": "temporal-coherence",
+      "kind": "concept",
+      "title": "Temporal coherence",
+      "summary": "A scene changes little from one step to the next, so the last answer is a good first guess",
+      "area": "physics",
+      "status": "seen",
+      "since": {
+        "seen": "2026-11-17"
+      },
+      "related": ["warm-starting"],
+      "citedIn": ["iterative-dynamics-paper", "docs/logbook/014-the-mirror.md"]
+    },
+    {
+      "id": "coulomb-friction",
+      "kind": "concept",
+      "title": "Coulomb friction",
+      "summary": "The classic law of friction: it can resist sliding up to a limit in proportion to how hard the surfaces press together",
+      "area": "physics",
+      "status": "seen",
+      "since": {
+        "seen": "2026-11-17"
+      },
+      "partOf": "friction",
+      "citedIn": [
+        "docs/logbook/010-the-ground.md",
+        "iterative-dynamics-paper",
+        "docs/logbook/014-the-mirror.md"
+      ]
+    },
+    {
+      "id": "revolute-joint",
+      "kind": "concept",
+      "title": "Revolute joint",
+      "summary": "A joint that lets two bodies turn around one shared axis, like a door hinge",
+      "area": "physics",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-17"
+      },
+      "partOf": "joint",
+      "citedIn": ["iterative-dynamics-paper"]
+    },
+    {
+      "id": "prismatic-joint",
+      "kind": "concept",
+      "title": "Prismatic joint",
+      "summary": "A joint that lets two bodies slide along one line, like a drawer",
+      "area": "physics",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-17"
+      },
+      "partOf": "joint",
+      "citedIn": ["iterative-dynamics-paper"]
+    },
+    {
+      "id": "joint-motor",
+      "kind": "concept",
+      "title": "Joint motor",
+      "summary": "A rule that drives a joint toward a speed, with a largest force it may use",
+      "area": "physics",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-17"
+      },
+      "partOf": "joint",
+      "related": ["constraint-bias"],
+      "citedIn": ["iterative-dynamics-paper"]
+    },
+    {
+      "id": "gyroscopic-torque",
+      "kind": "concept",
+      "title": "Gyroscopic torque",
+      "summary": "The term that makes a spinning body wobble when its mass is uneven: often dropped in games, because it can blow up",
+      "area": "physics",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-17"
+      },
+      "related": ["angular-momentum"],
+      "citedIn": ["iterative-dynamics-paper"]
+    },
+    {
+      "id": "mass-matrix",
+      "kind": "concept",
+      "title": "Mass matrix",
+      "summary": "The masses and inertias of all bodies in one table, so the equations of every body can be written at once",
+      "area": "math",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-17"
+      },
+      "related": ["inertia-tensor"],
+      "citedIn": ["iterative-dynamics-paper"]
+    },
+    {
+      "id": "redundant-constraints",
+      "kind": "concept",
+      "title": "Redundant constraints",
+      "summary": "More rules than needed for the same job, like a table on six legs: many answers are right, and the solver must cope",
+      "area": "physics",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-17"
+      },
+      "partOf": "constraint",
+      "citedIn": ["iterative-dynamics-paper"]
+    },
+    {
+      "id": "contact-reduction",
+      "kind": "concept",
+      "title": "Contact reduction",
+      "summary": "Keeping only the few contact points that matter between two shapes",
+      "area": "physics",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-17"
+      },
+      "partOf": "contact-manifold",
+      "citedIn": ["iterative-dynamics-paper"]
+    },
+    {
+      "id": "face-clipping",
+      "kind": "concept",
+      "title": "Face clipping",
+      "summary": "Finding where two boxes touch by cutting the face of one against the face of the other",
+      "area": "physics",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-17"
+      },
+      "partOf": "narrow-phase",
+      "related": ["contact-manifold"],
+      "citedIn": ["iterative-dynamics-paper"]
+    },
+    {
+      "id": "baraff-fast-contact-paper",
+      "kind": "paper",
+      "title": "Fast Contact Force Computation for Nonpenetrating Rigid Bodies",
+      "summary": "The precise way to find contact forces that Catto wants to avoid, because of its hard cases",
+      "area": "physics",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-17"
+      },
+      "about": ["contact", "rigid-body", "resting-contact"],
+      "citedIn": ["iterative-dynamics-paper"],
+      "url": "https://doi.org/10.1145/192161.192168",
+      "authors": "David Baraff",
+      "year": 1994
+    },
+    {
+      "id": "anitescu-potra-paper",
+      "kind": "paper",
+      "title": "Formulating Dynamic Multi-Rigid-Body Contact Problems with Friction as Solvable Linear Complementarity Problems",
+      "summary": "Contacts and friction for many rigid bodies written as one problem per step: the kind of scheme Catto follows",
+      "area": "physics",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-17"
+      },
+      "about": ["linear-complementarity-problem", "friction", "rigid-body"],
+      "citedIn": ["iterative-dynamics-paper"],
+      "url": "https://doi.org/10.1023/A:1008292328909",
+      "authors": "M. Anitescu, F. A. Potra",
+      "year": 1997
+    },
+    {
+      "id": "baumgarte-paper",
+      "kind": "paper",
+      "title": "Stabilization of Constraints and Integrals of Motion in Dynamical Systems",
+      "summary": "The paper of 1972 behind the nudge that pushes a broken rule back in proportion to its error",
+      "area": "physics",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-17"
+      },
+      "about": ["baumgarte-stabilization", "constraint-drift"],
+      "citedIn": ["iterative-dynamics-paper"],
+      "url": "https://doi.org/10.1016/0045-7825(72)90018-7",
+      "authors": "J. Baumgarte",
+      "year": 1972
+    },
+    {
+      "id": "guendelman-paper",
+      "kind": "paper",
+      "title": "Nonconvex Rigid Bodies with Stacking",
+      "summary": "Rigid bodies of any shape that stack, with impulses applied one after another",
+      "area": "physics",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-17"
+      },
+      "about": ["stacking", "impulse-based-dynamics", "rigid-body"],
+      "citedIn": ["iterative-dynamics-paper"],
+      "url": "https://doi.org/10.1145/882262.882358",
+      "authors": "Eran Guendelman, Robert Bridson, Ronald Fedkiw",
+      "year": 2003
+    },
+    {
+      "id": "open-dynamics-engine",
+      "kind": "project",
+      "title": "Open Dynamics Engine",
+      "summary": "The open source engine by Russell Smith whose velocity based formulation Catto follows",
+      "area": "physics",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-17"
+      },
+      "about": ["velocity-constraint", "rigid-body", "joint"],
+      "citedIn": ["iterative-dynamics-paper"],
+      "url": "https://www.ode.org/",
+      "authors": "Russell Smith"
+    },
+    {
+      "id": "contact-caching",
+      "kind": "concept",
+      "title": "Contact caching",
+      "summary": "Keeping the push of each contact point from one step to the next, with a label to find the same point again",
+      "area": "physics",
+      "status": "seen",
+      "since": {
+        "seen": "2026-11-17"
+      },
+      "partOf": "warm-starting",
+      "related": ["contact-manifold"],
+      "citedIn": ["iterative-dynamics-paper", "docs/logbook/014-the-mirror.md"]
+    },
+    {
+      "id": "constraint-bias",
+      "kind": "concept",
+      "title": "Constraint bias",
+      "summary": "A target speed added to a velocity rule, so that the rule does work: push out of an overlap, or drive a motor",
+      "area": "physics",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-17"
+      },
+      "partOf": "velocity-constraint",
+      "related": ["baumgarte-stabilization"],
+      "citedIn": ["iterative-dynamics-paper"]
+    },
+    {
+      "id": "projected-gauss-seidel",
+      "kind": "concept",
+      "title": "Projected Gauss-Seidel",
+      "summary": "Gauss-Seidel with a clamp: fix one rule at a time, keep its push inside its limits, and go round again",
+      "area": "physics",
+      "status": "seen",
+      "since": {
+        "seen": "2026-11-17"
+      },
+      "partOf": "gauss-seidel",
+      "related": ["sequential-impulses", "relaxation"],
+      "citedIn": ["iterative-dynamics-paper", "docs/logbook/014-the-mirror.md"]
+    },
+    {
+      "id": "linear-complementarity-problem",
+      "kind": "concept",
+      "title": "Linear complementarity problem",
+      "summary": "The math name of the contact problem: each contact either pushes or is separating, never both",
+      "area": "math",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-17"
+      },
+      "related": ["projected-gauss-seidel"],
+      "citedIn": ["iterative-dynamics-paper"]
+    },
+    {
+      "id": "velocity-constraint",
+      "kind": "concept",
+      "title": "Velocity constraint",
+      "summary": "A rule written on velocities instead of positions: \"do not move into the floor\" instead of \"do not be inside the floor\"",
+      "area": "physics",
+      "status": "seen",
+      "since": {
+        "seen": "2026-11-17"
+      },
+      "partOf": "constraint",
+      "related": ["projection", "impulse-based-dynamics"],
+      "citedIn": ["iterative-dynamics-paper", "docs/logbook/014-the-mirror.md"]
     },
     {
       "id": "solver2d-post",
@@ -4782,7 +5172,8 @@
         "docs/logbook/012-the-family-tree.md",
         "pbd-paper",
         "iterative-dynamics-paper",
-        "docs/logbook/013-the-hidden-brake.md"
+        "docs/logbook/013-the-hidden-brake.md",
+        "docs/logbook/014-the-mirror.md"
       ],
       "url": "https://edelkas.github.io/n/files/bib/jakobsen.pdf",
       "file": "library/advanced-character-physics.pdf",
@@ -4802,7 +5193,11 @@
         "seen": "2026-11-17"
       },
       "related": ["energy-conservation", "projection", "substepping"],
-      "citedIn": ["advanced-character-physics", "docs/logbook/013-the-hidden-brake.md"]
+      "citedIn": [
+        "advanced-character-physics",
+        "docs/logbook/013-the-hidden-brake.md",
+        "docs/logbook/014-the-mirror.md"
+      ]
     },
     {
       "id": "damping",
@@ -4815,7 +5210,7 @@
         "mentioned": "2026-11-17"
       },
       "related": ["numerical-damping"],
-      "citedIn": ["advanced-character-physics"]
+      "citedIn": ["advanced-character-physics", "iterative-dynamics-paper"]
     },
     {
       "id": "leapfrog-integration",
@@ -4864,12 +5259,16 @@
       "title": "Stacking",
       "summary": "Boxes resting on boxes: a classic stress test for a solver",
       "area": "physics",
-      "status": "mentioned",
+      "status": "seen",
       "since": {
-        "mentioned": "2026-11-17"
+        "seen": "2026-11-17"
       },
       "related": ["resting-contact", "mass-ratio"],
-      "citedIn": ["advanced-character-physics"]
+      "citedIn": [
+        "advanced-character-physics",
+        "iterative-dynamics-paper",
+        "docs/logbook/014-the-mirror.md"
+      ]
     },
     {
       "id": "constrained-particle-body",
@@ -4956,12 +5355,16 @@
       "title": "Jacobian",
       "summary": "The table of how much each rule changes when each coordinate moves: it gives the directions a solver pushes along",
       "area": "math",
-      "status": "mentioned",
+      "status": "seen",
       "since": {
-        "mentioned": "2026-11-17"
+        "seen": "2026-11-17"
       },
       "related": ["constraint"],
-      "citedIn": ["advanced-character-physics"]
+      "citedIn": [
+        "advanced-character-physics",
+        "iterative-dynamics-paper",
+        "docs/logbook/014-the-mirror.md"
+      ]
     },
     {
       "id": "conjugate-gradient",
@@ -5079,7 +5482,7 @@
         "seen": "2026-11-17"
       },
       "partOf": "contact",
-      "citedIn": ["advanced-character-physics"]
+      "citedIn": ["advanced-character-physics", "iterative-dynamics-paper"]
     },
     {
       "id": "ragdoll",
@@ -5117,7 +5520,11 @@
         "seen": "2026-11-17"
       },
       "partOf": "constraint",
-      "citedIn": ["advanced-character-physics"]
+      "citedIn": [
+        "advanced-character-physics",
+        "iterative-dynamics-paper",
+        "docs/logbook/014-the-mirror.md"
+      ]
     },
     {
       "id": "inverse-kinematics",
@@ -5143,7 +5550,11 @@
       },
       "partOf": "collision-response",
       "related": ["position-based-dynamics", "verlet-integration", "penalty-method"],
-      "citedIn": ["advanced-character-physics", "docs/logbook/013-the-hidden-brake.md"]
+      "citedIn": [
+        "advanced-character-physics",
+        "docs/logbook/013-the-hidden-brake.md",
+        "docs/logbook/014-the-mirror.md"
+      ]
     },
     {
       "id": "relaxation",

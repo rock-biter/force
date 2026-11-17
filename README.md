@@ -12,18 +12,16 @@ A GPU-first physics engine for the web, built on [WebGPU](https://www.w3.org/TR/
 
 *Updated November 17, 2026*
 
-**Latest step:** [the hidden brake](./docs/logbook/013-the-hidden-brake.md). We read our first
-paper from start to end: Thomas Jakobsen's, from 2001, on the physics of the game Hitman. It moves
-every point freely, then puts it straight back where the rules hold, such as "out of the wall" or
-"1 m from your neighbour". Its way of moving points turned out to be the one FORCE already uses.
-Putting them back has a price: a pendulum that should swing forever climbs to 14 cm instead of 1 m
-after 10 seconds, and smaller steps lose less. Our
-[reading notes](./docs/topics/advanced-character-physics.md) come with a script that recomputes
-every number.
+**Latest step:** [the mirror](./docs/logbook/014-the-mirror.md). We read the two papers behind
+the two ways a game engine repairs a broken rule, such as "do not pass through the floor".
+Thomas Jakobsen's, from 2001, moves the positions straight back. Erin Catto's, from 2005, changes
+the velocities instead. They turned out to be one loop seen in a mirror: one rule at a time, a
+few rounds, and the rest of the work left to the next frames. On our test, a pendulum that should
+swing forever, the first keeps 0.4% of its height after 30 seconds and the second 42%, but with a
+rod that is never exactly as long as it should be. Both sets of
+[reading notes](./docs/topics/README.md) come with a script that recomputes every number.
 
-**Next:** the other way to repair a broken rule: Erin Catto's paper of 2005, which changes
-velocities instead of positions. Then the engines used in video games, and which of the two each
-one runs.
+**Next:** the engines used in video games: which of the two each one runs, and what it can do.
 
 Every step, with what we learned and what went wrong, is in the [logbook](./docs/README.md).
 
