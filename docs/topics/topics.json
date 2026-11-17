@@ -957,7 +957,10 @@
         "docs/logbook/009-the-first-picture.md",
         "docs/decisions/011-substeps-per-world.md",
         "docs/logbook/012-the-family-tree.md",
-        "docs/logbook/013-the-hidden-brake.md"
+        "docs/logbook/013-the-hidden-brake.md",
+        "solver2d-post",
+        "box2d-solver",
+        "box2d-simulation"
       ],
       "page": "docs/topics/integration.md#substeps",
       "code": ["src/world.ts"]
@@ -1488,13 +1491,14 @@
       "title": "Soft Step",
       "summary": "The solver of recent Box2D versions, built around substeps",
       "area": "physics",
-      "status": "mentioned",
+      "status": "seen",
       "since": {
-        "mentioned": "2026-11-05"
+        "mentioned": "2026-11-05",
+        "seen": "2026-11-17"
       },
       "partOf": "solver",
       "related": ["substepping"],
-      "citedIn": ["docs/logbook/004-the-detour.md", "solver2d-post"]
+      "citedIn": ["docs/logbook/004-the-detour.md", "solver2d-post", "box2d-solver"]
     },
     {
       "id": "distance-constraint",
@@ -2060,9 +2064,10 @@
         "seen": "2026-11-05"
       },
       "partOf": "box2d",
-      "about": ["solver", "semi-implicit-euler"],
+      "about": ["solver", "semi-implicit-euler", "soft-step", "substepping"],
       "citedIn": ["docs/logbook/001-the-flip-book.md"],
-      "url": "https://github.com/erincatto/box2d/blob/main/src/solver.c"
+      "url": "https://github.com/erincatto/box2d/blob/main/src/solver.c",
+      "claudeRead": "parts"
     },
     {
       "id": "rapier",
@@ -2700,7 +2705,8 @@
       "partOf": "box2d",
       "about": ["substepping", "soft-step"],
       "citedIn": ["docs/logbook/004-the-detour.md"],
-      "url": "https://github.com/erincatto/box2d/blob/main/docs/simulation.md"
+      "url": "https://github.com/erincatto/box2d/blob/main/docs/simulation.md",
+      "claudeRead": "parts"
     },
     {
       "id": "unity-rigidbody",

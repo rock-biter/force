@@ -5,8 +5,8 @@
 Everything we have met while building FORCE, concepts and sources, and how far we went with each
 one. Use it to look up a term, to find what to read, or to pick what to explore next.
 
-- **226 concepts:** ● 19 studied · ◐ 102 seen · ○ 105 mentioned
-- **120 sources:** ● 15 studied · ◐ 16 seen · ○ 89 mentioned · read by Claude: 43 parts, 12 in full
+- **226 concepts:** ● 19 studied · ◐ 103 seen · ○ 104 mentioned
+- **120 sources:** ● 15 studied · ◐ 16 seen · ○ 89 mentioned · read by Claude: 45 parts, 12 in full
 
 | | Status | What it means |
 | --- | --- | --- |
@@ -137,7 +137,7 @@ How things move, collide and stay together.
 | ○ | Sleeping | Pausing bodies that have come to rest, until something wakes them up |  | [004](../logbook/004-the-detour.md) |
 | ○ | Soft body | An object that squashes and bounces back, like jelly |  | [Ten Minute Physics](https://matthias-research.github.io/pages/tenMinutePhysics/index.html) |
 | ○ | Soft constraint | A constraint allowed to give a little, like a spring with a damper, instead of being perfectly rigid | Constraint | [Solver2D](https://box2d.org/posts/2024/02/solver2d/) |
-| ○ | Soft Step | The solver of recent Box2D versions, built around substeps | Solver | [004](../logbook/004-the-detour.md) |
+| ◐ | Soft Step | The solver of recent Box2D versions, built around substeps | Solver | [004](../logbook/004-the-detour.md) |
 | ◐ | Solver | The part of the engine that corrects velocities so constraints are obeyed | Simulation step | [001](../logbook/001-the-flip-book.md) |
 | ○ | Spatial hashing | A uniform grid stored in a hash table, so it can cover endless space with little memory | Broad phase | [004](../logbook/004-the-detour.md) |
 | ○ | SPH | Smoothed particle hydrodynamics: a fluid's density and pressure at each particle, estimated from its neighbours | Fluid | [004](../logbook/004-the-detour.md) |
@@ -181,8 +181,8 @@ How things move, collide and stay together.
 | ◐ | [Box2D, Hello Box2D](https://github.com/erincatto/box2d/blob/main/docs/hello.md) | Documentation | The flip book comparison, and the 1/60 second step | Physics engine, Timestep | [001](../logbook/001-the-flip-book.md) |  |
 | ○ | [Box2D, Overview](https://github.com/erincatto/box2d/blob/main/docs/overview.md) | Documentation | The units Box2D is tuned for, and the size of objects it handles well | Units and scale | [008](../logbook/008-the-first-loop.md) | Parts |
 | ◐ | [Box2D, physics_world.c](https://github.com/erincatto/box2d/blob/main/src/physics_world.c) | Source code | The real order of the steps: broad phase, collisions, solver | Simulation step | [001](../logbook/001-the-flip-book.md) |  |
-| ○ | [Box2D, Simulation](https://github.com/erincatto/box2d/blob/main/docs/simulation.md) | Documentation | Box2D's guide to the world and its step, including substeps | Substepping, Soft Step | [004](../logbook/004-the-detour.md) |  |
-| ◐ | [Box2D, solver.c](https://github.com/erincatto/box2d/blob/main/src/solver.c) | Source code | The internal stages of the solver | Solver, Semi-implicit Euler | [001](../logbook/001-the-flip-book.md) |  |
+| ○ | [Box2D, Simulation](https://github.com/erincatto/box2d/blob/main/docs/simulation.md) | Documentation | Box2D's guide to the world and its step, including substeps | Substepping, Soft Step | [004](../logbook/004-the-detour.md) | Parts |
+| ◐ | [Box2D, solver.c](https://github.com/erincatto/box2d/blob/main/src/solver.c) | Source code | The internal stages of the solver | Solver, Semi-implicit Euler, Soft Step, Substepping | [001](../logbook/001-the-flip-book.md) | Parts |
 | ○ | [Bullet Physics](https://github.com/bulletphysics/bullet3) | Project | A long-lived open source C++ library: rigid bodies, collision detection and soft bodies | Rigid body, Collision detection, Soft body | [004](../logbook/004-the-detour.md) |  |
 | ○ | [cannon-es](https://github.com/pmndrs/cannon-es) | Project | A 3D physics engine written in JavaScript | Rigid body | [004](../logbook/004-the-detour.md) |  |
 | ○ | [Computer "Experiments" on Classical Fluids. I. Thermodynamical Properties of Lennard-Jones Molecules](https://doi.org/10.1103/PhysRev.159.98)<br>*Loup Verlet, 1967* | Paper | The paper the Verlet integrator is named after: a simulation of molecules, from 1967 | Verlet integration | [Advanced Character Physics](https://edelkas.github.io/n/files/bib/jakobsen.pdf) |  |
