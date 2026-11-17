@@ -2,7 +2,7 @@
 // the guide or theory page of the topic, read from the repo and shown as it is written.
 
 import { marked } from 'marked'
-import packageJson from '../../package.json?raw'
+import { REPO } from '../repo.js'
 import { areaColor, cssColor } from './colors.js'
 import type { Topic } from './data.js'
 
@@ -11,10 +11,6 @@ const pages = import.meta.glob<string>('../../docs/{guides,topics}/*.md', {
   query: '?raw',
   import: 'default',
 })
-/** "https://github.com/<owner>/<repo>", for the links that leave the page. */
-const REPO: string = JSON.parse(packageJson)
-  .repository.url.replace(/^git\+/, '')
-  .replace(/\.git$/, '')
 
 const panel = document.querySelector<HTMLElement>('.panel')
 const dialog = document.querySelector<HTMLDialogElement>('.page')

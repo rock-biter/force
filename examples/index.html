@@ -3,16 +3,48 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>FORCE examples</title>
+    <title>FORCE: a GPU-first physics engine for the web</title>
+    <meta
+      name="description"
+      content="FORCE is an open source physics engine for the web that runs on the GPU with WebGPU. Built in the open, one step at a time."
+    />
+    <link rel="stylesheet" href="./site.css" />
   </head>
   <body>
-    <h1>FORCE examples</h1>
-    <ul>
-      <li><a href="./hello-compute/">hello-compute</a></li>
-      <li><a href="./falling-particles/">falling-particles</a></li>
-      <li><a href="./fountain/">fountain</a>: the debug viewer</li>
-      <li><a href="./pipeline-creation/">pipeline-creation</a>: immediate against async, timed</li>
-      <li><a href="./topic-map/">topic-map</a>: the topic map as a graph in 3D</li>
-    </ul>
+    <main class="column prose">
+      <nav>
+        <a href="#examples">examples</a>
+        <a href="./logbook/">logbook</a>
+        <a href="./topic-map/">topic map</a>
+        <a href="https://github.com/rock-biter/force" target="_blank" rel="noopener">GitHub ↗</a>
+      </nav>
+
+      <!-- The README of the repo, put here by home.ts: the home page says what the README says. -->
+      <article id="readme"></article>
+
+      <!-- home.ts moves these two sections up, right after the first section of the README. -->
+      <section id="examples">
+        <h2>Examples</h2>
+        <p class="note">They run in a browser with WebGPU support.</p>
+        <ul>
+          <li><a href="./fountain/">fountain</a>: particles under gravity, in the debug viewer</li>
+          <li>
+            <a href="./falling-particles/">falling-particles</a>: the first world, printed as numbers
+          </li>
+          <li><a href="./hello-compute/">hello-compute</a>: one compute shader, nothing else</li>
+          <li>
+            <a href="./pipeline-creation/">pipeline-creation</a>: immediate against async, timed
+          </li>
+        </ul>
+      </section>
+      <section id="topic-map">
+        <h2>Topic map</h2>
+        <p>
+          Every concept and every source we met while studying, as a graph in 3D: what we only
+          heard of, what we saw, and what we studied. <a href="./topic-map/">Open the map →</a>
+        </p>
+      </section>
+    </main>
+    <script type="module" src="./home.ts"></script>
   </body>
 </html>

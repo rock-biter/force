@@ -43,6 +43,9 @@ Only those used in the chapter, with links.
 One line.
 ```
 
+Keep the first three pieces exactly in this shape: the website's logbook page (`examples/logbook/`)
+builds the card of each chapter from the title, the date line and the "In short" paragraph.
+
 Stay under 70 lines, about 3-4 minutes of reading. If that is not enough, the step was too big: split
 it into two chapters.
 

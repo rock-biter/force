@@ -132,7 +132,7 @@ export async function startDebugViewer(options: DebugViewerOptions): Promise<voi
 export function showError(error: unknown): void {
   const output = document.createElement('pre')
   output.textContent = `FAILED: ${error}`
-  output.style.cssText = 'position:fixed;top:0;left:0;margin:16px;color:#b00020'
+  output.style.cssText = 'position:fixed;top:24px;left:0;margin:16px;color:#b00020'
   document.body.append(output)
 }
 

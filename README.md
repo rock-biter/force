@@ -72,13 +72,14 @@ npm test           # run the unit tests
 npm run typecheck  # check types
 npm run lint       # check lint and formatting
 npm run build      # build the package into dist/
+npm run build:site # build the website into _site/
 ```
 
 | Path        | Contents                                   |
 | ----------- | ------------------------------------------ |
 | `src/`      | The library                                |
 | `test/`     | Unit tests                                 |
-| `examples/` | Runnable demos, importing from `force-gpu` |
+| `examples/` | The website: home page and runnable demos  |
 
 ## Contributing
 

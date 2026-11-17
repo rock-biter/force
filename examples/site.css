@@ -1,0 +1,184 @@
+/*
+ * The look shared by the home page, the logbook and the examples: the paper, the ink and the
+ * monospace type of the topic map, and nothing else.
+ */
+:root {
+  --paper: #f2f1ec;
+  --ink: #16161a;
+  --grey: #85857f;
+}
+body {
+  margin: 16px;
+  background: var(--paper);
+  color: var(--ink);
+  font:
+    12px / 1.7 ui-monospace,
+    "SF Mono",
+    Menlo,
+    Consolas,
+    monospace;
+}
+a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+pre {
+  margin: 0;
+  font: inherit;
+}
+
+/* The way back to the home page, at the top left of every page but the home. */
+.crumb {
+  margin-bottom: 16px;
+}
+.crumb p {
+  margin: 0;
+  color: var(--grey);
+}
+
+/* An example that draws: the canvas takes the whole window, and the way back floats over it. */
+.stage {
+  margin: 0;
+  overflow: hidden;
+}
+.stage canvas {
+  display: block;
+}
+.stage .crumb {
+  position: fixed;
+  top: 16px;
+  left: 16px;
+}
+
+/* One column of text in the middle of the window: the home page and the logbook. */
+.column {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 0 0 64px;
+}
+.column > nav:not(.crumb) {
+  display: flex;
+  gap: 16px;
+  padding: 16px 0;
+}
+
+/* A page of the repo written in markdown, shown as it is: the README, a chapter of the logbook. */
+.prose img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  border: 1px solid var(--ink);
+}
+.prose h1 {
+  font-size: 18px;
+  line-height: 1.3;
+}
+.prose h2 {
+  margin-top: 32px;
+  font-size: 14px;
+}
+.prose h3 {
+  font-size: 12px;
+}
+.prose blockquote {
+  margin: 16px 0;
+  padding: 0 12px;
+  border: 1px solid var(--ink);
+}
+.prose ul,
+.prose ol {
+  padding-left: 20px;
+}
+.prose .note {
+  color: var(--grey);
+}
+.prose pre {
+  overflow: auto;
+  padding: 12px;
+  border: 1px solid var(--grey);
+}
+.prose :not(pre) > code {
+  padding: 1px 3px;
+  background: rgb(22 22 26 / 0.07);
+}
+.prose table {
+  border-collapse: collapse;
+}
+.prose th,
+.prose td {
+  padding: 4px 10px;
+  border: 1px solid var(--grey);
+  text-align: left;
+  vertical-align: top;
+}
+
+/* A card of the logbook: one chapter, with its title, its date and how it starts. */
+.card {
+  margin-top: 16px;
+  padding: 12px;
+  border: 1px solid var(--ink);
+}
+.card h2,
+.card p {
+  margin: 0;
+  font: inherit;
+}
+.card h2 {
+  font-weight: 700;
+}
+.card h2 a {
+  text-decoration: none;
+}
+.card .meta {
+  margin-bottom: 8px;
+  color: var(--grey);
+}
+.card .actions {
+  margin-top: 10px;
+}
+
+/* A whole page over the others, as on the topic map: here, a chapter of the logbook. */
+.page {
+  width: min(760px, calc(100vw - 32px));
+  max-height: calc(100vh - 64px);
+  padding: 0;
+  border: 1px solid var(--ink);
+  background: var(--paper);
+  color: var(--ink);
+}
+.page[open] {
+  display: flex;
+  flex-direction: column;
+}
+.page::backdrop {
+  background: rgb(242 241 236 / 0.85);
+}
+.page header {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 10px 24px;
+  border-bottom: 1px solid var(--ink);
+  color: var(--grey);
+}
+/* The button that closes it looks like a link. Only this one: the debug panel has its own. */
+.page button {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+.page article {
+  overflow: auto;
+  padding: 8px 24px 32px;
+  outline: none; /* it takes the focus when the page opens, so the keyboard scrolls it */
+}
+/* While a page is open, the list under it stays still. */
+body:has(.page[open]) {
+  overflow: hidden;
+}

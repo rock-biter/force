@@ -38,4 +38,4 @@ Everything in the repo is in English: code, comments, docs and skills. Chat in I
 
 ## Commands
 
-`npm run dev` (examples), `npm test`, `npm run typecheck`, `npm run lint`, `npm run build`, `npm run topics` (checks the topic map and regenerates its index).
+`npm run dev` (examples), `npm test`, `npm run typecheck`, `npm run lint`, `npm run build`, `npm run build:site` (the website, from `examples/` into `_site/`), `npm run topics` (checks the topic map and regenerates its index).

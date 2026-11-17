@@ -13,7 +13,7 @@
   ],
   "license": "MIT",
   "author": "rock-biter",
-  "homepage": "https://github.com/rock-biter/force#readme",
+  "homepage": "https://rock-biter.github.io/force/",
   "bugs": "https://github.com/rock-biter/force/issues",
   "repository": {
     "type": "git",
@@ -38,6 +38,8 @@
   "scripts": {
     "dev": "vite examples",
     "build": "vite build && tsc -p tsconfig.build.json",
+    "build:site": "vite build examples",
+    "preview:site": "vite preview examples",
     "test": "vitest run",
     "test:watch": "vitest",
     "typecheck": "tsc",

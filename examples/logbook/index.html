@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>FORCE: logbook</title>
+    <meta
+      name="description"
+      content="The story of FORCE, a GPU physics engine for the web, one chapter per step: what we did, what we learned and what went wrong."
+    />
+    <link rel="stylesheet" href="../site.css" />
+  </head>
+  <body>
+    <main class="column">
+      <nav class="crumb">
+        <a href="../">← FORCE</a> · logbook
+        <p><span data-count></span> chapters, the latest first</p>
+      </nav>
+      <!-- One card per chapter of docs/logbook/, put here by main.ts. -->
+      <div class="chapters"></div>
+    </main>
+
+    <!-- A whole chapter, over the list. -->
+    <dialog class="page">
+      <header>
+        <span class="path"></span>
+        <button class="close" type="button">close ×</button>
+      </header>
+      <article class="prose" tabindex="-1" autofocus></article>
+    </dialog>
+    <script type="module" src="./main.ts"></script>
+  </body>
+</html>
