@@ -13,6 +13,8 @@
         --paper: #f2f1ec;
         --ink: #16161a;
         --grey: #85857f;
+        /* The paper, a little see-through: behind text that the graph passes under. */
+        --veil: rgb(242 241 236 / 0.85);
       }
       body {
         margin: 0;
@@ -45,7 +47,8 @@
 
       /*
        * The left column: the title at the top, the list of topics under it, and the panel of the
-       * selected topic at the bottom. The column itself lets the mouse through to the graph.
+       * selected topic at the bottom. The column itself lets the mouse through to the graph. On a
+       * narrow window it is as wide as the page, and the legend is its last row.
        */
       .side {
         position: fixed;
@@ -64,6 +67,11 @@
         pointer-events: auto;
       }
 
+      /* The button that opens the list: only on a narrow window, where the list starts closed. */
+      .toc-toggle {
+        display: none;
+      }
+
       /* The title, and under it how many topics are on the map. */
       .title {
         user-select: none;
@@ -80,41 +88,37 @@
         color: var(--grey);
       }
 
-      /* The legend sits in the corner the graph leaves free: bottom right. */
-      .legend {
+      /*
+       * The legend: one line per group (how far we went, concept or source, the areas), with the
+       * labels of a group side by side. It sits at the bottom, in the corner the panel leaves
+       * free, and never grows wide enough to reach the panel. The mouse goes through it.
+       */
+      .side > .legend {
         position: fixed;
         right: 16px;
         bottom: 16px;
-        z-index: 1; /* over the labels of the graph */
+        max-width: calc(100vw - 414px);
         user-select: none;
-      }
-      /* On a narrow window the panel takes the whole bottom: the legend goes under the title. */
-      @media (max-width: 720px) {
-        .legend {
-          top: 64px;
-          right: auto;
-          bottom: auto;
-          left: 16px;
-        }
+        pointer-events: none;
       }
       /* On the timeline, it moves up to leave the bottom to the timeline bar. */
       body[data-view="timeline"] .legend {
         bottom: 88px;
       }
-      .legend table {
-        border-collapse: collapse;
-      }
-      .legend td {
-        padding: 0 10px 0 0;
-      }
-      .legend td:last-child {
+      .legend ul {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        gap: 0 12px;
+        margin: 0;
         padding: 0;
-        text-align: right;
-        color: var(--grey);
+        list-style: none;
       }
-      /* A little air between the groups of the legend. */
-      .legend .gap {
-        border-top: 8px solid transparent;
+      .legend li {
+        white-space: nowrap;
+      }
+      .legend .count {
+        color: var(--grey);
       }
 
       .panel {
@@ -179,6 +183,7 @@
         position: fixed;
         top: 16px;
         right: 16px;
+        z-index: 2; /* over the bar the title becomes on a narrow window */
         display: flex;
         gap: 16px;
         user-select: none;
@@ -315,13 +320,86 @@
         background: rgb(22 22 26 / 0.14);
         color: var(--ink);
       }
-      /* The list is there only in the map view, and only where there is room beside it. */
-      body:not([data-view="map"]) .toc {
+      /* The list is there only in the map view. */
+      body:not([data-view="map"]) .toc,
+      body:not([data-view="map"]) .toc-toggle {
         display: none;
       }
+
+      /*
+       * A narrow window, such as a phone. The graph fills the page and passes under everything, so
+       * the title becomes a bar across the top and the legend a strip across the bottom, each on
+       * a veil of paper that keeps it readable. There is no room for the list beside the graph: it
+       * starts closed, and a button under the bar opens it over the graph.
+       */
       @media (max-width: 720px) {
-        .toc {
+        .side {
+          right: 16px;
+        }
+        /* The bar and the strip reach the edges of the page, past the margins of the column. */
+        .side > .title,
+        .side > .legend {
+          align-self: stretch;
+          background: var(--veil);
+          -webkit-backdrop-filter: blur(6px);
+          backdrop-filter: blur(6px);
+        }
+        .side > .title {
+          margin: -16px -16px 0;
+          padding: 16px 16px 10px;
+        }
+        .toc-toggle {
+          display: grid;
+          place-items: center;
+          width: 32px;
+          height: 32px;
+          border: 1px solid var(--ink);
+          background: var(--paper);
+        }
+        .toc-toggle svg {
+          grid-area: 1 / 1;
+        }
+        /* The button draws a magnifying glass while the list is closed, a cross while it is open. */
+        .toc-toggle[aria-expanded="true"] .closed,
+        .toc-toggle[aria-expanded="false"] .open {
+          visibility: hidden;
+        }
+        /* Filled while a search is fading the graph, so a closed list still says so. */
+        .toc-toggle[data-filtered] {
+          background: var(--ink);
+          color: var(--paper);
+        }
+        body:not([data-toc="open"]) .toc {
           display: none;
+        }
+        /* Safari on a phone zooms into a field whose text is smaller than 16px. */
+        .toc .search {
+          padding: 6px 12px;
+          font-size: 16px;
+        }
+        /* Rows a finger can hit. */
+        .toc summary {
+          padding: 6px 12px;
+        }
+        .toc li > button {
+          padding: 4px;
+        }
+        .side > .legend {
+          position: static;
+          max-width: none;
+          margin: 0 -16px -16px;
+          padding: 8px 16px 12px;
+        }
+        /* On the timeline the strip grows down, and the timeline bar sits on it. */
+        body[data-view="timeline"] .side > .legend {
+          padding-bottom: 88px;
+        }
+        /* With no panel, the legend is what goes to the bottom of the column. */
+        .side > .panel[hidden] + .legend {
+          margin-top: auto;
+        }
+        .legend ul {
+          justify-content: flex-start;
         }
       }
 
@@ -331,6 +409,7 @@
         left: 16px;
         right: 16px;
         bottom: 12px;
+        z-index: 2; /* over the strip the legend becomes on a narrow window */
         user-select: none;
       }
       .timeline .now {
@@ -442,41 +521,52 @@
         <h1><a href="../">← FORCE</a> · topic map</h1>
         <p><span data-count="all"></span> topics</p>
       </header>
-      <nav class="toc" aria-label="Topics">
+      <button
+        class="toc-toggle"
+        type="button"
+        aria-label="Open the list of topics"
+        aria-expanded="false"
+        aria-controls="toc"
+      >
+        <!-- A magnifying glass while the list is closed, a cross while it is open. -->
+        <svg class="closed" width="14" height="14" viewBox="0 0 14 14" aria-hidden="true">
+          <path
+            d="M10.25 6a4.25 4.25 0 1 1-8.5 0a4.25 4.25 0 0 1 8.5 0zM9 9l4 4"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.25"
+          />
+        </svg>
+        <svg class="open" width="14" height="14" viewBox="0 0 14 14" aria-hidden="true">
+          <path d="M2 2l10 10M12 2L2 12" fill="none" stroke="currentColor" stroke-width="1.25" />
+        </svg>
+      </button>
+      <nav class="toc" id="toc" aria-label="Topics">
         <input class="search" type="search" placeholder="search…" aria-label="Search the topics" />
         <div class="list"></div>
       </nav>
       <aside class="panel" hidden></aside>
-    </div>
-    <div class="legend">
-      <table>
-        <tr>
-          <td><span class="mark studied"></span></td>
-          <td>studied</td>
-          <td data-count="studied"></td>
-        </tr>
-        <tr>
-          <td><span class="mark seen"></span></td>
-          <td>seen</td>
-          <td data-count="seen"></td>
-        </tr>
-        <tr>
-          <td><span class="mark mentioned"></span></td>
-          <td>mentioned</td>
-          <td data-count="mentioned"></td>
-        </tr>
-        <tr class="gap">
-          <td><span class="mark"></span></td>
-          <td>concept</td>
-          <td></td>
-        </tr>
-        <tr>
-          <td><span class="mark square"></span></td>
-          <td>source</td>
-          <td></td>
-        </tr>
-        <tbody class="areas"></tbody>
-      </table>
+      <div class="legend">
+        <ul>
+          <li>
+            <span class="mark studied"></span> studied
+            <span class="count" data-count="studied"></span>
+          </li>
+          <li>
+            <span class="mark seen"></span> seen
+            <span class="count" data-count="seen"></span>
+          </li>
+          <li>
+            <span class="mark mentioned"></span> mentioned
+            <span class="count" data-count="mentioned"></span>
+          </li>
+        </ul>
+        <ul>
+          <li><span class="mark"></span> concept</li>
+          <li><span class="mark square"></span> source</li>
+        </ul>
+        <ul class="areas"></ul>
+      </div>
     </div>
     <nav class="views">
       <button type="button" data-view="map" aria-pressed="true">map</button>

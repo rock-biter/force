@@ -30,17 +30,16 @@ const toc = createToc(
 const fromAddress = graph.topics.findIndex((topic) => topic.id === location.hash.slice(1))
 if (fromAddress !== -1) scene.select(fromAddress)
 
-// The legend has a row for each area that has topics, after the rows of the statuses.
+// The last line of the legend: a label for each area that has topics, with how many.
 const areas = document.querySelector('.legend .areas')
 for (const [area, { title }] of Object.entries(graph.areas)) {
   if (!areas || !graph.topics.some((topic) => topic.area === area)) continue
-  const row = document.createElement('tr')
-  for (const content of [mark({ status: 'studied', kind: 'concept', area }), title]) {
-    row.insertCell().append(content)
-  }
-  row.insertCell().dataset.count = area
-  if (areas.childElementCount === 0) row.className = 'gap'
-  areas.append(row)
+  const count = document.createElement('span')
+  count.className = 'count'
+  count.dataset.count = area
+  const item = document.createElement('li')
+  item.append(mark({ status: 'studied', kind: 'concept', area }), ` ${title} `, count)
+  areas.append(item)
 }
 
 /**

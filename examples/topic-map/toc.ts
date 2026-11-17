@@ -8,6 +8,9 @@
 //
 // Over the list, a field to search the titles. While it has text, the list keeps only the topics
 // found, each under the topics it is part of, and the graph fades the others.
+//
+// On a narrow window, such as a phone, the list starts closed: a button under the title opens it
+// over the graph, and choosing a topic closes it again.
 
 import type { Graph } from './data.js'
 import { mark } from './panel.js'
@@ -31,6 +34,7 @@ export function createToc(
 ): Toc | undefined {
   const nav = document.querySelector<HTMLElement>('.toc .list')
   const field = document.querySelector<HTMLInputElement>('.toc .search')
+  const toggle = document.querySelector<HTMLButtonElement>('.toc-toggle')
   if (!nav) return
   const { topics, areas } = graph
 
@@ -130,6 +134,8 @@ export function createToc(
     }
     nothing.hidden = found.size > 0
     nav.scrollTop = 0
+    // The button says that a search is on, for when the list is closed and the field out of sight.
+    toggle?.toggleAttribute('data-filtered', words.length > 0)
     onSearch(words.length > 0 ? found : null)
   }
   search('')
@@ -139,7 +145,7 @@ export function createToc(
     if (event.key === 'Enter') {
       // Enter goes to the first topic found, as a click on its row would.
       const first = nav.querySelector<HTMLElement>('li:not([hidden]) > button:not(.around)')
-      if (first) onSelect(Number(first.dataset.index))
+      if (first) choose(Number(first.dataset.index))
     } else if (event.key === 'Escape' && field.value !== '') {
       // Escape empties the search first. It clears the selection only from an empty field.
       event.stopPropagation()
@@ -150,6 +156,31 @@ export function createToc(
   })
 
   let selected: number | null = null
+
+  /** Brings the row of the selected topic to the middle of the list. */
+  const reveal = () => {
+    if (selected !== null) rows[selected]?.scrollIntoView({ block: 'center' })
+  }
+  /**
+   * Opens or closes the list. The state is written on the body, and only the style of a narrow
+   * window reads it: on a wide one the list is always there, and this changes nothing.
+   */
+  const open = (state: boolean): void => {
+    document.body.dataset.toc = state ? 'open' : 'closed'
+    toggle?.setAttribute('aria-expanded', String(state))
+    toggle?.setAttribute('aria-label', `${state ? 'Close' : 'Open'} the list of topics`)
+    // The selection may have changed while the list was closed.
+    if (state) reveal()
+    // A field that is gone from the page lets go of the keyboard of the phone.
+    else if (field?.getClientRects().length === 0) field.blur()
+  }
+  toggle?.addEventListener('click', () => open(document.body.dataset.toc !== 'open'))
+  /** Selects a topic from the list, or clears the selection with null, and closes the list. */
+  const choose = (index: number | null): void => {
+    onSelect(index)
+    open(false)
+  }
+
   /** The topic of the row an event happened on, or null when it was not on a row. */
   const topicAt = (event: Event): number | null => {
     const row =
@@ -161,7 +192,7 @@ export function createToc(
   // One listener for all the rows: 295 buttons, and the number grows.
   nav.addEventListener('click', (event) => {
     const index = topicAt(event)
-    if (index !== null) onSelect(index === selected ? null : index)
+    if (index !== null) choose(index === selected ? null : index)
   })
   nav.addEventListener('pointerover', (event) => onHover(topicAt(event)))
   nav.addEventListener('pointerleave', () => onHover(null))
