@@ -4,6 +4,10 @@
 
 A GPU-first physics engine for the web, built on [WebGPU](https://www.w3.org/TR/webgpu/).
 
+**[Documentation →](https://rock-biter.github.io/force/)** The website of the project. For now it
+has the examples running in the browser, the logbook and the topic map in 3D. The full
+documentation of the library will live there too.
+
 > **Status: early development.** FORCE is being built in the open, one step at a time, and
 > studying how physics engines work is part of the job. The package is not published on npm, and
 > the API will change without notice.

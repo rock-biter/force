@@ -3,6 +3,7 @@
 import { marked } from 'marked'
 import readme from '../README.md?raw'
 import { chapterOf, fixLinks } from './links.js'
+import { SITE } from './repo.js'
 
 // The images at the root of the repo, by the path the README uses for them: "./force-cover.png".
 const images = import.meta.glob<string>('../*.png', {
@@ -20,6 +21,15 @@ if (article) {
     const src = image.getAttribute('src') ?? ''
     const url = images[`.${src}`] // "./x.png" in the README is "../x.png" from here
     if (url) image.src = url
+  }
+
+  // The README sends who reads it on GitHub to this site. Here that link would lead to the page it
+  // is on, so the paragraph that holds it is left out: in the README it has a paragraph of its own.
+  const withoutSlash = (address: string) => address.replace(/\/$/, '')
+  for (const link of article.querySelectorAll('a')) {
+    if (withoutSlash(link.getAttribute('href') ?? '') === withoutSlash(SITE)) {
+      link.closest('p')?.remove()
+    }
   }
 
   // A chapter of the logbook opens on the logbook page of the site, anything else on GitHub.
