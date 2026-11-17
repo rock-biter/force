@@ -415,7 +415,8 @@
         "docs/README.md",
         "ten-minute-physics",
         "docs/logbook/004-the-detour.md",
-        "advanced-character-physics"
+        "advanced-character-physics",
+        "docs/logbook/013-the-hidden-brake.md"
       ]
     },
     {
@@ -677,7 +678,8 @@
         "docs/logbook/004-the-detour.md",
         "docs/decisions/013-a-flat-ground.md",
         "docs/logbook/012-the-family-tree.md",
-        "advanced-character-physics"
+        "advanced-character-physics",
+        "docs/logbook/013-the-hidden-brake.md"
       ]
     },
     {
@@ -870,7 +872,8 @@
         "docs/logbook/004-the-detour.md",
         "integration-basics",
         "box2d-solver",
-        "docs/logbook/008-the-first-loop.md"
+        "docs/logbook/008-the-first-loop.md",
+        "docs/logbook/013-the-hidden-brake.md"
       ],
       "page": "docs/topics/integration.md#semi-implicit-euler",
       "code": ["src/shaders/integrate.wgsl"]
@@ -886,7 +889,11 @@
         "seen": "2026-11-08"
       },
       "partOf": "integration",
-      "citedIn": ["docs/logbook/004-the-detour.md", "advanced-character-physics"]
+      "citedIn": [
+        "docs/logbook/004-the-detour.md",
+        "advanced-character-physics",
+        "docs/logbook/013-the-hidden-brake.md"
+      ]
     },
     {
       "id": "numerical-stability",
@@ -937,7 +944,8 @@
         "docs/logbook/004-the-detour.md",
         "docs/logbook/009-the-first-picture.md",
         "docs/decisions/011-substeps-per-world.md",
-        "docs/logbook/012-the-family-tree.md"
+        "docs/logbook/012-the-family-tree.md",
+        "docs/logbook/013-the-hidden-brake.md"
       ],
       "page": "docs/topics/integration.md#substeps",
       "code": ["src/world.ts"]
@@ -1027,7 +1035,11 @@
         "seen": "2026-11-08"
       },
       "related": ["numerical-stability"],
-      "citedIn": ["docs/logbook/004-the-detour.md", "advanced-character-physics"]
+      "citedIn": [
+        "docs/logbook/004-the-detour.md",
+        "advanced-character-physics",
+        "docs/logbook/013-the-hidden-brake.md"
+      ]
     },
     {
       "id": "plausibility",
@@ -1468,7 +1480,8 @@
       "citedIn": [
         "docs/logbook/004-the-detour.md",
         "docs/logbook/012-the-family-tree.md",
-        "advanced-character-physics"
+        "advanced-character-physics",
+        "docs/logbook/013-the-hidden-brake.md"
       ]
     },
     {
@@ -4645,7 +4658,7 @@
       },
       "partOf": "integration",
       "related": ["velocity-verlet", "position-based-dynamics", "semi-implicit-euler"],
-      "citedIn": ["advanced-character-physics", "pbd-paper"]
+      "citedIn": ["advanced-character-physics", "pbd-paper", "docs/logbook/013-the-hidden-brake.md"]
     },
     {
       "id": "iterative-dynamics-paper",
@@ -4765,7 +4778,12 @@
         "jacobian",
         "conjugate-gradient"
       ],
-      "citedIn": ["docs/logbook/012-the-family-tree.md", "pbd-paper", "iterative-dynamics-paper"],
+      "citedIn": [
+        "docs/logbook/012-the-family-tree.md",
+        "pbd-paper",
+        "iterative-dynamics-paper",
+        "docs/logbook/013-the-hidden-brake.md"
+      ],
       "url": "https://edelkas.github.io/n/files/bib/jakobsen.pdf",
       "file": "library/advanced-character-physics.pdf",
       "authors": "Thomas Jakobsen",
@@ -4784,7 +4802,7 @@
         "seen": "2026-11-17"
       },
       "related": ["energy-conservation", "projection", "substepping"],
-      "citedIn": ["advanced-character-physics"]
+      "citedIn": ["advanced-character-physics", "docs/logbook/013-the-hidden-brake.md"]
     },
     {
       "id": "damping",
@@ -4865,7 +4883,7 @@
       },
       "partOf": "rigid-body",
       "related": ["particle-rigid-bodies", "distance-constraint", "shape-matching"],
-      "citedIn": ["advanced-character-physics"]
+      "citedIn": ["advanced-character-physics", "docs/logbook/013-the-hidden-brake.md"]
     },
     {
       "id": "convexity",
@@ -5125,7 +5143,7 @@
       },
       "partOf": "collision-response",
       "related": ["position-based-dynamics", "verlet-integration", "penalty-method"],
-      "citedIn": ["advanced-character-physics"]
+      "citedIn": ["advanced-character-physics", "docs/logbook/013-the-hidden-brake.md"]
     },
     {
       "id": "relaxation",
@@ -5139,7 +5157,7 @@
       },
       "partOf": "iterative-solver",
       "related": ["gauss-seidel", "jacobi", "projection", "distance-constraint"],
-      "citedIn": ["advanced-character-physics"]
+      "citedIn": ["advanced-character-physics", "docs/logbook/013-the-hidden-brake.md"]
     },
     {
       "id": "newton-raphson",
@@ -5152,7 +5170,7 @@
         "seen": "2026-11-17"
       },
       "related": ["taylor-expansion"],
-      "citedIn": ["advanced-character-physics"]
+      "citedIn": ["advanced-character-physics", "docs/logbook/013-the-hidden-brake.md"]
     },
     {
       "id": "taylor-expansion",
@@ -5165,7 +5183,7 @@
         "mentioned": "2026-11-17"
       },
       "related": ["derivative"],
-      "citedIn": ["advanced-character-physics"]
+      "citedIn": ["advanced-character-physics", "docs/logbook/013-the-hidden-brake.md"]
     },
     {
       "id": "penalty-method",
@@ -5178,7 +5196,7 @@
         "seen": "2026-11-17"
       },
       "partOf": "collision-response",
-      "citedIn": ["advanced-character-physics"]
+      "citedIn": ["advanced-character-physics", "docs/logbook/013-the-hidden-brake.md"]
     },
     {
       "id": "avbd-paper",

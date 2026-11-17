@@ -10,18 +10,20 @@ A GPU-first physics engine for the web, built on [WebGPU](https://www.w3.org/TR/
 
 ## Where we are
 
-*Updated November 16, 2026*
+*Updated November 17, 2026*
 
-**Latest step:** [the family tree](./docs/logbook/012-the-family-tree.md). We looked for the
-papers behind particles and rigid bodies, and found two branches: solvers that repair a broken
-rule by changing velocities, and solvers that move the positions straight back. Both now prefer
-many small steps, and both must be reshaped to run on thousands of GPU threads at once. One
-warning came with them: small steps need digits, and WebGPU shaders stop at 32-bit floats. Before
-it, the [WebGPU mini guides](./docs/guides/README.md) on
-[bind groups](./docs/guides/bind-groups.md) and on
-[dispatch and workgroups](./docs/guides/dispatch-and-workgroups.md).
+**Latest step:** [the hidden brake](./docs/logbook/013-the-hidden-brake.md). We read our first
+paper from start to end: Thomas Jakobsen's, from 2001, on the physics of the game Hitman. It moves
+every point freely, then puts it straight back where the rules hold, such as "out of the wall" or
+"1 m from your neighbour". Its way of moving points turned out to be the one FORCE already uses.
+Putting them back has a price: a pendulum that should swing forever climbs to 14 cm instead of 1 m
+after 10 seconds, and smaller steps lose less. Our
+[reading notes](./docs/topics/advanced-character-physics.md) come with a script that recomputes
+every number.
 
-**Next:** the engines used in video games: which solver each one runs, and what it can do.
+**Next:** the other way to repair a broken rule: Erin Catto's paper of 2005, which changes
+velocities instead of positions. Then the engines used in video games, and which of the two each
+one runs.
 
 Every step, with what we learned and what went wrong, is in the [logbook](./docs/README.md).
 
