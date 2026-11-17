@@ -194,21 +194,62 @@
       }
 
       /*
-       * The list of topics takes the room left between the title and the panel, and scrolls. It
-       * is as wide as the panel, border included.
+       * The list of topics takes the room left between the title and the panel. It is as wide as
+       * the panel, border included. The search field stays at its top, and the list scrolls
+       * under it.
        */
+      .toc {
+        display: flex;
+        flex-direction: column;
+      }
       .side > .toc {
         flex: 0 1 auto;
         box-sizing: border-box;
         width: min(366px, calc(100vw - 32px));
         min-height: 0;
+        border: 1px solid var(--ink);
+        background: var(--paper);
+        user-select: none;
+      }
+      .toc .search {
+        flex: none;
+        box-sizing: border-box;
+        width: 100%;
+        margin: 0;
+        padding: 4px 12px;
+        border: 0;
+        border-bottom: 1px solid var(--ink);
+        border-radius: 0;
+        outline: none;
+        appearance: none;
+        background: var(--paper);
+        color: var(--ink);
+        font: inherit;
+        /* Safari does not let you type in a field that sits inside something with no selection. */
+        -webkit-user-select: text;
+        user-select: text;
+      }
+      .toc .search::placeholder {
+        color: var(--grey);
+      }
+      .toc .search:focus {
+        background: rgb(22 22 26 / 0.06);
+      }
+      .toc .list {
+        min-height: 0;
         overflow-y: auto;
         overscroll-behavior: contain;
         scrollbar-width: thin;
         scrollbar-color: var(--grey) transparent;
-        border: 1px solid var(--ink);
-        background: var(--paper);
-        user-select: none;
+      }
+      /* A topic the search did not find, kept only because one that it found sits under it. */
+      .toc li > button.around {
+        opacity: 0.4;
+      }
+      .toc .nothing {
+        margin: 0;
+        padding: 4px 12px;
+        color: var(--grey);
       }
       /* The name of an area stays in sight while its topics scroll under it. */
       .toc summary {
@@ -401,7 +442,10 @@
         <h1><a href="../">← FORCE</a> · topic map</h1>
         <p><span data-count="all"></span> topics</p>
       </header>
-      <nav class="toc" aria-label="Topics"></nav>
+      <nav class="toc" aria-label="Topics">
+        <input class="search" type="search" placeholder="search…" aria-label="Search the topics" />
+        <div class="list"></div>
+      </nav>
       <aside class="panel" hidden></aside>
     </div>
     <div class="legend">

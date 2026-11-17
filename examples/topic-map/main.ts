@@ -23,6 +23,7 @@ const toc = createToc(
   graph,
   (index) => scene.select(index),
   (index) => scene.hover(index),
+  (found) => scene.filter(found),
 )
 
 // Opening the page with a topic in the address selects it.

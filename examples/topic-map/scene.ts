@@ -7,6 +7,9 @@
 // A click selects it: the highlight stays, the space around the node opens up (see layout.ts) and
 // the camera glides to it. From there, only the nodes still visible can be clicked.
 //
+// A search in the list of topics fades the nodes it did not find, the same way. A highlight comes
+// before it: selecting one of the topics found shows what is around it, found or not.
+//
 // On the timeline the graph shows the map of a past day: the topics not yet on the map are not
 // drawn, and the layout is simulated live (see createGrowingLayout), so it reshapes as they come.
 // There the color has to be earned: a topic is grey while only mentioned, halfway to its color
@@ -235,6 +238,8 @@ export class GraphScene {
   private highlighted: number | null = null
   /** The topic under the pointer, and the timer that will highlight it if the pointer stays. */
   private hovered: number | null = null
+  /** The topics a search in the list found, or null when nobody is searching. */
+  private matches: Set<number> | null = null
   private hoverTimer = 0
   /** Per node: x, y, z now. They move when a node is selected. */
   private readonly positions: Float32Array
@@ -445,6 +450,20 @@ export class GraphScene {
   }
 
   /**
+   * Keeps the colors of the topics a search found, and fades the others. With null, the search is
+   * over and every topic gets its colors back.
+   */
+  filter(matches: Set<number> | null): void {
+    this.matches = matches
+    if (this.highlighted === null) this.highlight(null, true)
+  }
+
+  /** The topics found by the search. The timeline has no list to search in: there, none. */
+  private get found(): Set<number> | null {
+    return this.onTimeline ? null : this.matches
+  }
+
+  /**
    * Shows the map of a past day: the status of each topic that day, null for a topic not on the
    * map yet. With null, goes back to the map of today, and the nodes glide to their usual places.
    */
@@ -454,15 +473,17 @@ export class GraphScene {
       if (!this.onTimeline) return
       this.onTimeline = false
       this.positionTween.to(this.layout.rest)
-      this.lineColorGoal.set(this.lineColorNormal)
-      this.lineColorTween.to(this.lineColorGoal)
+      // Nodes and lines go back to their usual colors or, during a search, to what it leaves them.
+      this.highlight(null, true)
     } else {
-      if (!this.onTimeline) {
+      const entering = !this.onTimeline
+      if (entering) {
         this.select(null)
         this.hover(null)
         this.positionTween.cancel()
       }
       this.onTimeline = true
+      if (entering) this.highlight(null, true) // a search fades nothing here
       this.growing ??= createGrowingLayout(this.graph)
       this.growing.set(statuses)
     }
@@ -490,18 +511,21 @@ export class GraphScene {
   }
 
   /**
-   * Centers the colors on a topic, or gives every node its own back with null. Nothing moves:
-   * this is all that hovering a node does.
+   * Centers the colors on a topic. With null, every node gets its own back, or, during a search,
+   * only the ones it found. Nothing moves: this is all that hovering a node does. `again` works
+   * the colors out even when the topic is the same as before, because the search changed.
    */
-  private highlight(index: number | null): void {
-    if (index === this.highlighted) return
+  private highlight(index: number | null, again = false): void {
+    if (index === this.highlighted && !again) return
     this.highlighted = index
     const { links, neighbors, second } = this.graph
+    const { found } = this
     const goal = this.focusGoal
 
     goal.forEach((_, node) => {
-      if (index === null || neighbors[index].has(node)) goal[node] = 1
+      if (index === null) goal[node] = !found || found.has(node) ? 1 : 0
       else if (node === index) goal[node] = 2
+      else if (neighbors[index].has(node)) goal[node] = 1
       else goal[node] = second[index].has(node) ? SECOND : 0
     })
 
@@ -729,7 +753,7 @@ export class GraphScene {
    * Decides which labels to show. A label fades with its distance from the camera, and gives way
    * when it would cover a more important one: studied first, then the closest. With a highlight,
    * only the nodes up to two links away have a label, at any distance, and the closest in links
-   * come first.
+   * come first. During a search, only the topics it found have one.
    */
   private updateLabels(): void {
     const { positions, radius, screen } = this
@@ -759,7 +783,8 @@ export class GraphScene {
       const byDistance = Math.min(Math.max((far * radius - depth) / ((far - near) * radius), 0), 1)
       const focus = this.focusGoal[index]
       const byHighlight = focus >= 1 ? 1 : focus === SECOND ? SECOND_LABEL : 0
-      const opacity = this.highlighted === null ? byDistance : byHighlight
+      const lit = this.highlighted !== null || this.found !== null
+      const opacity = lit ? byHighlight : byDistance
       const inView = point.z < 1 && x > -200 && x < width && y > 0 && y < height
       label.visible = inView && opacity > 0.02
       if (label.visible) {
