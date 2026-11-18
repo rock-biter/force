@@ -205,7 +205,8 @@
       "citedIn": [
         "docs/logbook/001-the-flip-book.md",
         "docs/logbook/004-the-detour.md",
-        "docs/logbook/010-the-ground.md"
+        "docs/logbook/010-the-ground.md",
+        "docs/logbook/024-twenty-seven-cells.md"
       ],
       "code": ["src/shaders/integrate.wgsl"]
     },
@@ -221,7 +222,11 @@
       },
       "partOf": "collision-detection",
       "related": ["bounding-box"],
-      "citedIn": ["docs/logbook/001-the-flip-book.md", "docs/logbook/004-the-detour.md"]
+      "citedIn": [
+        "docs/logbook/001-the-flip-book.md",
+        "docs/logbook/004-the-detour.md",
+        "docs/logbook/024-twenty-seven-cells.md"
+      ]
     },
     {
       "id": "bounding-box",
@@ -250,7 +255,8 @@
       "citedIn": [
         "docs/logbook/001-the-flip-book.md",
         "docs/logbook/004-the-detour.md",
-        "iterative-dynamics-paper"
+        "iterative-dynamics-paper",
+        "docs/logbook/024-twenty-seven-cells.md"
       ]
     },
     {
@@ -374,7 +380,8 @@
       "citedIn": [
         "docs/logbook/000-the-launch.md",
         "docs/logbook/004-the-detour.md",
-        "docs/logbook/023-the-first-free-turn.md"
+        "docs/logbook/023-the-first-free-turn.md",
+        "docs/logbook/024-twenty-seven-cells.md"
       ],
       "code": ["examples/hello-compute/free-fall.wgsl"]
     },
@@ -680,10 +687,10 @@
       "title": "Readback",
       "summary": "Copying results from the GPU back into JavaScript: a copy into a buffer that can be mapped, then a promise that resolves when the GPU has finished with it",
       "area": "gpu",
-      "status": "seen",
+      "status": "studied",
       "since": {
         "mentioned": "2026-11-05",
-        "seen": "2026-11-18"
+        "studied": "2026-11-18"
       },
       "partOf": "webgpu",
       "citedIn": [
@@ -703,7 +710,8 @@
         "src/world.ts",
         "examples/dispatch-cost/main.ts",
         "examples/round-trip/main.ts"
-      ]
+      ],
+      "page": "docs/guides/readback.md"
     },
     {
       "id": "position-based-dynamics",
@@ -767,7 +775,8 @@
       "citedIn": [
         "ten-minute-physics",
         "docs/logbook/004-the-detour.md",
-        "docs/logbook/023-the-first-free-turn.md"
+        "docs/logbook/023-the-first-free-turn.md",
+        "docs/logbook/024-twenty-seven-cells.md"
       ]
     },
     {
@@ -1240,7 +1249,8 @@
       "citedIn": [
         "docs/logbook/004-the-detour.md",
         "docs/logbook/012-the-family-tree.md",
-        "docs/logbook/023-the-first-free-turn.md"
+        "docs/logbook/023-the-first-free-turn.md",
+        "docs/logbook/024-twenty-seven-cells.md"
       ]
     },
     {
@@ -1775,7 +1785,11 @@
         "mentioned": "2026-11-05"
       },
       "related": ["sph"],
-      "citedIn": ["docs/logbook/004-the-detour.md", "docs/logbook/012-the-family-tree.md"]
+      "citedIn": [
+        "docs/logbook/004-the-detour.md",
+        "docs/logbook/012-the-family-tree.md",
+        "docs/logbook/024-twenty-seven-cells.md"
+      ]
     },
     {
       "id": "granular-material",
@@ -1832,11 +1846,12 @@
       "id": "atomic-operations",
       "kind": "concept",
       "title": "Atomic operations",
-      "summary": "Memory updates that stay correct even when thousands of threads write to the same place",
+      "summary": "Memory updates that stay correct even when thousands of threads write to the same place: in WGSL, atomicAdd() adds to an integer and returns the value from before, in one move that cannot be cut in two",
       "area": "gpu",
-      "status": "mentioned",
+      "status": "seen",
       "since": {
-        "mentioned": "2026-11-05"
+        "mentioned": "2026-11-05",
+        "seen": "2026-11-18"
       },
       "citedIn": [
         "docs/logbook/004-the-detour.md",
@@ -1844,7 +1859,8 @@
         "wgsl-spec-synchronization-functions",
         "particle-simulation-cuda",
         "wgsl-spec-atomic-types",
-        "docs/logbook/017-taking-turns.md"
+        "docs/logbook/017-taking-turns.md",
+        "docs/logbook/024-twenty-seven-cells.md"
       ]
     },
     {
@@ -1883,7 +1899,11 @@
         "mentioned": "2026-11-08"
       },
       "related": ["uniform-grid"],
-      "citedIn": ["docs/logbook/004-the-detour.md", "particle-simulation-cuda"]
+      "citedIn": [
+        "docs/logbook/004-the-detour.md",
+        "particle-simulation-cuda",
+        "docs/logbook/024-twenty-seven-cells.md"
+      ]
     },
     {
       "id": "structure-of-arrays",
@@ -2095,7 +2115,7 @@
         "mentioned": "2026-11-11"
       },
       "related": ["particle-rigid-bodies", "granular-material"],
-      "citedIn": ["gpu-gems-rigid-bodies"]
+      "citedIn": ["gpu-gems-rigid-bodies", "docs/logbook/024-twenty-seven-cells.md"]
     },
     {
       "id": "decision-record",
@@ -2706,10 +2726,15 @@
         "uniform-grid",
         "discrete-element-method"
       ],
-      "citedIn": ["docs/logbook/004-the-detour.md", "docs/logbook/005-the-first-pages.md"],
+      "citedIn": [
+        "docs/logbook/004-the-detour.md",
+        "docs/logbook/005-the-first-pages.md",
+        "docs/logbook/024-twenty-seven-cells.md"
+      ],
       "url": "https://developer.nvidia.com/gpugems/gpugems3/part-v-physics-simulation/chapter-29-real-time-rigid-body-simulation-gpus",
       "year": 2007,
-      "authors": "Takahiro Harada"
+      "authors": "Takahiro Harada",
+      "claudeRead": "parts"
     },
     {
       "id": "integration-basics",
@@ -5688,7 +5713,11 @@
         "seen": "2026-11-17"
       },
       "partOf": "contact",
-      "citedIn": ["advanced-character-physics", "iterative-dynamics-paper"]
+      "citedIn": [
+        "advanced-character-physics",
+        "iterative-dynamics-paper",
+        "docs/logbook/024-twenty-seven-cells.md"
+      ]
     },
     {
       "id": "ragdoll",
@@ -5875,7 +5904,7 @@
         "discrete-element-method",
         "prefix-sum"
       ],
-      "citedIn": ["docs/logbook/012-the-family-tree.md"],
+      "citedIn": ["docs/logbook/012-the-family-tree.md", "docs/logbook/024-twenty-seven-cells.md"],
       "url": "https://developer.download.nvidia.com/assets/cuda/files/particles.pdf",
       "file": "library/particle-simulation-cuda.pdf",
       "authors": "Simon Green",
@@ -6351,7 +6380,7 @@
       },
       "partOf": "wgsl-spec",
       "about": ["atomic-operations"],
-      "citedIn": ["docs/logbook/017-taking-turns.md"],
+      "citedIn": ["docs/logbook/017-taking-turns.md", "docs/logbook/024-twenty-seven-cells.md"],
       "url": "https://www.w3.org/TR/WGSL/#atomic-types",
       "claudeRead": "parts"
     },
@@ -6529,9 +6558,9 @@
       "title": "Buffer mapping",
       "summary": "mapAsync() opens a buffer to JavaScript and unmap() gives it back to the GPU: while it is mapped, no GPU command can use it",
       "area": "gpu",
-      "status": "mentioned",
+      "status": "studied",
       "since": {
-        "mentioned": "2026-11-18"
+        "studied": "2026-11-18"
       },
       "partOf": "readback",
       "related": ["buffer"],
@@ -6542,7 +6571,8 @@
         "mdn-map-async",
         "docs/guides/readback.md"
       ],
-      "code": ["examples/hello-compute/main.ts", "src/world.ts", "examples/round-trip/main.ts"]
+      "code": ["examples/hello-compute/main.ts", "src/world.ts", "examples/round-trip/main.ts"],
+      "page": "docs/guides/readback.md"
     },
     {
       "id": "webgpu-spec-buffer-mapping",
@@ -6650,7 +6680,53 @@
         "mentioned": "2026-11-18"
       },
       "partOf": "uniform-grid",
-      "citedIn": ["particle-simulation-cuda"]
+      "citedIn": ["particle-simulation-cuda", "docs/logbook/024-twenty-seven-cells.md"]
+    },
+    {
+      "id": "grid-by-counting",
+      "kind": "concept",
+      "title": "Grid built by counting",
+      "summary": "A uniform grid as an array with a few places per cell and an atomic counter per cell: each particle takes the next place of its cell, and a particle that finds the cell full stays out",
+      "area": "gpu",
+      "status": "seen",
+      "since": {
+        "seen": "2026-11-18"
+      },
+      "partOf": "uniform-grid",
+      "related": ["atomic-operations", "grid-by-sorting"],
+      "citedIn": [
+        "particle-simulation-cuda",
+        "gpu-gems-rigid-bodies",
+        "docs/logbook/024-twenty-seven-cells.md"
+      ]
+    },
+    {
+      "id": "grid-by-sorting",
+      "kind": "concept",
+      "title": "Grid built by sorting",
+      "summary": "A uniform grid as a list of particles sorted by cell, plus where each cell starts: no limit of particles per cell and no empty places, at the price of a sort on the GPU",
+      "area": "gpu",
+      "status": "seen",
+      "since": {
+        "seen": "2026-11-18"
+      },
+      "partOf": "uniform-grid",
+      "related": ["parallel-sort"],
+      "citedIn": ["particle-simulation-cuda", "docs/logbook/024-twenty-seven-cells.md"]
+    },
+    {
+      "id": "contact-normal",
+      "kind": "concept",
+      "title": "Contact normal",
+      "summary": "The direction along which two touching bodies are pushed apart: for two spheres, from one center to the other",
+      "area": "physics",
+      "status": "seen",
+      "since": {
+        "seen": "2026-11-18"
+      },
+      "partOf": "contact",
+      "related": ["penetration-depth"],
+      "citedIn": ["docs/logbook/024-twenty-seven-cells.md"]
     }
   ]
 }

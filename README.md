@@ -16,16 +16,13 @@ documentation of the library will live there too.
 
 *Updated November 18, 2026*
 
-**Latest step:** [the first free turn](./docs/logbook/023-the-first-free-turn.md). On a GPU,
-two rules that touch the same body cannot run at the same instant, so they take turns, and the
-turns are decided on the CPU at every step. We timed that sorting in JavaScript: about one
-thousandth of a second for 100 000 contacts, and much less when the turns of the step before
-are kept. With the two measures before it, [a launch](./docs/logbook/020-a-cheap-launch.md) and
-[a trip of data](./docs/logbook/021-a-short-trip.md), all the prices of taking turns are small
-on our machines.
+**Latest step:** [twenty-seven cells](./docs/logbook/024-twenty-seven-cells.md). We start
+building from particles that collide. Testing every particle against all the others is too
+much work, so space is cut into small cubes, and each particle looks only into its own cube and
+the ones around it: 27 in all. We went through how such a grid is filled on a GPU, in two
+ways, and how two spheres are tested against each other. No code yet.
 
-**Next:** make particles collide with each other, the first real piece of the engine. First we
-study how each particle finds the ones it touches on the GPU, with a grid.
+**Next:** how to push two particles apart once they touch. Then the code.
 
 Every step, with what we learned and what went wrong, is in the [logbook](./docs/README.md).
 
