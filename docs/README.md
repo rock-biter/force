@@ -25,6 +25,7 @@ This is where we tell how FORCE gets built, one step at a time. If you are new h
 | 016 | [The Same Road](./logbook/016-the-same-road.md) | Jolt, PhysX and Rapier: the many rounds of 2005, a move to small steps, and Soft Step taken whole |
 | 017 | [Taking Turns](./logbook/017-taking-turns.md) | PhysX on the GPU: rules take turns picked on the CPU, copies past a ceiling, and an explanation left halfway |
 | 018 | [Half a Box](./logbook/018-half-a-box.md) | The copies again, one idea at a time: an average, one box per round, and a share of the mass so no push is lost |
+| 019 | [The Price of Copies](./logbook/019-the-price-of-copies.md) | Turns and copies on a hanging chain: copies need four times the rounds, and springs sag twice as much |
 
 ## For reference
 

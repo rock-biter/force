@@ -1534,7 +1534,8 @@
         "docs/logbook/015-the-stiff-spring.md",
         "rapier-integration-parameters",
         "rapier-changelog",
-        "docs/logbook/016-the-same-road.md"
+        "docs/logbook/016-the-same-road.md",
+        "docs/logbook/019-the-price-of-copies.md"
       ],
       "page": "docs/topics/soft-step.md"
     },
@@ -1576,7 +1577,8 @@
         "docs/logbook/015-the-stiff-spring.md",
         "jolt-architecture",
         "physx-gpu-solver",
-        "docs/logbook/017-taking-turns.md"
+        "docs/logbook/017-taking-turns.md",
+        "docs/logbook/019-the-price-of-copies.md"
       ]
     },
     {
@@ -6235,7 +6237,8 @@
         "solver2d-post",
         "physx-gpu-solver",
         "docs/logbook/017-taking-turns.md",
-        "docs/logbook/018-half-a-box.md"
+        "docs/logbook/018-half-a-box.md",
+        "docs/logbook/019-the-price-of-copies.md"
       ]
     },
     {

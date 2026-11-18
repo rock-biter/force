@@ -16,13 +16,15 @@ documentation of the library will live there too.
 
 *Updated November 18, 2026*
 
-**Latest step:** [half a box](./docs/logbook/018-half-a-box.md). On a GPU, two rules such as
-"these two boxes must not overlap" cannot write the same box at the same instant. One way out is
-to give each rule its own copy of the box and average the copies afterwards. We went through it
-with four boxes in a row: it needs no taking turns, but news of a push travels only one box per
-pass, and each copy must take a share of the box's mass or part of the push is lost.
+**Latest step:** [the price of copies](./docs/logbook/019-the-price-of-copies.md). On a GPU, two
+rules such as "this link must stay 10 cm long" cannot write the same body at the same instant.
+Either they take turns, or each works on its own copy of the body and the copies are averaged
+([half a box](./docs/logbook/018-half-a-box.md)). We tried both on a hanging chain. Turns do as
+well as a CPU. Copies need four times the passes over the rules, and with the springs Box2D uses
+as rules the chain hangs twice as far below its length.
 
-**Next:** try the two ways, turns and copies, side by side on a hanging chain.
+**Next:** measure in WebGPU what the two ways cost: one launch of a compute shader, and one trip
+of data from the GPU back to JavaScript.
 
 Every step, with what we learned and what went wrong, is in the [logbook](./docs/README.md).
 
