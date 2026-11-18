@@ -110,6 +110,27 @@ async function run(): Promise<string> {
     return performance.now() - start
   }
 
+  /**
+   * The work, a wait until the browser says it is done, and only then the trip. If "done" is true
+   * this takes the work alone plus an idle trip. If it takes as long as a trip sent with the work,
+   * the browser said "done" too early.
+   */
+  async function tripAfterDone(target: Scene, numbers: number, dispatches: number) {
+    await device.queue.onSubmittedWorkDone()
+    const start = performance.now()
+    const encoder = device.createCommandEncoder()
+    work(encoder, target, dispatches)
+    device.queue.submit([encoder.finish()])
+    await device.queue.onSubmittedWorkDone()
+    const copy = device.createCommandEncoder()
+    copy.copyBufferToBuffer(target.buffer, 0, target.readable, 0, numbers * 4)
+    device.queue.submit([copy.finish()])
+    await target.readable.mapAsync(GPUMapMode.READ, 0, numbers * 4)
+    const arrived = performance.now() - start
+    open(target, numbers)
+    return arrived
+  }
+
   /** A step of two dispatches with a trip to JavaScript and back between them. */
   async function stepCutInTwo(target: Scene): Promise<number> {
     await device.queue.onSubmittedWorkDone()
@@ -213,7 +234,7 @@ async function run(): Promise<string> {
   }
 
   lines.push('', '2. A trip of 64 KB behind dispatches over a million numbers', '')
-  lines.push('      dispatches      work alone    trip arrives')
+  lines.push('      dispatches      work alone    trip arrives   done, then trip')
   const big = scene(1_048_576)
   for (const dispatches of [0, 20, 40]) {
     const alone = await middle(
@@ -224,7 +245,13 @@ async function run(): Promise<string> {
       () => tripBack(big, 16_384, dispatches),
       (result) => result.arrived,
     )
-    lines.push(String(dispatches).padStart(16) + cell(alone(), 16) + cell(trip(), 16))
+    const after = await middle(
+      () => tripAfterDone(big, 16_384, dispatches),
+      (result) => result,
+    )
+    lines.push(
+      String(dispatches).padStart(16) + cell(alone(), 16) + cell(trip(), 16) + cell(after(), 18),
+    )
   }
 
   lines.push('', '3. A step of two dispatches over 65 536 numbers', '')
