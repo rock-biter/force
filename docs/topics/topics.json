@@ -553,7 +553,8 @@
       "citedIn": [
         "docs/guides/README.md",
         "docs/logbook/004-the-detour.md",
-        "docs/logbook/009-the-first-picture.md"
+        "docs/logbook/009-the-first-picture.md",
+        "docs/guides/readback.md"
       ],
       "code": ["examples/hello-compute/main.ts", "src/world.ts", "examples/debug/particles.ts"],
       "page": "docs/guides/buffers.md"
@@ -629,7 +630,8 @@
         "wgsl-spec-shader-lifecycle",
         "docs/guides/dispatch-and-workgroups.md",
         "wgsl-spec-compute-shader-workgroups",
-        "docs/logbook/020-a-cheap-launch.md"
+        "docs/logbook/020-a-cheap-launch.md",
+        "docs/logbook/021-a-short-trip.md"
       ],
       "code": [
         "examples/hello-compute/main.ts",
@@ -656,24 +658,27 @@
         "docs/logbook/009-the-first-picture.md",
         "docs/guides/buffers.md",
         "docs/logbook/020-a-cheap-launch.md",
-        "docs/guides/timestamp-queries.md"
+        "docs/guides/timestamp-queries.md",
+        "docs/logbook/021-a-short-trip.md"
       ],
       "code": [
         "examples/hello-compute/main.ts",
         "src/world.ts",
         "examples/debug/viewer.ts",
-        "examples/dispatch-cost/main.ts"
+        "examples/dispatch-cost/main.ts",
+        "examples/round-trip/main.ts"
       ]
     },
     {
       "id": "readback",
       "kind": "concept",
       "title": "Readback",
-      "summary": "Copying results from the GPU back into JavaScript",
+      "summary": "Copying results from the GPU back into JavaScript: a copy into a buffer that can be mapped, then a promise that resolves when the GPU has finished with it",
       "area": "gpu",
-      "status": "mentioned",
+      "status": "seen",
       "since": {
-        "mentioned": "2026-11-05"
+        "mentioned": "2026-11-05",
+        "seen": "2026-11-18"
       },
       "partOf": "webgpu",
       "citedIn": [
@@ -683,9 +688,16 @@
         "physx-gpu-narrowphase",
         "docs/logbook/017-taking-turns.md",
         "docs/guides/timestamp-queries.md",
-        "docs/logbook/020-a-cheap-launch.md"
+        "docs/logbook/020-a-cheap-launch.md",
+        "docs/logbook/021-a-short-trip.md",
+        "docs/guides/readback.md"
       ],
-      "code": ["examples/hello-compute/main.ts", "src/world.ts", "examples/dispatch-cost/main.ts"]
+      "code": [
+        "examples/hello-compute/main.ts",
+        "src/world.ts",
+        "examples/dispatch-cost/main.ts",
+        "examples/round-trip/main.ts"
+      ]
     },
     {
       "id": "position-based-dynamics",
@@ -1590,7 +1602,8 @@
         "physx-gpu-solver",
         "docs/logbook/017-taking-turns.md",
         "docs/logbook/019-the-price-of-copies.md",
-        "docs/logbook/020-a-cheap-launch.md"
+        "docs/logbook/020-a-cheap-launch.md",
+        "docs/logbook/021-a-short-trip.md"
       ]
     },
     {
@@ -1902,7 +1915,8 @@
         "docs/guides/adapter-and-device.md",
         "docs/guides/buffers.md",
         "docs/guides/bind-groups.md",
-        "docs/guides/dispatch-and-workgroups.md"
+        "docs/guides/dispatch-and-workgroups.md",
+        "docs/logbook/021-a-short-trip.md"
       ],
       "code": ["src/world.ts"]
     },
@@ -1941,7 +1955,11 @@
       "since": {
         "mentioned": "2026-11-05"
       },
-      "citedIn": ["docs/logbook/004-the-detour.md", "docs/logbook/020-a-cheap-launch.md"]
+      "citedIn": [
+        "docs/logbook/004-the-detour.md",
+        "docs/logbook/020-a-cheap-launch.md",
+        "docs/logbook/021-a-short-trip.md"
+      ]
     },
     {
       "id": "benchmark",
@@ -2315,7 +2333,9 @@
         "docs/guides/buffers.md",
         "docs/guides/compute-shader.md",
         "docs/logbook/020-a-cheap-launch.md",
-        "docs/guides/timestamp-queries.md"
+        "docs/guides/timestamp-queries.md",
+        "docs/logbook/021-a-short-trip.md",
+        "docs/guides/readback.md"
       ],
       "url": "https://www.w3.org/TR/webgpu/",
       "claudeRead": "parts"
@@ -6253,7 +6273,8 @@
         "docs/logbook/017-taking-turns.md",
         "docs/logbook/018-half-a-box.md",
         "docs/logbook/019-the-price-of-copies.md",
-        "docs/logbook/020-a-cheap-launch.md"
+        "docs/logbook/020-a-cheap-launch.md",
+        "docs/logbook/021-a-short-trip.md"
       ]
     },
     {
@@ -6338,9 +6359,9 @@
       "title": "Timestamp queries",
       "summary": "The GPU's own clock: it writes the time at the start and at the end of a pass, in nanoseconds, into slots that are then copied to a buffer. An optional feature, and rounded on purpose",
       "area": "gpu",
-      "status": "seen",
+      "status": "studied",
       "since": {
-        "seen": "2026-11-18"
+        "studied": "2026-11-18"
       },
       "partOf": "webgpu",
       "related": ["readback", "benchmark"],
@@ -6351,7 +6372,8 @@
         "new-in-webgpu-120",
         "mdn-begin-compute-pass"
       ],
-      "code": ["examples/dispatch-cost/main.ts"]
+      "code": ["examples/dispatch-cost/main.ts"],
+      "page": "docs/guides/timestamp-queries.md"
     },
     {
       "id": "submitted-work-done",
@@ -6368,9 +6390,14 @@
         "docs/guides/pipeline-creation.md",
         "docs/logbook/020-a-cheap-launch.md",
         "docs/guides/timestamp-queries.md",
-        "mdn-on-submitted-work-done"
+        "mdn-on-submitted-work-done",
+        "docs/logbook/021-a-short-trip.md"
       ],
-      "code": ["examples/pipeline-creation/main.ts", "examples/dispatch-cost/main.ts"]
+      "code": [
+        "examples/pipeline-creation/main.ts",
+        "examples/dispatch-cost/main.ts",
+        "examples/round-trip/main.ts"
+      ]
     },
     {
       "id": "webgpu-spec-timestamp-query",
@@ -6434,6 +6461,74 @@
       "citedIn": ["docs/logbook/020-a-cheap-launch.md"],
       "url": "https://developer.mozilla.org/en-US/docs/Web/API/GPUQueue/onSubmittedWorkDone",
       "claudeRead": "parts"
+    },
+    {
+      "id": "readback-delay",
+      "kind": "concept",
+      "title": "The delay of a readback",
+      "summary": "How late data read back from the GPU arrives: the work in front of it, plus a fixed price that does not depend on the size until megabytes. A step that waits for it becomes asynchronous",
+      "area": "gpu",
+      "status": "seen",
+      "since": {
+        "seen": "2026-11-18"
+      },
+      "partOf": "readback",
+      "related": ["dispatch-cost", "frame-budget", "graph-coloring"],
+      "citedIn": ["docs/logbook/021-a-short-trip.md", "docs/guides/readback.md"],
+      "code": ["examples/round-trip/main.ts"]
+    },
+    {
+      "id": "buffer-mapping",
+      "kind": "concept",
+      "title": "Buffer mapping",
+      "summary": "mapAsync() opens a buffer to JavaScript and unmap() gives it back to the GPU: while it is mapped, no GPU command can use it",
+      "area": "gpu",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-18"
+      },
+      "partOf": "readback",
+      "related": ["buffer"],
+      "citedIn": [
+        "docs/guides/buffers.md",
+        "docs/logbook/021-a-short-trip.md",
+        "webgpu-spec-buffer-mapping",
+        "mdn-map-async",
+        "docs/guides/readback.md"
+      ],
+      "code": ["examples/hello-compute/main.ts", "src/world.ts", "examples/round-trip/main.ts"]
+    },
+    {
+      "id": "webgpu-spec-buffer-mapping",
+      "kind": "spec",
+      "title": "WebGPU specification, §5.2 Buffer Mapping",
+      "summary": "Mapping is asynchronous so the browser can make sure the GPU has finished with the buffer; the promise resolves once the commands that use it are done",
+      "area": "gpu",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-18"
+      },
+      "partOf": "webgpu-spec",
+      "about": ["buffer-mapping", "readback"],
+      "citedIn": ["docs/logbook/021-a-short-trip.md", "docs/guides/readback.md"],
+      "url": "https://www.w3.org/TR/webgpu/#buffer-mapping",
+      "claudeRead": "parts"
+    },
+    {
+      "id": "mdn-map-async",
+      "kind": "docs",
+      "title": "MDN, GPUBuffer.mapAsync()",
+      "summary": "The promise resolves when the buffer can be read, a mapped buffer cannot be used in GPU commands, and the rules on offset and size",
+      "area": "gpu",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-18"
+      },
+      "partOf": "mdn-webgpu",
+      "about": ["buffer-mapping", "readback"],
+      "citedIn": ["docs/logbook/021-a-short-trip.md", "docs/guides/readback.md"],
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/GPUBuffer/mapAsync",
+      "claudeRead": "full"
     }
   ]
 }

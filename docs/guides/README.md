@@ -14,6 +14,7 @@ Short guides, one concept each, built from the code of FORCE. They are written f
 | [How does a shader find its data?](./bind-groups.md) | Bind groups |
 | [How do you make thousands of threads work?](./dispatch-and-workgroups.md) | Dispatch and workgroups |
 | [How long did the GPU take?](./timestamp-queries.md) | Timestamp queries |
+| [How do you get the results back?](./readback.md) | Readback and buffer mapping |
 
 ## Planned
 
@@ -28,7 +29,7 @@ The first series comes from [`examples/hello-compute`](../../examples/hello-comp
 - [x] How do you make thousands of threads work? (dispatch and workgroups)
 - [x] How long did the GPU take? (timestamp queries, from [`examples/dispatch-cost`](../../examples/dispatch-cost/main.ts))
 - [ ] When does the GPU actually run? (commands and queue)
-- [ ] How do you get the results back? (readback)
+- [x] How do you get the results back? (readback, with the times from [`examples/round-trip`](../../examples/round-trip/main.ts))
 - [ ] How do you give every thread the same values? (uniform buffers)
 - [ ] Why does a vec3f take 16 bytes? (memory alignment)
 - [ ] How do two libraries share GPU data? (one device, one buffer, from [`examples/debug`](../../examples/debug/viewer.ts))

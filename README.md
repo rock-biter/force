@@ -16,14 +16,14 @@ documentation of the library will live there too.
 
 *Updated November 18, 2026*
 
-**Latest step:** [a cheap launch](./docs/logbook/020-a-cheap-launch.md). A step of physics on
-the GPU may need a hundred launches of a compute shader, so we timed what one more costs in
-WebGPU. On our Mac the launch itself takes one or two millionths of a second: almost nothing.
-What costs is the work inside it, and sending each launch to the GPU on its own, which takes
-about twenty times longer.
+**Latest step:** [a short trip](./docs/logbook/021-a-short-trip.md). Some ways to run physics
+on the GPU need the CPU in the middle of a step, so data must travel from the GPU to JavaScript
+and back. We expected that trip to be slow in WebGPU. On our Mac it took less than a thousandth of
+a second, and the answer was back before the next frame, almost always. The step before,
+[a cheap launch](./docs/logbook/020-a-cheap-launch.md), timed one launch of a compute shader:
+one or two millionths of a second.
 
-**Next:** measure the other price: how late a trip of data from the GPU back to JavaScript
-arrives.
+**Next:** run the same measures on a phone, to see if the numbers hold.
 
 Every step, with what we learned and what went wrong, is in the [logbook](./docs/README.md).
 
