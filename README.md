@@ -16,14 +16,14 @@ documentation of the library will live there too.
 
 *Updated November 18, 2026*
 
-**Latest step:** [a short trip](./docs/logbook/021-a-short-trip.md). Some ways to run physics
-on the GPU need the CPU in the middle of a step, so data must travel from the GPU to JavaScript
-and back. We expected that trip to be slow in WebGPU. On our Mac it took less than a thousandth of
-a second, and the answer was back before the next frame, almost always. The step before,
-[a cheap launch](./docs/logbook/020-a-cheap-launch.md), timed one launch of a compute shader:
-one or two millionths of a second.
+**Latest step:** [the bell that rang early](./docs/logbook/022-the-bell-that-rang-early.md).
+We repeated our measures on a phone, an iPhone 16 Pro. Launching a compute shader and reading
+data back from the GPU stay cheap there too: a few millionths of a second for a launch, about
+half a thousandth for a trip. But one of our stopwatches, a signal the browser gives when the
+GPU is done, came well before the work was over. Reading a number back is the only proof.
 
-**Next:** run the same measures on a phone, to see if the numbers hold.
+**Next:** time the last piece of the price of taking turns: sorting the rules into turns, in
+JavaScript.
 
 Every step, with what we learned and what went wrong, is in the [logbook](./docs/README.md).
 

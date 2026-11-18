@@ -90,6 +90,7 @@ One tiny dispatch took the GPU 1 to 2 microseconds, far less than one step of th
 - **Timing an empty pass.** With no dispatch in the pass, in Chrome on our Mac both slots stayed at 0, their value at creation, with no error.
 - **Trusting every number.** The spec warns that the clock may restart now and then, and `end` may come out smaller than `begin`: drop that run.
 - **Reading it as the whole cost.** It is the time on the GPU only: in the table above, 1.0 of 1.8 ms.
+- **Trusting `onSubmittedWorkDone()` instead.** On an iPhone 16 Pro it resolved well before the work was over, in a pass with no timestamps: 3.7 ms by the promise, 5.5 to 5.9 by the GPU's clock once we added it. The story is in [chapter 022](../logbook/022-the-bell-that-rang-early.md) of the logbook.
 
 ## Where FORCE uses it
 

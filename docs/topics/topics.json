@@ -690,7 +690,8 @@
         "docs/guides/timestamp-queries.md",
         "docs/logbook/020-a-cheap-launch.md",
         "docs/logbook/021-a-short-trip.md",
-        "docs/guides/readback.md"
+        "docs/guides/readback.md",
+        "docs/logbook/022-the-bell-that-rang-early.md"
       ],
       "code": [
         "examples/hello-compute/main.ts",
@@ -1603,7 +1604,8 @@
         "docs/logbook/017-taking-turns.md",
         "docs/logbook/019-the-price-of-copies.md",
         "docs/logbook/020-a-cheap-launch.md",
-        "docs/logbook/021-a-short-trip.md"
+        "docs/logbook/021-a-short-trip.md",
+        "docs/logbook/022-the-bell-that-rang-early.md"
       ]
     },
     {
@@ -1943,7 +1945,7 @@
       "since": {
         "seen": "2026-11-05"
       },
-      "citedIn": ["docs/logbook/004-the-detour.md"]
+      "citedIn": ["docs/logbook/004-the-detour.md", "docs/logbook/022-the-bell-that-rang-early.md"]
     },
     {
       "id": "frame-budget",
@@ -1983,7 +1985,7 @@
       "since": {
         "mentioned": "2026-11-05"
       },
-      "citedIn": ["docs/logbook/004-the-detour.md"]
+      "citedIn": ["docs/logbook/004-the-detour.md", "docs/logbook/022-the-bell-that-rang-early.md"]
     },
     {
       "id": "ecs",
@@ -6350,7 +6352,11 @@
       },
       "partOf": "workgroup",
       "related": ["frame-budget", "timestamp-query", "graph-coloring"],
-      "citedIn": ["docs/logbook/020-a-cheap-launch.md", "docs/guides/timestamp-queries.md"],
+      "citedIn": [
+        "docs/logbook/020-a-cheap-launch.md",
+        "docs/guides/timestamp-queries.md",
+        "docs/logbook/022-the-bell-that-rang-early.md"
+      ],
       "code": ["examples/dispatch-cost/main.ts"]
     },
     {
@@ -6370,7 +6376,8 @@
         "docs/guides/timestamp-queries.md",
         "webgpu-spec-timestamp-query",
         "new-in-webgpu-120",
-        "mdn-begin-compute-pass"
+        "mdn-begin-compute-pass",
+        "docs/logbook/022-the-bell-that-rang-early.md"
       ],
       "code": ["examples/dispatch-cost/main.ts"],
       "page": "docs/guides/timestamp-queries.md"
@@ -6379,11 +6386,11 @@
       "id": "submitted-work-done",
       "kind": "concept",
       "title": "onSubmittedWorkDone()",
-      "summary": "A promise that resolves when the GPU has finished everything sent to the queue so far: a stopwatch for all the work, with the way there and back",
+      "summary": "A promise that resolves when the GPU has finished everything sent to the queue so far. A stopwatch not to trust alone: on an iPhone it resolved well before the work was over",
       "area": "gpu",
-      "status": "mentioned",
+      "status": "seen",
       "since": {
-        "mentioned": "2026-11-18"
+        "seen": "2026-11-18"
       },
       "partOf": "command-queue",
       "citedIn": [
@@ -6391,7 +6398,9 @@
         "docs/logbook/020-a-cheap-launch.md",
         "docs/guides/timestamp-queries.md",
         "mdn-on-submitted-work-done",
-        "docs/logbook/021-a-short-trip.md"
+        "docs/logbook/021-a-short-trip.md",
+        "docs/logbook/022-the-bell-that-rang-early.md",
+        "webkit-bug-266793"
       ],
       "code": [
         "examples/pipeline-creation/main.ts",
@@ -6458,7 +6467,10 @@
       },
       "partOf": "mdn-webgpu",
       "about": ["submitted-work-done", "command-queue"],
-      "citedIn": ["docs/logbook/020-a-cheap-launch.md"],
+      "citedIn": [
+        "docs/logbook/020-a-cheap-launch.md",
+        "docs/logbook/022-the-bell-that-rang-early.md"
+      ],
       "url": "https://developer.mozilla.org/en-US/docs/Web/API/GPUQueue/onSubmittedWorkDone",
       "claudeRead": "parts"
     },
@@ -6474,7 +6486,11 @@
       },
       "partOf": "readback",
       "related": ["dispatch-cost", "frame-budget", "graph-coloring"],
-      "citedIn": ["docs/logbook/021-a-short-trip.md", "docs/guides/readback.md"],
+      "citedIn": [
+        "docs/logbook/021-a-short-trip.md",
+        "docs/guides/readback.md",
+        "docs/logbook/022-the-bell-that-rang-early.md"
+      ],
       "code": ["examples/round-trip/main.ts"]
     },
     {
@@ -6529,6 +6545,39 @@
       "citedIn": ["docs/logbook/021-a-short-trip.md", "docs/guides/readback.md"],
       "url": "https://developer.mozilla.org/en-US/docs/Web/API/GPUBuffer/mapAsync",
       "claudeRead": "full"
+    },
+    {
+      "id": "clock-precision",
+      "kind": "concept",
+      "title": "The precision of a page's clock",
+      "summary": "Browsers round the clocks a page can read, so they cannot be used to spy: performance.now() moved in steps of 0.1 ms in Chrome on our Mac and of 1 ms on an iPhone. Averaging many runs still measures below the step",
+      "area": "engine",
+      "status": "seen",
+      "since": {
+        "seen": "2026-11-18"
+      },
+      "related": ["timestamp-query", "benchmark"],
+      "citedIn": [
+        "docs/logbook/020-a-cheap-launch.md",
+        "docs/logbook/021-a-short-trip.md",
+        "docs/logbook/022-the-bell-that-rang-early.md"
+      ],
+      "code": ["examples/dispatch-cost/main.ts", "examples/round-trip/main.ts"]
+    },
+    {
+      "id": "webkit-bug-266793",
+      "kind": "article",
+      "title": "WebKit bug 266793, WebLLM Compatibility",
+      "summary": "A bug report about another problem, where a WebKit developer says that the promise of onSubmittedWorkDone() waits for the work to complete",
+      "area": "gpu",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-18"
+      },
+      "about": ["submitted-work-done"],
+      "citedIn": ["docs/logbook/022-the-bell-that-rang-early.md"],
+      "url": "https://bugs.webkit.org/show_bug.cgi?id=266793",
+      "claudeRead": "parts"
     }
   ]
 }

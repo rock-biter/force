@@ -28,6 +28,7 @@ This is where we tell how FORCE gets built, one step at a time. If you are new h
 | 019 | [The Price of Copies](./logbook/019-the-price-of-copies.md) | Turns and copies on a hanging chain: copies need four times the rounds, and springs sag twice as much |
 | 020 | [A Cheap Launch](./logbook/020-a-cheap-launch.md) | What one more dispatch costs in WebGPU: almost nothing to launch, the work inside, and twenty times more when sent alone |
 | 021 | [A Short Trip](./logbook/021-a-short-trip.md) | Data read back from the GPU to JavaScript: a quarter of a millisecond on our Mac, back before the next frame, and a step that becomes asynchronous |
+| 022 | [The Bell That Rang Early](./logbook/022-the-bell-that-rang-early.md) | The same measures on an iPhone 16 Pro: launches and trips stay cheap, and a stopwatch that rang before the work was over |
 
 ## For reference
 

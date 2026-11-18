@@ -5,8 +5,8 @@
 Everything we have met while building FORCE, concepts and sources, and how far we went with each
 one. Use it to look up a term, to find what to read, or to pick what to explore next.
 
-- **243 concepts:** ● 21 studied · ◐ 114 seen · ○ 108 mentioned
-- **142 sources:** ● 15 studied · ◐ 16 seen · ○ 111 mentioned · read by Claude: 66 parts, 14 in full
+- **244 concepts:** ● 21 studied · ◐ 116 seen · ○ 107 mentioned
+- **143 sources:** ● 15 studied · ◐ 16 seen · ○ 112 mentioned · read by Claude: 67 parts, 14 in full
 
 | | Status | What it means |
 | --- | --- | --- |
@@ -321,7 +321,7 @@ WebGPU, WGSL and how to make thousands of threads work.
 | ◐ | Mass splitting | Giving each rule that touches a body its own copy of it, with a share of its mass, then averaging the copies: rules can run together without taking turns | Solver | [Mass Splitting for Jitter-Free Parallel Rigid Body Simulation](https://doi.org/10.1145/2185520.2185601) |
 | ◐ | Memory alignment | Where a value may start in memory: a vec3f starts on a multiple of 16 bytes, so in an array it takes 16 bytes, not 12 | WGSL | [008](../logbook/008-the-first-loop.md) |
 | ○ | Module and function scope | Where a name can be used: everywhere in the shader if declared outside functions, or from its line to the closing brace if declared inside one | WGSL | [WGSL specification, §7.2 Value Declarations](https://www.w3.org/TR/WGSL/#value-decls) |
-| ○ | onSubmittedWorkDone() | A promise that resolves when the GPU has finished everything sent to the queue so far: a stopwatch for all the work, with the way there and back | Commands and queue | [pipeline-creation](../guides/pipeline-creation.md) |
+| ◐ | onSubmittedWorkDone() | A promise that resolves when the GPU has finished everything sent to the queue so far. A stopwatch not to trust alone: on an iPhone it resolved well before the work was over | Commands and queue | [pipeline-creation](../guides/pipeline-creation.md) |
 | ◐ | Out-of-bounds access | Reading or writing past the end of an array in WGSL. It never touches memory outside the buffer, but what happens instead is not fixed: the write may be skipped or land on another element | WGSL | [dispatch-and-workgroups](../guides/dispatch-and-workgroups.md) |
 | ◐ | Override constant | A WGSL constant set from JavaScript when the pipeline is created, such as the workgroup size | WGSL | [free-fall](../../examples/hello-compute/free-fall.wgsl) |
 | ○ | Override-expression | An expression built from override constants, known only when the pipeline is created: it can size an array or a workgroup | Override constant | [WGSL specification, §7.2 Value Declarations](https://www.w3.org/TR/WGSL/#value-decls) |
@@ -413,6 +413,7 @@ WebGPU, WGSL and how to make thousands of threads work.
 | ○ | [WebGPU specification, §3.4.1 Timelines](https://www.w3.org/TR/webgpu/#programming-model-timelines) | Specification | Content, device and queue timeline: which work happens where, and why async calls exist | Timelines | [pipeline-creation](../guides/pipeline-creation.md) | Parts |
 | ○ | [WebGPU specification, §5.2 Buffer Mapping](https://www.w3.org/TR/webgpu/#buffer-mapping) | Specification | Mapping is asynchronous so the browser can make sure the GPU has finished with the buffer; the promise resolves once the commands that use it are done | Buffer mapping, Readback | [021](../logbook/021-a-short-trip.md) | Parts |
 | ○ | [WebGPU specification, §8 Resource Binding](https://www.w3.org/TR/webgpu/#bindings) | Specification | What bind group layouts, bind groups and pipeline layouts are, the checks at bind group creation, and the advice to keep what changes least in the lowest groups | Bind group, Bind group layout, Pipeline layout | [bind-groups](../guides/bind-groups.md) | Parts |
+| ○ | [WebKit bug 266793, WebLLM Compatibility](https://bugs.webkit.org/show_bug.cgi?id=266793) | Article | A bug report about another problem, where a WebKit developer says that the promise of onSubmittedWorkDone() waits for the work to complete | onSubmittedWorkDone() | [022](../logbook/022-the-bell-that-rang-early.md) | Parts |
 | ◐ | [WGSL specification](https://www.w3.org/TR/WGSL/) | Specification | The official definition of the shader language | WGSL, Memory alignment, Compute shader, Override constant, Shader module | [guide skill](../../.claude/skills/guide/SKILL.md) | Parts |
 | ○ | [WGSL specification, §13.3.2 Resource Interface](https://www.w3.org/TR/WGSL/#resource-interface) | Specification | Every buffer, texture or sampler variable must have both @group and @binding, and no two may share the same pair | Resource interface, Bind group | [bind-groups](../guides/bind-groups.md) | Parts |
 | ● | [WGSL specification, §15.3 Compute Shaders and Workgroups](https://www.w3.org/TR/WGSL/#compute-shader-workgroups) · **[our page](../guides/dispatch-and-workgroups.md)** | Specification | What a workgroup is, the grid of threads a dispatch runs, and how the global, local and workgroup ids follow from it | Workgroups and dispatch, Invocation, Invocation ids, Workgroup variable | [dispatch-and-workgroups](../guides/dispatch-and-workgroups.md) | In full |
@@ -435,6 +436,7 @@ How an engine is organized, measured and scaled across devices.
 | ○ | Frame budget | The slice of each frame the physics may use, for example 2 to 4 ms of the 16.7 ms available at 60 FPS |  | [004](../logbook/004-the-detour.md) |
 | ○ | Job system | Splitting the work of a step into small jobs spread over the CPU cores |  | [004](../logbook/004-the-detour.md) |
 | ◐ | Quality tiers | The same simulation at different costs: fewer particles, substeps and solver rounds on weaker devices |  | [004](../logbook/004-the-detour.md) |
+| ◐ | The precision of a page's clock | Browsers round the clocks a page can read, so they cannot be used to spy: performance.now() moved in steps of 0.1 ms in Chrome on our Mac and of 1 ms on an iPhone. Averaging many runs still measures below the step |  | [020](../logbook/020-a-cheap-launch.md) |
 | ○ | Thermal throttling | Phones slow down as they heat up, so speed must be measured over minutes, not seconds |  | [004](../logbook/004-the-detour.md) |
 
 ## Method
