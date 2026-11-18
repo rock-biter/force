@@ -89,15 +89,17 @@
       }
 
       /*
-       * The legend: one line per group (how far we went, concept or source, the areas), with the
-       * labels of a group side by side. It sits at the bottom, in the corner the panel leaves
-       * free, and never grows wide enough to reach the panel. The mouse goes through it.
+       * The legend: three groups (how far we went, concept or source, the areas), one label per
+       * line, with the counts in a column on the right. It sits in the corner the graph leaves
+       * free: bottom right. The mouse goes through it.
        */
       .side > .legend {
         position: fixed;
         right: 16px;
         bottom: 16px;
-        max-width: calc(100vw - 414px);
+        display: flex;
+        flex-direction: column;
+        gap: 8px; /* a little air between the groups */
         user-select: none;
         pointer-events: none;
       }
@@ -106,18 +108,18 @@
         bottom: 88px;
       }
       .legend ul {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: flex-end;
-        gap: 0 12px;
         margin: 0;
         padding: 0;
         list-style: none;
       }
       .legend li {
+        display: flex;
+        align-items: center;
+        gap: 10px;
         white-space: nowrap;
       }
       .legend .count {
+        margin-left: auto;
         color: var(--grey);
       }
 
@@ -386,7 +388,7 @@
         }
         .side > .legend {
           position: static;
-          max-width: none;
+          gap: 0;
           margin: 0 -16px -16px;
           padding: 8px 16px 12px;
         }
@@ -398,8 +400,17 @@
         .side > .panel[hidden] + .legend {
           margin-top: auto;
         }
+        /* The legend is compact here: one line per group, the labels side by side. */
         .legend ul {
-          justify-content: flex-start;
+          display: flex;
+          flex-wrap: wrap;
+          gap: 0 12px;
+        }
+        .legend li {
+          gap: 6px;
+        }
+        .legend .count {
+          margin-left: 0;
         }
       }
 

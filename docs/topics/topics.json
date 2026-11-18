@@ -5831,10 +5831,15 @@
         "mentioned": "2026-11-16"
       },
       "about": ["constraint-averaging", "jacobi", "rigid-body", "mass-splitting"],
-      "citedIn": ["unified-particle-physics-paper", "physx-gpu-solver"],
+      "citedIn": [
+        "unified-particle-physics-paper",
+        "physx-gpu-solver",
+        "docs/logbook/018-half-a-box.md"
+      ],
       "url": "https://doi.org/10.1145/2185520.2185601",
       "authors": "Richard Tonge, Feodor Benevolenski, Andrey Voroshilov",
-      "year": 2012
+      "year": 2012,
+      "claudeRead": "parts"
     },
     {
       "id": "relax-pass",
@@ -6218,9 +6223,10 @@
       "title": "Mass splitting",
       "summary": "Giving each rule that touches a body its own copy of it, with a share of its mass, then averaging the copies: rules can run together without taking turns",
       "area": "gpu",
-      "status": "mentioned",
+      "status": "seen",
       "since": {
-        "mentioned": "2026-11-17"
+        "mentioned": "2026-11-17",
+        "seen": "2026-11-18"
       },
       "partOf": "solver",
       "related": ["constraint-averaging", "jacobi", "graph-coloring"],
@@ -6228,7 +6234,8 @@
         "mass-splitting-paper",
         "solver2d-post",
         "physx-gpu-solver",
-        "docs/logbook/017-taking-turns.md"
+        "docs/logbook/017-taking-turns.md",
+        "docs/logbook/018-half-a-box.md"
       ]
     },
     {
@@ -6278,6 +6285,19 @@
       "citedIn": ["docs/logbook/017-taking-turns.md"],
       "url": "https://www.w3.org/TR/WGSL/#atomic-types",
       "claudeRead": "parts"
+    },
+    {
+      "id": "momentum",
+      "kind": "concept",
+      "title": "Momentum",
+      "summary": "Mass times velocity: the push a body carries, which a contact moves from one body to another without losing any",
+      "area": "physics",
+      "status": "seen",
+      "since": {
+        "seen": "2026-11-18"
+      },
+      "related": ["impulse-based-dynamics", "mass-splitting", "angular-momentum"],
+      "citedIn": ["docs/logbook/018-half-a-box.md"]
     }
   ]
 }

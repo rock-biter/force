@@ -24,6 +24,7 @@ This is where we tell how FORCE gets built, one step at a time. If you are new h
 | 015 | [The Stiff Spring](./logbook/015-the-stiff-spring.md) | Box2D's Soft Step: small steps instead of rounds, rules as stiff springs, and a chain that sags |
 | 016 | [The Same Road](./logbook/016-the-same-road.md) | Jolt, PhysX and Rapier: the many rounds of 2005, a move to small steps, and Soft Step taken whole |
 | 017 | [Taking Turns](./logbook/017-taking-turns.md) | PhysX on the GPU: rules take turns picked on the CPU, copies past a ceiling, and an explanation left halfway |
+| 018 | [Half a Box](./logbook/018-half-a-box.md) | The copies again, one idea at a time: an average, one box per round, and a share of the mass so no push is lost |
 
 ## For reference
 

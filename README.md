@@ -14,16 +14,15 @@ documentation of the library will live there too.
 
 ## Where we are
 
-*Updated November 17, 2026*
+*Updated November 18, 2026*
 
-**Latest step:** [taking turns](./docs/logbook/017-taking-turns.md). A physics engine repairs
-its rules one at a time, and a GPU runs thousands of threads at once. We read how PhysX, the
-engine by NVIDIA, does both: rules that touch the same body take turns, the turns are decided on
-the CPU at every step, and when they would be too many each rule works on a copy of the body and
-the copies are averaged. The turns need a trip to the CPU that is cheap for PhysX and costly on
-the web. We stopped halfway through the copies: it was a long day.
+**Latest step:** [half a box](./docs/logbook/018-half-a-box.md). On a GPU, two rules such as
+"these two boxes must not overlap" cannot write the same box at the same instant. One way out is
+to give each rule its own copy of the box and average the copies afterwards. We went through it
+with four boxes in a row: it needs no taking turns, but news of a push travels only one box per
+pass, and each copy must take a share of the box's mass or part of the push is lost.
 
-**Next:** pick up the copies again, then try turns and copies side by side on a hanging chain.
+**Next:** try the two ways, turns and copies, side by side on a hanging chain.
 
 Every step, with what we learned and what went wrong, is in the [logbook](./docs/README.md).
 

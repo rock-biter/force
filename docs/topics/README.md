@@ -5,8 +5,8 @@
 Everything we have met while building FORCE, concepts and sources, and how far we went with each
 one. Use it to look up a term, to find what to read, or to pick what to explore next.
 
-- **237 concepts:** ● 20 studied · ◐ 109 seen · ○ 108 mentioned
-- **136 sources:** ● 15 studied · ◐ 16 seen · ○ 105 mentioned · read by Claude: 60 parts, 13 in full
+- **238 concepts:** ● 20 studied · ◐ 111 seen · ○ 107 mentioned
+- **136 sources:** ● 15 studied · ◐ 16 seen · ○ 105 mentioned · read by Claude: 61 parts, 13 in full
 
 | | Status | What it means |
 | --- | --- | --- |
@@ -101,6 +101,7 @@ How things move, collide and stay together.
 | ○ | Material point method (MPM) | Particles carry the material while a grid works out the forces: good for snow, sand and deformables |  | [004](../logbook/004-the-detour.md) |
 | ○ | Mesh sampling | Turning a mesh's surface or volume into points, for example to build a body out of particles |  | [004](../logbook/004-the-detour.md) |
 | ◐ | Moment of inertia | How hard an object is to spin: it depends on its mass and on how far that mass is from the axis | Rigid body | [004](../logbook/004-the-detour.md) |
+| ◐ | Momentum | Mass times velocity: the push a body carries, which a contact moves from one body to another without losing any |  | [018](../logbook/018-half-a-box.md) |
 | ◐ | Narrow phase | A precise check, on the real shapes, of the pairs that survived the broad phase | Collision detection | [001](../logbook/001-the-flip-book.md) |
 | ○ | Neighbour search | Finding the particles near each particle: a major cost of particle fluids |  | [004](../logbook/004-the-detour.md) |
 | ◐ | Newton's second law | Force equals mass times acceleration (F = ma): the same push moves a light object more | Forces | [004](../logbook/004-the-detour.md) |
@@ -218,7 +219,7 @@ How things move, collide and stay together.
 | ○ | [Jolt Physics, ContactConstraintManager.cpp](https://github.com/jrouwe/JoltPhysics/blob/master/Jolt/Physics/Constraints/ContactConstraintManager.cpp) | Source code | Where Jolt fixes overlap: in the position rounds, a share of the error at a time, not in the velocity rounds | Nonlinear Gauss-Seidel (NGS), Baumgarte stabilization, Speculative contact, Restitution | [016](../logbook/016-the-same-road.md) | Parts |
 | ○ | [Jolt Physics, PhysicsSettings.h](https://github.com/jrouwe/JoltPhysics/blob/master/Jolt/Physics/PhysicsSettings.h) | Source code | The defaults of Jolt's solver: 10 rounds on velocities, 2 on positions, stored pushes | Sequential impulses (PGS), Nonlinear Gauss-Seidel (NGS), Baumgarte stabilization, Warm starting, Speculative contact | [016](../logbook/016-the-same-road.md) | Parts |
 | ○ | [JoltPhysics.js](https://github.com/jrouwe/JoltPhysics.js) | Project | Jolt compiled to WebAssembly, for the browser | Physics engine | [004](../logbook/004-the-detour.md) |  |
-| ○ | [Mass Splitting for Jitter-Free Parallel Rigid Body Simulation](https://doi.org/10.1145/2185520.2185601)<br>*Richard Tonge, Feodor Benevolenski, Andrey Voroshilov, 2012* | Paper | A parallel Jacobi solver for rigid bodies that splits the mass of each body among its contacts | Constraint averaging (mass splitting), Jacobi, Rigid body, Mass splitting | [Unified Particle Physics for Real-Time Applications](https://doi.org/10.1145/2601097.2601152) |  |
+| ○ | [Mass Splitting for Jitter-Free Parallel Rigid Body Simulation](https://doi.org/10.1145/2185520.2185601)<br>*Richard Tonge, Feodor Benevolenski, Andrey Voroshilov, 2012* | Paper | A parallel Jacobi solver for rigid bodies that splits the mass of each body among its contacts | Constraint averaging (mass splitting), Jacobi, Rigid body, Mass splitting | [Unified Particle Physics for Real-Time Applications](https://doi.org/10.1145/2601097.2601152) | Parts |
 | ○ | [Matter.js](https://github.com/liabru/matter-js) | Project | A 2D physics engine written in JavaScript | Rigid body | [004](../logbook/004-the-detour.md) |  |
 | ○ | [Meshless Deformations Based on Shape Matching](https://doi.org/10.1145/1073204.1073216)<br>*Matthias Müller, Bruno Heidelberger, Matthias Teschner, Markus Gross, 2005* | Paper | Deformable objects made of points pulled back toward their rest shape | Shape matching, Soft body | [004](../logbook/004-the-detour.md) |  |
 | ○ | [Modeling and Solving Constraints](https://box2d.org/files/ErinCatto_ModelingAndSolvingConstraints_GDC2009.pdf)<br>*Erin Catto, 2009* | Talk | Catto's talk of 2009 that Jolt names as the description of its solver | Sequential impulses (PGS), Warm starting | [Jolt Physics, Architecture](https://github.com/jrouwe/JoltPhysics/blob/master/Docs/Architecture.md) |  |
@@ -316,7 +317,7 @@ WebGPU, WGSL and how to make thousands of threads work.
 | ◐ | Invocation | One run of an entry point: what our guides call a thread. A dispatch or a draw starts many, and the shader ends when all are done | WGSL | [WGSL specification, §2.1 Shader Lifecycle](https://www.w3.org/TR/WGSL/#shader-lifecycle) |
 | ◐ | Invocation ids | How a thread knows where it sits in a dispatch: workgroup_id is its block, local_invocation_id its place in the block, global_invocation_id its place in the whole dispatch | Workgroups and dispatch | [dispatch-and-workgroups](../guides/dispatch-and-workgroups.md) |
 | ○ | let declaration | A name for a value computed while the shader runs and fixed from then on: only inside functions, and it can also hold a pointer | Value declaration | [WGSL specification, §7.2 Value Declarations](https://www.w3.org/TR/WGSL/#value-decls) |
-| ○ | Mass splitting | Giving each rule that touches a body its own copy of it, with a share of its mass, then averaging the copies: rules can run together without taking turns | Solver | [Mass Splitting for Jitter-Free Parallel Rigid Body Simulation](https://doi.org/10.1145/2185520.2185601) |
+| ◐ | Mass splitting | Giving each rule that touches a body its own copy of it, with a share of its mass, then averaging the copies: rules can run together without taking turns | Solver | [Mass Splitting for Jitter-Free Parallel Rigid Body Simulation](https://doi.org/10.1145/2185520.2185601) |
 | ◐ | Memory alignment | Where a value may start in memory: a vec3f starts on a multiple of 16 bytes, so in an array it takes 16 bytes, not 12 | WGSL | [008](../logbook/008-the-first-loop.md) |
 | ○ | Module and function scope | Where a name can be used: everywhere in the shader if declared outside functions, or from its line to the closing brace if declared inside one | WGSL | [WGSL specification, §7.2 Value Declarations](https://www.w3.org/TR/WGSL/#value-decls) |
 | ◐ | Out-of-bounds access | Reading or writing past the end of an array in WGSL. It never touches memory outside the buffer, but what happens instead is not fixed: the write may be skipped or land on another element | WGSL | [dispatch-and-workgroups](../guides/dispatch-and-workgroups.md) |
