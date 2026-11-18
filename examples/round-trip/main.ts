@@ -36,7 +36,20 @@ async function run(): Promise<string> {
   if (!adapter) {
     throw new Error('no WebGPU here')
   }
-  const device = await adapter.requestDevice()
+  // The GPU's own clock, where there is one: it times the work with no promise in between.
+  const hasClock = adapter.features.has('timestamp-query')
+  const device = await adapter.requestDevice({
+    requiredFeatures: hasClock ? ['timestamp-query'] : [],
+  })
+  const stamps = hasClock ? device.createQuerySet({ type: 'timestamp', count: 2 }) : undefined
+  const resolved = device.createBuffer({
+    size: 16,
+    usage: GPUBufferUsage.QUERY_RESOLVE | GPUBufferUsage.COPY_SRC,
+  })
+  const stampsReadable = device.createBuffer({
+    size: 16,
+    usage: GPUBufferUsage.MAP_READ | GPUBufferUsage.COPY_DST,
+  })
   const pipeline = await device.createComputePipelineAsync({
     layout: 'auto',
     compute: { module: device.createShaderModule({ code: SHADER }) },
@@ -67,7 +80,11 @@ async function run(): Promise<string> {
     if (count === 0) {
       return
     }
-    const pass = encoder.beginComputePass()
+    const pass = encoder.beginComputePass(
+      stamps && {
+        timestampWrites: { querySet: stamps, beginningOfPassWriteIndex: 0, endOfPassWriteIndex: 1 },
+      },
+    )
     pass.setPipeline(pipeline)
     pass.setBindGroup(0, target.bindGroup)
     for (let i = 0; i < count; i++) {
@@ -75,6 +92,21 @@ async function run(): Promise<string> {
     }
     pass.end()
     target.sent += count
+  }
+
+  /** How long the last pass of work took by the GPU's own clock, in milliseconds. */
+  async function gpuClock(dispatches: number): Promise<number> {
+    if (!stamps || dispatches === 0) {
+      return Number.NaN
+    }
+    const encoder = device.createCommandEncoder()
+    encoder.resolveQuerySet(stamps, 0, 2, resolved, 0)
+    encoder.copyBufferToBuffer(resolved, 0, stampsReadable, 0, 16)
+    device.queue.submit([encoder.finish()])
+    await stampsReadable.mapAsync(GPUMapMode.READ)
+    const [begin, end] = new BigUint64Array(stampsReadable.getMappedRange())
+    stampsReadable.unmap()
+    return Number(end - begin) / 1e6
   }
 
   /** Opens the readable buffer, copies its first `numbers` out, and checks them. */
@@ -96,18 +128,20 @@ async function run(): Promise<string> {
     await target.readable.mapAsync(GPUMapMode.READ, 0, numbers * 4)
     const arrived = performance.now() - start
     open(target, numbers)
-    return { arrived, copied: performance.now() - start - arrived }
+    const copied = performance.now() - start - arrived
+    return { arrived, copied, gpu: await gpuClock(dispatches) }
   }
 
   /** The same work with no trip: milliseconds until the browser says it is done. */
-  async function workAlone(target: Scene, dispatches: number): Promise<number> {
+  async function workAlone(target: Scene, dispatches: number) {
     await device.queue.onSubmittedWorkDone()
     const start = performance.now()
     const encoder = device.createCommandEncoder()
     work(encoder, target, dispatches)
     device.queue.submit([encoder.finish()])
     await device.queue.onSubmittedWorkDone()
-    return performance.now() - start
+    const done = performance.now() - start
+    return { done, gpu: await gpuClock(dispatches) }
   }
 
   /**
@@ -234,12 +268,13 @@ async function run(): Promise<string> {
   }
 
   lines.push('', '2. A trip of 64 KB behind dispatches over a million numbers', '')
-  lines.push('      dispatches      work alone    trip arrives   done, then trip')
+  lines.push('In brackets, the same work by the clock of the GPU.', '')
+  lines.push('      dispatches        work alone        trip arrives   done, then trip')
   const big = scene(1_048_576)
   for (const dispatches of [0, 20, 40]) {
     const alone = await middle(
       () => workAlone(big, dispatches),
-      (result) => result,
+      (result) => result.done,
     )
     const trip = await middle(
       () => tripBack(big, 16_384, dispatches),
@@ -249,8 +284,14 @@ async function run(): Promise<string> {
       () => tripAfterDone(big, 16_384, dispatches),
       (result) => result,
     )
+    const byGpu = (value: number) => ` (${Number.isNaN(value) ? '-' : value.toFixed(2)})`.padEnd(8)
     lines.push(
-      String(dispatches).padStart(16) + cell(alone(), 16) + cell(trip(), 16) + cell(after(), 18),
+      String(dispatches).padStart(16) +
+        cell(alone(), 10) +
+        byGpu(alone((result) => result.gpu)) +
+        cell(trip(), 12) +
+        byGpu(trip((result) => result.gpu)) +
+        cell(after(), 14),
     )
   }
 
@@ -258,7 +299,7 @@ async function run(): Promise<string> {
   const small = scene(65_536)
   const whole = await middle(
     () => workAlone(small, 2),
-    (result) => result,
+    (result) => result.done,
   )
   const cut = await middle(
     () => stepCutInTwo(small),
