@@ -4,6 +4,9 @@
 // you ask, and the data comes later. Four measures of how much later.
 
 const RUNS = 7
+/** Runs averaged into one number. Some browsers give a page a clock that moves in steps of a whole
+ * millisecond: one run then reads 0 or 1, and only the average of many says something. */
+const REPEAT = 10
 const FRAMES = 60
 
 /** Every thread adds 1 to its own number: after N dispatches each number is N. */
@@ -134,7 +137,7 @@ async function run(): Promise<string> {
     let frame = 0
     let waiting = false
     return new Promise<{ every: number; late: number[]; frames: number[] }>((resolve) => {
-      const finish = () => resolve({ every: median(differences(stamps)), late, frames })
+      const finish = () => resolve({ every: mean(differences(stamps)), late, frames })
       const giveUp = setTimeout(finish, 5000) // a hidden tab gets no frames
       const tick = () => {
         frame++
@@ -164,20 +167,26 @@ async function run(): Promise<string> {
     })
   }
 
-  /** The middle one of a few runs, after one run that does not count. */
+  /** The average of a few runs, taken a few times: the middle one of those averages. */
   async function middle<T>(measure: () => Promise<T>, pick: (result: T) => number) {
-    await measure()
-    const runs: T[] = []
+    await measure() // one run that does not count
+    const rounds: T[][] = []
     for (let i = 0; i < RUNS; i++) {
-      runs.push(await measure())
+      const round: T[] = []
+      for (let j = 0; j < REPEAT; j++) {
+        round.push(await measure())
+      }
+      rounds.push(round)
     }
-    return (key: (result: T) => number = pick) => median(runs.map(key))
+    return (key: (result: T) => number = pick) =>
+      median(rounds.map((round) => mean(round.map(key))))
   }
 
   const lines = [
     `${adapter.info.description || adapter.info.vendor} (${adapter.info.architecture})`,
     '',
-    'Milliseconds, the middle one of 7 runs. A frame at 60 per second lasts 16.7.',
+    `Milliseconds: each number is the average of ${REPEAT} runs, the middle one of ${RUNS} such averages.`,
+    `The clock of this page moves in steps of ${clockStep()}. A frame at 60 per second lasts 16.7.`,
     '',
     '1. One trip back, with the GPU doing nothing else',
     '',
@@ -238,7 +247,7 @@ async function run(): Promise<string> {
   } else {
     const count = (test: (frames: number) => boolean) => perFrame.frames.filter(test).length
     lines.push(
-      `a frame every ${perFrame.every.toFixed(1)}, the answer after ${median(perFrame.late).toFixed(2)}`,
+      `a frame every ${perFrame.every.toFixed(1)}, the answer after ${mean(perFrame.late).toFixed(2)}, on average`,
       `back before the next frame:  ${count((frames) => frames === 0)} of ${perFrame.late.length}`,
       `one frame late:              ${count((frames) => frames === 1)}`,
       `later:                       ${count((frames) => frames > 1)}`,
@@ -258,6 +267,24 @@ function cell(value: number, width: number): string {
 
 function median(values: number[]): number {
   return [...values].sort((a, b) => a - b)[Math.floor(values.length / 2)]
+}
+
+function mean(values: number[]): number {
+  return values.reduce((sum, value) => sum + value, 0) / values.length
+}
+
+/** The smallest step the clock of the page makes, in milliseconds. */
+function clockStep(): number {
+  let smallest = Number.POSITIVE_INFINITY
+  for (let i = 0; i < 5; i++) {
+    const from = performance.now()
+    let to = from
+    while (to === from) {
+      to = performance.now()
+    }
+    smallest = Math.min(smallest, to - from)
+  }
+  return Number(smallest.toFixed(3))
 }
 
 function differences(values: number[]): number[] {

@@ -4,6 +4,9 @@
 // GPU takes to run them, and how long until the browser says that all of it is done.
 
 const RUNS = 5
+/** Runs averaged into one number. Some browsers give a page a clock that moves in steps of a whole
+ * millisecond: one run then reads 0 or 1, and only the average of many says something. */
+const REPEAT = 10
 
 /** Every thread adds 1 to its own element: after N dispatches each element counts N. */
 const SHADER = `
@@ -132,18 +135,20 @@ async function run(): Promise<string> {
     return { js, gpu, all }
   }
 
-  /** The middle one of a few runs, clock by clock, after one run that does not count. */
+  /** The average of a few runs, taken a few times: the middle one of those averages, clock by clock. */
   async function middle(target: Scene, count: number, packing: Packing): Promise<Clocks> {
-    await time(target, count, packing)
-    const runs: Clocks[] = []
+    await time(target, count, packing) // one run that does not count
+    const rounds: Clocks[][] = []
     for (let i = 0; i < RUNS; i++) {
-      runs.push(await time(target, count, packing))
+      const round: Clocks[] = []
+      for (let j = 0; j < REPEAT; j++) {
+        round.push(await time(target, count, packing))
+      }
+      rounds.push(round)
     }
-    return {
-      js: median(runs.map((clocks) => clocks.js)),
-      gpu: median(runs.map((clocks) => clocks.gpu)),
-      all: median(runs.map((clocks) => clocks.all)),
-    }
+    const of = (key: keyof Clocks) =>
+      median(rounds.map((round) => mean(round.map((clocks) => clocks[key]))))
+    return { js: of('js'), gpu: of('gpu'), all: of('all') }
   }
 
   /** The last element of the buffer: how many dispatches really reached it. */
@@ -162,6 +167,7 @@ async function run(): Promise<string> {
     '',
     'One more dispatch, in microseconds: a thousandth of a millisecond.',
     'A frame at 60 per second lasts 16 700.',
+    `Each number is the average of ${REPEAT} runs, the middle one of ${RUNS} such averages.`,
     '',
     'threads per dispatch       GPU       all',
   ]
@@ -218,6 +224,10 @@ async function run(): Promise<string> {
 
 function cell(value: number, width: number, digits: number): string {
   return (Number.isNaN(value) ? '-' : value.toFixed(digits)).padStart(width)
+}
+
+function mean(values: number[]): number {
+  return values.reduce((sum, value) => sum + value, 0) / values.length
 }
 
 function median(values: number[]): number {
