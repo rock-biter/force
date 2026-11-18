@@ -55,4 +55,4 @@ In the third column one contact in twenty ends and begins again, and the others 
 
 ## Next step
 
-Put the prices of turns and of copies, the other way out, side by side, and decide which way FORCE takes.
+Not the decision between turns and copies, the other way out: the user said it is too early. We have not chosen how bodies are made, as shapes or all as particles, and we have never studied how they find each other. So we start from the particles: how each one finds the ones it touches on a GPU, with a grid. Meshes, and trees of boxes such as the *bounding volume hierarchy*, come after.

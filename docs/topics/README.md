@@ -5,8 +5,8 @@
 Everything we have met while building FORCE, concepts and sources, and how far we went with each
 one. Use it to look up a term, to find what to read, or to pick what to explore next.
 
-- **245 concepts:** ● 21 studied · ◐ 117 seen · ○ 107 mentioned
-- **144 sources:** ● 15 studied · ◐ 16 seen · ○ 113 mentioned · read by Claude: 67 parts, 14 in full
+- **246 concepts:** ● 21 studied · ◐ 117 seen · ○ 108 mentioned
+- **144 sources:** ● 15 studied · ◐ 16 seen · ○ 113 mentioned · read by Claude: 66 parts, 15 in full
 
 | | Status | What it means |
 | --- | --- | --- |
@@ -360,6 +360,7 @@ WebGPU, WGSL and how to make thousands of threads work.
 | ◐ | Workgroup variable | A var<workgroup>: memory shared by the threads of one workgroup, only in compute shaders, starting at zero | Address space | [WGSL specification, §7.3 var Declarations](https://www.w3.org/TR/WGSL/#var-decls) |
 | ● | **[Workgroups and dispatch](../guides/dispatch-and-workgroups.md)** | Threads start in blocks: the shader fixes the size of a block (a workgroup), and each dispatch says how many blocks to launch. Threads = size × count, so the count is rounded up and the extra threads return at once | WebGPU | [guides index](../guides/README.md) |
 | ○ | Writable binding aliasing | The same range of a buffer in two slots of a dispatch, with at least one writable: WebGPU refuses it. In Chrome: "Writable storage buffer binding aliasing found" | Bind group | [WebGPU specification, §14.1 Bind Groups](https://www.w3.org/TR/webgpu/#programmable-passes-bind-groups) |
+| ○ | Z-order curve | A way to number the cells of a grid so that cells close in space get close numbers, and the memory read for neighbours is close too | Uniform grid | [Particle Simulation using CUDA](https://developer.download.nvidia.com/assets/cuda/files/particles.pdf) |
 | ○ | Zero value | What a variable holds when it is declared with no initial value: all zeros, never garbage | var declaration | [WGSL specification, §7.3 var Declarations](https://www.w3.org/TR/WGSL/#var-decls) |
 
 | | Source | Kind | What it gives us | About | First cited in | Claude read |
@@ -391,7 +392,7 @@ WebGPU, WGSL and how to make thousands of threads work.
 | ○ | [MDN, Navigator.gpu](https://developer.mozilla.org/en-US/docs/Web/API/Navigator/gpu) | Documentation | The entry point of WebGPU, only on HTTPS or localhost | WebGPU | [adapter-and-device](../guides/adapter-and-device.md) | Parts |
 | ○ | [MDN, WebGLRenderingContext.bufferData()](https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/bufferData) | Documentation | How WebGL fills a buffer; its usage is only an intended pattern, for speed | Buffer | [buffers](../guides/buffers.md) | Parts |
 | ○ | [MDN, WebGPU API](https://developer.mozilla.org/en-US/docs/Web/API/WebGPU_API) | Documentation | A readable API reference | WebGPU | [guide skill](../../.claude/skills/guide/SKILL.md) |  |
-| ○ | [Particle Simulation using CUDA](https://developer.download.nvidia.com/assets/cuda/files/particles.pdf)<br>*Simon Green, 2010* | Article | Particles that collide on the GPU: a uniform grid rebuilt at every step, with atomic counters or by sorting | Uniform grid, Neighbour search, Parallel sorting, Atomic operations | [012](../logbook/012-the-family-tree.md) | Parts |
+| ○ | [Particle Simulation using CUDA](https://developer.download.nvidia.com/assets/cuda/files/particles.pdf)<br>*Simon Green, 2010* | Article | Particles that collide on the GPU in three steps: move them, rebuild a uniform grid from scratch at every step (with atomic counters, or by sorting particles by cell), then test each particle against the 27 cells around it | Uniform grid, Neighbour search, Parallel sorting, Atomic operations, Z-order curve, Discrete element method (DEM), Prefix sum (scan) | [012](../logbook/012-the-family-tree.md) | In full |
 | ○ | [PhysX, gpunarrowphase](https://github.com/NVIDIA-Omniverse/PhysX/tree/main/physx/source/gpunarrowphase) | Source code | Contact finding on the GPU, and the copies that bring its results back to the CPU | Narrow phase, Readback | [017](../logbook/017-taking-turns.md) | Parts |
 | ○ | [PhysX, gpusolver](https://github.com/NVIDIA-Omniverse/PhysX/tree/main/physx/source/gpusolver) | Source code | The GPU solver of PhysX: rules sorted into groups on the CPU, one launch per group, and an average for bodies with too many rules | Constraint graph coloring, Mass splitting, TGS solver, Parallel work on the GPU, Islands | [017](../logbook/017-taking-turns.md) | Parts |
 | ◐ | [Real-Time Rigid Body Simulation on GPUs](https://developer.nvidia.com/gpugems/gpugems3/part-v-physics-simulation/chapter-29-real-time-rigid-body-simulation-gpus)<br>*Takahiro Harada, 2007* | Book | Rigid bodies built from particles: collisions found on a uniform grid and pushed apart with springs and dampers, all on the GPU | Rigid body, Inertia tensor, Parallel work on the GPU, Particle-based rigid bodies, Uniform grid, Discrete element method (DEM) | [004](../logbook/004-the-detour.md) |  |

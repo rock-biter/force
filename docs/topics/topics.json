@@ -371,7 +371,11 @@
         "seen": "2026-11-08"
       },
       "related": ["rigid-body"],
-      "citedIn": ["docs/logbook/000-the-launch.md", "docs/logbook/004-the-detour.md"],
+      "citedIn": [
+        "docs/logbook/000-the-launch.md",
+        "docs/logbook/004-the-detour.md",
+        "docs/logbook/023-the-first-free-turn.md"
+      ],
       "code": ["examples/hello-compute/free-fall.wgsl"]
     },
     {
@@ -391,7 +395,8 @@
         "docs/logbook/004-the-detour.md",
         "docs/logbook/012-the-family-tree.md",
         "advanced-character-physics",
-        "iterative-dynamics-paper"
+        "iterative-dynamics-paper",
+        "docs/logbook/023-the-first-free-turn.md"
       ]
     },
     {
@@ -759,7 +764,11 @@
       },
       "partOf": "broad-phase",
       "related": ["bounding-box"],
-      "citedIn": ["ten-minute-physics", "docs/logbook/004-the-detour.md"]
+      "citedIn": [
+        "ten-minute-physics",
+        "docs/logbook/004-the-detour.md",
+        "docs/logbook/023-the-first-free-turn.md"
+      ]
     },
     {
       "id": "joint",
@@ -1228,7 +1237,11 @@
         "seen": "2026-11-16"
       },
       "partOf": "broad-phase",
-      "citedIn": ["docs/logbook/004-the-detour.md", "docs/logbook/012-the-family-tree.md"]
+      "citedIn": [
+        "docs/logbook/004-the-detour.md",
+        "docs/logbook/012-the-family-tree.md",
+        "docs/logbook/023-the-first-free-turn.md"
+      ]
     },
     {
       "id": "spatial-hashing",
@@ -5847,19 +5860,27 @@
       "id": "particle-simulation-cuda",
       "kind": "article",
       "title": "Particle Simulation using CUDA",
-      "summary": "Particles that collide on the GPU: a uniform grid rebuilt at every step, with atomic counters or by sorting",
+      "summary": "Particles that collide on the GPU in three steps: move them, rebuild a uniform grid from scratch at every step (with atomic counters, or by sorting particles by cell), then test each particle against the 27 cells around it",
       "area": "gpu",
       "status": "mentioned",
       "since": {
         "mentioned": "2026-11-16"
       },
-      "about": ["uniform-grid", "neighbour-search", "parallel-sort", "atomic-operations"],
+      "about": [
+        "uniform-grid",
+        "neighbour-search",
+        "parallel-sort",
+        "atomic-operations",
+        "z-order-curve",
+        "discrete-element-method",
+        "prefix-sum"
+      ],
       "citedIn": ["docs/logbook/012-the-family-tree.md"],
       "url": "https://developer.download.nvidia.com/assets/cuda/files/particles.pdf",
       "file": "library/particle-simulation-cuda.pdf",
       "authors": "Simon Green",
       "year": 2010,
-      "claudeRead": "parts"
+      "claudeRead": "full"
     },
     {
       "id": "mass-splitting-paper",
@@ -6617,6 +6638,19 @@
       "about": ["graph-coloring"],
       "citedIn": ["box2d-constraint-graph", "docs/logbook/023-the-first-free-turn.md"],
       "url": "http://web.eecs.umich.edu/~msmelyan/papers/physsim_onmanycore_itj.pdf"
+    },
+    {
+      "id": "z-order-curve",
+      "kind": "concept",
+      "title": "Z-order curve",
+      "summary": "A way to number the cells of a grid so that cells close in space get close numbers, and the memory read for neighbours is close too",
+      "area": "gpu",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-18"
+      },
+      "partOf": "uniform-grid",
+      "citedIn": ["particle-simulation-cuda"]
     }
   ]
 }

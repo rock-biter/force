@@ -24,7 +24,8 @@ are kept. With the two measures before it, [a launch](./docs/logbook/020-a-cheap
 [a trip of data](./docs/logbook/021-a-short-trip.md), all the prices of taking turns are small
 on our machines.
 
-**Next:** put the two ways side by side, turns and copies, and decide which one FORCE takes.
+**Next:** make particles collide with each other, the first real piece of the engine. First we
+study how each particle finds the ones it touches on the GPU, with a grid.
 
 Every step, with what we learned and what went wrong, is in the [logbook](./docs/README.md).
 
