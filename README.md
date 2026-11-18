@@ -16,15 +16,14 @@ documentation of the library will live there too.
 
 *Updated November 18, 2026*
 
-**Latest step:** [the price of copies](./docs/logbook/019-the-price-of-copies.md). On a GPU, two
-rules such as "this link must stay 10 cm long" cannot write the same body at the same instant.
-Either they take turns, or each works on its own copy of the body and the copies are averaged
-([half a box](./docs/logbook/018-half-a-box.md)). We tried both on a hanging chain. Turns do as
-well as a CPU. Copies need four times the passes over the rules, and with the springs Box2D uses
-as rules the chain hangs twice as far below its length.
+**Latest step:** [a cheap launch](./docs/logbook/020-a-cheap-launch.md). A step of physics on
+the GPU may need a hundred launches of a compute shader, so we timed what one more costs in
+WebGPU. On our Mac the launch itself takes one or two millionths of a second: almost nothing.
+What costs is the work inside it, and sending each launch to the GPU on its own, which takes
+about twenty times longer.
 
-**Next:** measure in WebGPU what the two ways cost: one launch of a compute shader, and one trip
-of data from the GPU back to JavaScript.
+**Next:** measure the other price: how late a trip of data from the GPU back to JavaScript
+arrives.
 
 Every step, with what we learned and what went wrong, is in the [logbook](./docs/README.md).
 

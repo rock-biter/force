@@ -26,6 +26,7 @@ This is where we tell how FORCE gets built, one step at a time. If you are new h
 | 017 | [Taking Turns](./logbook/017-taking-turns.md) | PhysX on the GPU: rules take turns picked on the CPU, copies past a ceiling, and an explanation left halfway |
 | 018 | [Half a Box](./logbook/018-half-a-box.md) | The copies again, one idea at a time: an average, one box per round, and a share of the mass so no push is lost |
 | 019 | [The Price of Copies](./logbook/019-the-price-of-copies.md) | Turns and copies on a hanging chain: copies need four times the rounds, and springs sag twice as much |
+| 020 | [A Cheap Launch](./logbook/020-a-cheap-launch.md) | What one more dispatch costs in WebGPU: almost nothing to launch, the work inside, and twenty times more when sent alone |
 
 ## For reference
 

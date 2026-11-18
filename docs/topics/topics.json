@@ -628,12 +628,14 @@
         "docs/guides/compute-shader.md",
         "wgsl-spec-shader-lifecycle",
         "docs/guides/dispatch-and-workgroups.md",
-        "wgsl-spec-compute-shader-workgroups"
+        "wgsl-spec-compute-shader-workgroups",
+        "docs/logbook/020-a-cheap-launch.md"
       ],
       "code": [
         "examples/hello-compute/main.ts",
         "examples/hello-compute/free-fall.wgsl",
-        "src/world.ts"
+        "src/world.ts",
+        "examples/dispatch-cost/main.ts"
       ],
       "page": "docs/guides/dispatch-and-workgroups.md"
     },
@@ -652,9 +654,16 @@
         "docs/guides/README.md",
         "docs/logbook/004-the-detour.md",
         "docs/logbook/009-the-first-picture.md",
-        "docs/guides/buffers.md"
+        "docs/guides/buffers.md",
+        "docs/logbook/020-a-cheap-launch.md",
+        "docs/guides/timestamp-queries.md"
       ],
-      "code": ["examples/hello-compute/main.ts", "src/world.ts", "examples/debug/viewer.ts"]
+      "code": [
+        "examples/hello-compute/main.ts",
+        "src/world.ts",
+        "examples/debug/viewer.ts",
+        "examples/dispatch-cost/main.ts"
+      ]
     },
     {
       "id": "readback",
@@ -672,9 +681,11 @@
         "docs/logbook/004-the-detour.md",
         "docs/guides/buffers.md",
         "physx-gpu-narrowphase",
-        "docs/logbook/017-taking-turns.md"
+        "docs/logbook/017-taking-turns.md",
+        "docs/guides/timestamp-queries.md",
+        "docs/logbook/020-a-cheap-launch.md"
       ],
-      "code": ["examples/hello-compute/main.ts", "src/world.ts"]
+      "code": ["examples/hello-compute/main.ts", "src/world.ts", "examples/dispatch-cost/main.ts"]
     },
     {
       "id": "position-based-dynamics",
@@ -1578,7 +1589,8 @@
         "jolt-architecture",
         "physx-gpu-solver",
         "docs/logbook/017-taking-turns.md",
-        "docs/logbook/019-the-price-of-copies.md"
+        "docs/logbook/019-the-price-of-copies.md",
+        "docs/logbook/020-a-cheap-launch.md"
       ]
     },
     {
@@ -1929,7 +1941,7 @@
       "since": {
         "mentioned": "2026-11-05"
       },
-      "citedIn": ["docs/logbook/004-the-detour.md"]
+      "citedIn": ["docs/logbook/004-the-detour.md", "docs/logbook/020-a-cheap-launch.md"]
     },
     {
       "id": "benchmark",
@@ -2301,7 +2313,9 @@
         "docs/guides/adapter-and-device.md",
         "docs/logbook/009-the-first-picture.md",
         "docs/guides/buffers.md",
-        "docs/guides/compute-shader.md"
+        "docs/guides/compute-shader.md",
+        "docs/logbook/020-a-cheap-launch.md",
+        "docs/guides/timestamp-queries.md"
       ],
       "url": "https://www.w3.org/TR/webgpu/",
       "claudeRead": "parts"
@@ -6238,7 +6252,8 @@
         "physx-gpu-solver",
         "docs/logbook/017-taking-turns.md",
         "docs/logbook/018-half-a-box.md",
-        "docs/logbook/019-the-price-of-copies.md"
+        "docs/logbook/019-the-price-of-copies.md",
+        "docs/logbook/020-a-cheap-launch.md"
       ]
     },
     {
@@ -6301,6 +6316,124 @@
       },
       "related": ["impulse-based-dynamics", "mass-splitting", "angular-momentum"],
       "citedIn": ["docs/logbook/018-half-a-box.md"]
+    },
+    {
+      "id": "dispatch-cost",
+      "kind": "concept",
+      "title": "The cost of a dispatch",
+      "summary": "What one more dispatch adds to a step: a small fixed price for the launch, then the work of its threads. Sending each dispatch in its own submit costs far more than the dispatch",
+      "area": "gpu",
+      "status": "seen",
+      "since": {
+        "seen": "2026-11-18"
+      },
+      "partOf": "workgroup",
+      "related": ["frame-budget", "timestamp-query", "graph-coloring"],
+      "citedIn": ["docs/logbook/020-a-cheap-launch.md", "docs/guides/timestamp-queries.md"],
+      "code": ["examples/dispatch-cost/main.ts"]
+    },
+    {
+      "id": "timestamp-query",
+      "kind": "concept",
+      "title": "Timestamp queries",
+      "summary": "The GPU's own clock: it writes the time at the start and at the end of a pass, in nanoseconds, into slots that are then copied to a buffer. An optional feature, and rounded on purpose",
+      "area": "gpu",
+      "status": "seen",
+      "since": {
+        "seen": "2026-11-18"
+      },
+      "partOf": "webgpu",
+      "related": ["readback", "benchmark"],
+      "citedIn": [
+        "docs/logbook/020-a-cheap-launch.md",
+        "docs/guides/timestamp-queries.md",
+        "webgpu-spec-timestamp-query",
+        "new-in-webgpu-120",
+        "mdn-begin-compute-pass"
+      ],
+      "code": ["examples/dispatch-cost/main.ts"]
+    },
+    {
+      "id": "submitted-work-done",
+      "kind": "concept",
+      "title": "onSubmittedWorkDone()",
+      "summary": "A promise that resolves when the GPU has finished everything sent to the queue so far: a stopwatch for all the work, with the way there and back",
+      "area": "gpu",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-18"
+      },
+      "partOf": "command-queue",
+      "citedIn": [
+        "docs/guides/pipeline-creation.md",
+        "docs/logbook/020-a-cheap-launch.md",
+        "docs/guides/timestamp-queries.md",
+        "mdn-on-submitted-work-done"
+      ],
+      "code": ["examples/pipeline-creation/main.ts", "examples/dispatch-cost/main.ts"]
+    },
+    {
+      "id": "webgpu-spec-timestamp-query",
+      "kind": "spec",
+      "title": "WebGPU specification, §20.4 Timestamp Query",
+      "summary": "Timestamps are nanoseconds in 64 bits, written at the start and end of a pass; their values are up to the browser, the clock may reset, and its precision must be reduced",
+      "area": "gpu",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-18"
+      },
+      "partOf": "webgpu-spec",
+      "about": ["timestamp-query"],
+      "citedIn": ["docs/guides/timestamp-queries.md", "docs/logbook/020-a-cheap-launch.md"],
+      "url": "https://www.w3.org/TR/webgpu/#timestamp",
+      "claudeRead": "parts"
+    },
+    {
+      "id": "new-in-webgpu-120",
+      "kind": "docs",
+      "title": "Chrome, What's New in WebGPU 120",
+      "summary": "Chrome rounds timestamp queries to 100 microseconds, and a developer flag turns the rounding off",
+      "area": "gpu",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-18"
+      },
+      "about": ["timestamp-query"],
+      "citedIn": ["docs/guides/timestamp-queries.md", "docs/logbook/020-a-cheap-launch.md"],
+      "url": "https://developer.chrome.com/blog/new-in-webgpu-120",
+      "claudeRead": "parts"
+    },
+    {
+      "id": "mdn-begin-compute-pass",
+      "kind": "docs",
+      "title": "MDN, GPUCommandEncoder.beginComputePass()",
+      "summary": "How a compute pass is opened, and the timestampWrites option that times it",
+      "area": "gpu",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-18"
+      },
+      "partOf": "mdn-webgpu",
+      "about": ["timestamp-query", "command-queue"],
+      "citedIn": ["docs/guides/timestamp-queries.md"],
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/GPUCommandEncoder/beginComputePass",
+      "claudeRead": "parts"
+    },
+    {
+      "id": "mdn-on-submitted-work-done",
+      "kind": "docs",
+      "title": "MDN, GPUQueue.onSubmittedWorkDone()",
+      "summary": "The promise resolves when the work sent to the queue so far is done; mapping a buffer does not need it",
+      "area": "gpu",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-18"
+      },
+      "partOf": "mdn-webgpu",
+      "about": ["submitted-work-done", "command-queue"],
+      "citedIn": ["docs/logbook/020-a-cheap-launch.md"],
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/GPUQueue/onSubmittedWorkDone",
+      "claudeRead": "parts"
     }
   ]
 }

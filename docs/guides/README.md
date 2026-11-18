@@ -13,6 +13,7 @@ Short guides, one concept each, built from the code of FORCE. They are written f
 | [Create a pipeline now, or wait for it?](./pipeline-creation.md) | Immediate and async pipeline creation |
 | [How does a shader find its data?](./bind-groups.md) | Bind groups |
 | [How do you make thousands of threads work?](./dispatch-and-workgroups.md) | Dispatch and workgroups |
+| [How long did the GPU take?](./timestamp-queries.md) | Timestamp queries |
 
 ## Planned
 
@@ -25,6 +26,7 @@ The first series comes from [`examples/hello-compute`](../../examples/hello-comp
 - [x] Create a pipeline now, or wait for it? (immediate and async pipeline creation, from [`examples/pipeline-creation`](../../examples/pipeline-creation/main.ts))
 - [x] How does a shader find its data? (bind groups)
 - [x] How do you make thousands of threads work? (dispatch and workgroups)
+- [x] How long did the GPU take? (timestamp queries, from [`examples/dispatch-cost`](../../examples/dispatch-cost/main.ts))
 - [ ] When does the GPU actually run? (commands and queue)
 - [ ] How do you get the results back? (readback)
 - [ ] How do you give every thread the same values? (uniform buffers)
