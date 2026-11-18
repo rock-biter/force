@@ -1,7 +1,8 @@
 // What one more dispatch costs, timed.
 // A step of physics may need a hundred dispatches, so we send the same tiny shader many times in a
-// row and read three clocks: how long JavaScript takes to write the commands down, how long the
-// GPU takes to run them, and how long until the browser says that all of it is done.
+// row and read four clocks: how long JavaScript takes to write the commands down, how long the
+// GPU takes to run them, how long until the browser says that all of it is done, and how long
+// until JavaScript holds a number that the last dispatch wrote.
 
 const RUNS = 5
 /** Runs averaged into one number. Some browsers give a page a clock that moves in steps of a whole
@@ -28,6 +29,8 @@ interface Clocks {
   gpu: number
   /** All of it: from the first command until the browser says the work is done. */
   all: number
+  /** From the first command until JavaScript holds a number the last dispatch wrote. */
+  back: number
 }
 
 interface Scene {
@@ -65,6 +68,13 @@ async function run(): Promise<string> {
     usage: GPUBufferUsage.MAP_READ | GPUBufferUsage.COPY_DST,
   })
 
+  // The proof that the work is over: one element, copied here after the last dispatch and read back.
+  const proof = device.createBuffer({
+    size: 16,
+    usage: GPUBufferUsage.MAP_READ | GPUBufferUsage.COPY_DST,
+  })
+  let allRan = true
+
   function scene(threads: number): Scene {
     const buffer = device.createBuffer({
       size: threads * 16,
@@ -77,7 +87,7 @@ async function run(): Promise<string> {
     return { threads, workgroups: Math.ceil(threads / 64), buffer, bindGroup, sent: 0 }
   }
 
-  /** Sends `count` dispatches and reads the three clocks, in milliseconds. */
+  /** Sends `count` dispatches and reads the four clocks, in milliseconds. */
   async function time(target: Scene, count: number, packing: Packing): Promise<Clocks> {
     await device.queue.onSubmittedWorkDone() // start from a GPU with nothing to do
     const start = performance.now()
@@ -99,6 +109,7 @@ async function run(): Promise<string> {
         pass.dispatchWorkgroups(target.workgroups)
       }
       pass.end()
+      encoder.copyBufferToBuffer(target.buffer, 0, proof, 0, 16)
       device.queue.submit([encoder.finish()])
     } else {
       let encoder = device.createCommandEncoder()
@@ -113,13 +124,18 @@ async function run(): Promise<string> {
           encoder = device.createCommandEncoder()
         }
       }
+      encoder.copyBufferToBuffer(target.buffer, 0, proof, 0, 16)
       device.queue.submit([encoder.finish()])
     }
     target.sent += count
 
     const js = performance.now() - start
-    await device.queue.onSubmittedWorkDone()
-    const all = performance.now() - start
+    const done = device.queue.onSubmittedWorkDone().then(() => performance.now() - start)
+    await proof.mapAsync(GPUMapMode.READ)
+    const back = performance.now() - start
+    allRan &&= new Float32Array(proof.getMappedRange())[0] === target.sent
+    proof.unmap()
+    const all = await done
 
     let gpu = Number.NaN
     if (stamps && packing === 'one pass') {
@@ -132,7 +148,7 @@ async function run(): Promise<string> {
       gpu = Number(end - begin) / 1e6 // nanoseconds to milliseconds
       readable.unmap()
     }
-    return { js, gpu, all }
+    return { js, gpu, all, back }
   }
 
   /** The average of a few runs, taken a few times: the middle one of those averages, clock by clock. */
@@ -148,7 +164,7 @@ async function run(): Promise<string> {
     }
     const of = (key: keyof Clocks) =>
       median(rounds.map((round) => mean(round.map((clocks) => clocks[key]))))
-    return { js: of('js'), gpu: of('gpu'), all: of('all') }
+    return { js: of('js'), gpu: of('gpu'), all: of('all'), back: of('back') }
   }
 
   /** The last element of the buffer: how many dispatches really reached it. */
@@ -169,9 +185,8 @@ async function run(): Promise<string> {
     'A frame at 60 per second lasts 16 700.',
     `Each number is the average of ${REPEAT} runs, the middle one of ${RUNS} such averages.`,
     '',
-    'threads per dispatch       GPU       all',
+    'threads per dispatch       GPU       all   read back',
   ]
-  let allRan = true
   const small = scene(64)
 
   // Sending anything costs a fixed fee, however many dispatches it holds. So each row is timed
@@ -186,7 +201,8 @@ async function run(): Promise<string> {
     lines.push(
       threads.toLocaleString('en').padStart(20) +
         cell(each('gpu'), 10, 1) +
-        cell(each('all'), 10, 1),
+        cell(each('all'), 10, 1) +
+        cell(each('back'), 12, 1),
     )
     allRan &&= (await counted(target)) === target.sent
     target.buffer.destroy()
@@ -208,10 +224,15 @@ async function run(): Promise<string> {
   lines.push('', `JavaScript writes one down in ${written.toFixed(2)} (timed over 100 000).`)
 
   lines.push('', '1000 dispatches of 64 threads, in milliseconds', '')
-  lines.push('                       JavaScript       all')
+  lines.push('                       JavaScript       all   read back')
   for (const packing of ['one pass', 'a pass each', 'a submit each'] as const) {
     const clocks = await middle(small, 1000, packing)
-    lines.push(packing.padEnd(20) + cell(clocks.js, 13, 2) + cell(clocks.all, 10, 1))
+    lines.push(
+      packing.padEnd(20) +
+        cell(clocks.js, 13, 2) +
+        cell(clocks.all, 10, 1) +
+        cell(clocks.back, 12, 1),
+    )
   }
   allRan &&= (await counted(small)) === small.sent
 
