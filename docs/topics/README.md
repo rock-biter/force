@@ -5,8 +5,8 @@
 Everything we have met while building FORCE, concepts and sources, and how far we went with each
 one. Use it to look up a term, to find what to read, or to pick what to explore next.
 
-- **244 concepts:** ● 21 studied · ◐ 116 seen · ○ 107 mentioned
-- **143 sources:** ● 15 studied · ◐ 16 seen · ○ 112 mentioned · read by Claude: 67 parts, 14 in full
+- **245 concepts:** ● 21 studied · ◐ 117 seen · ○ 107 mentioned
+- **144 sources:** ● 15 studied · ◐ 16 seen · ○ 113 mentioned · read by Claude: 67 parts, 14 in full
 
 | | Status | What it means |
 | --- | --- | --- |
@@ -309,6 +309,7 @@ WebGPU, WGSL and how to make thousands of threads work.
 | ○ | Dynamic offset | A buffer slot whose starting byte is given at setBindGroup() instead of when the bind group is made, so one bind group can serve many ranges of one buffer | Bind group | [WebGPU specification, §14.1 Bind Groups](https://www.w3.org/TR/webgpu/#programmable-passes-bind-groups) |
 | ◐ | Entry point | The function where a shader starts, marked @compute, @vertex or @fragment. A pipeline compiles only the code its entry point reaches: the rest of the module is dropped | WGSL | [WGSL specification, §2.1 Shader Lifecycle](https://www.w3.org/TR/WGSL/#shader-lifecycle) |
 | ○ | Error scope | Catches WebGPU errors in code: push a scope before the calls, pop it after to get the first error, or null | WebGPU errors | [buffers](../guides/buffers.md) |
+| ◐ | First-fit coloring | Giving each constraint the first group where both its bodies are free. Simple and kept from step to step, but it uses more groups than the minimum, and a body in more constraints than there are groups leaves some out | Constraint graph coloring | [Box2D, constraint_graph.c](https://github.com/erincatto/box2d/blob/main/src/constraint_graph.c) |
 | ○ | GPU-resident simulation | Keeping the simulation's data on the GPU, and not reading it back every frame |  | [004](../logbook/004-the-detour.md) |
 | ○ | Host-shareable type | A type with a fixed layout in bytes, so JavaScript and the shader agree on it: the only kind allowed in a buffer | WGSL | [WGSL specification, §7.3 var Declarations](https://www.w3.org/TR/WGSL/#var-decls) |
 | ○ | Immediate data | A var<immediate>: a few values set straight from the command encoder with setImmediates, with no buffer to create | Address space | [WGSL specification, §7.3 var Declarations](https://www.w3.org/TR/WGSL/#var-decls) |
@@ -370,6 +371,7 @@ WebGPU, WGSL and how to make thousands of threads work.
 | ○ | [Firefox bug 1878449, comment 5](https://bugzilla.mozilla.org/show_bug.cgi?id=1878449#c5)<br>*Jim Blandy* | Article | A Firefox engineer gives the async pipeline methods as best practice: the immediate ones are hard to keep from blocking the work that follows | Async pipeline creation | [pipeline-creation](../guides/pipeline-creation.md) | Parts |
 | ○ | [GPU Gems 3](https://developer.nvidia.com/gpugems/gpugems3)<br>*2007* | Book | NVIDIA's free book of GPU techniques, with a whole part on physics simulation | Parallel work on the GPU | [004](../logbook/004-the-detour.md) |  |
 | ○ | [High-Performance Physical Simulations on Next-Generation Architecture with Many Cores](https://doi.org/10.1535/itj.1103.08)<br>*2007* | Paper | The paper Box2D's constraint graph cites for solving rules in parallel by colors | Constraint graph coloring, Parallel work on the GPU | [Box2D, constraint_graph.c](https://github.com/erincatto/box2d/blob/main/src/constraint_graph.c) |  |
+| ○ | [High-Performance Physical Simulations on Next-Generation Architecture with Many Cores](http://web.eecs.umich.edu/~msmelyan/papers/physsim_onmanycore_itj.pdf) | Paper | The paper Box2D's constraint graph cites for its solver with graph coloring | Constraint graph coloring | [Box2D, constraint_graph.c](https://github.com/erincatto/box2d/blob/main/src/constraint_graph.c) |  |
 | ○ | [MDN, GPU.requestAdapter()](https://developer.mozilla.org/en-US/docs/Web/API/GPU/requestAdapter) | Documentation | How to ask for an adapter, and why it can be null | Adapter and device | [adapter-and-device](../guides/adapter-and-device.md) | Parts |
 | ○ | [MDN, GPUAdapter.requestDevice()](https://developer.mozilla.org/en-US/docs/Web/API/GPUAdapter/requestDevice) | Documentation | How to ask for a device, its options, and why a second call rejects | Adapter and device, Device limits | [adapter-and-device](../guides/adapter-and-device.md) | Parts |
 | ○ | [MDN, GPUBuffer.mapAsync()](https://developer.mozilla.org/en-US/docs/Web/API/GPUBuffer/mapAsync) | Documentation | The promise resolves when the buffer can be read, a mapped buffer cannot be used in GPU commands, and the rules on offset and size | Buffer mapping, Readback | [021](../logbook/021-a-short-trip.md) | In full |

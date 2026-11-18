@@ -16,14 +16,15 @@ documentation of the library will live there too.
 
 *Updated November 18, 2026*
 
-**Latest step:** [the bell that rang early](./docs/logbook/022-the-bell-that-rang-early.md).
-We repeated our measures on a phone, an iPhone 16 Pro. Launching a compute shader and reading
-data back from the GPU stay cheap there too: a few millionths of a second for a launch, about
-half a thousandth for a trip. But one of our stopwatches, a signal the browser gives when the
-GPU is done, came well before the work was over. Reading a number back is the only proof.
+**Latest step:** [the first free turn](./docs/logbook/023-the-first-free-turn.md). On a GPU,
+two rules that touch the same body cannot run at the same instant, so they take turns, and the
+turns are decided on the CPU at every step. We timed that sorting in JavaScript: about one
+thousandth of a second for 100 000 contacts, and much less when the turns of the step before
+are kept. With the two measures before it, [a launch](./docs/logbook/020-a-cheap-launch.md) and
+[a trip of data](./docs/logbook/021-a-short-trip.md), all the prices of taking turns are small
+on our machines.
 
-**Next:** time the last piece of the price of taking turns: sorting the rules into turns, in
-JavaScript.
+**Next:** put the two ways side by side, turns and copies, and decide which one FORCE takes.
 
 Every step, with what we learned and what went wrong, is in the [logbook](./docs/README.md).
 

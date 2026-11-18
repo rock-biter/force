@@ -1605,8 +1605,10 @@
         "docs/logbook/019-the-price-of-copies.md",
         "docs/logbook/020-a-cheap-launch.md",
         "docs/logbook/021-a-short-trip.md",
-        "docs/logbook/022-the-bell-that-rang-early.md"
-      ]
+        "docs/logbook/022-the-bell-that-rang-early.md",
+        "docs/logbook/023-the-first-free-turn.md"
+      ],
+      "code": ["examples/turn-sorting/main.ts"]
     },
     {
       "id": "xpbd",
@@ -1960,7 +1962,8 @@
       "citedIn": [
         "docs/logbook/004-the-detour.md",
         "docs/logbook/020-a-cheap-launch.md",
-        "docs/logbook/021-a-short-trip.md"
+        "docs/logbook/021-a-short-trip.md",
+        "docs/logbook/023-the-first-free-turn.md"
       ]
     },
     {
@@ -6054,7 +6057,10 @@
       },
       "partOf": "box2d",
       "about": ["graph-coloring"],
-      "citedIn": ["docs/logbook/015-the-stiff-spring.md"],
+      "citedIn": [
+        "docs/logbook/015-the-stiff-spring.md",
+        "docs/logbook/023-the-first-free-turn.md"
+      ],
       "url": "https://github.com/erincatto/box2d/blob/main/src/constraint_graph.c",
       "authors": "Erin Catto",
       "claudeRead": "parts"
@@ -6276,7 +6282,8 @@
         "docs/logbook/018-half-a-box.md",
         "docs/logbook/019-the-price-of-copies.md",
         "docs/logbook/020-a-cheap-launch.md",
-        "docs/logbook/021-a-short-trip.md"
+        "docs/logbook/021-a-short-trip.md",
+        "docs/logbook/023-the-first-free-turn.md"
       ]
     },
     {
@@ -6291,7 +6298,7 @@
       },
       "partOf": "physx",
       "about": ["graph-coloring", "mass-splitting", "tgs-solver", "gpu-parallelism", "island"],
-      "citedIn": ["docs/logbook/017-taking-turns.md"],
+      "citedIn": ["docs/logbook/017-taking-turns.md", "docs/logbook/023-the-first-free-turn.md"],
       "url": "https://github.com/NVIDIA-Omniverse/PhysX/tree/main/physx/source/gpusolver",
       "claudeRead": "parts"
     },
@@ -6355,7 +6362,8 @@
       "citedIn": [
         "docs/logbook/020-a-cheap-launch.md",
         "docs/guides/timestamp-queries.md",
-        "docs/logbook/022-the-bell-that-rang-early.md"
+        "docs/logbook/022-the-bell-that-rang-early.md",
+        "docs/logbook/023-the-first-free-turn.md"
       ],
       "code": ["examples/dispatch-cost/main.ts"]
     },
@@ -6489,7 +6497,8 @@
       "citedIn": [
         "docs/logbook/021-a-short-trip.md",
         "docs/guides/readback.md",
-        "docs/logbook/022-the-bell-that-rang-early.md"
+        "docs/logbook/022-the-bell-that-rang-early.md",
+        "docs/logbook/023-the-first-free-turn.md"
       ],
       "code": ["examples/round-trip/main.ts"]
     },
@@ -6560,7 +6569,8 @@
       "citedIn": [
         "docs/logbook/020-a-cheap-launch.md",
         "docs/logbook/021-a-short-trip.md",
-        "docs/logbook/022-the-bell-that-rang-early.md"
+        "docs/logbook/022-the-bell-that-rang-early.md",
+        "docs/logbook/023-the-first-free-turn.md"
       ],
       "code": ["examples/dispatch-cost/main.ts", "examples/round-trip/main.ts"]
     },
@@ -6578,6 +6588,35 @@
       "citedIn": ["docs/logbook/022-the-bell-that-rang-early.md"],
       "url": "https://bugs.webkit.org/show_bug.cgi?id=266793",
       "claudeRead": "parts"
+    },
+    {
+      "id": "first-fit-coloring",
+      "kind": "concept",
+      "title": "First-fit coloring",
+      "summary": "Giving each constraint the first group where both its bodies are free. Simple and kept from step to step, but it uses more groups than the minimum, and a body in more constraints than there are groups leaves some out",
+      "area": "gpu",
+      "status": "seen",
+      "since": {
+        "seen": "2026-11-18"
+      },
+      "partOf": "graph-coloring",
+      "related": ["mass-splitting"],
+      "citedIn": ["box2d-constraint-graph", "docs/logbook/023-the-first-free-turn.md"],
+      "code": ["examples/turn-sorting/main.ts"]
+    },
+    {
+      "id": "physsim-manycore-paper",
+      "kind": "paper",
+      "title": "High-Performance Physical Simulations on Next-Generation Architecture with Many Cores",
+      "summary": "The paper Box2D's constraint graph cites for its solver with graph coloring",
+      "area": "gpu",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-18"
+      },
+      "about": ["graph-coloring"],
+      "citedIn": ["box2d-constraint-graph", "docs/logbook/023-the-first-free-turn.md"],
+      "url": "http://web.eecs.umich.edu/~msmelyan/papers/physsim_onmanycore_itj.pdf"
     }
   ]
 }
