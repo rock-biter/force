@@ -732,7 +732,8 @@
         "docs/logbook/012-the-family-tree.md",
         "advanced-character-physics",
         "docs/logbook/013-the-hidden-brake.md",
-        "docs/logbook/016-the-same-road.md"
+        "docs/logbook/016-the-same-road.md",
+        "docs/logbook/026-the-marble-in-the-pocket.md"
       ]
     },
     {
@@ -985,7 +986,11 @@
         "studied": "2026-11-11"
       },
       "related": ["spring", "substepping"],
-      "citedIn": ["docs/logbook/004-the-detour.md", "advanced-character-physics"],
+      "citedIn": [
+        "docs/logbook/004-the-detour.md",
+        "advanced-character-physics",
+        "docs/logbook/025-the-pillow.md"
+      ],
       "page": "docs/topics/integration.md#the-step-limit"
     },
     {
@@ -1015,7 +1020,9 @@
         "physx-rigid-body-dynamics",
         "jolt-architecture",
         "rapier-staged-solver",
-        "docs/logbook/016-the-same-road.md"
+        "docs/logbook/016-the-same-road.md",
+        "docs/logbook/025-the-pillow.md",
+        "docs/logbook/028-the-ranking.md"
       ],
       "page": "docs/topics/integration.md#substeps",
       "code": ["src/world.ts"]
@@ -1484,7 +1491,8 @@
         "docs/logbook/012-the-family-tree.md",
         "advanced-character-physics",
         "solver2d-post",
-        "docs/logbook/017-taking-turns.md"
+        "docs/logbook/017-taking-turns.md",
+        "docs/logbook/026-the-marble-in-the-pocket.md"
       ]
     },
     {
@@ -1527,7 +1535,8 @@
         "docs/logbook/014-the-mirror.md",
         "box2d-contact-solver",
         "docs/logbook/015-the-stiff-spring.md",
-        "jolt-physics-settings"
+        "jolt-physics-settings",
+        "docs/logbook/027-the-stored-nudge.md"
       ]
     },
     {
@@ -1550,14 +1559,16 @@
       "title": "Sleeping",
       "summary": "Pausing bodies that have come to rest, until something wakes them up",
       "area": "physics",
-      "status": "mentioned",
+      "status": "seen",
       "since": {
-        "mentioned": "2026-11-05"
+        "mentioned": "2026-11-05",
+        "seen": "2026-11-19"
       },
       "citedIn": [
         "docs/logbook/004-the-detour.md",
         "advanced-character-physics",
-        "iterative-dynamics-paper"
+        "iterative-dynamics-paper",
+        "docs/logbook/027-the-stored-nudge.md"
       ]
     },
     {
@@ -2110,12 +2121,18 @@
       "title": "Discrete element method (DEM)",
       "summary": "Particles that push each other apart when they overlap, like small springs, with dampers to absorb the bounce",
       "area": "physics",
-      "status": "mentioned",
+      "status": "seen",
       "since": {
-        "mentioned": "2026-11-11"
+        "mentioned": "2026-11-11",
+        "seen": "2026-11-19"
       },
       "related": ["particle-rigid-bodies", "granular-material"],
-      "citedIn": ["gpu-gems-rigid-bodies", "docs/logbook/024-twenty-seven-cells.md"]
+      "citedIn": [
+        "gpu-gems-rigid-bodies",
+        "docs/logbook/024-twenty-seven-cells.md",
+        "docs/logbook/025-the-pillow.md",
+        "docs/logbook/028-the-ranking.md"
+      ]
     },
     {
       "id": "decision-record",
@@ -2459,9 +2476,15 @@
         "jacobi",
         "constraint-averaging",
         "shape-matching",
-        "gpu-parallelism"
+        "gpu-parallelism",
+        "sleeping"
       ],
-      "citedIn": ["docs/logbook/004-the-detour.md", "docs/logbook/012-the-family-tree.md"],
+      "citedIn": [
+        "docs/logbook/004-the-detour.md",
+        "docs/logbook/012-the-family-tree.md",
+        "docs/logbook/026-the-marble-in-the-pocket.md",
+        "docs/logbook/027-the-stored-nudge.md"
+      ],
       "url": "https://doi.org/10.1145/2601097.2601152",
       "authors": "Miles Macklin, Matthias Müller, Nuttapong Chentanez, Tae-Yong Kim",
       "year": 2014,
@@ -2729,7 +2752,8 @@
       "citedIn": [
         "docs/logbook/004-the-detour.md",
         "docs/logbook/005-the-first-pages.md",
-        "docs/logbook/024-twenty-seven-cells.md"
+        "docs/logbook/024-twenty-seven-cells.md",
+        "docs/logbook/025-the-pillow.md"
       ],
       "url": "https://developer.nvidia.com/gpugems/gpugems3/part-v-physics-simulation/chapter-29-real-time-rigid-body-simulation-gpus",
       "year": 2007,
@@ -3608,7 +3632,14 @@
       },
       "partOf": "simulation-step",
       "related": ["contact", "restitution", "friction"],
-      "citedIn": ["docs/logbook/010-the-ground.md", "advanced-character-physics"],
+      "citedIn": [
+        "docs/logbook/010-the-ground.md",
+        "advanced-character-physics",
+        "docs/logbook/025-the-pillow.md",
+        "docs/logbook/026-the-marble-in-the-pocket.md",
+        "docs/logbook/027-the-stored-nudge.md",
+        "docs/logbook/028-the-ranking.md"
+      ],
       "code": ["src/shaders/integrate.wgsl"]
     },
     {
@@ -4796,7 +4827,8 @@
       "citedIn": [
         "docs/logbook/012-the-family-tree.md",
         "unified-particle-physics-paper",
-        "docs/logbook/017-taking-turns.md"
+        "docs/logbook/017-taking-turns.md",
+        "docs/logbook/026-the-marble-in-the-pocket.md"
       ]
     },
     {
@@ -4903,7 +4935,8 @@
         "iterative-dynamics-paper",
         "docs/logbook/014-the-mirror.md",
         "docs/logbook/015-the-stiff-spring.md",
-        "jolt-physics-settings"
+        "jolt-physics-settings",
+        "docs/logbook/027-the-stored-nudge.md"
       ]
     },
     {
@@ -4985,7 +5018,11 @@
         "contact-reduction",
         "face-clipping"
       ],
-      "citedIn": ["docs/logbook/012-the-family-tree.md", "docs/logbook/014-the-mirror.md"],
+      "citedIn": [
+        "docs/logbook/012-the-family-tree.md",
+        "docs/logbook/014-the-mirror.md",
+        "docs/logbook/027-the-stored-nudge.md"
+      ],
       "url": "https://box2d.org/files/ErinCatto_IterativeDynamics_GDC2005.pdf",
       "partOf": "catto-publications",
       "file": "library/iterative-dynamics.pdf",
@@ -5292,7 +5329,11 @@
       },
       "partOf": "constraint",
       "related": ["projection", "impulse-based-dynamics"],
-      "citedIn": ["iterative-dynamics-paper", "docs/logbook/014-the-mirror.md"]
+      "citedIn": [
+        "iterative-dynamics-paper",
+        "docs/logbook/014-the-mirror.md",
+        "docs/logbook/027-the-stored-nudge.md"
+      ]
     },
     {
       "id": "solver2d-post",
@@ -5436,12 +5477,19 @@
       "title": "Damping",
       "summary": "Taking away a little speed at every step, like air drag, so that motion dies out",
       "area": "physics",
-      "status": "mentioned",
+      "status": "seen",
       "since": {
-        "mentioned": "2026-11-17"
+        "mentioned": "2026-11-17",
+        "seen": "2026-11-19"
       },
       "related": ["numerical-damping"],
-      "citedIn": ["advanced-character-physics", "iterative-dynamics-paper"]
+      "citedIn": [
+        "advanced-character-physics",
+        "iterative-dynamics-paper",
+        "docs/logbook/025-the-pillow.md",
+        "docs/logbook/027-the-stored-nudge.md",
+        "docs/logbook/028-the-ranking.md"
+      ]
     },
     {
       "id": "leapfrog-integration",
@@ -5578,7 +5626,7 @@
         "mentioned": "2026-11-17"
       },
       "partOf": "relaxation",
-      "citedIn": ["advanced-character-physics"]
+      "citedIn": ["advanced-character-physics", "docs/logbook/026-the-marble-in-the-pocket.md"]
     },
     {
       "id": "jacobian",
@@ -5842,7 +5890,12 @@
         "seen": "2026-11-17"
       },
       "partOf": "collision-response",
-      "citedIn": ["advanced-character-physics", "docs/logbook/013-the-hidden-brake.md"]
+      "citedIn": [
+        "advanced-character-physics",
+        "docs/logbook/013-the-hidden-brake.md",
+        "docs/logbook/025-the-pillow.md",
+        "docs/logbook/028-the-ranking.md"
+      ]
     },
     {
       "id": "avbd-paper",
@@ -5904,7 +5957,11 @@
         "discrete-element-method",
         "prefix-sum"
       ],
-      "citedIn": ["docs/logbook/012-the-family-tree.md", "docs/logbook/024-twenty-seven-cells.md"],
+      "citedIn": [
+        "docs/logbook/012-the-family-tree.md",
+        "docs/logbook/024-twenty-seven-cells.md",
+        "docs/logbook/025-the-pillow.md"
+      ],
       "url": "https://developer.download.nvidia.com/assets/cuda/files/particles.pdf",
       "file": "library/particle-simulation-cuda.pdf",
       "authors": "Simon Green",
@@ -5925,7 +5982,9 @@
       "citedIn": [
         "unified-particle-physics-paper",
         "physx-gpu-solver",
-        "docs/logbook/018-half-a-box.md"
+        "docs/logbook/018-half-a-box.md",
+        "docs/logbook/026-the-marble-in-the-pocket.md",
+        "docs/logbook/027-the-stored-nudge.md"
       ],
       "url": "https://doi.org/10.1145/2185520.2185601",
       "authors": "Richard Tonge, Feodor Benevolenski, Andrey Voroshilov",
@@ -5949,7 +6008,9 @@
         "box2d-solver",
         "docs/logbook/015-the-stiff-spring.md",
         "physx-rigid-body-dynamics",
-        "rapier-integration-parameters"
+        "rapier-integration-parameters",
+        "docs/logbook/027-the-stored-nudge.md",
+        "docs/logbook/028-the-ranking.md"
       ]
     },
     {
@@ -5999,13 +6060,18 @@
       "title": "Speculative contact",
       "summary": "A contact kept before the bodies touch: it only removes the speed that would make them overlap within the step",
       "area": "physics",
-      "status": "mentioned",
+      "status": "seen",
       "since": {
-        "mentioned": "2026-11-17"
+        "mentioned": "2026-11-17",
+        "seen": "2026-11-19"
       },
       "partOf": "contact",
       "related": ["continuous-collision-detection"],
-      "citedIn": ["box2d-contact-solver", "jolt-physics-settings"]
+      "citedIn": [
+        "box2d-contact-solver",
+        "jolt-physics-settings",
+        "docs/logbook/027-the-stored-nudge.md"
+      ]
     },
     {
       "id": "accumulated-impulse",
@@ -6019,7 +6085,12 @@
       },
       "partOf": "sequential-impulses",
       "related": ["warm-starting"],
-      "citedIn": ["iterative-dynamics-paper", "solver2d-post", "box2d-contact-solver"]
+      "citedIn": [
+        "iterative-dynamics-paper",
+        "solver2d-post",
+        "box2d-contact-solver",
+        "docs/logbook/027-the-stored-nudge.md"
+      ]
     },
     {
       "id": "ngs-solver",
@@ -6090,7 +6161,7 @@
         "coulomb-friction",
         "restitution"
       ],
-      "citedIn": ["docs/logbook/015-the-stiff-spring.md"],
+      "citedIn": ["docs/logbook/015-the-stiff-spring.md", "docs/logbook/027-the-stored-nudge.md"],
       "url": "https://github.com/erincatto/box2d/blob/main/src/contact_solver.c",
       "authors": "Erin Catto",
       "claudeRead": "parts"
@@ -6333,7 +6404,8 @@
         "docs/logbook/019-the-price-of-copies.md",
         "docs/logbook/020-a-cheap-launch.md",
         "docs/logbook/021-a-short-trip.md",
-        "docs/logbook/023-the-first-free-turn.md"
+        "docs/logbook/023-the-first-free-turn.md",
+        "docs/logbook/027-the-stored-nudge.md"
       ]
     },
     {
@@ -6727,6 +6799,60 @@
       "partOf": "contact",
       "related": ["penetration-depth"],
       "citedIn": ["docs/logbook/024-twenty-seven-cells.md"]
+    },
+    {
+      "id": "dashpot",
+      "kind": "concept",
+      "title": "Dashpot",
+      "summary": "A damper between two touching particles that resists the speed at which they meet, so a contact spring stops bouncing",
+      "area": "physics",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-19"
+      },
+      "partOf": "discrete-element-method",
+      "related": ["damping"],
+      "citedIn": [
+        "particle-simulation-cuda",
+        "docs/logbook/025-the-pillow.md",
+        "docs/logbook/028-the-ranking.md"
+      ]
+    },
+    {
+      "id": "cuda-particles-sample",
+      "kind": "code",
+      "title": "NVIDIA CUDA particles sample",
+      "summary": "The code behind Green's paper: integrate, build the grid by sorting, then one thread per particle adds up spring, damper and sideways forces from the 27 cells and writes only its own velocity",
+      "area": "gpu",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-19"
+      },
+      "about": [
+        "discrete-element-method",
+        "dashpot",
+        "uniform-grid",
+        "parallel-sort",
+        "neighbour-search",
+        "damping"
+      ],
+      "citedIn": ["docs/logbook/025-the-pillow.md", "docs/logbook/027-the-stored-nudge.md"],
+      "url": "https://github.com/NVIDIA/cuda-samples/tree/0ec046d5e99d7214cc8e9fbac2cc1e66f3019878/cpp/2_Concepts_and_Techniques/particles",
+      "authors": "NVIDIA",
+      "claudeRead": "parts"
+    },
+    {
+      "id": "rotation-invariance",
+      "kind": "concept",
+      "title": "Rotation invariance",
+      "summary": "Turning the whole scene must give the same motion, only turned: a rule that treats x, y and z one by one breaks it, like a Box3 that changes size when the mesh turns",
+      "area": "math",
+      "status": "seen",
+      "since": {
+        "seen": "2026-11-19"
+      },
+      "related": ["constraint-averaging"],
+      "citedIn": ["docs/logbook/026-the-marble-in-the-pocket.md"]
     }
   ]
 }

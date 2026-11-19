@@ -14,15 +14,16 @@ documentation of the library will live there too.
 
 ## Where we are
 
-*Updated November 18, 2026*
+*Updated November 19, 2026*
 
-**Latest step:** [twenty-seven cells](./docs/logbook/024-twenty-seven-cells.md). We start
-building from particles that collide. Testing every particle against all the others is too
-much work, so space is cut into small cubes, and each particle looks only into its own cube and
-the ones around it: 27 in all. We went through how such a grid is filled on a GPU, in two
-ways, and how two spheres are tested against each other. No code yet.
+**Latest step:** [the ranking](./docs/logbook/028-the-ranking.md). Two particles that touch
+must be pushed apart, and in chapters 025 to 027 we tried three ways: a spring, moving them back,
+and changing their velocities, with a dozen ways of combining the pushes. At the same low price
+for all, a tuned spring came first, and moving them back with the user's "half and half" rule
+came next, with nothing to tune. Changing velocities needed more work per step than we want to
+spend.
 
-**Next:** how to push two particles apart once they touch. Then the code.
+**Next:** the two finalists with heavy and light bodies. Then we choose, and write the code.
 
 Every step, with what we learned and what went wrong, is in the [logbook](./docs/README.md).
 

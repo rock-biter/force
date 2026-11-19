@@ -5,8 +5,8 @@
 Everything we have met while building FORCE, concepts and sources, and how far we went with each
 one. Use it to look up a term, to find what to read, or to pick what to explore next.
 
-- **249 concepts:** ● 23 studied · ◐ 120 seen · ○ 106 mentioned
-- **144 sources:** ● 15 studied · ◐ 16 seen · ○ 113 mentioned · read by Claude: 67 parts, 15 in full
+- **251 concepts:** ● 23 studied · ◐ 125 seen · ○ 103 mentioned
+- **145 sources:** ● 15 studied · ◐ 16 seen · ○ 114 mentioned · read by Claude: 68 parts, 15 in full
 
 | | Status | What it means |
 | --- | --- | --- |
@@ -58,11 +58,12 @@ How things move, collide and stay together.
 | ○ | Continuous collision detection | Checking the whole path between two steps, so fast objects cannot tunnel through walls | Collision detection | [004](../logbook/004-the-detour.md) |
 | ○ | Convexity | A shape with no dents: the segment between any two of its points stays inside. Many collision shortcuts only work for these | Collision detection | [Advanced Character Physics](https://edelkas.github.io/n/files/bib/jakobsen.pdf) |
 | ◐ | Coulomb friction | The classic law of friction: it can resist sliding up to a limit in proportion to how hard the surfaces press together | Friction | [010](../logbook/010-the-ground.md) |
-| ○ | Damping | Taking away a little speed at every step, like air drag, so that motion dies out |  | [Advanced Character Physics](https://edelkas.github.io/n/files/bib/jakobsen.pdf) |
+| ◐ | Damping | Taking away a little speed at every step, like air drag, so that motion dies out |  | [Advanced Character Physics](https://edelkas.github.io/n/files/bib/jakobsen.pdf) |
 | ◐ | Damping ratio | How fast a spring's swing dies: 0 swings forever, 1 comes back without overshooting | Soft constraint | [Solver2D](https://box2d.org/posts/2024/02/solver2d/) |
+| ○ | Dashpot | A damper between two touching particles that resists the speed at which they meet, so a contact spring stops bouncing | Discrete element method (DEM) | [Particle Simulation using CUDA](https://developer.download.nvidia.com/assets/cuda/files/particles.pdf) |
 | ○ | Degrees of freedom | How many independent numbers describe where a thing is: 6 for a rigid body, 3 to place it and 3 to turn it | Rigid body | [Advanced Character Physics](https://edelkas.github.io/n/files/bib/jakobsen.pdf) |
 | ○ | Destruction | Breaking objects into pieces while the game runs |  | [004](../logbook/004-the-detour.md) |
-| ○ | Discrete element method (DEM) | Particles that push each other apart when they overlap, like small springs, with dampers to absorb the bounce |  | [Real-Time Rigid Body Simulation on GPUs](https://developer.nvidia.com/gpugems/gpugems3/part-v-physics-simulation/chapter-29-real-time-rigid-body-simulation-gpus) |
+| ◐ | Discrete element method (DEM) | Particles that push each other apart when they overlap, like small springs, with dampers to absorb the bounce |  | [Real-Time Rigid Body Simulation on GPUs](https://developer.nvidia.com/gpugems/gpugems3/part-v-physics-simulation/chapter-29-real-time-rigid-body-simulation-gpus) |
 | ◐ | Distance constraint | A rule that keeps two points at a fixed distance: the building block of chains, ropes and cloth | Constraint | [004](../logbook/004-the-detour.md) |
 | ○ | EPA | Run after GJK when two shapes overlap, to find how deep and in which direction | Narrow phase | [004](../logbook/004-the-detour.md) |
 | ● | **[Explicit Euler](integration.md#explicit-euler)** | Move with the old velocity, then update the velocity: simple, but it makes oscillations gain energy | Integration | [004](../logbook/004-the-detour.md) |
@@ -144,13 +145,13 @@ How things move, collide and stay together.
 | ○ | Shock propagation | A solver variation for stacks that Catto lists as still to try: only the name so far | Solver | [Solver2D](https://box2d.org/posts/2024/02/solver2d/) |
 | ○ | Signed distance field collision | Describing a shape by the distance from it at every point of space, so a contact test becomes a lookup | Narrow phase | [004](../logbook/004-the-detour.md) |
 | ◐ | Simulation step | What an engine repeats over and over: apply forces, find contacts, fix them, move everything | Physics engine | [001](../logbook/001-the-flip-book.md) |
-| ○ | Sleeping | Pausing bodies that have come to rest, until something wakes them up |  | [004](../logbook/004-the-detour.md) |
+| ◐ | Sleeping | Pausing bodies that have come to rest, until something wakes them up |  | [004](../logbook/004-the-detour.md) |
 | ○ | Soft body | An object that squashes and bounces back, like jelly |  | [Ten Minute Physics](https://matthias-research.github.io/pages/tenMinutePhysics/index.html) |
 | ◐ | Soft constraint | A constraint allowed to give a little, like a spring with a damper, instead of being perfectly rigid | Constraint | [Solver2D](https://box2d.org/posts/2024/02/solver2d/) |
 | ● | **[Soft Step](soft-step.md)** | The solver of Box2D since version 3: every rule is a stiff spring, solved once in each of a few substeps, with a relax pass | Solver | [004](../logbook/004-the-detour.md) |
 | ◐ | Solver | The part of the engine that corrects velocities so constraints are obeyed | Simulation step | [001](../logbook/001-the-flip-book.md) |
 | ○ | Spatial hashing | A uniform grid stored in a hash table, so it can cover endless space with little memory | Broad phase | [004](../logbook/004-the-detour.md) |
-| ○ | Speculative contact | A contact kept before the bodies touch: it only removes the speed that would make them overlap within the step | Contact | [Box2D, contact_solver.c](https://github.com/erincatto/box2d/blob/main/src/contact_solver.c) |
+| ◐ | Speculative contact | A contact kept before the bodies touch: it only removes the speed that would make them overlap within the step | Contact | [Box2D, contact_solver.c](https://github.com/erincatto/box2d/blob/main/src/contact_solver.c) |
 | ○ | SPH | Smoothed particle hydrodynamics: a fluid's density and pressure at each particle, estimated from its neighbours | Fluid | [004](../logbook/004-the-detour.md) |
 | ● | **[Spiral of death](fixed-timestep.md#the-spiral-of-death)** | When catching up on physics takes so long that every frame falls further behind | Fixed timestep | [004](../logbook/004-the-detour.md) |
 | ○ | Split impulse | PhysX's name for solving the position error and the velocity error in separate rounds, so the correction does not stay in the final velocity | Solver | [PhysX, Rigid Body Dynamics](https://nvidia-omniverse.github.io/PhysX/physx/5.6.1/docs/RigidBodyDynamics.html) |
@@ -253,7 +254,7 @@ How things move, collide and stay together.
 | ○ | [Stable Fluids](https://doi.org/10.1145/311535.311548)<br>*Jos Stam, 1999* | Paper | A grid fluid method that stays stable even with large timesteps | Grid fluid (Eulerian), Numerical stability | [004](../logbook/004-the-detour.md) |  |
 | ○ | [Strain Based Dynamics](https://matthias-research.github.io/pages/publications/strainBasedDynamics.pdf)<br>*Matthias Müller, Nuttapong Chentanez, Tae-Yong Kim, Miles Macklin, 2014* | Paper | PBD constraints that control stretching in any direction, not only along the edges of the mesh | Position based dynamics (PBD), Cloth, Soft body | [004](../logbook/004-the-detour.md) |  |
 | ○ | [Ten Minute Physics](https://matthias-research.github.io/pages/tenMinutePhysics/index.html)<br>*Matthias Müller* | Video | Short videos with JavaScript demos: PBD, cloth, soft bodies, fluids, rigid bodies, collisions and the GPU | Position based dynamics (PBD), Cloth, Soft body, Fluid, Rigid body, Broad phase, Parallel work on the GPU | [001](../logbook/001-the-flip-book.md) |  |
-| ○ | [Unified Particle Physics for Real-Time Applications](https://doi.org/10.1145/2601097.2601152)<br>*Miles Macklin, Matthias Müller, Nuttapong Chentanez, Tae-Yong Kim, 2014* | Paper | The paper behind NVIDIA FleX: solids, cloth and fluids as particles and constraints, solved in parallel | Unified particle physics, Position based dynamics (PBD), Two-way coupling, Jacobi, Constraint averaging (mass splitting), Shape matching, Parallel work on the GPU | [004](../logbook/004-the-detour.md) | Parts |
+| ○ | [Unified Particle Physics for Real-Time Applications](https://doi.org/10.1145/2601097.2601152)<br>*Miles Macklin, Matthias Müller, Nuttapong Chentanez, Tae-Yong Kim, 2014* | Paper | The paper behind NVIDIA FleX: solids, cloth and fluids as particles and constraints, solved in parallel | Unified particle physics, Position based dynamics (PBD), Two-way coupling, Jacobi, Constraint averaging (mass splitting), Shape matching, Parallel work on the GPU, Sleeping | [004](../logbook/004-the-detour.md) | Parts |
 | ○ | [Unity](https://docs.unity.com/en-us/engine/6000.0/manual/physics-section) | Project | Game engine: PhysX for 3D physics, Box2D for 2D | Physics engine, Entity component system (ECS) | [004](../logbook/004-the-detour.md) |  |
 | ○ | [Unity, Rigidbody](https://docs.unity.com/en-us/engine/6000.7/manual/physics-section/physics-overview/rigidbody/class-rigidbody) | Documentation | The manual page of Unity's rigid body component | Rigid body | [004](../logbook/004-the-detour.md) |  |
 | ○ | [Unity, Rigidbody.inertiaTensor](https://docs.unity.com/en-us/engine/6000.6/script-reference/unityengine/rigidbody/inertiatensor) | Documentation | How Unity exposes a body's inertia tensor, and lets you change it | Inertia tensor | [004](../logbook/004-the-detour.md) |  |
@@ -277,6 +278,7 @@ The math behind motion: change over time, rotations, numbers on a computer.
 | ○ | Linear complementarity problem | The math name of the contact problem: each contact either pushes or is separating, never both |  | [Iterative Dynamics with Temporal Coherence](https://box2d.org/files/ErinCatto_IterativeDynamics_GDC2005.pdf) |
 | ○ | Mass matrix | The masses and inertias of all bodies in one table, so the equations of every body can be written at once |  | [Iterative Dynamics with Temporal Coherence](https://box2d.org/files/ErinCatto_IterativeDynamics_GDC2005.pdf) |
 | ◐ | Newton-Raphson method | Improving a guess step by step: for a square root, average the guess with the number divided by the guess |  | [Advanced Character Physics](https://edelkas.github.io/n/files/bib/jakobsen.pdf) |
+| ◐ | Rotation invariance | Turning the whole scene must give the same motion, only turned: a rule that treats x, y and z one by one breaks it, like a Box3 that changes size when the mesh turns |  | [026](../logbook/026-the-marble-in-the-pocket.md) |
 | ○ | Taylor expansion | Replacing a curve, near a point where you know it, with something simpler: at first order, its tangent line |  | [Advanced Character Physics](https://edelkas.github.io/n/files/bib/jakobsen.pdf) |
 
 ## GPU
@@ -395,6 +397,7 @@ WebGPU, WGSL and how to make thousands of threads work.
 | ○ | [MDN, Navigator.gpu](https://developer.mozilla.org/en-US/docs/Web/API/Navigator/gpu) | Documentation | The entry point of WebGPU, only on HTTPS or localhost | WebGPU | [adapter-and-device](../guides/adapter-and-device.md) | Parts |
 | ○ | [MDN, WebGLRenderingContext.bufferData()](https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/bufferData) | Documentation | How WebGL fills a buffer; its usage is only an intended pattern, for speed | Buffer | [buffers](../guides/buffers.md) | Parts |
 | ○ | [MDN, WebGPU API](https://developer.mozilla.org/en-US/docs/Web/API/WebGPU_API) | Documentation | A readable API reference | WebGPU | [guide skill](../../.claude/skills/guide/SKILL.md) |  |
+| ○ | [NVIDIA CUDA particles sample](https://github.com/NVIDIA/cuda-samples/tree/0ec046d5e99d7214cc8e9fbac2cc1e66f3019878/cpp/2_Concepts_and_Techniques/particles)<br>*NVIDIA* | Source code | The code behind Green's paper: integrate, build the grid by sorting, then one thread per particle adds up spring, damper and sideways forces from the 27 cells and writes only its own velocity | Discrete element method (DEM), Dashpot, Uniform grid, Parallel sorting, Neighbour search, Damping | [025](../logbook/025-the-pillow.md) | Parts |
 | ○ | [Particle Simulation using CUDA](https://developer.download.nvidia.com/assets/cuda/files/particles.pdf)<br>*Simon Green, 2010* | Article | Particles that collide on the GPU in three steps: move them, rebuild a uniform grid from scratch at every step (with atomic counters, or by sorting particles by cell), then test each particle against the 27 cells around it | Uniform grid, Neighbour search, Parallel sorting, Atomic operations, Z-order curve, Discrete element method (DEM), Prefix sum (scan) | [012](../logbook/012-the-family-tree.md) | In full |
 | ○ | [PhysX, gpunarrowphase](https://github.com/NVIDIA-Omniverse/PhysX/tree/main/physx/source/gpunarrowphase) | Source code | Contact finding on the GPU, and the copies that bring its results back to the CPU | Narrow phase, Readback | [017](../logbook/017-taking-turns.md) | Parts |
 | ○ | [PhysX, gpusolver](https://github.com/NVIDIA-Omniverse/PhysX/tree/main/physx/source/gpusolver) | Source code | The GPU solver of PhysX: rules sorted into groups on the CPU, one launch per group, and an average for bodies with too many rules | Constraint graph coloring, Mass splitting, TGS solver, Parallel work on the GPU, Islands | [017](../logbook/017-taking-turns.md) | Parts |

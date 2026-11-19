@@ -31,6 +31,10 @@ This is where we tell how FORCE gets built, one step at a time. If you are new h
 | 022 | [The Bell That Rang Early](./logbook/022-the-bell-that-rang-early.md) | The same measures on an iPhone 16 Pro: launches and trips stay cheap, and a stopwatch that rang before the work was over |
 | 023 | [The First Free Turn](./logbook/023-the-first-free-turn.md) | Sorting contacts into turns in JavaScript, the way Box2D does: cheap up to 100 000, cheaper with memory, and a ceiling |
 | 024 | [Twenty-Seven Cells](./logbook/024-twenty-seven-cells.md) | How particles find the ones they touch on a GPU: a grid, two ways to fill it, and the test between two spheres |
+| 025 | [The Pillow](./logbook/025-the-pillow.md) | Pushing particles apart with a spring: no turns on a GPU, but too soft it sinks and too stiff it blows up |
+| 026 | [The Marble in the Pocket](./logbook/026-the-marble-in-the-pocket.md) | Pushing particles apart by moving them: the sum goes too far, the average sinks, and eight ideas of the user tried in 3D |
+| 027 | [The Stored Nudge](./logbook/027-the-stored-nudge.md) | Pushing particles apart by changing velocities: Catto's two pieces, a nudge that keeps coming back, and Box2D's relax rounds at twice the price |
+| 028 | [The Ranking](./logbook/028-the-ranking.md) | Every way at the same low price: a tuned spring first, half and half on positions next, velocities out |
 
 ## For reference
 
