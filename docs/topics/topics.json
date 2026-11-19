@@ -5488,7 +5488,8 @@
         "iterative-dynamics-paper",
         "docs/logbook/025-the-pillow.md",
         "docs/logbook/027-the-stored-nudge.md",
-        "docs/logbook/028-the-ranking.md"
+        "docs/logbook/028-the-ranking.md",
+        "docs/decisions/014-damping-off-by-default.md"
       ]
     },
     {

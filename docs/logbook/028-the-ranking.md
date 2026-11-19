@@ -31,7 +31,7 @@ The sum came 11th, with 3 failures and deeper pairs than the 10th: 20.7 mm in th
 
 **The spring won.** In chapter 025 it looked trapped between sinking and blowing up. But the stiffest spring that holds grows with the square of how much shorter the step is: halving it let in a spring four times stiffer in chapter 025, so 8 substeps let in one 8 × 8 = 64 times stiffer. Its window is narrow, though. The same stiffness with a damper ratio of 1 shook: 35 particles moving in the box. Claude's guess is that a damper has a limit of its own, like a spring, and many contacts add up past it. A softer spring, 5 000 N/m, sank 18 to 26 mm. And the window will move with heavier bodies and with more neighbours. Half and half has no knob to set: only the number of rounds.
 
-**Damping, a little.** The user proposed to give half and half a minimum of damping anyway. At 0.5% of the speed per step the effect was mixed: the straight box went from 13.0 to 11.4 mm and the floor from 5.0 to 2.9, but the turned box from 15.2 to 16.1, and nothing was moving that needed stopping. And a body falling for one second reaches 8.45 m/s instead of 9.81. Claude's advice: offer it as a knob, measured per second so it does not change with the substeps, and off by default.
+**Damping, a little.** The user proposed to give half and half a minimum of damping anyway. At 0.5% of the speed per step the effect was mixed: the straight box went from 13.0 to 11.4 mm and the floor from 5.0 to 2.9, but the turned box from 15.2 to 16.1, and nothing was moving that needed stopping. And a body falling for one second reaches 8.45 m/s instead of 9.81. Claude's advice: offer it as a knob, measured per second so it does not change with the substeps, and off by default. The user agreed: [decision 014](../decisions/014-damping-off-by-default.md).
 
 ## What we take away
 
@@ -42,7 +42,6 @@ The sum came 11th, with 3 failures and deeper pairs than the 10th: 20.7 mm in th
 
 ## Open questions
 
-- Damping for half and half: on by default or not? The user decides.
 - Heavy bodies on light ones, friction, different sizes: which of the two finalists holds?
 - A pass is not the same work in every way: a spring substep also moves every particle. To measure on the GPU.
 
