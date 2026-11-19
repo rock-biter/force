@@ -36,6 +36,7 @@ This is where we tell how FORCE gets built, one step at a time. If you are new h
 | 027 | [The Stored Nudge](./logbook/027-the-stored-nudge.md) | Pushing particles apart by changing velocities: Catto's two pieces, a nudge that keeps coming back, and Box2D's relax rounds at twice the price |
 | 028 | [The Ranking](./logbook/028-the-ranking.md) | Every way at the same low price: a tuned spring first, half and half on positions next, velocities out |
 | 029 | [Heavy on Light](./logbook/029-heavy-on-light.md) | Particles of different masses: a light one under a heavy one sinks, and two ideas of the user fix it, compressed masses and levels in the pile |
+| 030 | [The Lazy List](./logbook/030-the-lazy-list.md) | Both finalists on the GPU: the same cost, a list of neighbours made only when needed, and half and half chosen |
 
 ## For reference
 

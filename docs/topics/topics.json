@@ -733,7 +733,8 @@
         "advanced-character-physics",
         "docs/logbook/013-the-hidden-brake.md",
         "docs/logbook/016-the-same-road.md",
-        "docs/logbook/026-the-marble-in-the-pocket.md"
+        "docs/logbook/026-the-marble-in-the-pocket.md",
+        "docs/decisions/015-half-and-half-on-positions.md"
       ]
     },
     {
@@ -1258,8 +1259,11 @@
         "docs/logbook/004-the-detour.md",
         "docs/logbook/012-the-family-tree.md",
         "docs/logbook/023-the-first-free-turn.md",
-        "docs/logbook/024-twenty-seven-cells.md"
-      ]
+        "docs/logbook/024-twenty-seven-cells.md",
+        "docs/logbook/030-the-lazy-list.md",
+        "docs/decisions/016-a-list-made-when-needed.md"
+      ],
+      "code": ["examples/contact-cost/main.ts", "examples/contact-cost/grid.wgsl"]
     },
     {
       "id": "spatial-hashing",
@@ -1801,8 +1805,11 @@
       "citedIn": [
         "docs/logbook/004-the-detour.md",
         "docs/logbook/012-the-family-tree.md",
-        "docs/logbook/024-twenty-seven-cells.md"
-      ]
+        "docs/logbook/024-twenty-seven-cells.md",
+        "docs/logbook/030-the-lazy-list.md",
+        "docs/decisions/016-a-list-made-when-needed.md"
+      ],
+      "code": ["examples/contact-cost/list.wgsl"]
     },
     {
       "id": "granular-material",
@@ -1861,10 +1868,11 @@
       "title": "Atomic operations",
       "summary": "Memory updates that stay correct even when thousands of threads write to the same place: in WGSL, atomicAdd() adds to an integer and returns the value from before, in one move that cannot be cut in two",
       "area": "gpu",
-      "status": "seen",
+      "status": "studied",
       "since": {
         "mentioned": "2026-11-05",
-        "seen": "2026-11-18"
+        "seen": "2026-11-18",
+        "studied": "2026-11-19"
       },
       "citedIn": [
         "docs/logbook/004-the-detour.md",
@@ -1873,8 +1881,12 @@
         "particle-simulation-cuda",
         "wgsl-spec-atomic-types",
         "docs/logbook/017-taking-turns.md",
-        "docs/logbook/024-twenty-seven-cells.md"
-      ]
+        "docs/logbook/024-twenty-seven-cells.md",
+        "docs/guides/atomics.md",
+        "docs/logbook/030-the-lazy-list.md"
+      ],
+      "page": "docs/guides/atomics.md",
+      "code": ["examples/contact-cost/main.ts", "examples/contact-cost/watch.wgsl"]
     },
     {
       "id": "determinism",
@@ -1966,7 +1978,8 @@
         "docs/guides/buffers.md",
         "docs/guides/bind-groups.md",
         "docs/guides/dispatch-and-workgroups.md",
-        "docs/logbook/021-a-short-trip.md"
+        "docs/logbook/021-a-short-trip.md",
+        "docs/logbook/030-the-lazy-list.md"
       ],
       "code": ["src/world.ts"]
     },
@@ -4049,7 +4062,11 @@
       "partOf": "buffer",
       "related": ["uniform-buffer"],
       "code": ["src/world.ts", "src/shaders/integrate.wgsl"],
-      "citedIn": ["wgsl-spec-var-declarations", "docs/guides/compute-shader.md"]
+      "citedIn": [
+        "wgsl-spec-var-declarations",
+        "docs/guides/compute-shader.md",
+        "docs/logbook/030-the-lazy-list.md"
+      ]
     },
     {
       "id": "workgroup-variable",
@@ -4834,7 +4851,8 @@
         "docs/logbook/012-the-family-tree.md",
         "unified-particle-physics-paper",
         "docs/logbook/017-taking-turns.md",
-        "docs/logbook/026-the-marble-in-the-pocket.md"
+        "docs/logbook/026-the-marble-in-the-pocket.md",
+        "docs/decisions/015-half-and-half-on-positions.md"
       ]
     },
     {
@@ -4856,7 +4874,8 @@
         "docs/logbook/014-the-mirror.md",
         "docs/logbook/015-the-stiff-spring.md",
         "physx-rigid-body-dynamics",
-        "docs/logbook/029-heavy-on-light.md"
+        "docs/logbook/029-heavy-on-light.md",
+        "docs/decisions/015-half-and-half-on-positions.md"
       ]
     },
     {
@@ -5905,7 +5924,8 @@
         "docs/logbook/013-the-hidden-brake.md",
         "docs/logbook/025-the-pillow.md",
         "docs/logbook/028-the-ranking.md",
-        "docs/logbook/029-heavy-on-light.md"
+        "docs/logbook/029-heavy-on-light.md",
+        "docs/decisions/015-half-and-half-on-positions.md"
       ]
     },
     {
@@ -5971,7 +5991,8 @@
       "citedIn": [
         "docs/logbook/012-the-family-tree.md",
         "docs/logbook/024-twenty-seven-cells.md",
-        "docs/logbook/025-the-pillow.md"
+        "docs/logbook/025-the-pillow.md",
+        "docs/logbook/030-the-lazy-list.md"
       ],
       "url": "https://developer.download.nvidia.com/assets/cuda/files/particles.pdf",
       "file": "library/particle-simulation-cuda.pdf",
@@ -6892,7 +6913,11 @@
       },
       "partOf": "stacking",
       "related": ["stiff-stacks"],
-      "citedIn": ["docs/logbook/029-heavy-on-light.md"]
+      "citedIn": [
+        "docs/logbook/029-heavy-on-light.md",
+        "docs/decisions/015-half-and-half-on-positions.md"
+      ],
+      "code": ["examples/contact-cost/levels.wgsl"]
     },
     {
       "id": "mass-compression",
@@ -6906,7 +6931,11 @@
       },
       "partOf": "mass-ratio",
       "related": ["stiff-stacks"],
-      "citedIn": ["docs/logbook/029-heavy-on-light.md"]
+      "citedIn": [
+        "docs/logbook/029-heavy-on-light.md",
+        "docs/decisions/015-half-and-half-on-positions.md"
+      ],
+      "code": ["examples/contact-cost/round.wgsl"]
     },
     {
       "id": "particle-phase",
@@ -6920,6 +6949,38 @@
       },
       "related": ["unified-particle-physics"],
       "citedIn": ["unified-particle-physics-paper", "docs/logbook/029-heavy-on-light.md"]
+    },
+    {
+      "id": "neighbour-list",
+      "kind": "concept",
+      "title": "Neighbour list (Verlet list)",
+      "summary": "Each particle writes down the others closer than a diameter plus a margin, and the rounds read only those; the list holds until some particle has moved half the margin, so it is made again only when needed",
+      "area": "gpu",
+      "status": "seen",
+      "since": {
+        "seen": "2026-11-20"
+      },
+      "partOf": "neighbour-search",
+      "related": ["uniform-grid", "atomic-operations"],
+      "citedIn": [
+        "docs/logbook/030-the-lazy-list.md",
+        "docs/decisions/016-a-list-made-when-needed.md"
+      ],
+      "code": ["examples/contact-cost/list.wgsl", "examples/contact-cost/watch.wgsl"]
+    },
+    {
+      "id": "ping-pong-buffers",
+      "kind": "concept",
+      "title": "Ping-pong buffers",
+      "summary": "Two buffers that take turns: each pass reads one and writes the other, so no thread reads a value while another changes it, like two render targets swapped every frame",
+      "area": "gpu",
+      "status": "seen",
+      "since": {
+        "seen": "2026-11-20"
+      },
+      "related": ["storage-buffer"],
+      "citedIn": ["docs/logbook/030-the-lazy-list.md"],
+      "code": ["examples/contact-cost/round.wgsl", "examples/contact-cost/spring.wgsl"]
     }
   ]
 }

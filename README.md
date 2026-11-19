@@ -16,12 +16,13 @@ documentation of the library will live there too.
 
 *Updated November 19, 2026*
 
-**Latest step:** [heavy on light](./docs/logbook/029-heavy-on-light.md). Particles that touch
-must be pushed apart, and in the last chapters we compared every way of doing it at the same low
-price. With different masses, a light particle under a heavy one sinks. Two ideas of the user fix
-it: let the solver see squeezed masses, and count each particle's level in its pile.
+**Latest step:** [the lazy list](./docs/logbook/030-the-lazy-list.md). We put the two best ways
+of pushing particles apart on the GPU: they cost the same, about 1 ms per step for 10 000
+particles on a laptop. A list of each particle's neighbours, made again only when particles have
+moved, made it more than twice as fast. FORCE will move particles back with the user's "half and
+half" rule ([decision 015](./docs/decisions/015-half-and-half-on-positions.md)).
 
-**Next:** the two candidates on the GPU, with their real cost. Then we choose, and write the code.
+**Next:** a page that runs the best ways side by side, live, with a scene to choose.
 
 Every step, with what we learned and what went wrong, is in the [logbook](./docs/README.md).
 

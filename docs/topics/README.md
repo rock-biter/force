@@ -5,7 +5,7 @@
 Everything we have met while building FORCE, concepts and sources, and how far we went with each
 one. Use it to look up a term, to find what to read, or to pick what to explore next.
 
-- **255 concepts:** ● 23 studied · ◐ 128 seen · ○ 104 mentioned
+- **257 concepts:** ● 24 studied · ◐ 129 seen · ○ 104 mentioned
 - **145 sources:** ● 15 studied · ◐ 16 seen · ○ 114 mentioned · read by Claude: 68 parts, 15 in full
 
 | | Status | What it means |
@@ -296,7 +296,7 @@ WebGPU, WGSL and how to make thousands of threads work.
 | ● | **[Adapter and device](../guides/adapter-and-device.md)** | How a page gets the GPU: the adapter stands for a GPU on the system, the device is our own connection to it | WebGPU | [guides index](../guides/README.md) |
 | ○ | Address space | Where a variable's memory lives, written var<…>: function, private, workgroup, uniform, storage, immediate, or handle for textures and samplers | var declaration | [WGSL specification, §7.3 var Declarations](https://www.w3.org/TR/WGSL/#var-decls) |
 | ● | **[Async pipeline creation](../guides/pipeline-creation.md)** | createComputePipelineAsync() returns a promise that resolves when the pipeline is compiled. It is not faster: it lets the rest of the GPU work go on meanwhile, and a mistake rejects the promise with a GPUPipelineError | Compute pipeline | [pipelines](../guides/pipelines.md) |
-| ◐ | Atomic operations | Memory updates that stay correct even when thousands of threads write to the same place: in WGSL, atomicAdd() adds to an integer and returns the value from before, in one move that cannot be cut in two |  | [004](../logbook/004-the-detour.md) |
+| ● | **[Atomic operations](../guides/atomics.md)** | Memory updates that stay correct even when thousands of threads write to the same place: in WGSL, atomicAdd() adds to an integer and returns the value from before, in one move that cannot be cut in two |  | [004](../logbook/004-the-detour.md) |
 | ○ | Barriers | workgroupBarrier(), storageBarrier() and textureBarrier(): a line in a compute shader that the threads of a workgroup cross together, so that what any of them wrote before it is visible to all of them after it | Workgroups and dispatch | [dispatch-and-workgroups](../guides/dispatch-and-workgroups.md) |
 | ◐ | Billboard | A flat shape turned to face the camera in every frame, the base of most impostors | Impostor | [009](../logbook/009-the-first-picture.md) |
 | ● | **[Bind group](../guides/bind-groups.md)** | A fixed list that puts a real buffer in each numbered slot of one group of a shader. Made once, set before the shader runs: the pipeline is which program, the bind group is which data | WebGPU | [guides index](../guides/README.md) |
@@ -331,12 +331,14 @@ WebGPU, WGSL and how to make thousands of threads work.
 | ◐ | Mass splitting | Giving each rule that touches a body its own copy of it, with a share of its mass, then averaging the copies: rules can run together without taking turns | Solver | [Mass Splitting for Jitter-Free Parallel Rigid Body Simulation](https://doi.org/10.1145/2185520.2185601) |
 | ◐ | Memory alignment | Where a value may start in memory: a vec3f starts on a multiple of 16 bytes, so in an array it takes 16 bytes, not 12 | WGSL | [008](../logbook/008-the-first-loop.md) |
 | ○ | Module and function scope | Where a name can be used: everywhere in the shader if declared outside functions, or from its line to the closing brace if declared inside one | WGSL | [WGSL specification, §7.2 Value Declarations](https://www.w3.org/TR/WGSL/#value-decls) |
+| ◐ | Neighbour list (Verlet list) | Each particle writes down the others closer than a diameter plus a margin, and the rounds read only those; the list holds until some particle has moved half the margin, so it is made again only when needed | Neighbour search | [030](../logbook/030-the-lazy-list.md) |
 | ◐ | onSubmittedWorkDone() | A promise that resolves when the GPU has finished everything sent to the queue so far. A stopwatch not to trust alone: on an iPhone it resolved well before the work was over | Commands and queue | [pipeline-creation](../guides/pipeline-creation.md) |
 | ◐ | Out-of-bounds access | Reading or writing past the end of an array in WGSL. It never touches memory outside the buffer, but what happens instead is not fixed: the write may be skipped or land on another element | WGSL | [dispatch-and-workgroups](../guides/dispatch-and-workgroups.md) |
 | ◐ | Override constant | A WGSL constant set from JavaScript when the pipeline is created, such as the workgroup size | WGSL | [free-fall](../../examples/hello-compute/free-fall.wgsl) |
 | ○ | Override-expression | An expression built from override constants, known only when the pipeline is created: it can size an array or a workgroup | Override constant | [WGSL specification, §7.2 Value Declarations](https://www.w3.org/TR/WGSL/#value-decls) |
 | ○ | Parallel sorting | Sorting many keys at once on the GPU, for example objects by grid cell |  | [004](../logbook/004-the-detour.md) |
 | ◐ | Parallel work on the GPU | The GPU runs the same code on thousands of items at once, and is fastest when each one can go its own way |  | [001](../logbook/001-the-flip-book.md) |
+| ◐ | Ping-pong buffers | Two buffers that take turns: each pass reads one and writes the other, so no thread reads a value while another changes it, like two render targets swapped every frame |  | [030](../logbook/030-the-lazy-list.md) |
 | ○ | Pipeline constant ID | The @id(n) attribute gives an override a number, and JavaScript then sets it by that number and not by its name | Override constant | [WGSL specification, §7.2 Value Declarations](https://www.w3.org/TR/WGSL/#value-decls) |
 | ◐ | Pipeline layout | Which buffers a pipeline expects and in which slots. 'auto' works it out from the shader, but its bind groups then work with that pipeline only; one made by hand with createPipelineLayout() can be given to several pipelines, which then share bind groups | Compute pipeline | [pipelines](../guides/pipelines.md) |
 | ○ | Prefix sum (scan) | Turning a list of counts into running totals, in parallel: the GPU's way of packing results |  | [004](../logbook/004-the-detour.md) |

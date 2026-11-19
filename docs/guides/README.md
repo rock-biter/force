@@ -15,6 +15,7 @@ Short guides, one concept each, built from the code of FORCE. They are written f
 | [How do you make thousands of threads work?](./dispatch-and-workgroups.md) | Dispatch and workgroups |
 | [How long did the GPU take?](./timestamp-queries.md) | Timestamp queries |
 | [How do you get the results back?](./readback.md) | Readback and buffer mapping |
+| [How do threads share a counter?](./atomics.md) | Atomics and clearing a buffer |
 
 ## Planned
 

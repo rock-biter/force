@@ -45,6 +45,7 @@ export async function requestGPUDevice(): Promise<GPUDevice> {
 - **Testing on a phone over the local network.** `http://192.168.1.10:5173` is neither HTTPS nor localhost, so `navigator.gpu` is `undefined`, even on a phone that supports WebGPU. Serve the page over HTTPS, for example with Vite's `@vitejs/plugin-basic-ssl`.
 - **Forgetting the `null`.** `requestAdapter()` does not throw, so the error shows up one line later, in Chrome as `Cannot read properties of null (reading 'requestDevice')`.
 - **Expecting the adapter's limits on the device.** A compute shader reads and writes GPU memory through *storage buffers*. A GPU may let a shader see more than 128 MiB of one at a time, yet the device stays at 128 MiB (`maxStorageBufferBindingSize`) until you ask for more.
+- **Too many buffers in one shader.** The same goes for counts: a device lets one shader stage use 8 storage buffers (`maxStorageBuffersPerShaderStage`), whatever the GPU could do. With 9, Chrome refuses the bind group layout: *The number of storage buffers (9) in the Compute stage exceeds the maximum per-stage limit (8). This adapter supports a higher maxStorageBuffersPerShaderStage of 10*. You can ask for 10 in `requiredLimits`, but then the page fails on a GPU that has only 8. FORCE merged its small counters into one buffer instead ([examples/contact-cost](../../examples/contact-cost/rebuild.wgsl)).
 
 ## Where FORCE uses it
 

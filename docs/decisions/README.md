@@ -26,6 +26,8 @@ The choices that shape FORCE, one per page: what we decided, why, what we left o
 | 012 | [Renderers draw from the world's GPU buffer](./012-renderers-read-the-gpu-buffer.md) | Accepted | November 11, 2026 |
 | 013 | [A flat ground, the simplest way](./013-a-flat-ground.md) | Accepted | November 11, 2026 |
 | 014 | [Damping as a knob, off by default](./014-damping-off-by-default.md) | Accepted | November 19, 2026 |
+| 015 | [Particles pushed apart by moving positions, half and half](./015-half-and-half-on-positions.md) | Accepted | November 20, 2026 |
+| 016 | [Neighbours: a grid, and a list made when needed](./016-a-list-made-when-needed.md) | Accepted | November 20, 2026 |
 
 ## Rules
 
