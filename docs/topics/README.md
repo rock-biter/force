@@ -5,7 +5,7 @@
 Everything we have met while building FORCE, concepts and sources, and how far we went with each
 one. Use it to look up a term, to find what to read, or to pick what to explore next.
 
-- **251 concepts:** ● 23 studied · ◐ 125 seen · ○ 103 mentioned
+- **255 concepts:** ● 23 studied · ◐ 128 seen · ○ 104 mentioned
 - **145 sources:** ● 15 studied · ◐ 16 seen · ○ 114 mentioned · read by Claude: 68 parts, 15 in full
 
 | | Status | What it means |
@@ -43,6 +43,7 @@ How things move, collide and stay together.
 | ◐ | Collision detection | Finding out which objects touch: first a rough pass, then a precise one | Simulation step | [001](../logbook/001-the-flip-book.md) |
 | ◐ | Collision response | What to do once a contact is found: push the objects apart and change their velocities | Simulation step | [010](../logbook/010-the-ground.md) |
 | ◐ | Compliance | The softness XPBD gives each constraint, the inverse of stiffness: zero means perfectly rigid | XPBD | [012](../logbook/012-the-family-tree.md) |
+| ◐ | Compressed masses | Letting the solver see m^α instead of the real mass, so large ratios shrink: α = 0.5 turns 100 into 10. Gravity keeps the real mass; heavy bodies push through light ones less | Mass ratio | [029](../logbook/029-heavy-on-light.md) |
 | ◐ | Conservation of energy | Without friction, the energy of motion plus the stored energy stays constant: a simple test for an integrator |  | [004](../logbook/004-the-detour.md) |
 | ◐ | Constraint | A rule objects must obey, such as "do not pass through each other" |  | [001](../logbook/001-the-flip-book.md) |
 | ◐ | Constraint averaging (mass splitting) | Dividing the total correction of each particle by the number of constraints that touch it, so a parallel solver does not overshoot | Jacobi | [012](../logbook/012-the-family-tree.md) |
@@ -98,6 +99,7 @@ How things move, collide and stay together.
 | ○ | Joint motor | A rule that drives a joint toward a speed, with a largest force it may use | Joint | [Iterative Dynamics with Temporal Coherence](https://box2d.org/files/ErinCatto_IterativeDynamics_GDC2005.pdf) |
 | ◐ | Lagrange multiplier | The number a solver finds for each constraint: how hard that constraint has to push |  | [XPBD: Position-Based Simulation of Compliant Constrained Dynamics](https://matthias-research.github.io/pages/publications/XPBD.pdf) |
 | ○ | Leapfrog integration | A variant of Verlet where the velocity lives halfway between two positions | Integration | [Advanced Character Physics](https://edelkas.github.io/n/files/bib/jakobsen.pdf) |
+| ◐ | Levels in a pile | Each particle's place in a pile, counted in particles from the floor and kept from step to step; none for particles that rest on nothing, so hits in the air stay physical | Stacking | [029](../logbook/029-heavy-on-light.md) |
 | ◐ | Mass ratio | How much heavier one body is than the one it rests on or pulls: large ratios make iterative solvers struggle |  | [Iterative Dynamics with Temporal Coherence](https://box2d.org/files/ErinCatto_IterativeDynamics_GDC2005.pdf) |
 | ◐ | Mass-spring system | Particles linked by springs: the simplest model of cloth and soft bodies |  | [004](../logbook/004-the-detour.md) |
 | ○ | Material point method (MPM) | Particles carry the material while a grid works out the forces: good for snow, sand and deformables |  | [004](../logbook/004-the-detour.md) |
@@ -114,6 +116,7 @@ How things move, collide and stay together.
 | ◐ | Orientation | How a body is rotated, stored as a quaternion and updated each step by a small rotation | Rigid body | [004](../logbook/004-the-detour.md) |
 | ○ | Over-relaxation | Correcting a little more than needed at each round, to get there in fewer rounds | Relaxation | [Advanced Character Physics](https://edelkas.github.io/n/files/bib/jakobsen.pdf) |
 | ◐ | Particle | A point that moves but has no size or shape: the simplest thing to simulate |  | [000](../logbook/000-the-launch.md) |
+| ○ | Particle phase | A group label on each particle that the solver reads to decide how its contacts work, as in NVIDIA FleX: for example liquids with real masses, solids with compressed ones |  | [Unified Particle Physics for Real-Time Applications](https://doi.org/10.1145/2601097.2601152) |
 | ◐ | Particle-based rigid bodies | A rigid body's shape approximated by spheres, so every collision becomes a cheap test between spheres | Rigid body | [Real-Time Rigid Body Simulation on GPUs](https://developer.nvidia.com/gpugems/gpugems3/part-v-physics-simulation/chapter-29-real-time-rigid-body-simulation-gpus) |
 | ◐ | Penalty method | Handling a contact with a spring where the objects overlap: simple, but too soft it sinks and too stiff it blows up | Collision response | [Advanced Character Physics](https://edelkas.github.io/n/files/bib/jakobsen.pdf) |
 | ◐ | Penetration depth | How far two shapes overlap: the shortest move that takes them apart | Contact | [Advanced Character Physics](https://edelkas.github.io/n/files/bib/jakobsen.pdf) |
@@ -157,6 +160,7 @@ How things move, collide and stay together.
 | ○ | Split impulse | PhysX's name for solving the position error and the velocity error in separate rounds, so the correction does not stay in the final velocity | Solver | [PhysX, Rigid Body Dynamics](https://nvidia-omniverse.github.io/PhysX/physx/5.6.1/docs/RigidBodyDynamics.html) |
 | ◐ | Spring | A link that keeps two points near a rest distance, pulling when stretched and pushing when squeezed |  | [docs index](../README.md) |
 | ◐ | Stacking | Boxes resting on boxes: a classic stress test for a solver |  | [Advanced Character Physics](https://edelkas.github.io/n/files/bib/jakobsen.pdf) |
+| ◐ | Stiff stacks (mass scaling) | During contacts only, making lower particles look heavier, e^(-k × height), so a pile settles in fewer rounds: Macklin's trick, which biases hits in the air | Stacking | [Unified Particle Physics for Real-Time Applications](https://doi.org/10.1145/2601097.2601152) |
 | ● | **[Stiffness](integration.md#the-step-limit)** | How strongly a spring or constraint resists: the stiffer it is, the faster it oscillates and the smaller the safe timestep |  | [004](../logbook/004-the-detour.md) |
 | ● | **[Substepping](integration.md#substeps)** | Splitting each step into smaller ones, to follow fast motion and stiff constraints | Timestep | [004](../logbook/004-the-detour.md) |
 | ○ | Sweep and prune | A broad phase that sorts objects along an axis, so only neighbours in the list need checking | Broad phase | [Ten Minute Physics](https://matthias-research.github.io/pages/tenMinutePhysics/index.html) |
@@ -254,7 +258,7 @@ How things move, collide and stay together.
 | ○ | [Stable Fluids](https://doi.org/10.1145/311535.311548)<br>*Jos Stam, 1999* | Paper | A grid fluid method that stays stable even with large timesteps | Grid fluid (Eulerian), Numerical stability | [004](../logbook/004-the-detour.md) |  |
 | ○ | [Strain Based Dynamics](https://matthias-research.github.io/pages/publications/strainBasedDynamics.pdf)<br>*Matthias Müller, Nuttapong Chentanez, Tae-Yong Kim, Miles Macklin, 2014* | Paper | PBD constraints that control stretching in any direction, not only along the edges of the mesh | Position based dynamics (PBD), Cloth, Soft body | [004](../logbook/004-the-detour.md) |  |
 | ○ | [Ten Minute Physics](https://matthias-research.github.io/pages/tenMinutePhysics/index.html)<br>*Matthias Müller* | Video | Short videos with JavaScript demos: PBD, cloth, soft bodies, fluids, rigid bodies, collisions and the GPU | Position based dynamics (PBD), Cloth, Soft body, Fluid, Rigid body, Broad phase, Parallel work on the GPU | [001](../logbook/001-the-flip-book.md) |  |
-| ○ | [Unified Particle Physics for Real-Time Applications](https://doi.org/10.1145/2601097.2601152)<br>*Miles Macklin, Matthias Müller, Nuttapong Chentanez, Tae-Yong Kim, 2014* | Paper | The paper behind NVIDIA FleX: solids, cloth and fluids as particles and constraints, solved in parallel | Unified particle physics, Position based dynamics (PBD), Two-way coupling, Jacobi, Constraint averaging (mass splitting), Shape matching, Parallel work on the GPU, Sleeping | [004](../logbook/004-the-detour.md) | Parts |
+| ○ | [Unified Particle Physics for Real-Time Applications](https://doi.org/10.1145/2601097.2601152)<br>*Miles Macklin, Matthias Müller, Nuttapong Chentanez, Tae-Yong Kim, 2014* | Paper | The paper behind NVIDIA FleX: solids, cloth and fluids as particles and constraints, solved in parallel | Unified particle physics, Position based dynamics (PBD), Two-way coupling, Jacobi, Constraint averaging (mass splitting), Shape matching, Parallel work on the GPU, Sleeping, Stiff stacks (mass scaling), Particle phase | [004](../logbook/004-the-detour.md) | Parts |
 | ○ | [Unity](https://docs.unity.com/en-us/engine/6000.0/manual/physics-section) | Project | Game engine: PhysX for 3D physics, Box2D for 2D | Physics engine, Entity component system (ECS) | [004](../logbook/004-the-detour.md) |  |
 | ○ | [Unity, Rigidbody](https://docs.unity.com/en-us/engine/6000.7/manual/physics-section/physics-overview/rigidbody/class-rigidbody) | Documentation | The manual page of Unity's rigid body component | Rigid body | [004](../logbook/004-the-detour.md) |  |
 | ○ | [Unity, Rigidbody.inertiaTensor](https://docs.unity.com/en-us/engine/6000.6/script-reference/unityengine/rigidbody/inertiatensor) | Documentation | How Unity exposes a body's inertia tensor, and lets you change it | Inertia tensor | [004](../logbook/004-the-detour.md) |  |

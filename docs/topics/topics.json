@@ -989,7 +989,8 @@
       "citedIn": [
         "docs/logbook/004-the-detour.md",
         "advanced-character-physics",
-        "docs/logbook/025-the-pillow.md"
+        "docs/logbook/025-the-pillow.md",
+        "docs/logbook/029-heavy-on-light.md"
       ],
       "page": "docs/topics/integration.md#the-step-limit"
     },
@@ -1593,7 +1594,8 @@
         "rapier-integration-parameters",
         "rapier-changelog",
         "docs/logbook/016-the-same-road.md",
-        "docs/logbook/019-the-price-of-copies.md"
+        "docs/logbook/019-the-price-of-copies.md",
+        "docs/logbook/029-heavy-on-light.md"
       ],
       "page": "docs/topics/soft-step.md"
     },
@@ -1770,7 +1772,7 @@
       },
       "partOf": "fluid",
       "related": ["position-based-dynamics"],
-      "citedIn": ["docs/logbook/004-the-detour.md"]
+      "citedIn": ["docs/logbook/004-the-detour.md", "docs/logbook/029-heavy-on-light.md"]
     },
     {
       "id": "material-point-method",
@@ -2477,13 +2479,16 @@
         "constraint-averaging",
         "shape-matching",
         "gpu-parallelism",
-        "sleeping"
+        "sleeping",
+        "stiff-stacks",
+        "particle-phase"
       ],
       "citedIn": [
         "docs/logbook/004-the-detour.md",
         "docs/logbook/012-the-family-tree.md",
         "docs/logbook/026-the-marble-in-the-pocket.md",
-        "docs/logbook/027-the-stored-nudge.md"
+        "docs/logbook/027-the-stored-nudge.md",
+        "docs/logbook/029-heavy-on-light.md"
       ],
       "url": "https://doi.org/10.1145/2601097.2601152",
       "authors": "Miles Macklin, Matthias Müller, Nuttapong Chentanez, Tae-Yong Kim",
@@ -3638,7 +3643,8 @@
         "docs/logbook/025-the-pillow.md",
         "docs/logbook/026-the-marble-in-the-pocket.md",
         "docs/logbook/027-the-stored-nudge.md",
-        "docs/logbook/028-the-ranking.md"
+        "docs/logbook/028-the-ranking.md",
+        "docs/logbook/029-heavy-on-light.md"
       ],
       "code": ["src/shaders/integrate.wgsl"]
     },
@@ -4849,7 +4855,8 @@
         "docs/logbook/012-the-family-tree.md",
         "docs/logbook/014-the-mirror.md",
         "docs/logbook/015-the-stiff-spring.md",
-        "physx-rigid-body-dynamics"
+        "physx-rigid-body-dynamics",
+        "docs/logbook/029-heavy-on-light.md"
       ]
     },
     {
@@ -4914,7 +4921,8 @@
         "box2d-distance-joint",
         "docs/logbook/015-the-stiff-spring.md",
         "rapier-integration-parameters",
-        "jolt-architecture"
+        "jolt-architecture",
+        "docs/logbook/029-heavy-on-light.md"
       ]
     },
     {
@@ -5547,7 +5555,8 @@
       "citedIn": [
         "advanced-character-physics",
         "iterative-dynamics-paper",
-        "docs/logbook/014-the-mirror.md"
+        "docs/logbook/014-the-mirror.md",
+        "docs/logbook/029-heavy-on-light.md"
       ]
     },
     {
@@ -5895,7 +5904,8 @@
         "advanced-character-physics",
         "docs/logbook/013-the-hidden-brake.md",
         "docs/logbook/025-the-pillow.md",
-        "docs/logbook/028-the-ranking.md"
+        "docs/logbook/028-the-ranking.md",
+        "docs/logbook/029-heavy-on-light.md"
       ]
     },
     {
@@ -6138,7 +6148,7 @@
       },
       "partOf": "solver",
       "related": ["mass-ratio"],
-      "citedIn": ["solver2d-post"]
+      "citedIn": ["solver2d-post", "docs/logbook/029-heavy-on-light.md"]
     },
     {
       "id": "box2d-contact-solver",
@@ -6406,7 +6416,8 @@
         "docs/logbook/020-a-cheap-launch.md",
         "docs/logbook/021-a-short-trip.md",
         "docs/logbook/023-the-first-free-turn.md",
-        "docs/logbook/027-the-stored-nudge.md"
+        "docs/logbook/027-the-stored-nudge.md",
+        "docs/logbook/029-heavy-on-light.md"
       ]
     },
     {
@@ -6854,6 +6865,61 @@
       },
       "related": ["constraint-averaging"],
       "citedIn": ["docs/logbook/026-the-marble-in-the-pocket.md"]
+    },
+    {
+      "id": "stiff-stacks",
+      "kind": "concept",
+      "title": "Stiff stacks (mass scaling)",
+      "summary": "During contacts only, making lower particles look heavier, e^(-k × height), so a pile settles in fewer rounds: Macklin's trick, which biases hits in the air",
+      "area": "physics",
+      "status": "seen",
+      "since": {
+        "seen": "2026-11-19"
+      },
+      "partOf": "stacking",
+      "related": ["mass-ratio", "stack-levels"],
+      "citedIn": ["unified-particle-physics-paper", "docs/logbook/029-heavy-on-light.md"]
+    },
+    {
+      "id": "stack-levels",
+      "kind": "concept",
+      "title": "Levels in a pile",
+      "summary": "Each particle's place in a pile, counted in particles from the floor and kept from step to step; none for particles that rest on nothing, so hits in the air stay physical",
+      "area": "physics",
+      "status": "seen",
+      "since": {
+        "seen": "2026-11-19"
+      },
+      "partOf": "stacking",
+      "related": ["stiff-stacks"],
+      "citedIn": ["docs/logbook/029-heavy-on-light.md"]
+    },
+    {
+      "id": "mass-compression",
+      "kind": "concept",
+      "title": "Compressed masses",
+      "summary": "Letting the solver see m^α instead of the real mass, so large ratios shrink: α = 0.5 turns 100 into 10. Gravity keeps the real mass; heavy bodies push through light ones less",
+      "area": "physics",
+      "status": "seen",
+      "since": {
+        "seen": "2026-11-19"
+      },
+      "partOf": "mass-ratio",
+      "related": ["stiff-stacks"],
+      "citedIn": ["docs/logbook/029-heavy-on-light.md"]
+    },
+    {
+      "id": "particle-phase",
+      "kind": "concept",
+      "title": "Particle phase",
+      "summary": "A group label on each particle that the solver reads to decide how its contacts work, as in NVIDIA FleX: for example liquids with real masses, solids with compressed ones",
+      "area": "physics",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-19"
+      },
+      "related": ["unified-particle-physics"],
+      "citedIn": ["unified-particle-physics-paper", "docs/logbook/029-heavy-on-light.md"]
     }
   ]
 }

@@ -16,14 +16,12 @@ documentation of the library will live there too.
 
 *Updated November 19, 2026*
 
-**Latest step:** [the ranking](./docs/logbook/028-the-ranking.md). Two particles that touch
-must be pushed apart, and in chapters 025 to 027 we tried three ways: a spring, moving them back,
-and changing their velocities, with a dozen ways of combining the pushes. At the same low price
-for all, a tuned spring came first, and moving them back with the user's "half and half" rule
-came next, with nothing to tune. Changing velocities needed more work per step than we want to
-spend.
+**Latest step:** [heavy on light](./docs/logbook/029-heavy-on-light.md). Particles that touch
+must be pushed apart, and in the last chapters we compared every way of doing it at the same low
+price. With different masses, a light particle under a heavy one sinks. Two ideas of the user fix
+it: let the solver see squeezed masses, and count each particle's level in its pile.
 
-**Next:** the two finalists with heavy and light bodies. Then we choose, and write the code.
+**Next:** the two candidates on the GPU, with their real cost. Then we choose, and write the code.
 
 Every step, with what we learned and what went wrong, is in the [logbook](./docs/README.md).
 

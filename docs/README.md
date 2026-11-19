@@ -35,6 +35,7 @@ This is where we tell how FORCE gets built, one step at a time. If you are new h
 | 026 | [The Marble in the Pocket](./logbook/026-the-marble-in-the-pocket.md) | Pushing particles apart by moving them: the sum goes too far, the average sinks, and eight ideas of the user tried in 3D |
 | 027 | [The Stored Nudge](./logbook/027-the-stored-nudge.md) | Pushing particles apart by changing velocities: Catto's two pieces, a nudge that keeps coming back, and Box2D's relax rounds at twice the price |
 | 028 | [The Ranking](./logbook/028-the-ranking.md) | Every way at the same low price: a tuned spring first, half and half on positions next, velocities out |
+| 029 | [Heavy on Light](./logbook/029-heavy-on-light.md) | Particles of different masses: a light one under a heavy one sinks, and two ideas of the user fix it, compressed masses and levels in the pile |
 
 ## For reference
 
