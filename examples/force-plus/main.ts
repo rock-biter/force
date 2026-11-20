@@ -1,6 +1,7 @@
 // FORCE+ on the GPU, live. Up to 100 000 particles in a box as big as the grid, pushed apart by
 // moving their positions with half and half, masses seen as m^α and levels in the pile (decision
-// 015), through lists of neighbours made when needed (decision 016). The pointer pushes them away
+// 015), through lists of neighbours made when needed (decision 016). A menu switches to FORCE, the
+// same rule with the real masses and no levels (chapter 026), as in the compare page. The pointer pushes them away
 // with a ball. The shaders come from contact-cost, where they were checked against JavaScript; two
 // are this page's own: the round, the same one plus the ball, and finish, the same one plus a speed
 // limit. three.js draws the particles straight from the position buffer, on the same device
@@ -273,6 +274,7 @@ function makeSimulation(
   const cellWorkgroups = Math.ceil(cellCount / 64)
   let parity = 0
   let substeps = 1
+  let levelsOn = true // the levels pass runs only when the rounds read the levels, c > 0
 
   return {
     particleCount: count,
@@ -318,7 +320,7 @@ function makeSimulation(
         dispatch(kit.clearIf, clearGroup, cellWorkgroups)
         dispatch(kit.gridIf, gridGroup)
         dispatch(kit.list, listGroup)
-        dispatch(kit.levels, levelGroups[parity])
+        if (levelsOn) dispatch(kit.levels, levelGroups[parity])
         for (let r = 0; r < ROUNDS; r++) dispatch(kit.round, roundGroups[parity][r % 2])
         dispatch(kit.finish, finishGroup)
         pass.end()
@@ -331,10 +333,12 @@ function makeSimulation(
     /**
      * α, c, the substeps and the speed limit, from the next step on. A substep lasts 1/60 s
      * divided by their number: predict and finish read it from the params. No particle may go
-     * faster than `maxSpeed`, in m/s, 0 for no limit (decisions 017 and 018).
+     * faster than `maxSpeed`, in m/s, 0 for no limit (decisions 017 to 019). With c = 0 the levels
+     * are not computed: the levels of the pile then catch up in a few steps when c comes back.
      */
     setSolver(alpha: number, levelStrength: number, count: number, maxSpeed: number) {
       substeps = count
+      levelsOn = levelStrength > 0
       device.queue.writeBuffer(params, 3 * 4, new Float32Array([STEP / count]))
       device.queue.writeBuffer(params, 13 * 4, new Float32Array([alpha, levelStrength]))
       device.queue.writeBuffer(limit, 0, new Float32Array([maxSpeed]))
@@ -507,6 +511,8 @@ async function start() {
   // ?particles=20000 in the address starts with that many, in thousands from 1000 to 100 000.
   const asked = Math.round(Number(new URLSearchParams(location.search).get('particles')) / 1000)
   const settings = {
+    // FORCE+ ('plus') or FORCE ('force'): the same rule, with α = 1 and c = 0
+    method: 'plus',
     ...FORCE_PLUS,
     levels: 1.5, // a gentler start than decision 015, as in compare's tunable copy
     // The speed limit: 'auto', the default of 1.5 × the safe one, 'safe', 'custom', `speed` in
@@ -518,6 +524,9 @@ async function start() {
     ball: BALL_RADIUS,
   }
   const stats = { gpu: Number.NaN, lists: Number.NaN }
+  /** α and c as the solver sees them: FORCE uses the real masses and no levels. */
+  const solverAlpha = () => (settings.method === 'plus' ? settings.alpha : 1)
+  const solverLevels = () => (settings.method === 'plus' ? settings.levels : 0)
   /** The speed limit asked for, in m/s, 0 for none. */
   const maxSpeed = () =>
     settings.maxSpeed === 'auto'
@@ -541,7 +550,7 @@ async function start() {
     simulation?.destroy()
     const masses = MASSES[settings.masses]
     simulation = makeSimulation(device, kit, pointerBuffer, settings.particles, masses)
-    simulation.setSolver(settings.alpha, settings.levels, settings.substeps, maxSpeed())
+    simulation.setSolver(solverAlpha(), solverLevels(), settings.substeps, maxSpeed())
     view = new ParticleView(renderer, simulation, { massRange: masses })
     scene.add(view.mesh)
     owed = 0
@@ -549,11 +558,18 @@ async function start() {
     stats.lists = Number.NaN
   }
   const applySolver = () =>
-    simulation?.setSolver(settings.alpha, settings.levels, settings.substeps, maxSpeed())
+    simulation?.setSolver(solverAlpha(), solverLevels(), settings.substeps, maxSpeed())
 
-  const pane = new Pane({ title: 'FORCE+ on the GPU', expanded: window.innerWidth >= 600 })
+  const pane = new Pane({ title: 'FORCE on the GPU', expanded: window.innerWidth >= 600 })
   pane.registerPlugin(EssentialsPlugin)
   const solver = pane.addFolder({ title: 'Solver' })
+  // FORCE or FORCE+: with FORCE, α and c do not apply, and their sliders rest.
+  const method = solver
+    .addBinding(settings, 'method', { options: { 'FORCE+': 'plus', FORCE: 'force' } })
+    .on('change', () => {
+      alpha.disabled = levels.disabled = settings.method !== 'plus'
+      applySolver()
+    })
   const alpha = solver
     .addBinding(settings, 'alpha', { label: 'α', min: 0, max: 1, step: 0.05 })
     .on('change', applySolver)
@@ -588,7 +604,9 @@ async function start() {
   }
   solver.addBinding(cap, 'value', { label: 'limit', readonly: true })
   solver.addButton({ title: 'as decision 015' }).on('click', () => {
-    Object.assign(settings, FORCE_PLUS)
+    Object.assign(settings, FORCE_PLUS, { method: 'plus' })
+    alpha.disabled = levels.disabled = false
+    method.refresh()
     alpha.refresh()
     levels.refresh()
     substeps.refresh()
