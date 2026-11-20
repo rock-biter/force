@@ -1024,7 +1024,8 @@
         "rapier-staged-solver",
         "docs/logbook/016-the-same-road.md",
         "docs/logbook/025-the-pillow.md",
-        "docs/logbook/028-the-ranking.md"
+        "docs/logbook/028-the-ranking.md",
+        "docs/logbook/031-the-yellow-ball.md"
       ],
       "page": "docs/topics/integration.md#substeps",
       "code": ["src/world.ts"]
@@ -2494,14 +2495,17 @@
         "gpu-parallelism",
         "sleeping",
         "stiff-stacks",
-        "particle-phase"
+        "particle-phase",
+        "pre-stabilization",
+        "position-based-friction"
       ],
       "citedIn": [
         "docs/logbook/004-the-detour.md",
         "docs/logbook/012-the-family-tree.md",
         "docs/logbook/026-the-marble-in-the-pocket.md",
         "docs/logbook/027-the-stored-nudge.md",
-        "docs/logbook/029-heavy-on-light.md"
+        "docs/logbook/029-heavy-on-light.md",
+        "docs/logbook/031-the-yellow-ball.md"
       ],
       "url": "https://doi.org/10.1145/2601097.2601152",
       "authors": "Miles Macklin, Matthias Müller, Nuttapong Chentanez, Tae-Yong Kim",
@@ -3352,7 +3356,8 @@
         "docs/logbook/008-the-first-loop.md",
         "docs/guides/buffers.md",
         "docs/guides/compute-shader.md",
-        "wgsl-spec-var-declarations"
+        "wgsl-spec-var-declarations",
+        "docs/logbook/031-the-yellow-ball.md"
       ],
       "code": ["src/world.ts", "src/shaders/integrate.wgsl"]
     },
@@ -6915,7 +6920,8 @@
       "related": ["stiff-stacks"],
       "citedIn": [
         "docs/logbook/029-heavy-on-light.md",
-        "docs/decisions/015-half-and-half-on-positions.md"
+        "docs/decisions/015-half-and-half-on-positions.md",
+        "docs/logbook/031-the-yellow-ball.md"
       ],
       "code": ["examples/contact-cost/levels.wgsl"]
     },
@@ -6964,7 +6970,8 @@
       "related": ["uniform-grid", "atomic-operations"],
       "citedIn": [
         "docs/logbook/030-the-lazy-list.md",
-        "docs/decisions/016-a-list-made-when-needed.md"
+        "docs/decisions/016-a-list-made-when-needed.md",
+        "docs/logbook/031-the-yellow-ball.md"
       ],
       "code": ["examples/contact-cost/list.wgsl", "examples/contact-cost/watch.wgsl"]
     },
@@ -6981,6 +6988,34 @@
       "related": ["storage-buffer"],
       "citedIn": ["docs/logbook/030-the-lazy-list.md"],
       "code": ["examples/contact-cost/round.wgsl", "examples/contact-cost/spring.wgsl"]
+    },
+    {
+      "id": "pre-stabilization",
+      "kind": "concept",
+      "title": "Pre-stabilization",
+      "summary": "Moving the starting positions out of their overlaps before the rounds, so that the move does not turn into speed and particles do not pop out",
+      "area": "physics",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-20"
+      },
+      "partOf": "position-based-dynamics",
+      "related": ["baumgarte-stabilization"],
+      "citedIn": ["unified-particle-physics-paper", "docs/logbook/031-the-yellow-ball.md"]
+    },
+    {
+      "id": "position-based-friction",
+      "kind": "concept",
+      "title": "Friction on positions",
+      "summary": "After two particles are pushed apart, their sliding in the step is taken away: all of it when small (static), a share tied to how deep they overlapped otherwise (kinetic)",
+      "area": "physics",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-20"
+      },
+      "partOf": "friction",
+      "related": ["coulomb-friction"],
+      "citedIn": ["unified-particle-physics-paper", "docs/logbook/031-the-yellow-ball.md"]
     }
   ]
 }

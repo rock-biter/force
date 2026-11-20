@@ -5,7 +5,7 @@
 Everything we have met while building FORCE, concepts and sources, and how far we went with each
 one. Use it to look up a term, to find what to read, or to pick what to explore next.
 
-- **257 concepts:** ● 24 studied · ◐ 129 seen · ○ 104 mentioned
+- **259 concepts:** ● 24 studied · ◐ 129 seen · ○ 106 mentioned
 - **145 sources:** ● 15 studied · ◐ 16 seen · ○ 114 mentioned · read by Claude: 68 parts, 15 in full
 
 | | Status | What it means |
@@ -76,6 +76,7 @@ How things move, collide and stay together.
 | ◐ | Force-directed layout | Placing the nodes of a graph with a simulation: links pull like springs, and every node pushes the others away |  | [011](../logbook/011-the-living-map.md) |
 | ◐ | Forces | Pushes such as gravity or wind: they change velocity, and change a light object more than a heavy one | Simulation step | [001](../logbook/001-the-flip-book.md) |
 | ◐ | Friction | The force that resists sliding between two surfaces in contact |  | [004](../logbook/004-the-detour.md) |
+| ○ | Friction on positions | After two particles are pushed apart, their sliding in the step is taken away: all of it when small (static), a share tied to how deep they overlapped otherwise (kinetic) | Friction | [Unified Particle Physics for Real-Time Applications](https://doi.org/10.1145/2601097.2601152) |
 | ◐ | Gauss-Seidel | Fixing constraints one after another, each using the latest results: converges fast, but it is sequential | Iterative solver | [004](../logbook/004-the-detour.md) |
 | ○ | GJK | A test that tells whether two convex shapes overlap, using only their farthest points in each direction | Narrow phase | [004](../logbook/004-the-detour.md) |
 | ○ | Granular materials | Sand, snow and grains: solid up close, flowing in bulk |  | [004](../logbook/004-the-detour.md) |
@@ -124,6 +125,7 @@ How things move, collide and stay together.
 | ◐ | Plausibility over accuracy | Games need motion that looks right, fast and stable, more than exact physics | Physics engine | [001](../logbook/001-the-flip-book.md) |
 | ◐ | Position based dynamics (PBD) | Moving points straight to where the constraints want them, instead of going through forces: simple and stable |  | [Ten Minute Physics](https://matthias-research.github.io/pages/tenMinutePhysics/index.html) |
 | ○ | Position based fluids (PBF) | Fluids kept from compressing with position constraints, the PBD way | Fluid | [004](../logbook/004-the-detour.md) |
+| ○ | Pre-stabilization | Moving the starting positions out of their overlaps before the rounds, so that the move does not turn into speed and particles do not pop out | Position based dynamics (PBD) | [Unified Particle Physics for Real-Time Applications](https://doi.org/10.1145/2601097.2601152) |
 | ○ | Primal and dual solvers | Two ways to pose the same problem: dual solvers look for the constraint forces and suffer with large mass ratios, primal ones look for the positions and suffer with large stiffness ratios | Solver | [Augmented Vertex Block Descent](https://graphics.cs.utah.edu/research/projects/avbd/) |
 | ○ | Prismatic joint | A joint that lets two bodies slide along one line, like a drawer | Joint | [Iterative Dynamics with Temporal Coherence](https://box2d.org/files/ErinCatto_IterativeDynamics_GDC2005.pdf) |
 | ◐ | Projected Gauss-Seidel | Gauss-Seidel with a clamp: fix one rule at a time, keep its push inside its limits, and go round again | Gauss-Seidel | [Iterative Dynamics with Temporal Coherence](https://box2d.org/files/ErinCatto_IterativeDynamics_GDC2005.pdf) |
@@ -258,7 +260,7 @@ How things move, collide and stay together.
 | ○ | [Stable Fluids](https://doi.org/10.1145/311535.311548)<br>*Jos Stam, 1999* | Paper | A grid fluid method that stays stable even with large timesteps | Grid fluid (Eulerian), Numerical stability | [004](../logbook/004-the-detour.md) |  |
 | ○ | [Strain Based Dynamics](https://matthias-research.github.io/pages/publications/strainBasedDynamics.pdf)<br>*Matthias Müller, Nuttapong Chentanez, Tae-Yong Kim, Miles Macklin, 2014* | Paper | PBD constraints that control stretching in any direction, not only along the edges of the mesh | Position based dynamics (PBD), Cloth, Soft body | [004](../logbook/004-the-detour.md) |  |
 | ○ | [Ten Minute Physics](https://matthias-research.github.io/pages/tenMinutePhysics/index.html)<br>*Matthias Müller* | Video | Short videos with JavaScript demos: PBD, cloth, soft bodies, fluids, rigid bodies, collisions and the GPU | Position based dynamics (PBD), Cloth, Soft body, Fluid, Rigid body, Broad phase, Parallel work on the GPU | [001](../logbook/001-the-flip-book.md) |  |
-| ○ | [Unified Particle Physics for Real-Time Applications](https://doi.org/10.1145/2601097.2601152)<br>*Miles Macklin, Matthias Müller, Nuttapong Chentanez, Tae-Yong Kim, 2014* | Paper | The paper behind NVIDIA FleX: solids, cloth and fluids as particles and constraints, solved in parallel | Unified particle physics, Position based dynamics (PBD), Two-way coupling, Jacobi, Constraint averaging (mass splitting), Shape matching, Parallel work on the GPU, Sleeping, Stiff stacks (mass scaling), Particle phase | [004](../logbook/004-the-detour.md) | Parts |
+| ○ | [Unified Particle Physics for Real-Time Applications](https://doi.org/10.1145/2601097.2601152)<br>*Miles Macklin, Matthias Müller, Nuttapong Chentanez, Tae-Yong Kim, 2014* | Paper | The paper behind NVIDIA FleX: solids, cloth and fluids as particles and constraints, solved in parallel | Unified particle physics, Position based dynamics (PBD), Two-way coupling, Jacobi, Constraint averaging (mass splitting), Shape matching, Parallel work on the GPU, Sleeping, Stiff stacks (mass scaling), Particle phase, Pre-stabilization, Friction on positions | [004](../logbook/004-the-detour.md) | Parts |
 | ○ | [Unity](https://docs.unity.com/en-us/engine/6000.0/manual/physics-section) | Project | Game engine: PhysX for 3D physics, Box2D for 2D | Physics engine, Entity component system (ECS) | [004](../logbook/004-the-detour.md) |  |
 | ○ | [Unity, Rigidbody](https://docs.unity.com/en-us/engine/6000.7/manual/physics-section/physics-overview/rigidbody/class-rigidbody) | Documentation | The manual page of Unity's rigid body component | Rigid body | [004](../logbook/004-the-detour.md) |  |
 | ○ | [Unity, Rigidbody.inertiaTensor](https://docs.unity.com/en-us/engine/6000.6/script-reference/unityengine/rigidbody/inertiatensor) | Documentation | How Unity exposes a body's inertia tensor, and lets you change it | Inertia tensor | [004](../logbook/004-the-detour.md) |  |
