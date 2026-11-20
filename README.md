@@ -14,15 +14,14 @@ documentation of the library will live there too.
 
 ## Where we are
 
-*Updated November 19, 2026*
+*Updated November 20, 2026*
 
-**Latest step:** [the lazy list](./docs/logbook/030-the-lazy-list.md). We put the two best ways
-of pushing particles apart on the GPU: they cost the same, about 1 ms per step for 10 000
-particles on a laptop. A list of each particle's neighbours, made again only when particles have
-moved, made it more than twice as fast. FORCE will move particles back with the user's "half and
-half" rule ([decision 015](./docs/decisions/015-half-and-half-on-positions.md)).
+**Latest step:** [the yellow ball](./docs/logbook/031-the-yellow-ball.md). The way FORCE pushes
+particles apart now runs live in the browser: up to 100 000 particles in a big box, and a yellow
+ball under the mouse that pushes them away ([try it](https://rock-biter.github.io/force/force-plus/)).
+A laptop keeps up with real time up to about 50 000.
 
-**Next:** a page that runs the best ways side by side, live, with a scene to choose.
+**Next:** some particles bounce too much when they land. We measure why, then add friction.
 
 Every step, with what we learned and what went wrong, is in the [logbook](./docs/README.md).
 
