@@ -16,12 +16,13 @@ documentation of the library will live there too.
 
 *Updated November 20, 2026*
 
-**Latest step:** [the yellow ball](./docs/logbook/031-the-yellow-ball.md). The way FORCE pushes
-particles apart now runs live in the browser: up to 100 000 particles in a big box, and a yellow
-ball under the mouse that pushes them away ([try it](https://rock-biter.github.io/force/force-plus/)).
-A laptop keeps up with real time up to about 50 000.
+**Latest step:** [two kinds of bounce](./docs/logbook/032-two-kinds-of-bounce.md). On our live
+page ([try it](https://rock-biter.github.io/force/force-plus/)) some particles bounced too much when
+they landed. We measured why: a particle that moves more than its radius in one step ends up inside
+others and is thrown out, and without friction a glancing hit keeps its sideways speed, which the
+next particle turns upward.
 
-**Next:** some particles bounce too much when they land. We measure why, then add friction.
+**Next:** friction, measured on the same falls and on the slope of a pile.
 
 Every step, with what we learned and what went wrong, is in the [logbook](./docs/README.md).
 

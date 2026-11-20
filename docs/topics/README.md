@@ -5,8 +5,8 @@
 Everything we have met while building FORCE, concepts and sources, and how far we went with each
 one. Use it to look up a term, to find what to read, or to pick what to explore next.
 
-- **259 concepts:** ● 24 studied · ◐ 129 seen · ○ 106 mentioned
-- **145 sources:** ● 15 studied · ◐ 16 seen · ○ 114 mentioned · read by Claude: 68 parts, 15 in full
+- **261 concepts:** ● 24 studied · ◐ 131 seen · ○ 106 mentioned
+- **146 sources:** ● 15 studied · ◐ 16 seen · ○ 115 mentioned · read by Claude: 69 parts, 15 in full
 
 | | Status | What it means |
 | --- | --- | --- |
@@ -51,6 +51,7 @@ How things move, collide and stay together.
 | ◐ | Constraint drift | A rule kept only on velocities slowly comes apart on positions: nothing pulls the error back | Velocity constraint | [Iterative Dynamics with Temporal Coherence](https://box2d.org/files/ErinCatto_IterativeDynamics_GDC2005.pdf) |
 | ◐ | Contact | The result of a collision: where two objects touch, in which direction, and how far they overlap |  | [001](../logbook/001-the-flip-book.md) |
 | ◐ | Contact caching | Keeping the push of each contact point from one step to the next, with a label to find the same point again | Warm starting | [Iterative Dynamics with Temporal Coherence](https://box2d.org/files/ErinCatto_IterativeDynamics_GDC2005.pdf) |
+| ○ | Contact dissipation | Damping that slows only the particles that touch others, more with more contacts, so that free falls keep their speed: FleX calls it dissipation | Damping | [FleX, NvFlex.h](https://github.com/NVIDIAGameWorks/FleX/blob/master/include/NvFlex.h) |
 | ○ | Contact events | Telling game code when two objects start or stop touching |  | [004](../logbook/004-the-detour.md) |
 | ○ | Contact manifold | All the contact points between two touching shapes, such as the four corners of a box resting on the floor |  | [004](../logbook/004-the-detour.md) |
 | ◐ | Contact normal | The direction along which two touching bodies are pushed apart: for two spheres, from one center to the other | Contact | [024](../logbook/024-twenty-seven-cells.md) |
@@ -76,7 +77,7 @@ How things move, collide and stay together.
 | ◐ | Force-directed layout | Placing the nodes of a graph with a simulation: links pull like springs, and every node pushes the others away |  | [011](../logbook/011-the-living-map.md) |
 | ◐ | Forces | Pushes such as gravity or wind: they change velocity, and change a light object more than a heavy one | Simulation step | [001](../logbook/001-the-flip-book.md) |
 | ◐ | Friction | The force that resists sliding between two surfaces in contact |  | [004](../logbook/004-the-detour.md) |
-| ○ | Friction on positions | After two particles are pushed apart, their sliding in the step is taken away: all of it when small (static), a share tied to how deep they overlapped otherwise (kinetic) | Friction | [Unified Particle Physics for Real-Time Applications](https://doi.org/10.1145/2601097.2601152) |
+| ◐ | Friction on positions | After two particles are pushed apart, their sliding in the step is taken away: all of it when small (static), a share tied to how deep they overlapped otherwise (kinetic) | Friction | [Unified Particle Physics for Real-Time Applications](https://doi.org/10.1145/2601097.2601152) |
 | ◐ | Gauss-Seidel | Fixing constraints one after another, each using the latest results: converges fast, but it is sequential | Iterative solver | [004](../logbook/004-the-detour.md) |
 | ○ | GJK | A test that tells whether two convex shapes overlap, using only their farthest points in each direction | Narrow phase | [004](../logbook/004-the-detour.md) |
 | ○ | Granular materials | Sand, snow and grains: solid up close, flowing in bulk |  | [004](../logbook/004-the-detour.md) |
@@ -125,7 +126,7 @@ How things move, collide and stay together.
 | ◐ | Plausibility over accuracy | Games need motion that looks right, fast and stable, more than exact physics | Physics engine | [001](../logbook/001-the-flip-book.md) |
 | ◐ | Position based dynamics (PBD) | Moving points straight to where the constraints want them, instead of going through forces: simple and stable |  | [Ten Minute Physics](https://matthias-research.github.io/pages/tenMinutePhysics/index.html) |
 | ○ | Position based fluids (PBF) | Fluids kept from compressing with position constraints, the PBD way | Fluid | [004](../logbook/004-the-detour.md) |
-| ○ | Pre-stabilization | Moving the starting positions out of their overlaps before the rounds, so that the move does not turn into speed and particles do not pop out | Position based dynamics (PBD) | [Unified Particle Physics for Real-Time Applications](https://doi.org/10.1145/2601097.2601152) |
+| ◐ | Pre-stabilization | Moving the starting positions out of their overlaps before the rounds, so that the move does not turn into speed and particles do not pop out | Position based dynamics (PBD) | [Unified Particle Physics for Real-Time Applications](https://doi.org/10.1145/2601097.2601152) |
 | ○ | Primal and dual solvers | Two ways to pose the same problem: dual solvers look for the constraint forces and suffer with large mass ratios, primal ones look for the positions and suffer with large stiffness ratios | Solver | [Augmented Vertex Block Descent](https://graphics.cs.utah.edu/research/projects/avbd/) |
 | ○ | Prismatic joint | A joint that lets two bodies slide along one line, like a drawer | Joint | [Iterative Dynamics with Temporal Coherence](https://box2d.org/files/ErinCatto_IterativeDynamics_GDC2005.pdf) |
 | ◐ | Projected Gauss-Seidel | Gauss-Seidel with a clamp: fix one rule at a time, keep its push inside its limits, and go round again | Gauss-Seidel | [Iterative Dynamics with Temporal Coherence](https://box2d.org/files/ErinCatto_IterativeDynamics_GDC2005.pdf) |
@@ -157,6 +158,7 @@ How things move, collide and stay together.
 | ◐ | Solver | The part of the engine that corrects velocities so constraints are obeyed | Simulation step | [001](../logbook/001-the-flip-book.md) |
 | ○ | Spatial hashing | A uniform grid stored in a hash table, so it can cover endless space with little memory | Broad phase | [004](../logbook/004-the-detour.md) |
 | ◐ | Speculative contact | A contact kept before the bodies touch: it only removes the speed that would make them overlap within the step | Contact | [Box2D, contact_solver.c](https://github.com/erincatto/box2d/blob/main/src/contact_solver.c) |
+| ○ | Speed limit | A cap on how fast a particle goes, or on how fast its speed can change, so that a deep overlap cannot throw it: FleX calls them maxSpeed and maxAcceleration |  | [FleX, NvFlex.h](https://github.com/NVIDIAGameWorks/FleX/blob/master/include/NvFlex.h) |
 | ○ | SPH | Smoothed particle hydrodynamics: a fluid's density and pressure at each particle, estimated from its neighbours | Fluid | [004](../logbook/004-the-detour.md) |
 | ● | **[Spiral of death](fixed-timestep.md#the-spiral-of-death)** | When catching up on physics takes so long that every frame falls further behind | Fixed timestep | [004](../logbook/004-the-detour.md) |
 | ○ | Split impulse | PhysX's name for solving the position error and the velocity error in separate rounds, so the correction does not stay in the final velocity | Solver | [PhysX, Rigid Body Dynamics](https://nvidia-omniverse.github.io/PhysX/physx/5.6.1/docs/RigidBodyDynamics.html) |
@@ -216,6 +218,7 @@ How things move, collide and stay together.
 | ○ | [Erin Catto, publications](https://box2d.org/publications/)<br>*Erin Catto* | Talk | GDC talks by the creator of Box2D on solvers and collisions | Solver, Collision detection | [001](../logbook/001-the-flip-book.md) | Parts |
 | ○ | [Fast Contact Force Computation for Nonpenetrating Rigid Bodies](https://doi.org/10.1145/192161.192168)<br>*David Baraff, 1994* | Paper | The precise way to find contact forces that Catto wants to avoid, because of its hard cases | Contact, Rigid body, Resting contact | [Iterative Dynamics with Temporal Coherence](https://box2d.org/files/ErinCatto_IterativeDynamics_GDC2005.pdf) |  |
 | ● | [Fix Your Timestep!](https://gafferongames.com/post/fix_your_timestep/) · **[our page](fixed-timestep.md)**<br>*Glenn Fiedler* | Article | Why the step must be fixed, and how to separate it from frames | Fixed timestep, Timestep, Time accumulator, Render interpolation, Spiral of death, Semi-fixed timestep | [001](../logbook/001-the-flip-book.md) |  |
+| ○ | [FleX, NvFlex.h](https://github.com/NVIDIAGameWorks/FleX/blob/master/include/NvFlex.h)<br>*NVIDIA* | Source code | The public header of NVIDIA FleX: every setting of its particle solver, one line each, such as maxSpeed, maxAcceleration and dissipation | Speed limit, Contact dissipation, Damping, Friction, Restitution, Sleeping, Stiff stacks (mass scaling) | [032](../logbook/032-two-kinds-of-bounce.md) | Parts |
 | ○ | [Formulating Dynamic Multi-Rigid-Body Contact Problems with Friction as Solvable Linear Complementarity Problems](https://doi.org/10.1023/A:1008292328909)<br>*M. Anitescu, F. A. Potra, 1997* | Paper | Contacts and friction for many rigid bodies written as one problem per step: the kind of scheme Catto follows | Linear complementarity problem, Friction, Rigid body | [Iterative Dynamics with Temporal Coherence](https://box2d.org/files/ErinCatto_IterativeDynamics_GDC2005.pdf) |  |
 | ○ | [Godot](https://godotengine.org/) | Project | Open source game engine with its own physics, and alternative backends | Physics engine | [004](../logbook/004-the-detour.md) |  |
 | ○ | [Havok](https://www.havok.com/) | Project | A commercial physics engine, available as an option in Unity | Physics engine | [004](../logbook/004-the-detour.md) |  |

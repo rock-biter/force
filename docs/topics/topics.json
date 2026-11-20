@@ -273,7 +273,8 @@
       "citedIn": [
         "docs/logbook/001-the-flip-book.md",
         "docs/logbook/010-the-ground.md",
-        "advanced-character-physics"
+        "advanced-character-physics",
+        "docs/logbook/032-two-kinds-of-bounce.md"
       ]
     },
     {
@@ -1025,7 +1026,8 @@
         "docs/logbook/016-the-same-road.md",
         "docs/logbook/025-the-pillow.md",
         "docs/logbook/028-the-ranking.md",
-        "docs/logbook/031-the-yellow-ball.md"
+        "docs/logbook/031-the-yellow-ball.md",
+        "docs/logbook/032-two-kinds-of-bounce.md"
       ],
       "page": "docs/topics/integration.md#substeps",
       "code": ["src/world.ts"]
@@ -1368,7 +1370,8 @@
         "docs/logbook/010-the-ground.md",
         "advanced-character-physics",
         "iterative-dynamics-paper",
-        "docs/logbook/014-the-mirror.md"
+        "docs/logbook/014-the-mirror.md",
+        "docs/logbook/032-two-kinds-of-bounce.md"
       ],
       "code": ["src/shaders/integrate.wgsl"]
     },
@@ -1389,7 +1392,8 @@
         "docs/logbook/010-the-ground.md",
         "advanced-character-physics",
         "iterative-dynamics-paper",
-        "box2d-contact-solver"
+        "box2d-contact-solver",
+        "docs/logbook/032-two-kinds-of-bounce.md"
       ],
       "code": ["src/shaders/integrate.wgsl"]
     },
@@ -2505,7 +2509,8 @@
         "docs/logbook/026-the-marble-in-the-pocket.md",
         "docs/logbook/027-the-stored-nudge.md",
         "docs/logbook/029-heavy-on-light.md",
-        "docs/logbook/031-the-yellow-ball.md"
+        "docs/logbook/031-the-yellow-ball.md",
+        "docs/logbook/032-two-kinds-of-bounce.md"
       ],
       "url": "https://doi.org/10.1145/2601097.2601152",
       "authors": "Miles Macklin, Matthias Müller, Nuttapong Chentanez, Tae-Yong Kim",
@@ -5521,7 +5526,8 @@
         "docs/logbook/025-the-pillow.md",
         "docs/logbook/027-the-stored-nudge.md",
         "docs/logbook/028-the-ranking.md",
-        "docs/decisions/014-damping-off-by-default.md"
+        "docs/decisions/014-damping-off-by-default.md",
+        "docs/logbook/032-two-kinds-of-bounce.md"
       ]
     },
     {
@@ -6921,7 +6927,8 @@
       "citedIn": [
         "docs/logbook/029-heavy-on-light.md",
         "docs/decisions/015-half-and-half-on-positions.md",
-        "docs/logbook/031-the-yellow-ball.md"
+        "docs/logbook/031-the-yellow-ball.md",
+        "docs/logbook/032-two-kinds-of-bounce.md"
       ],
       "code": ["examples/contact-cost/levels.wgsl"]
     },
@@ -6995,13 +7002,17 @@
       "title": "Pre-stabilization",
       "summary": "Moving the starting positions out of their overlaps before the rounds, so that the move does not turn into speed and particles do not pop out",
       "area": "physics",
-      "status": "mentioned",
+      "status": "seen",
       "since": {
-        "mentioned": "2026-11-20"
+        "seen": "2026-11-20"
       },
       "partOf": "position-based-dynamics",
       "related": ["baumgarte-stabilization"],
-      "citedIn": ["unified-particle-physics-paper", "docs/logbook/031-the-yellow-ball.md"]
+      "citedIn": [
+        "unified-particle-physics-paper",
+        "docs/logbook/031-the-yellow-ball.md",
+        "docs/logbook/032-two-kinds-of-bounce.md"
+      ]
     },
     {
       "id": "position-based-friction",
@@ -7009,13 +7020,68 @@
       "title": "Friction on positions",
       "summary": "After two particles are pushed apart, their sliding in the step is taken away: all of it when small (static), a share tied to how deep they overlapped otherwise (kinetic)",
       "area": "physics",
+      "status": "seen",
+      "since": {
+        "seen": "2026-11-20"
+      },
+      "partOf": "friction",
+      "related": ["coulomb-friction"],
+      "citedIn": [
+        "unified-particle-physics-paper",
+        "docs/logbook/031-the-yellow-ball.md",
+        "docs/logbook/032-two-kinds-of-bounce.md"
+      ]
+    },
+    {
+      "id": "flex-header",
+      "kind": "code",
+      "title": "FleX, NvFlex.h",
+      "summary": "The public header of NVIDIA FleX: every setting of its particle solver, one line each, such as maxSpeed, maxAcceleration and dissipation",
+      "area": "physics",
       "status": "mentioned",
       "since": {
         "mentioned": "2026-11-20"
       },
-      "partOf": "friction",
-      "related": ["coulomb-friction"],
-      "citedIn": ["unified-particle-physics-paper", "docs/logbook/031-the-yellow-ball.md"]
+      "partOf": "flex",
+      "about": [
+        "speed-limit",
+        "contact-dissipation",
+        "damping",
+        "friction",
+        "restitution",
+        "sleeping",
+        "stiff-stacks"
+      ],
+      "citedIn": ["docs/logbook/032-two-kinds-of-bounce.md"],
+      "url": "https://github.com/NVIDIAGameWorks/FleX/blob/master/include/NvFlex.h",
+      "authors": "NVIDIA",
+      "claudeRead": "parts"
+    },
+    {
+      "id": "speed-limit",
+      "kind": "concept",
+      "title": "Speed limit",
+      "summary": "A cap on how fast a particle goes, or on how fast its speed can change, so that a deep overlap cannot throw it: FleX calls them maxSpeed and maxAcceleration",
+      "area": "physics",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-20"
+      },
+      "related": ["tunneling", "pre-stabilization"],
+      "citedIn": ["flex-header", "docs/logbook/032-two-kinds-of-bounce.md"]
+    },
+    {
+      "id": "contact-dissipation",
+      "kind": "concept",
+      "title": "Contact dissipation",
+      "summary": "Damping that slows only the particles that touch others, more with more contacts, so that free falls keep their speed: FleX calls it dissipation",
+      "area": "physics",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-20"
+      },
+      "partOf": "damping",
+      "citedIn": ["flex-header", "docs/logbook/032-two-kinds-of-bounce.md"]
     }
   ]
 }

@@ -38,6 +38,7 @@ This is where we tell how FORCE gets built, one step at a time. If you are new h
 | 029 | [Heavy on Light](./logbook/029-heavy-on-light.md) | Particles of different masses: a light one under a heavy one sinks, and two ideas of the user fix it, compressed masses and levels in the pile |
 | 030 | [The Lazy List](./logbook/030-the-lazy-list.md) | Both finalists on the GPU: the same cost, a list of neighbours made only when needed, and half and half chosen |
 | 031 | [The Yellow Ball](./logbook/031-the-yellow-ball.md) | FORCE+ live on the GPU: up to 100 000 particles, a ball under the pointer, and bounces left to fix |
+| 032 | [Two Kinds of Bounce](./logbook/032-two-kinds-of-bounce.md) | Why landing particles bounce: too far in one step, or skating with no friction, and not the pop we suspected |
 
 ## For reference
 
