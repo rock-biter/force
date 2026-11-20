@@ -3,7 +3,6 @@
 // if it were round, and writes the depth a real sphere would have, so spheres cross correctly.
 // The shaders are TSL, three.js's way to write shaders in JavaScript: it compiles them to WGSL.
 
-import type { World } from 'force-gpu'
 import {
   cameraFar,
   cameraNear,
@@ -14,10 +13,13 @@ import {
   Fn,
   If,
   instanceIndex,
+  log,
   max,
+  mix,
   normalize,
   positionGeometry,
   pow,
+  saturate,
   sqrt,
   storage,
   uniform,
@@ -47,6 +49,24 @@ const LIGHT = normalize(vec3(0.4, 0.6, 0.7))
 // ahead, along +Z in view space: close enough for small spheres.
 const HALFWAY = normalize(LIGHT.add(vec3(0, 0, 1)))
 
+/**
+ * What the view draws: a FORCE World, or any GPU buffer of one vec4f per particle, the center in
+ * xyz and 1 / mass in w (decision 008).
+ */
+export interface ParticleSource {
+  readonly particleCount: number
+  readonly positionBuffer: GPUBuffer
+  readonly radius: number
+}
+
+export interface ParticleViewOptions {
+  /**
+   * Colors each particle by its mass, read from w, on a log scale: light blue at the lightest mass
+   * given, red at the heaviest. When both are the same, every particle is light blue.
+   */
+  massRange?: readonly [lightest: number, heaviest: number]
+}
+
 /** The particles of one world, drawn straight from its GPU buffer. */
 export class ParticleView {
   readonly mesh: Mesh
@@ -54,13 +74,32 @@ export class ParticleView {
   private readonly geometry: InstancedBufferGeometry
   private readonly material: MeshBasicNodeMaterial
 
-  constructor(renderer: WebGPURenderer, world: World) {
+  constructor(renderer: WebGPURenderer, world: ParticleSource, options: ParticleViewOptions = {}) {
     // The positions: the world's own buffer, no copy. Like in GLSL, a shader reads a buffer it is
     // given; here three.js binds it as a read-only storage buffer for the vertex shader.
     const positions = new StorageInstancedBufferAttribute(world.particleCount, 4)
     useExternalBuffer(renderer, positions, world.positionBuffer)
     const centers = storage(positions, 'vec4', world.particleCount).toReadOnly()
     const radius = uniform(world.radius) // the engine's own, so spheres rest on the ground
+    const particle = centers.element(instanceIndex)
+
+    // The color: one for all, or from the mass m = 1 / w. log(m / lightest) / log(heaviest /
+    // lightest) is 0 at the lightest and 1 at the heaviest; it is worked out in the vertex shader,
+    // once per corner, and handed to the fragment shader.
+    const light = uniform(new Color(0x4ea3ff))
+    const [lightest, heaviest] = options.massRange ?? [1, 1]
+    const spread = Math.log(heaviest / lightest)
+    const tint = !options.massRange
+      ? this.color
+      : spread > 0
+        ? varying(
+            mix(
+              light,
+              uniform(new Color(0xd1495b)),
+              saturate(log(particle.w).negate().sub(Math.log(lightest)).div(spread)),
+            ),
+          )
+        : light
 
     // Three corners shared by every particle, drawn once per particle (instancing).
     this.geometry = new InstancedBufferGeometry()
@@ -70,7 +109,7 @@ export class ParticleView {
     // Vertex shader. The center goes to view space, where the camera looks down -Z, and the corner
     // opens around it in the XY plane, so the triangle always faces the camera (a billboard).
     const corner = positionGeometry.xy
-    const viewCenter = cameraViewMatrix.mul(vec4(centers.element(instanceIndex).xyz, 1)).xyz
+    const viewCenter = cameraViewMatrix.mul(vec4(particle.xyz, 1)).xyz
     const viewCorner = viewCenter.add(vec3(corner.mul(radius), 0))
 
     // What the fragment shader receives, like GLSL varyings.
@@ -91,7 +130,7 @@ export class ParticleView {
       // white highlight where it mirrors the light toward the eye (specular), as in GLSL.
       const diffuse = max(dot(normal, LIGHT), 0)
       const specular = pow(max(dot(normal, HALFWAY), 0), 20).mul(0.45)
-      return vec4(this.color.mul(diffuse.mul(0.6).add(0.4)).add(specular), 1)
+      return vec4(tint.mul(diffuse.mul(0.6).add(0.4)).add(specular), 1)
     })()
     // The depth of the sphere's surface, not of the flat triangle: like gl_FragDepth in GLSL.
     const surfaceZ = sphereCenter.z.add(normal.z.mul(radius))
