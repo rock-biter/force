@@ -7,7 +7,6 @@ import {
   cameraFar,
   cameraNear,
   cameraProjectionMatrix,
-  cameraViewMatrix,
   Discard,
   dot,
   Fn,
@@ -16,6 +15,7 @@ import {
   log,
   max,
   mix,
+  modelViewMatrix,
   normalize,
   positionGeometry,
   pow,
@@ -112,10 +112,11 @@ export class ParticleView {
     this.geometry.setAttribute('position', new Float32BufferAttribute(CORNERS, 3))
     this.geometry.instanceCount = world.particleCount
 
-    // Vertex shader. The center goes to view space, where the camera looks down -Z, and the corner
+    // Vertex shader. The center goes to view space, where the camera looks down -Z, through the
+    // mesh's own matrix too, so a mesh that is turned turns its particles. Then the corner
     // opens around it in the XY plane, so the triangle always faces the camera (a billboard).
     const corner = positionGeometry.xy
-    const viewCenter = cameraViewMatrix.mul(vec4(particle.xyz, 1)).xyz
+    const viewCenter = modelViewMatrix.mul(vec4(particle.xyz, 1)).xyz
     const viewCorner = viewCenter.add(vec3(corner.mul(radius), 0))
 
     // What the fragment shader receives, like GLSL varyings.

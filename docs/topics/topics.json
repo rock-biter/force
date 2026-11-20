@@ -1266,7 +1266,8 @@
         "docs/logbook/023-the-first-free-turn.md",
         "docs/logbook/024-twenty-seven-cells.md",
         "docs/logbook/030-the-lazy-list.md",
-        "docs/decisions/016-a-list-made-when-needed.md"
+        "docs/decisions/016-a-list-made-when-needed.md",
+        "docs/logbook/035-the-grid-stays-still.md"
       ],
       "code": ["examples/contact-cost/main.ts", "examples/contact-cost/grid.wgsl"]
     },
@@ -1373,7 +1374,8 @@
         "advanced-character-physics",
         "iterative-dynamics-paper",
         "docs/logbook/014-the-mirror.md",
-        "docs/logbook/032-two-kinds-of-bounce.md"
+        "docs/logbook/032-two-kinds-of-bounce.md",
+        "docs/logbook/034-the-box-on-the-ramp.md"
       ],
       "code": ["src/shaders/integrate.wgsl"]
     },
@@ -2503,7 +2505,9 @@
         "stiff-stacks",
         "particle-phase",
         "pre-stabilization",
-        "position-based-friction"
+        "position-based-friction",
+        "static-and-kinetic-friction",
+        "angle-of-repose"
       ],
       "citedIn": [
         "docs/logbook/004-the-detour.md",
@@ -2512,7 +2516,8 @@
         "docs/logbook/027-the-stored-nudge.md",
         "docs/logbook/029-heavy-on-light.md",
         "docs/logbook/031-the-yellow-ball.md",
-        "docs/logbook/032-two-kinds-of-bounce.md"
+        "docs/logbook/032-two-kinds-of-bounce.md",
+        "docs/logbook/034-the-box-on-the-ramp.md"
       ],
       "url": "https://doi.org/10.1145/2601097.2601152",
       "authors": "Miles Macklin, Matthias Müller, Nuttapong Chentanez, Tae-Yong Kim",
@@ -5113,7 +5118,8 @@
         "iterative-dynamics-paper",
         "docs/logbook/014-the-mirror.md",
         "box2d-contact-solver",
-        "docs/logbook/015-the-stiff-spring.md"
+        "docs/logbook/015-the-stiff-spring.md",
+        "docs/logbook/034-the-box-on-the-ramp.md"
       ]
     },
     {
@@ -6930,7 +6936,8 @@
         "docs/logbook/029-heavy-on-light.md",
         "docs/decisions/015-half-and-half-on-positions.md",
         "docs/logbook/031-the-yellow-ball.md",
-        "docs/logbook/032-two-kinds-of-bounce.md"
+        "docs/logbook/032-two-kinds-of-bounce.md",
+        "docs/logbook/035-the-grid-stays-still.md"
       ],
       "code": ["examples/contact-cost/levels.wgsl"]
     },
@@ -7032,7 +7039,9 @@
       "citedIn": [
         "unified-particle-physics-paper",
         "docs/logbook/031-the-yellow-ball.md",
-        "docs/logbook/032-two-kinds-of-bounce.md"
+        "docs/logbook/032-two-kinds-of-bounce.md",
+        "docs/logbook/034-the-box-on-the-ramp.md",
+        "docs/logbook/035-the-grid-stays-still.md"
       ]
     },
     {
@@ -7055,7 +7064,11 @@
         "sleeping",
         "stiff-stacks"
       ],
-      "citedIn": ["docs/logbook/032-two-kinds-of-bounce.md", "docs/logbook/033-the-speed-limit.md"],
+      "citedIn": [
+        "docs/logbook/032-two-kinds-of-bounce.md",
+        "docs/logbook/033-the-speed-limit.md",
+        "docs/logbook/034-the-box-on-the-ramp.md"
+      ],
       "url": "https://github.com/NVIDIAGameWorks/FleX/blob/master/include/NvFlex.h",
       "authors": "NVIDIA",
       "claudeRead": "parts"
@@ -7093,6 +7106,33 @@
       },
       "partOf": "damping",
       "citedIn": ["flex-header", "docs/logbook/032-two-kinds-of-bounce.md"]
+    },
+    {
+      "id": "static-and-kinetic-friction",
+      "kind": "concept",
+      "title": "Static and kinetic friction",
+      "summary": "Below its limit friction keeps two surfaces from sliding at all (static); above it they slide, braked by the limit (kinetic)",
+      "area": "physics",
+      "status": "seen",
+      "since": {
+        "seen": "2026-11-20"
+      },
+      "partOf": "friction",
+      "related": ["coulomb-friction"],
+      "citedIn": ["docs/logbook/034-the-box-on-the-ramp.md", "unified-particle-physics-paper"]
+    },
+    {
+      "id": "angle-of-repose",
+      "kind": "concept",
+      "title": "Angle of repose",
+      "summary": "The steepest slope a pile of grains holds before it slides: the more friction, the steeper",
+      "area": "physics",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-20"
+      },
+      "related": ["friction"],
+      "citedIn": ["docs/logbook/034-the-box-on-the-ramp.md", "unified-particle-physics-paper"]
     }
   ]
 }

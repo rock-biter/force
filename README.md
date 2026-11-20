@@ -16,13 +16,15 @@ documentation of the library will live there too.
 
 *Updated November 20, 2026*
 
-**Latest step:** [the speed limit](./docs/logbook/033-the-speed-limit.md). On our live page
-([try it](https://rock-biter.github.io/force/force-plus/)) fast particles splashed meters high. A
-particle that moves more than its radius in one small step ends up inside others and is thrown
-out ([why](./docs/logbook/032-two-kinds-of-bounce.md)). Now no particle goes faster than one and a
-half radii per step by default, 9 m/s, and the splashes are almost gone at little visible cost.
+**Latest step:** [a box that tilts](./docs/logbook/035-the-grid-stays-still.md). Our particles now
+have friction, so a heap stands in a pile instead of flowing like a liquid
+([how](./docs/logbook/034-the-box-on-the-ramp.md)). On a new live page
+([try it](https://rock-biter.github.io/force/force-tilt/)) you can tilt their box by up to 30
+degrees and watch the pile hold, then slide. Getting there taught us to keep the grid that finds
+neighbouring particles fixed in the world, and to let the box turn inside it.
 
-**Next:** friction, measured on the same falls and on the slope of a pile.
+**Next:** a better way to find which particles are near each other, without the limit of four per
+cell of today's grid.
 
 Every step, with what we learned and what went wrong, is in the [logbook](./docs/README.md).
 

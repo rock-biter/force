@@ -15,14 +15,19 @@ import {
   Color,
   DirectionalLight,
   EdgesGeometry,
+  Euler,
   GridHelper,
+  Group,
   HemisphereLight,
   LineBasicMaterial,
   LineSegments,
+  MathUtils,
+  Matrix4,
   Mesh,
   MeshStandardMaterial,
   PerspectiveCamera,
   Plane,
+  type Quaternion,
   Raycaster,
   Scene,
   SphereGeometry,
@@ -58,7 +63,9 @@ const MARGIN = 0.05 // the lists look 5 cm beyond touching (decision 016)
 const MAX_NEIGHBOURS = 32 // as in list.wgsl
 const NO_LEVEL = 0xffffffff
 const HALF = 12 // the box is 24 m by 24 m on the floor...
-const SIZE: Vec3 = [120, 45, 120] // ...and the grid fills it: 120 cells of 20 cm, 9 m tall
+const SIZE: Vec3 = [120, 45, 120] // ...and 9 m tall: 120 by 45 by 120 cells of 20 cm
+const MAX_TILT = 30 // degrees, around X and around Z, on the page that tilts the box
+const TILT_SPEED = 20 // degrees per second: the floor's far corner, 17 m away, then moves 9.9 cm per step, just under a radius
 const GAP = 0.01 // between particles at the start, in meters
 const LAYERS = 28 // at most, at the start: about 5.9 m, well inside the grid's 9 m
 const BALL_RADIUS = 2 // meters, at the start: the panel changes it
@@ -156,6 +163,44 @@ const safeSpeed = (substeps: number) => (RADIUS * substeps) / STEP
 /** The default limit, as a share of the safe one: 9 m/s with 1 substep (decision 019). */
 const DEFAULT_SHARE = 1.5
 
+/** The grid of cells: where its first corner is, in meters, and how many cells along x, y, z. */
+interface Grid {
+  origin: Vec3
+  size: Vec3
+}
+/** The grid the level box fills exactly. */
+const LEVEL_GRID: Grid = { origin: [-HALF, 0, -HALF], size: SIZE }
+
+/**
+ * The grid never turns: its cells stay along the world's axes. So for a box that tilts, it must be
+ * big enough to hold the box at every tilt, up to `most` degrees around X and around Z. The box
+ * turns around the middle of its floor.
+ */
+function gridAround(most: number): Grid {
+  const low = new Vector3(
+    Number.POSITIVE_INFINITY,
+    Number.POSITIVE_INFINITY,
+    Number.POSITIVE_INFINITY,
+  )
+  const high = low.clone().negate()
+  const corner = new Vector3()
+  const turn = new Euler()
+  for (let x = -most; x <= most; x += 5)
+    for (let z = -most; z <= most; z += 5) {
+      turn.set(MathUtils.degToRad(x), 0, MathUtils.degToRad(z))
+      for (const sx of [-HALF, HALF])
+        for (const y of [0, SIZE[1] * CELL])
+          for (const sz of [-HALF, HALF]) {
+            corner.set(sx, y, sz).applyEuler(turn)
+            low.min(corner)
+            high.max(corner)
+          }
+    }
+  const origin = low.toArray().map((v) => Math.floor(v / CELL) * CELL - CELL) as Vec3
+  const size = high.toArray().map((v, a) => Math.ceil((v - origin[a]) / CELL) + 1) as Vec3
+  return { origin, size }
+}
+
 /**
  * The particles on the GPU and how to encode one step of them: the step of contact-cost's part 4,
  * with the list made when needed.
@@ -166,10 +211,18 @@ function makeSimulation(
   pointer: GPUBuffer,
   count: number,
   masses: readonly [number, number],
+  grid: Grid,
+  box: Matrix4,
 ) {
+  // The cube stands on the floor of the box, wherever the box is turned.
   const start = cube(count, masses)
+  const point = new Vector3()
+  for (let i = 0; i < count; i++) {
+    point.fromArray(start, i * 4).applyMatrix4(box)
+    start.set(point.toArray(), i * 4)
+  }
   const bytes = start.byteLength
-  const cellCount = SIZE[0] * SIZE[1] * SIZE[2]
+  const cellCount = grid.size[0] * grid.size[1] * grid.size[2]
   const buffers: GPUBuffer[] = []
   const storage = (size: number, extra = 0) => {
     const buffer = device.createBuffer({
@@ -205,8 +258,8 @@ function makeSimulation(
   const data = new ArrayBuffer(80)
   const floats = new Float32Array(data)
   const words = new Uint32Array(data)
-  floats.set([0, -GRAVITY, 0, STEP, -HALF, 0, -HALF, CELL])
-  words.set([...SIZE, PLACES], 8)
+  floats.set([0, -GRAVITY, 0, STEP, ...grid.origin, CELL])
+  words.set([...grid.size, PLACES], 8)
   floats.set([RADIUS, FORCE_PLUS.alpha, FORCE_PLUS.levels], 12)
   words[15] = PLANES.length
   floats[19] = MARGIN // 16 to 18 belong to the spring, not used here
@@ -231,6 +284,12 @@ function makeSimulation(
     neighbourCounts,
     anchors,
   ])
+  // µ, the friction of round-push.wgsl: 4 bytes, in a buffer of the usual 16.
+  const rub = device.createBuffer({
+    size: 16,
+    usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
+  })
+  buffers.push(rub)
   // Levels alternate between two buffers, a step each; positions between two, a round each.
   const levelGroups = [0, 1].map((k) =>
     group(kit.levels, [
@@ -254,6 +313,8 @@ function makeSimulation(
         planes,
         levels[1 - k],
         pointer,
+        positions, // where each particle was when the substep began: friction measures from there
+        rub,
       ]),
     ),
   )
@@ -344,6 +405,21 @@ function makeSimulation(
       device.queue.writeBuffer(limit, 0, new Float32Array([maxSpeed]))
     },
 
+    /** The floor and the walls, turned as the box is: only their normals change. */
+    setBox(turn: Quaternion) {
+      const normal = new Vector3()
+      const data = PLANES.flatMap(([x, y, z, offset]) => [
+        ...normal.set(x, y, z).applyQuaternion(turn).toArray(),
+        offset,
+      ])
+      device.queue.writeBuffer(planes, 0, new Float32Array(data))
+    },
+
+    /** µ, how much of their slide two touching particles take back: 0 is none (decision 020). */
+    setFriction(mu: number) {
+      device.queue.writeBuffer(rub, 0, new Float32Array([mu]))
+    },
+
     destroy() {
       for (const b of buffers) b.destroy()
     },
@@ -382,14 +458,19 @@ async function start() {
   sun.position.set(2, 5, 3)
   scene.add(sun)
   // The floor, with a line every meter, 5 cells of the grid, and the box the grid fills.
-  scene.add(new GridHelper(2 * HALF, 2 * HALF, 0xbcbcbc, 0xd4d4d4))
+  // They and the ball sit in one group, the box. The force-tilt page turns the group, and the
+  // floor and the walls of the simulation with it. The particles are not in the group: they live in
+  // the world, where the grid of cells stays still and gravity points down.
+  const world = new Group()
+  scene.add(world)
+  world.add(new GridHelper(2 * HALF, 2 * HALF, 0xbcbcbc, 0xd4d4d4))
   const height = SIZE[1] * CELL
   const box = new LineSegments(
     new EdgesGeometry(new BoxGeometry(2 * HALF, height, 2 * HALF)),
     new LineBasicMaterial({ color: 0x9a9a9a }),
   )
   box.position.y = height / 2
-  scene.add(box)
+  world.add(box)
 
   const camera = new PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 200)
   camera.position.set(17, 14, 23)
@@ -467,10 +548,12 @@ async function start() {
     new SphereGeometry(1, 48, 12, 0, 2 * Math.PI, 0, Math.PI / 2),
     new MeshStandardMaterial({ color: 0xf2c200, roughness: 1, metalness: 0 }), // matte yellow
   )
-  scene.add(ballMesh)
+  world.add(ballMesh)
   const raycaster = new Raycaster()
   const surface = new Plane(new Vector3(0, 1, 0), 0)
   const hit = new Vector3()
+  const inside = new Matrix4()
+  const center = new Vector3()
   /**
    * Moves the ball through the `steps` steps of this frame, `substeps` each, toward the pointer and
    * toward `radius`, and writes where it is at every substep into `ballPath`.
@@ -479,6 +562,8 @@ async function start() {
     const top = Math.max(count / (150 * (2 * HALF) ** 2), DIAMETER)
     surface.constant = -top // the plane y = top
     raycaster.setFromCamera(screen, camera)
+    // the ray as the box sees it, since the plane and the ball are the box's own
+    raycaster.ray.applyMatrix4(inside.copy(world.matrixWorld).invert())
     const on = pointing && raycaster.ray.intersectPlane(surface, hit) !== null
     if (on && ball.radius === 0) {
       ball.x = hit.x
@@ -499,7 +584,9 @@ async function start() {
       // The radius goes toward its target at BALL_GROWTH, also when the panel changes it.
       const change = (on ? radius : 0) - ball.radius
       ball.radius += Math.min(Math.max(change, -BALL_GROWTH * h), BALL_GROWTH * h)
-      pathData.set([ball.x, 0, ball.z, ball.radius], k * 4)
+      // the simulation wants the ball in the world, not in the box
+      center.set(ball.x, 0, ball.z).applyMatrix4(world.matrixWorld)
+      pathData.set([center.x, center.y, center.z, ball.radius], k * 4)
     }
     if (steps) device.queue.writeBuffer(ballPath, 0, pathData, 0, steps * substeps * 4)
     ballMesh.visible = ball.radius > 0
@@ -513,15 +600,34 @@ async function start() {
   const query = new URLSearchParams(location.search)
   const asked = Math.round(Number(query.get('particles')) / 1000)
   const askedDraw = query.get('draw')
+  const askedFriction = Number(query.get('friction') ?? Number.NaN) // ?friction=0 starts as a liquid
+  const startTilt = (key: 'tiltX' | 'tiltZ') =>
+    MathUtils.clamp(
+      Number(query.get(key) ?? document.body.dataset[key] ?? 0) || 0,
+      -MAX_TILT,
+      MAX_TILT,
+    )
   const settings = {
     // FORCE+ ('plus') or FORCE ('force'): the same rule, with α = 1 and c = 0
     method: 'plus',
     ...FORCE_PLUS,
-    levels: 1.5, // a gentler start than decision 015, as in compare's tunable copy
+    // a gentler start than decision 015, as in compare's tunable copy; ?c=0 starts without levels
+    levels: query.has('c') ? MathUtils.clamp(Number(query.get('c')) || 0, 0, 4) : 1.5,
     // The speed limit: 'auto', the default of 1.5 × the safe one, 'safe', 'custom', `speed` in
     // m/s, or 'off' (decisions 017 to 019). With the default 1 substep, 'auto' is 9 m/s.
     maxSpeed: 'auto',
     speed: 20,
+    // µ: 0 is the liquid of chapter 031, 0.3 already makes a pile stand (chapter 034). A page
+    // sets its own start with data-friction on its <body>.
+    friction:
+      askedFriction >= 0 && askedFriction <= 1
+        ? askedFriction
+        : Number(document.body.dataset.friction ?? 0),
+    // The tilt of the box around X and around Z, in degrees: only the force-tilt page has the
+    // sliders.
+    // ?tiltX=20 in the address starts tilted that much; else as the page's <body> says.
+    tiltX: startTilt('tiltX'),
+    tiltZ: startTilt('tiltZ'),
     particles: asked >= 1 && asked <= 100 ? asked * 1000 : 20000,
     masses: '1 to 100 kg',
     // How the particles are drawn: as shaded spheres with their own depth, as flat discs, or not
@@ -542,6 +648,8 @@ async function start() {
         : settings.maxSpeed === 'custom'
           ? settings.speed
           : 0
+  // A page that tilts the box needs a grid that holds it at every tilt.
+  const grid = document.body.dataset.tilt !== undefined ? gridAround(MAX_TILT) : LEVEL_GRID
   let simulation: Simulation | undefined
   let view: ParticleView | undefined
   let paused = false
@@ -566,15 +674,43 @@ async function start() {
   function restart() {
     simulation?.destroy()
     const masses = MASSES[settings.masses]
-    simulation = makeSimulation(device, kit, pointerBuffer, settings.particles, masses)
-    simulation.setSolver(solverAlpha(), solverLevels(), settings.substeps, maxSpeed())
+    simulation = makeSimulation(
+      device,
+      kit,
+      pointerBuffer,
+      settings.particles,
+      masses,
+      grid,
+      world.matrixWorld,
+    )
+    simulation.setBox(world.quaternion)
+    applySolver()
     redraw()
     owed = 0
     lastReading = undefined
     stats.lists = Number.NaN
   }
-  const applySolver = () =>
+  // The box as it is turned now, in degrees. It follows the sliders at TILT_SPEED, not at once: a
+  // floor that jumped by one degree would move 21 cm at its edge, more than a particle's radius.
+  const tilt = { x: settings.tiltX, z: settings.tiltZ }
+  const turnBox = () => {
+    world.rotation.set(MathUtils.degToRad(tilt.x), 0, MathUtils.degToRad(tilt.z))
+    world.updateMatrixWorld()
+    simulation?.setBox(world.quaternion)
+  }
+  turnBox()
+  /** Moves the box toward the tilt the sliders ask, for a frame that lasted dt seconds. */
+  const followTilt = (dt: number) => {
+    if (tilt.x === settings.tiltX && tilt.z === settings.tiltZ) return
+    const most = TILT_SPEED * dt
+    tilt.x += MathUtils.clamp(settings.tiltX - tilt.x, -most, most)
+    tilt.z += MathUtils.clamp(settings.tiltZ - tilt.z, -most, most)
+    turnBox()
+  }
+  const applySolver = () => {
     simulation?.setSolver(solverAlpha(), solverLevels(), settings.substeps, maxSpeed())
+    simulation?.setFriction(settings.friction)
+  }
 
   const pane = new Pane({ title: 'FORCE on the GPU', expanded: window.innerWidth >= 600 })
   pane.registerPlugin(EssentialsPlugin)
@@ -619,6 +755,9 @@ async function start() {
     },
   }
   solver.addBinding(cap, 'value', { label: 'limit', readonly: true })
+  solver
+    .addBinding(settings, 'friction', { label: 'friction µ', min: 0, max: 1, step: 0.05 })
+    .on('change', applySolver)
   solver.addButton({ title: 'as decision 015' }).on('click', () => {
     Object.assign(settings, FORCE_PLUS, { method: 'plus' })
     alpha.disabled = levels.disabled = false
@@ -656,6 +795,24 @@ async function start() {
     const cell = buttons.cell(0, 0)
     if (cell) cell.title = paused ? 'resume' : 'pause'
   })
+  if (document.body.dataset.tilt !== undefined) {
+    const tiltFolder = pane.addFolder({ title: 'Tilt' })
+    for (const [key, label] of [
+      ['tiltX', 'around X'],
+      ['tiltZ', 'around Z'],
+    ] as const)
+      tiltFolder.addBinding(settings, key, {
+        label,
+        min: -MAX_TILT,
+        max: MAX_TILT,
+        step: 1,
+        format: (v) => `${v}°`,
+      })
+    tiltFolder.addButton({ title: 'level' }).on('click', () => {
+      settings.tiltX = settings.tiltZ = 0
+      pane.refresh()
+    })
+  }
   const ballFolder = pane.addFolder({ title: 'Ball' })
   ballFolder.addBinding(settings, 'ball', { label: 'radius', min: 0.3, max: 3, step: 0.1 })
   const numbers = pane.addFolder({ title: 'Numbers' })
@@ -713,6 +870,7 @@ async function start() {
     const dt = last === undefined ? 0 : Math.min((now - last) / 1000, 0.1)
     last = now
     orbit.update()
+    if (!paused) followTilt(dt)
     if (simulation) {
       const sim = simulation
       // A fixed step of 1/60 s: as many as real time asks, two per frame at most.

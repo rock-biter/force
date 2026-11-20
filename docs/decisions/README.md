@@ -31,6 +31,8 @@ The choices that shape FORCE, one per page: what we decided, why, what we left o
 | 017 | [A speed limit of one radius per substep](./017-a-speed-limit-per-substep.md) | Superseded by 019 | November 20, 2026 |
 | 018 | [The speed limit, set in m/s](./018-max-speed-in-meters-per-second.md) | Accepted | November 20, 2026 |
 | 019 | [A default speed limit of 1.5 radii per substep](./019-default-speed-limit.md) | Accepted | November 20, 2026 |
+| 020 | [Friction on positions, measured after the pushes](./020-friction-after-the-pushes.md) | Accepted | November 20, 2026 |
+| 021 | [A grid fixed in the world](./021-a-grid-fixed-in-the-world.md) | Accepted | November 20, 2026 |
 
 ## Rules
 

@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>FORCE: friction in a box that tilts</title>
+    <meta
+      name="description"
+      content="Up to 100 000 particles with friction on the GPU, in a box you can tilt by up to 30 degrees: a pile holds its slope, then slides."
+    />
+    <link rel="stylesheet" href="../site.css" />
+  </head>
+  <!-- The same page as force-plus, started with friction, with the sliders that tilt the box,
+       and with the box already tilted by 10 degrees. -->
+  <body class="stage" data-friction="0.3" data-tilt data-tilt-z="10">
+    <nav class="crumb">
+      <a href="../">← FORCE</a> · Friction in a box that tilts
+      <p>Tilt the box from the panel. Move the pointer over the particles to push them.</p>
+      <p>Drag to turn the camera, two fingers on a phone.</p>
+    </nav>
+    <script type="module" src="../force-plus/main.ts"></script>
+  </body>
+</html>

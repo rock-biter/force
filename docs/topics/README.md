@@ -5,7 +5,7 @@
 Everything we have met while building FORCE, concepts and sources, and how far we went with each
 one. Use it to look up a term, to find what to read, or to pick what to explore next.
 
-- **261 concepts:** ● 24 studied · ◐ 132 seen · ○ 105 mentioned
+- **263 concepts:** ● 24 studied · ◐ 133 seen · ○ 106 mentioned
 - **146 sources:** ● 15 studied · ◐ 16 seen · ○ 115 mentioned · read by Claude: 69 parts, 15 in full
 
 | | Status | What it means |
@@ -29,6 +29,7 @@ How things move, collide and stay together.
 | | Concept | In short | Part of | First cited in |
 | --- | --- | --- | --- | --- |
 | ◐ | Accumulated impulse | Keeping the total push of a rule and clamping that, not each round alone, so a later round can take part of it back | Sequential impulses (PGS) | [Iterative Dynamics with Temporal Coherence](https://box2d.org/files/ErinCatto_IterativeDynamics_GDC2005.pdf) |
+| ○ | Angle of repose | The steepest slope a pile of grains holds before it slides: the more friction, the steeper |  | [034](../logbook/034-the-box-on-the-ramp.md) |
 | ◐ | Angular momentum | Inertia times angular velocity: the quantity a torque changes over time | Rigid body | [004](../logbook/004-the-detour.md) |
 | ◐ | Angular velocity | How fast a body spins and around which axis, as one vector in radians per second | Rigid body | [004](../logbook/004-the-detour.md) |
 | ◐ | Articulated bodies | Chains of bodies linked by joints, such as robots and ragdolls |  | [004](../logbook/004-the-detour.md) |
@@ -164,6 +165,7 @@ How things move, collide and stay together.
 | ○ | Split impulse | PhysX's name for solving the position error and the velocity error in separate rounds, so the correction does not stay in the final velocity | Solver | [PhysX, Rigid Body Dynamics](https://nvidia-omniverse.github.io/PhysX/physx/5.6.1/docs/RigidBodyDynamics.html) |
 | ◐ | Spring | A link that keeps two points near a rest distance, pulling when stretched and pushing when squeezed |  | [docs index](../README.md) |
 | ◐ | Stacking | Boxes resting on boxes: a classic stress test for a solver |  | [Advanced Character Physics](https://edelkas.github.io/n/files/bib/jakobsen.pdf) |
+| ◐ | Static and kinetic friction | Below its limit friction keeps two surfaces from sliding at all (static); above it they slide, braked by the limit (kinetic) | Friction | [034](../logbook/034-the-box-on-the-ramp.md) |
 | ◐ | Stiff stacks (mass scaling) | During contacts only, making lower particles look heavier, e^(-k × height), so a pile settles in fewer rounds: Macklin's trick, which biases hits in the air | Stacking | [Unified Particle Physics for Real-Time Applications](https://doi.org/10.1145/2601097.2601152) |
 | ● | **[Stiffness](integration.md#the-step-limit)** | How strongly a spring or constraint resists: the stiffer it is, the faster it oscillates and the smaller the safe timestep |  | [004](../logbook/004-the-detour.md) |
 | ● | **[Substepping](integration.md#substeps)** | Splitting each step into smaller ones, to follow fast motion and stiff constraints | Timestep | [004](../logbook/004-the-detour.md) |
@@ -263,7 +265,7 @@ How things move, collide and stay together.
 | ○ | [Stable Fluids](https://doi.org/10.1145/311535.311548)<br>*Jos Stam, 1999* | Paper | A grid fluid method that stays stable even with large timesteps | Grid fluid (Eulerian), Numerical stability | [004](../logbook/004-the-detour.md) |  |
 | ○ | [Strain Based Dynamics](https://matthias-research.github.io/pages/publications/strainBasedDynamics.pdf)<br>*Matthias Müller, Nuttapong Chentanez, Tae-Yong Kim, Miles Macklin, 2014* | Paper | PBD constraints that control stretching in any direction, not only along the edges of the mesh | Position based dynamics (PBD), Cloth, Soft body | [004](../logbook/004-the-detour.md) |  |
 | ○ | [Ten Minute Physics](https://matthias-research.github.io/pages/tenMinutePhysics/index.html)<br>*Matthias Müller* | Video | Short videos with JavaScript demos: PBD, cloth, soft bodies, fluids, rigid bodies, collisions and the GPU | Position based dynamics (PBD), Cloth, Soft body, Fluid, Rigid body, Broad phase, Parallel work on the GPU | [001](../logbook/001-the-flip-book.md) |  |
-| ○ | [Unified Particle Physics for Real-Time Applications](https://doi.org/10.1145/2601097.2601152)<br>*Miles Macklin, Matthias Müller, Nuttapong Chentanez, Tae-Yong Kim, 2014* | Paper | The paper behind NVIDIA FleX: solids, cloth and fluids as particles and constraints, solved in parallel | Unified particle physics, Position based dynamics (PBD), Two-way coupling, Jacobi, Constraint averaging (mass splitting), Shape matching, Parallel work on the GPU, Sleeping, Stiff stacks (mass scaling), Particle phase, Pre-stabilization, Friction on positions | [004](../logbook/004-the-detour.md) | Parts |
+| ○ | [Unified Particle Physics for Real-Time Applications](https://doi.org/10.1145/2601097.2601152)<br>*Miles Macklin, Matthias Müller, Nuttapong Chentanez, Tae-Yong Kim, 2014* | Paper | The paper behind NVIDIA FleX: solids, cloth and fluids as particles and constraints, solved in parallel | Unified particle physics, Position based dynamics (PBD), Two-way coupling, Jacobi, Constraint averaging (mass splitting), Shape matching, Parallel work on the GPU, Sleeping, Stiff stacks (mass scaling), Particle phase, Pre-stabilization, Friction on positions, Static and kinetic friction, Angle of repose | [004](../logbook/004-the-detour.md) | Parts |
 | ○ | [Unity](https://docs.unity.com/en-us/engine/6000.0/manual/physics-section) | Project | Game engine: PhysX for 3D physics, Box2D for 2D | Physics engine, Entity component system (ECS) | [004](../logbook/004-the-detour.md) |  |
 | ○ | [Unity, Rigidbody](https://docs.unity.com/en-us/engine/6000.7/manual/physics-section/physics-overview/rigidbody/class-rigidbody) | Documentation | The manual page of Unity's rigid body component | Rigid body | [004](../logbook/004-the-detour.md) |  |
 | ○ | [Unity, Rigidbody.inertiaTensor](https://docs.unity.com/en-us/engine/6000.6/script-reference/unityengine/rigidbody/inertiatensor) | Documentation | How Unity exposes a body's inertia tensor, and lets you change it | Inertia tensor | [004](../logbook/004-the-detour.md) |  |
