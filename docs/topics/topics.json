@@ -7076,7 +7076,8 @@
         "docs/logbook/032-two-kinds-of-bounce.md",
         "docs/logbook/033-the-speed-limit.md",
         "docs/decisions/017-a-speed-limit-per-substep.md",
-        "docs/decisions/018-max-speed-in-meters-per-second.md"
+        "docs/decisions/018-max-speed-in-meters-per-second.md",
+        "docs/decisions/019-default-speed-limit.md"
       ],
       "code": ["examples/force-plus/finish-limit.wgsl"]
     },

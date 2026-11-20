@@ -28,8 +28,9 @@ The choices that shape FORCE, one per page: what we decided, why, what we left o
 | 014 | [Damping as a knob, off by default](./014-damping-off-by-default.md) | Accepted | November 19, 2026 |
 | 015 | [Particles pushed apart by moving positions, half and half](./015-half-and-half-on-positions.md) | Accepted | November 20, 2026 |
 | 016 | [Neighbours: a grid, and a list made when needed](./016-a-list-made-when-needed.md) | Accepted | November 20, 2026 |
-| 017 | [A speed limit of one radius per substep](./017-a-speed-limit-per-substep.md) | Accepted | November 20, 2026 |
+| 017 | [A speed limit of one radius per substep](./017-a-speed-limit-per-substep.md) | Superseded by 019 | November 20, 2026 |
 | 018 | [The speed limit, set in m/s](./018-max-speed-in-meters-per-second.md) | Accepted | November 20, 2026 |
+| 019 | [A default speed limit of 1.5 radii per substep](./019-default-speed-limit.md) | Accepted | November 20, 2026 |
 
 ## Rules
 

@@ -30,12 +30,14 @@ With 1 substep the limit works, but every fall slows to 6 m/s, which shows. With
 
 **Faster, at a risk.** The user wanted to be able to ask for more, in m/s, a number people picture ([decision 018](../decisions/018-max-speed-in-meters-per-second.md)). So we measured the risk with 2 substeps, where 12 m/s is safe. Of the 75 drops onto spheres held still, 6 rose above 10 cm at 15 m/s, up to 18 cm, and 16 at 18 m/s, up to 41 cm. With no limit, at 20 m/s, 38 did, up to 22 m. The page's limit now reads "safe (auto)", "in m/s" with a slider, or "off", and always shows the safe value next to it.
 
+**The defaults.** Last, the user chose the defaults of the base simulation: 1 substep, as always, and a limit of 1.5 times the safe one, 9 m/s ([decision 019](../decisions/019-default-speed-limit.md)). Measured the same way, 6 of the 75 drops onto the heap still rise above 10 cm, up to 19 cm, against heap spheres thrown up to 5.9 m with no limit. A fall from 9 m lands at 9 m/s, 80 ms late. The page now starts that way.
+
 ## What we take away
 
 - The safe speed is one radius per substep: radius × steps per second × substeps.
 - Pick the substeps first, then the limit follows. 2 substeps and 12 m/s cost almost nothing to see.
 - Limiting the speed is not the same as limiting its change: the second also stops particles from stopping.
-- The engine takes it, tied to the substeps and on by default ([decision 017](../decisions/017-a-speed-limit-per-substep.md)); a world may ask for more, in m/s, at a risk that grows slowly up to about 1.5 radii per substep.
+- The engine takes it, tied to the substeps and on by default ([decision 017](../decisions/017-a-speed-limit-per-substep.md)); a world may ask for more, in m/s, at a risk that grows slowly up to about 1.5 radii per substep. The default is 1.5 radii with 1 substep.
 
 ## Open questions
 

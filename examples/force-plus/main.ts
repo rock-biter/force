@@ -151,7 +151,9 @@ async function makePipelines(device: GPUDevice) {
 type Pipelines = Awaited<ReturnType<typeof makePipelines>>
 
 /** One radius per substep, in m/s: 6 with 1 substep, 12 with 2, the safe limit (decision 017). */
-const speedLimit = (substeps: number) => (RADIUS * substeps) / STEP
+const safeSpeed = (substeps: number) => (RADIUS * substeps) / STEP
+/** The default limit, as a share of the safe one: 9 m/s with 1 substep (decision 019). */
+const DEFAULT_SHARE = 1.5
 
 /**
  * The particles on the GPU and how to encode one step of them: the step of contact-cost's part 4,
@@ -507,9 +509,8 @@ async function start() {
   const settings = {
     ...FORCE_PLUS,
     levels: 1.5, // a gentler start than decision 015, as in compare's tunable copy
-    // 2 substeps and the safe speed limit stop the splashes of fast particles, at little cost
-    // (chapter 033). The limit is 'auto', the safe one, 'custom', `speed` in m/s, or 'off'.
-    substeps: 2,
+    // The speed limit: 'auto', the default of 1.5 × the safe one, 'safe', 'custom', `speed` in
+    // m/s, or 'off' (decisions 017 to 019). With the default 1 substep, 'auto' is 9 m/s.
     maxSpeed: 'auto',
     speed: 20,
     particles: asked >= 1 && asked <= 100 ? asked * 1000 : 20000,
@@ -520,10 +521,12 @@ async function start() {
   /** The speed limit asked for, in m/s, 0 for none. */
   const maxSpeed = () =>
     settings.maxSpeed === 'auto'
-      ? speedLimit(settings.substeps)
-      : settings.maxSpeed === 'custom'
-        ? settings.speed
-        : 0
+      ? DEFAULT_SHARE * safeSpeed(settings.substeps)
+      : settings.maxSpeed === 'safe'
+        ? safeSpeed(settings.substeps)
+        : settings.maxSpeed === 'custom'
+          ? settings.speed
+          : 0
   let simulation: Simulation | undefined
   let view: ParticleView | undefined
   let paused = false
@@ -561,12 +564,12 @@ async function start() {
   const substeps = solver
     .addBinding(settings, 'substeps', { min: 1, max: MAX_SUBSTEPS, step: 1 })
     .on('change', applySolver)
-  // The speed limit: the safe one by default, one radius per substep; or any speed in m/s, at the
-  // risk of splashes above the safe one (decision 018).
+  // The speed limit: 1.5 × the safe one by default, the safe one, one radius per substep, or any
+  // speed in m/s, at the risk of splashes above the safe one (decisions 017 to 019).
   solver
     .addBinding(settings, 'maxSpeed', {
       label: 'max speed',
-      options: { 'safe (auto)': 'auto', 'in m/s': 'custom', off: 'off' },
+      options: { 'default, 1.5 × safe': 'auto', safe: 'safe', 'in m/s': 'custom', off: 'off' },
     })
     .on('change', () => {
       speed.disabled = settings.maxSpeed !== 'custom'
@@ -579,8 +582,8 @@ async function start() {
   const cap = {
     get value() {
       const now = maxSpeed()
-      const safe = speedLimit(settings.substeps).toFixed(0)
-      return `${now ? `${now.toFixed(0)} m/s` : 'none'}, safe ${safe}`
+      const short = (v: number) => String(Number(v.toFixed(1))) // 7.5, not 7.50; 9, not 9.0
+      return `${now ? `${short(now)} m/s` : 'none'}, safe ${short(safeSpeed(settings.substeps))}`
     },
   }
   solver.addBinding(cap, 'value', { label: 'limit', readonly: true })

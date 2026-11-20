@@ -1,6 +1,6 @@
 # 017 · A speed limit of one radius per substep
 
-*Accepted · November 20, 2026 · The user, after measuring the splashes of fast particles ([chapter 032](../logbook/032-two-kinds-of-bounce.md), [chapter 033](../logbook/033-the-speed-limit.md))*
+*Superseded by [019](./019-default-speed-limit.md) · November 20, 2026 · The user, after measuring the splashes of fast particles ([chapter 032](../logbook/032-two-kinds-of-bounce.md), [chapter 033](../logbook/033-the-speed-limit.md))*
 
 **Decision:** we will cut every particle's speed, at the end of each substep, to one radius per substep, radius × 60 × substeps in m/s, on by default; the position stays where the substep left it.
 

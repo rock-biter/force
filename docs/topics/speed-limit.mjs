@@ -280,21 +280,24 @@ const LIMITS = [
 // ---- part 1: the price, a free fall -------------------------------------------------------------
 // A sphere alone falls from 9 m, the height of the force-plus box, onto the floor. Without a limit
 // it lands after 1.35 s at 13.3 m/s, as √(2 × 9.81 × 8.9) says.
+/** When a sphere alone, falling from 9 m, touches the floor, and how fast it goes then. */
+function fall(substeps, limit) {
+  let state = { x: [[0, 9, 0]], v: [[0, 0, 0]], w: [1], level: [Number.POSITIVE_INFINITY] }
+  let t = 0
+  let speed = 0
+  while (state.x[0][1] > RADIUS + RESTS && t < 600) {
+    speed = -state.v[0][1]
+    for (let k = 0; k < substeps; k++) state = substep(state, STEP / substeps, limit)
+    t++
+  }
+  return `lands after ${(t * STEP).toFixed(2)} s, at ${speed.toFixed(1)} m/s`
+}
 console.log('Part 1. One sphere falls from 9 m onto the floor: when it lands, and how fast.')
 for (const substeps of [1, 2, 4])
-  for (const [name, limit] of LIMITS) {
-    let state = { x: [[0, 9, 0]], v: [[0, 0, 0]], w: [1], level: [Number.POSITIVE_INFINITY] }
-    let t = 0
-    let speed = 0
-    while (state.x[0][1] > RADIUS + RESTS && t < 600) {
-      speed = -state.v[0][1]
-      for (let k = 0; k < substeps; k++) state = substep(state, STEP / substeps, limit)
-      t++
-    }
+  for (const [name, limit] of LIMITS)
     console.log(
-      `  ${substeps} substep${substeps > 1 ? 's' : ' '}, ${name.padEnd(32)}: lands after ${(t * STEP).toFixed(2)} s, at ${speed.toFixed(1)} m/s`,
+      `  ${substeps} substep${substeps > 1 ? 's' : ' '}, ${name.padEnd(32)}: ${fall(substeps, limit)}`,
     )
-  }
 
 // ---- part 2: the splashes ---------------------------------------------------------------------
 console.log('\nPart 2. Rains of 25 spheres of 1 kg, three for each line, 75 drops.')
@@ -326,16 +329,19 @@ for (const [label, make] of SCENES) {
 }
 
 // ---- part 3: asking for more ----------------------------------------------------------------------
-// With 2 substeps the safe limit is 12 m/s, one radius per substep. A world may ask for more, in m/s.
-console.log('\nPart 3. 2 substeps, the max speed set in m/s, above the safe 12 m/s.')
-for (const [label, make] of SCENES) {
-  console.log(label)
-  for (const most of [12, 15, 18, Number.POSITIVE_INFINITY]) {
+// A world may ask for more than the safe limit, one radius per substep, in m/s (decision 018). Here
+// as a share of the safe limit: 1.5 is the default of decision 019.
+console.log('\nPart 3. The max speed above the safe one, one radius per substep.')
+for (const substeps of [1, 2]) {
+  console.log(`${substeps} substep${substeps > 1 ? 's' : ''}, safe ${speedOf(substeps)} m/s`)
+  for (const share of [1, 1.25, 1.5, Number.POSITIVE_INFINITY]) {
+    const most = share * speedOf(substeps)
     const limit = Number.isFinite(most) ? { speed: () => most } : {}
-    const name = Number.isFinite(most)
-      ? `${most} m/s, ${(most / speedOf(2)).toFixed(2)} radii per substep`
-      : 'no limit'
-    const runs = [7, 8, 9].map((seed) => run(() => make(seed), 2, limit))
-    report(`  ${name.padEnd(34)}`, runs)
+    const name = Number.isFinite(most) ? `${most} m/s, ${share} × safe` : 'no limit'
+    console.log(`  ${name}, a fall from 9 m ${fall(substeps, limit)}`)
+    for (const [label, make] of SCENES) {
+      const runs = [7, 8, 9].map((seed) => run(() => make(seed), substeps, limit))
+      report(`    ${label.padEnd(36)}`, runs)
+    }
   }
 }

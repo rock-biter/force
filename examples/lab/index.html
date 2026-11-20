@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>FORCE: lab</title>
+    <meta
+      name="description"
+      content="The pages we use while we build FORCE: measurements and tests that print numbers, each one told in a chapter of the logbook, and the demos."
+    />
+    <link rel="stylesheet" href="../site.css" />
+  </head>
+  <body>
+    <main class="column prose">
+      <nav class="crumb"><a href="../">← FORCE</a> · lab</nav>
+
+      <h1>Lab</h1>
+      <p>
+        The pages we use while we build FORCE. Most of them are not demos: they measure something,
+        such as how long it takes to start a job on the GPU, or check that the GPU gives the same
+        result as the same algorithm written in JavaScript. They print numbers rather than draw.
+        Each one belongs to a chapter of the logbook, where those numbers are told and explained.
+        They stay online as they were, so anyone can run them again on their own device.
+      </p>
+      <p class="note">They run in a browser with WebGPU support.</p>
+
+      <h2>Measurements and tests</h2>
+      <ul>
+        <li>
+          <a href="../hello-compute/">hello-compute</a>: one compute shader, nothing else ·
+          logbook <a href="../logbook/#000-the-launch">000</a>
+        </li>
+        <li>
+          <a href="../falling-particles/">falling-particles</a>: the first world, printed as numbers
+          and checked against JavaScript · logbook <a href="../logbook/#008-the-first-loop">008</a>
+        </li>
+        <li>
+          <a href="../pipeline-creation/">pipeline-creation</a>: creating a pipeline now or waiting
+          for it, timed ·
+          <a
+            href="https://github.com/rock-biter/force/blob/main/docs/guides/pipeline-creation.md"
+            target="_blank"
+            rel="noopener"
+            >guide ↗</a
+          >
+        </li>
+        <li>
+          <a href="../dispatch-cost/">dispatch-cost</a>: what one more dispatch costs, timed ·
+          logbook <a href="../logbook/#020-a-cheap-launch">020</a>,
+          <a href="../logbook/#022-the-bell-that-rang-early">022</a>
+        </li>
+        <li>
+          <a href="../round-trip/">round-trip</a>: a trip from the GPU to JavaScript, timed ·
+          logbook <a href="../logbook/#021-a-short-trip">021</a>,
+          <a href="../logbook/#022-the-bell-that-rang-early">022</a>
+        </li>
+        <li>
+          <a href="../turn-sorting/">turn-sorting</a>: sorting contacts into turns in JavaScript,
+          timed · logbook <a href="../logbook/#023-the-first-free-turn">023</a>
+        </li>
+        <li>
+          <a href="../contact-cost/">contact-cost</a>: finding and pushing apart the particles that
+          touch, on the GPU, timed · logbook <a href="../logbook/#030-the-lazy-list">030</a>
+        </li>
+      </ul>
+
+      <h2>Demos</h2>
+      <p>The pages that draw, also listed on the <a href="../#examples">home page</a>.</p>
+      <ul>
+        <li>
+          <a href="../force-plus/">force-plus</a>: up to 100 000 particles pushed apart on the GPU,
+          live, and pushed away by the pointer · logbook
+          <a href="../logbook/#031-the-yellow-ball">031</a>,
+          <a href="../logbook/#032-two-kinds-of-bounce">032</a>,
+          <a href="../logbook/#033-the-speed-limit">033</a>
+        </li>
+        <li>
+          <a href="../compare/">compare</a>: every way of pushing particles apart we studied, side
+          by side, live · logbook <a href="../logbook/#031-the-yellow-ball">031</a>
+        </li>
+        <li>
+          <a href="../fountain/">fountain</a>: particles under gravity, in the debug viewer · logbook
+          <a href="../logbook/#009-the-first-picture">009</a>,
+          <a href="../logbook/#010-the-ground">010</a>
+        </li>
+      </ul>
+    </main>
+  </body>
+</html>

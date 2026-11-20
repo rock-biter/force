@@ -13,7 +13,8 @@
   <body>
     <main class="column prose">
       <nav>
-        <a href="#examples">examples</a>
+        <a href="#examples">demos</a>
+        <a href="./lab/">lab</a>
         <a href="./logbook/">logbook</a>
         <a href="./topic-map/">topic map</a>
         <a href="https://github.com/rock-biter/force" target="_blank" rel="noopener">GitHub ↗</a>
@@ -24,24 +25,17 @@
 
       <!-- home.ts moves these two sections up, right after the first section of the README. -->
       <section id="examples">
-        <h2>Examples</h2>
+        <h2>Demos</h2>
         <p class="note">They run in a browser with WebGPU support.</p>
         <ul>
           <li><a href="./force-plus/">force-plus</a>: up to 100 000 particles pushed apart on the GPU, live, and pushed away by the pointer</li>
           <li><a href="./compare/">compare</a>: every way of pushing particles apart we studied, side by side, live</li>
           <li><a href="./fountain/">fountain</a>: particles under gravity, in the debug viewer</li>
-          <li>
-            <a href="./falling-particles/">falling-particles</a>: the first world, printed as numbers
-          </li>
-          <li><a href="./hello-compute/">hello-compute</a>: one compute shader, nothing else</li>
-          <li>
-            <a href="./pipeline-creation/">pipeline-creation</a>: immediate against async, timed
-          </li>
-          <li><a href="./dispatch-cost/">dispatch-cost</a>: what one more dispatch costs, timed</li>
-          <li><a href="./round-trip/">round-trip</a>: a trip from the GPU to JavaScript, timed</li>
-          <li><a href="./turn-sorting/">turn-sorting</a>: sorting contacts into turns in JavaScript, timed</li>
-          <li><a href="./contact-cost/">contact-cost</a>: finding and pushing apart the particles that touch, on the GPU, timed</li>
         </ul>
+        <p>
+          The measurements and tests we run while we build, which print numbers rather than draw,
+          are in the <a href="./lab/">lab</a>.
+        </p>
       </section>
       <section id="topic-map">
         <h2>Topic map</h2>
