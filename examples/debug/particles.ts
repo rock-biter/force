@@ -65,6 +65,12 @@ export interface ParticleViewOptions {
    * given, red at the heaviest. When both are the same, every particle is light blue.
    */
   massRange?: readonly [lightest: number, heaviest: number]
+  /**
+   * 'sphere', the default, shades each disc as a round sphere and writes the sphere's depth.
+   * 'flat' is the cheapest drawing we could think of, to see what the spheres cost: a disc with a
+   * diagonal gradient, at the depth of its flat triangle.
+   */
+  look?: 'sphere' | 'flat'
 }
 
 /** The particles of one world, drawn straight from its GPU buffer. */
@@ -122,6 +128,19 @@ export class ParticleView {
 
     this.material = new MeshBasicNodeMaterial()
     this.material.vertexNode = cameraProjectionMatrix.mul(vec4(viewCorner, 1))
+    if (options.look === 'flat') {
+      // No normal, no light, no depth of its own: lighter toward the top right, darker toward the
+      // bottom left, which is enough to read the discs as round.
+      this.material.colorNode = Fn(() => {
+        If(dot(disc, disc).greaterThan(1), () => {
+          Discard()
+        })
+        return vec4(tint.mul(disc.x.add(disc.y).mul(0.2).add(0.8)), 1)
+      })()
+      this.mesh = new Mesh(this.geometry, this.material)
+      this.mesh.frustumCulled = false
+      return
+    }
     this.material.colorNode = Fn(() => {
       If(dot(disc, disc).greaterThan(1), () => {
         Discard() // outside the disc: this pixel was only part of the triangle

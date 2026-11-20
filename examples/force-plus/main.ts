@@ -53,7 +53,7 @@ const CELL = DIAMETER // a cell as wide as a particle (chapter 024)
 const PLACES = 4 // per cell (decision 016)
 const STEP = 1 / 60 // seconds
 const GRAVITY = 9.81
-const ROUNDS = 8 // decision 015
+const ROUNDS = 6 // decision 015 says 8: fewer here, to see what a step gains and a heap loses
 const MARGIN = 0.05 // the lists look 5 cm beyond touching (decision 016)
 const MAX_NEIGHBOURS = 32 // as in list.wgsl
 const NO_LEVEL = 0xffffffff
@@ -68,7 +68,7 @@ const BALL_GROWTH = 8 // m/s: how fast its radius grows or shrinks
 const MAX_STEPS_PER_FRAME = 2
 const MAX_SUBSTEPS = 8
 const SAMPLE_EVERY = 30 // frames between two readings of the GPU's numbers
-const FORCE_PLUS = { alpha: 0.5, levels: 2, substeps: 1 } // decision 015: 8 rounds per step
+const FORCE_PLUS = { alpha: 0.5, levels: 2, substeps: 1 } // decision 015, but for its 8 rounds: see ROUNDS
 // The choices of the masses menu: the lightest and the heaviest, in kg. Only their ratio changes
 // what the solver does: gravity pulls every mass alike, and a contact shares by w_i / (w_i + w_j).
 const MASSES: Record<string, readonly [number, number]> = {
@@ -509,7 +509,10 @@ async function start() {
 
   // ---- the simulation and the panel ----------------------------------------------------------------
   // ?particles=20000 in the address starts with that many, in thousands from 1000 to 100 000.
-  const asked = Math.round(Number(new URLSearchParams(location.search).get('particles')) / 1000)
+  // ?draw=flat or ?draw=none starts with the cheap discs, or with no particles drawn at all.
+  const query = new URLSearchParams(location.search)
+  const asked = Math.round(Number(query.get('particles')) / 1000)
+  const askedDraw = query.get('draw')
   const settings = {
     // FORCE+ ('plus') or FORCE ('force'): the same rule, with α = 1 and c = 0
     method: 'plus',
@@ -521,6 +524,9 @@ async function start() {
     speed: 20,
     particles: asked >= 1 && asked <= 100 ? asked * 1000 : 20000,
     masses: '1 to 100 kg',
+    // How the particles are drawn: as shaded spheres with their own depth, as flat discs, or not
+    // at all, to see how much of a frame goes into drawing them.
+    draw: askedDraw === 'flat' || askedDraw === 'none' ? askedDraw : 'spheres',
     ball: BALL_RADIUS,
   }
   const stats = { gpu: Number.NaN, lists: Number.NaN }
@@ -542,17 +548,27 @@ async function start() {
   let owed = 0 // simulated time the steps still owe to real time
   let lastReading: { lists: number; steps: number } | undefined
 
-  function restart() {
+  /** Draws the same simulation again, in the way the panel asks. */
+  function redraw() {
     if (view) {
       scene.remove(view.mesh)
       view.dispose()
+      view = undefined
     }
+    if (!simulation || settings.draw === 'none') return
+    view = new ParticleView(renderer, simulation, {
+      massRange: MASSES[settings.masses],
+      look: settings.draw === 'flat' ? 'flat' : 'sphere',
+    })
+    scene.add(view.mesh)
+  }
+
+  function restart() {
     simulation?.destroy()
     const masses = MASSES[settings.masses]
     simulation = makeSimulation(device, kit, pointerBuffer, settings.particles, masses)
     simulation.setSolver(solverAlpha(), solverLevels(), settings.substeps, maxSpeed())
-    view = new ParticleView(renderer, simulation, { massRange: masses })
-    scene.add(view.mesh)
+    redraw()
     owed = 0
     lastReading = undefined
     stats.lists = Number.NaN
@@ -576,7 +592,7 @@ async function start() {
   const levels = solver
     .addBinding(settings, 'levels', { label: 'c', min: 0, max: 4, step: 0.25 })
     .on('change', applySolver)
-  // Each substep has its own 8 rounds, so a step costs about as many times more.
+  // Each substep has its own rounds, so a step costs about as many times more.
   const substeps = solver
     .addBinding(settings, 'substeps', { min: 1, max: MAX_SUBSTEPS, step: 1 })
     .on('change', applySolver)
@@ -624,6 +640,11 @@ async function start() {
       options: Object.fromEntries(Object.keys(MASSES).map((label) => [label, label])),
     })
     .on('change', restart)
+  particles
+    .addBinding(settings, 'draw', {
+      options: { spheres: 'spheres', 'flat discs': 'flat', nothing: 'none' },
+    })
+    .on('change', redraw)
   const buttons = particles.addBlade({
     view: 'buttongrid',
     size: [2, 1],
