@@ -5,8 +5,8 @@
 Everything we have met while building FORCE, concepts and sources, and how far we went with each
 one. Use it to look up a term, to find what to read, or to pick what to explore next.
 
-- **263 concepts:** ● 24 studied · ◐ 133 seen · ○ 106 mentioned
-- **146 sources:** ● 15 studied · ◐ 16 seen · ○ 115 mentioned · read by Claude: 69 parts, 15 in full
+- **264 concepts:** ● 24 studied · ◐ 136 seen · ○ 104 mentioned
+- **147 sources:** ● 15 studied · ◐ 16 seen · ○ 116 mentioned · read by Claude: 70 parts, 15 in full
 
 | | Status | What it means |
 | --- | --- | --- |
@@ -157,7 +157,7 @@ How things move, collide and stay together.
 | ◐ | Soft constraint | A constraint allowed to give a little, like a spring with a damper, instead of being perfectly rigid | Constraint | [Solver2D](https://box2d.org/posts/2024/02/solver2d/) |
 | ● | **[Soft Step](soft-step.md)** | The solver of Box2D since version 3: every rule is a stiff spring, solved once in each of a few substeps, with a relax pass | Solver | [004](../logbook/004-the-detour.md) |
 | ◐ | Solver | The part of the engine that corrects velocities so constraints are obeyed | Simulation step | [001](../logbook/001-the-flip-book.md) |
-| ○ | Spatial hashing | A uniform grid stored in a hash table, so it can cover endless space with little memory | Broad phase | [004](../logbook/004-the-detour.md) |
+| ◐ | Spatial hashing | A uniform grid stored in a hash table, so it can cover endless space with little memory | Broad phase | [004](../logbook/004-the-detour.md) |
 | ◐ | Speculative contact | A contact kept before the bodies touch: it only removes the speed that would make them overlap within the step | Contact | [Box2D, contact_solver.c](https://github.com/erincatto/box2d/blob/main/src/contact_solver.c) |
 | ◐ | Speed limit | A cap on how fast a particle goes, or on how fast its speed can change, so that a deep overlap cannot throw it: FleX calls them maxSpeed and maxAcceleration |  | [FleX, NvFlex.h](https://github.com/NVIDIAGameWorks/FleX/blob/master/include/NvFlex.h) |
 | ○ | SPH | Smoothed particle hydrodynamics: a fluid's density and pressure at each particle, estimated from its neighbours | Fluid | [004](../logbook/004-the-detour.md) |
@@ -245,6 +245,7 @@ How things move, collide and stay together.
 | ○ | [NVIDIA PhysX](https://developer.nvidia.com/physx-sdk) | Project | NVIDIA's physics SDK: rigid bodies, particles and soft bodies, partly accelerated on the GPU with CUDA | Rigid body, Parallel work on the GPU, TGS solver, Finite element method (FEM), Constraint graph coloring, Mass splitting | [004](../logbook/004-the-detour.md) |  |
 | ○ | [O3DE](https://o3de.org/) | Project | Open 3D Engine, an open source game engine that uses PhysX | Physics engine | [004](../logbook/004-the-detour.md) |  |
 | ○ | [Open Dynamics Engine](https://www.ode.org/)<br>*Russell Smith* | Project | The open source engine by Russell Smith whose velocity based formulation Catto follows | Velocity constraint, Rigid body, Joint | [Iterative Dynamics with Temporal Coherence](https://box2d.org/files/ErinCatto_IterativeDynamics_GDC2005.pdf) |  |
+| ○ | [Optimized Spatial Hashing for Collision Detection of Deformable Objects](https://matthias-research.github.io/pages/publications/tetraederCollision.pdf)<br>*Matthias Teschner, Bruno Heidelberger, Matthias Müller, Danat Pomeranets, Markus Gross, 2003* | Paper | A grid of endless space kept in a small hash table: the hash of a cell from three primes, and how to choose the table and cell sizes | Spatial hashing, Uniform grid | [036](../logbook/036-the-address-book.md) | Parts |
 | ○ | [Particle-Based Fluid Simulation for Interactive Applications](https://matthias-research.github.io/pages/publications/sca03.pdf)<br>*Matthias Müller et al., 2003* | Paper | SPH fluids fast enough for interactive use | SPH | [004](../logbook/004-the-detour.md) |  |
 | ○ | [Physically Based Modeling: Principles and Practice](https://www.cs.cmu.edu/~baraff/sigcourse/)<br>*Andrew Witkin, David Baraff, 1997* | Course | The classic SIGGRAPH course notes: particles, rigid bodies, constraints and implicit methods | Particle, Rigid body, Constraint, Integration, Implicit integration, Inertia tensor, Angular momentum | [001](../logbook/001-the-flip-book.md) | Parts |
 | ○ | [PhysX, GPU simulation](https://nvidia-omniverse.github.io/PhysX/physx/5.6.1/docs/GPURigidBodies.html) | Documentation | Which parts of PhysX run on the GPU with CUDA | Parallel work on the GPU, Rigid body | [004](../logbook/004-the-detour.md) | Parts |
@@ -318,6 +319,7 @@ WebGPU, WGSL and how to make thousands of threads work.
 | ○ | Const-expression | An expression the compiler can evaluate while compiling the shader, such as 2 * 3 or vec3(1, 2, 3) | WGSL | [WGSL specification, §7.2 Value Declarations](https://www.w3.org/TR/WGSL/#value-decls) |
 | ◐ | Constraint graph coloring | Splitting constraints into groups that share no body, so each group can be solved in parallel |  | [004](../logbook/004-the-detour.md) |
 | ○ | Constructible type | A type whose values can be created, copied and passed around: scalars, vectors, matrices, fixed-size arrays and structs made of them | WGSL | [WGSL specification, §7.2 Value Declarations](https://www.w3.org/TR/WGSL/#value-decls) |
+| ◐ | Counting sort | Sorting by a small key without comparing: count how many have each key, sum the counts to find where each key's part begins, then drop every item into its part |  | [036](../logbook/036-the-address-book.md) |
 | ◐ | Device limits | What a given GPU guarantees, such as buffer sizes and workgroup memory: to check before choosing a pipeline | WebGPU | [004](../logbook/004-the-detour.md) |
 | ◐ | Device loss | The browser can take the GPU back at any time: every buffer and pipeline, and the data in them, must then be created again | Adapter and device | [adapter-and-device](../guides/adapter-and-device.md) |
 | ○ | Dynamic offset | A buffer slot whose starting byte is given at setBindGroup() instead of when the bind group is made, so one bind group can serve many ranges of one buffer | Bind group | [WebGPU specification, §14.1 Bind Groups](https://www.w3.org/TR/webgpu/#programmable-passes-bind-groups) |
@@ -348,7 +350,7 @@ WebGPU, WGSL and how to make thousands of threads work.
 | ◐ | Ping-pong buffers | Two buffers that take turns: each pass reads one and writes the other, so no thread reads a value while another changes it, like two render targets swapped every frame |  | [030](../logbook/030-the-lazy-list.md) |
 | ○ | Pipeline constant ID | The @id(n) attribute gives an override a number, and JavaScript then sets it by that number and not by its name | Override constant | [WGSL specification, §7.2 Value Declarations](https://www.w3.org/TR/WGSL/#value-decls) |
 | ◐ | Pipeline layout | Which buffers a pipeline expects and in which slots. 'auto' works it out from the shader, but its bind groups then work with that pipeline only; one made by hand with createPipelineLayout() can be given to several pipelines, which then share bind groups | Compute pipeline | [pipelines](../guides/pipelines.md) |
-| ○ | Prefix sum (scan) | Turning a list of counts into running totals, in parallel: the GPU's way of packing results |  | [004](../logbook/004-the-detour.md) |
+| ◐ | Prefix sum (scan) | Turning a list of counts into running totals: each entry becomes the sum of all those before it. On the GPU it is made in blocks |  | [004](../logbook/004-the-detour.md) |
 | ○ | Private variable | A var<private>: a global variable of which every thread gets its own separate copy | Address space | [WGSL specification, §7.3 var Declarations](https://www.w3.org/TR/WGSL/#var-decls) |
 | ● | **[Readback](../guides/readback.md)** | Copying results from the GPU back into JavaScript: a copy into a buffer that can be mapped, then a promise that resolves when the GPU has finished with it | WebGPU | [guides index](../guides/README.md) |
 | ○ | References and pointers | A variable is a reference to memory, typed ref<address space, type, access mode>: reading it is a load, assigning to it a store, and & turns it into a pointer. Values have no memory, so no pointer | WGSL | [WGSL specification, §7.2 Value Declarations](https://www.w3.org/TR/WGSL/#value-decls) |

@@ -16,15 +16,13 @@ documentation of the library will live there too.
 
 *Updated November 20, 2026*
 
-**Latest step:** [a box that tilts](./docs/logbook/035-the-grid-stays-still.md). Our particles now
-have friction, so a heap stands in a pile instead of flowing like a liquid
-([how](./docs/logbook/034-the-box-on-the-ramp.md)). On a new live page
-([try it](https://rock-biter.github.io/force/force-tilt/)) you can tilt their box by up to 30
-degrees and watch the pile hold, then slide. Getting there taught us to keep the grid that finds
-neighbouring particles fixed in the world, and to let the box turn inside it.
+**Latest step:** [the address book](./docs/logbook/036-the-address-book.md). To find which particles
+touch, we drop them into a grid of small cells with four places each. In a pile under pressure
+that loses particles: 23 000 of 100 000 in the corner of a tilted box
+([try it](https://rock-biter.github.io/force/force-tilt/)). We built two other ways on the GPU that
+lose none, one of them with 1 MB of memory instead of 78, and both a little slower.
 
-**Next:** a better way to find which particles are near each other, without the limit of four per
-cell of today's grid.
+**Next:** choose which of the three the engine keeps, with more measures and a phone.
 
 Every step, with what we learned and what went wrong, is in the [logbook](./docs/README.md).
 

@@ -16,5 +16,7 @@ fn main(@builtin(global_invocation_id) id: vec3u) {
   let place = atomicAdd(&counts[cell], 1u);
   if (place < params.places) {
     places[cell * params.places + place] = i;
+  } else {
+    atomicAdd(&control[5], 1u); // the cell is full: nobody will find this particle
   }
 }

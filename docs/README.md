@@ -42,6 +42,7 @@ This is where we tell how FORCE gets built, one step at a time. If you are new h
 | 033 | [The Speed Limit](./logbook/033-the-speed-limit.md) | No particle faster than one radius per substep: 2 substeps and 12 m/s stop the splashes at almost no cost |
 | 034 | [The Box on the Ramp](./logbook/034-the-box-on-the-ramp.md) | Friction by moving positions: exact on a slope, piles stand and the skating stops, but the slope of a pile changes with the substeps |
 | 035 | [The Grid Stays Still](./logbook/035-the-grid-stays-still.md) | A box that tilts: turning gravity instead made the corners explode, so the grid stays fixed and the box turns inside it |
+| 036 | [The Address Book](./logbook/036-the-address-book.md) | Four places per cell lose particles under pressure; a list sorted by cell loses none, and a hashed table gives it 1 MB instead of 78, read slower |
 
 ## For reference
 

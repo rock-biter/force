@@ -47,6 +47,14 @@ import rebuildCode from '../contact-cost/rebuild.wgsl?raw'
 import watchCode from '../contact-cost/watch.wgsl?raw'
 import { ParticleView } from '../debug/particles.js'
 import { showError } from '../debug/viewer.js'
+import bookBlocksCode from './book-blocks.wgsl?raw'
+import bookCountCode from './book-count.wgsl?raw'
+import bookEndsCode from './book-ends.wgsl?raw'
+import bookFillCode from './book-fill.wgsl?raw'
+import bookListCode from './book-list.wgsl?raw'
+import bookScanCode from './book-scan.wgsl?raw'
+import cellsGridCode from './cells-grid.wgsl?raw'
+import cellsTableCode from './cells-table.wgsl?raw'
 import finishLimitCode from './finish-limit.wgsl?raw'
 import roundPushCode from './round-push.wgsl?raw'
 
@@ -58,10 +66,11 @@ const CELL = DIAMETER // a cell as wide as a particle (chapter 024)
 const PLACES = 4 // per cell (decision 016)
 const STEP = 1 / 60 // seconds
 const GRAVITY = 9.81
-const ROUNDS = 6 // decision 015 says 8: fewer here, to see what a step gains and a heap loses
+const ROUNDS = 6 // decision 022
 const MARGIN = 0.05 // the lists look 5 cm beyond touching (decision 016)
 const MAX_NEIGHBOURS = 32 // as in list.wgsl
 const NO_LEVEL = 0xffffffff
+const BLOCK = 512 // cells per block of the prefix sum, as in book-blocks.wgsl
 const HALF = 12 // the box is 24 m by 24 m on the floor...
 const SIZE: Vec3 = [120, 45, 120] // ...and 9 m tall: 120 by 45 by 120 cells of 20 cm
 const MAX_TILT = 30 // degrees, around X and around Z, on the page that tilts the box
@@ -75,7 +84,7 @@ const BALL_GROWTH = 8 // m/s: how fast its radius grows or shrinks
 const MAX_STEPS_PER_FRAME = 2
 const MAX_SUBSTEPS = 8
 const SAMPLE_EVERY = 30 // frames between two readings of the GPU's numbers
-const FORCE_PLUS = { alpha: 0.5, levels: 2, substeps: 1 } // decision 015, but for its 8 rounds: see ROUNDS
+const FORCE_PLUS = { alpha: 0.5, levels: 2, substeps: 1 } // decisions 015 and 022
 // The choices of the masses menu: the lightest and the heaviest, in kg. Only their ratio changes
 // what the solver does: gravity pulls every mass alike, and a contact shares by w_i / (w_i + w_j).
 const MASSES: Record<string, readonly [number, number]> = {
@@ -142,7 +151,7 @@ async function makePipelines(device: GPUDevice) {
       layout: 'auto',
       compute: { module: device.createShaderModule({ code: commonCode + code }) },
     })
-  const [predict, watch, clearIf, gridIf, list, levels, round, finish] = await Promise.all(
+  const [predict, watch, clearIf, gridIf, list, levels, round, finish, ...book] = await Promise.all(
     [
       predictCode,
       watchCode,
@@ -152,9 +161,38 @@ async function makePipelines(device: GPUDevice) {
       levelsListCode,
       roundPushCode,
       finishLimitCode,
+      // the address book: the particles sorted by cell, instead of 4 places per cell
+      rebuildCode + bookBlocksCode,
+      rebuildCode + bookScanCode,
+      rebuildCode + bookEndsCode,
+      // its three shaders that file a particle under its cell, once with a slot per cell of the
+      // grid and once with the slots of a table
+      ...[cellsGridCode, cellsTableCode].flatMap((cellsCode) =>
+        [bookCountCode, bookFillCode, bookListCode].map((code) => rebuildCode + cellsCode + code),
+      ),
     ].map(make),
   )
-  return { predict, watch, clearIf, gridIf, list, levels, round, finish }
+  const [bookBlocks, bookScan, bookEnds, ...filed] = book
+  const filing = (k: number) => ({
+    bookCount: filed[3 * k],
+    bookFill: filed[3 * k + 1],
+    bookList: filed[3 * k + 2],
+  })
+  return {
+    predict,
+    watch,
+    clearIf,
+    gridIf,
+    list,
+    levels,
+    round,
+    finish,
+    bookBlocks,
+    bookScan,
+    bookEnds,
+    byGrid: filing(0),
+    byTable: filing(1),
+  }
 }
 type Pipelines = Awaited<ReturnType<typeof makePipelines>>
 
@@ -168,6 +206,14 @@ interface Grid {
   origin: Vec3
   size: Vec3
 }
+/**
+ * How the grid keeps its particles. 'places': 4 places per cell, and a particle that finds its cell
+ * full is left out (decision 016). 'book': one list of all the particles sorted by cell, the
+ * address book of chapter 024, where a cell is never full, with a slot for every cell of the grid.
+ * 'table': the same book with the slots of a table, about two per particle, shared by all the
+ * cells of a space with no border (spatial hashing).
+ */
+type Cells = 'places' | 'book' | 'table'
 /** The grid the level box fills exactly. */
 const LEVEL_GRID: Grid = { origin: [-HALF, 0, -HALF], size: SIZE }
 
@@ -213,6 +259,7 @@ function makeSimulation(
   masses: readonly [number, number],
   grid: Grid,
   box: Matrix4,
+  cells: Cells,
 ) {
   // The cube stands on the floor of the box, wherever the box is turned.
   const start = cube(count, masses)
@@ -222,7 +269,12 @@ function makeSimulation(
     start.set(point.toArray(), i * 4)
   }
   const bytes = start.byteLength
-  const cellCount = grid.size[0] * grid.size[1] * grid.size[2]
+  // The slots that count particles: one per cell of the grid, or those of the table, the first
+  // power of two that gives at least two per particle.
+  const cellCount =
+    cells === 'table'
+      ? 2 ** Math.ceil(Math.log2(Math.max(2 * count, 1024)))
+      : grid.size[0] * grid.size[1] * grid.size[2]
   const buffers: GPUBuffer[] = []
   const storage = (size: number, extra = 0) => {
     const buffer = device.createBuffer({
@@ -236,11 +288,19 @@ function makeSimulation(
   const velocities = storage(bytes)
   const predicted = [storage(bytes), storage(bytes)]
   const counts = storage(cellCount * 4)
-  const places = storage(cellCount * PLACES * 4)
+  // 4 places per cell, or the address book: a row per particle, where each cell's rows begin, and
+  // the sums of the blocks the prefix sum is made in
+  const blockCount = Math.ceil(cellCount / BLOCK)
+  const places = storage(cells === 'places' ? cellCount * PLACES * 4 : 4)
+  const booked = cells !== 'places'
+  const book = storage(booked ? count * 4 : 4)
+  const starts = storage(booked ? cellCount * 4 : 4)
+  const blocks = storage(booked ? blockCount * 4 : 4)
+  const file = cells === 'table' ? kit.byTable : kit.byGrid
   const levels = [storage(count * 4), storage(count * 4)]
   const planes = storage(PLANES.length * 16)
-  const neighbours = storage(count * MAX_NEIGHBOURS * 4)
-  const neighbourCounts = storage(count * 4)
+  const neighbours = storage(count * MAX_NEIGHBOURS * 4, GPUBufferUsage.COPY_SRC)
+  const neighbourCounts = storage(count * 4, GPUBufferUsage.COPY_SRC)
   const anchors = storage(bytes)
   const control = storage(32, GPUBufferUsage.COPY_SRC) // see rebuild.wgsl
   const params = device.createBuffer({
@@ -284,6 +344,24 @@ function makeSimulation(
     neighbourCounts,
     anchors,
   ])
+  const bookGroups = {
+    count: group(file.bookCount, [params, predicted[0], counts, control]),
+    blocks: group(kit.bookBlocks, [params, control, counts, blocks]),
+    scan: group(kit.bookScan, [params, control, blocks]),
+    ends: group(kit.bookEnds, [params, control, counts, blocks, starts]),
+    fill: group(file.bookFill, [params, predicted[0], starts, book, control]),
+    list: group(file.bookList, [
+      params,
+      predicted[0],
+      counts,
+      starts,
+      control,
+      neighbours,
+      neighbourCounts,
+      anchors,
+      book,
+    ]),
+  }
   // µ, the friction of round-push.wgsl: 4 bytes, in a buffer of the usual 16.
   const rub = device.createBuffer({
     size: 16,
@@ -333,6 +411,7 @@ function makeSimulation(
   ])
   const workgroups = Math.ceil(count / 64)
   const cellWorkgroups = Math.ceil(cellCount / 64)
+  const blockWorkgroups = Math.ceil(blockCount / 64)
   let parity = 0
   let substeps = 1
   let levelsOn = true // the levels pass runs only when the rounds read the levels, c > 0
@@ -342,6 +421,8 @@ function makeSimulation(
     radius: RADIUS,
     positionBuffer: positions,
     control,
+    neighbours,
+    neighbourCounts,
     substepCount: 0,
 
     get substeps() {
@@ -349,7 +430,7 @@ function makeSimulation(
     },
 
     /**
-     * One step of 1/60 s, cut into substeps. Each one: predict, the list if needed, the levels, 8
+     * One step of 1/60 s, cut into substeps. Each one: predict, the list if needed, the levels, 6
      * rounds with the ball, finish. Before each substep its own ball is copied from `path`, from
      * entry `from` on, into the Pointer uniform. With a `clock`, the GPU clock is read when the
      * first substep starts and when the last one ends.
@@ -379,8 +460,17 @@ function makeSimulation(
         dispatch(kit.predict, predictGroup)
         dispatch(kit.watch, watchGroup)
         dispatch(kit.clearIf, clearGroup, cellWorkgroups)
-        dispatch(kit.gridIf, gridGroup)
-        dispatch(kit.list, listGroup)
+        if (cells === 'places') {
+          dispatch(kit.gridIf, gridGroup)
+          dispatch(kit.list, listGroup)
+        } else {
+          dispatch(file.bookCount, bookGroups.count)
+          dispatch(kit.bookBlocks, bookGroups.blocks, blockWorkgroups)
+          dispatch(kit.bookScan, bookGroups.scan, 1)
+          dispatch(kit.bookEnds, bookGroups.ends, blockWorkgroups)
+          dispatch(file.bookFill, bookGroups.fill)
+          dispatch(file.bookList, bookGroups.list)
+        }
         if (levelsOn) dispatch(kit.levels, levelGroups[parity])
         for (let r = 0; r < ROUNDS; r++) dispatch(kit.round, roundGroups[parity][r % 2])
         dispatch(kit.finish, finishGroup)
@@ -633,9 +723,14 @@ async function start() {
     // How the particles are drawn: as shaded spheres with their own depth, as flat discs, or not
     // at all, to see how much of a frame goes into drawing them.
     draw: askedDraw === 'flat' || askedDraw === 'none' ? askedDraw : 'spheres',
+    // How the grid keeps its particles: 4 places per cell, the address book, or the address book
+    // with a table. ?cells=book or ?cells=table
+    cells: (['book', 'table'].includes(query.get('cells') ?? '')
+      ? query.get('cells')
+      : 'places') as Cells,
     ball: BALL_RADIUS,
   }
-  const stats = { gpu: Number.NaN, lists: Number.NaN }
+  const stats = { gpu: Number.NaN, lists: Number.NaN, crowded: Number.NaN, leftOut: Number.NaN }
   /** α and c as the solver sees them: FORCE uses the real masses and no levels. */
   const solverAlpha = () => (settings.method === 'plus' ? settings.alpha : 1)
   const solverLevels = () => (settings.method === 'plus' ? settings.levels : 0)
@@ -654,7 +749,7 @@ async function start() {
   let view: ParticleView | undefined
   let paused = false
   let owed = 0 // simulated time the steps still owe to real time
-  let lastReading: { lists: number; steps: number } | undefined
+  let lastReading: { lists: number; steps: number; crowded: number; leftOut: number } | undefined
 
   /** Draws the same simulation again, in the way the panel asks. */
   function redraw() {
@@ -682,13 +777,14 @@ async function start() {
       masses,
       grid,
       world.matrixWorld,
+      settings.cells,
     )
     simulation.setBox(world.quaternion)
     applySolver()
     redraw()
     owed = 0
     lastReading = undefined
-    stats.lists = Number.NaN
+    stats.lists = stats.crowded = stats.leftOut = Number.NaN
   }
   // The box as it is turned now, in degrees. It follows the sliders at TILT_SPEED, not at once: a
   // floor that jumped by one degree would move 21 cm at its edge, more than a particle's radius.
@@ -779,6 +875,17 @@ async function start() {
       options: Object.fromEntries(Object.keys(MASSES).map((label) => [label, label])),
     })
     .on('change', restart)
+  // A new way to keep the grid builds everything again.
+  particles
+    .addBinding(settings, 'cells', {
+      label: 'grid',
+      options: {
+        '4 places per cell': 'places',
+        'address book': 'book',
+        'address book, table': 'table',
+      },
+    })
+    .on('change', restart)
   particles
     .addBinding(settings, 'draw', {
       options: { spheres: 'spheres', 'flat discs': 'flat', nothing: 'none' },
@@ -822,6 +929,18 @@ async function start() {
     readonly: true,
     format: (v) => (Number.isNaN(v) ? 'n/a' : `${v.toFixed(2)} ms`),
   })
+  // The grid has 4 places per cell (decision 016): a particle that finds its cell full is seen by
+  // nobody until the next list.
+  numbers.addBinding(stats, 'leftOut', {
+    label: 'cell full',
+    readonly: true,
+    format: (v) => (Number.isNaN(v) ? '…' : `${v.toFixed(0)} particles`),
+  })
+  numbers.addBinding(stats, 'crowded', {
+    label: 'list full',
+    readonly: true,
+    format: (v) => (Number.isNaN(v) ? '…' : `${v.toFixed(0)} neighbours`),
+  })
   numbers.addBinding(stats, 'lists', {
     label: 'new lists',
     readonly: true,
@@ -847,7 +966,7 @@ async function start() {
     readback.mapAsync(GPUMapMode.READ).then(() => {
       const data = readback.getMappedRange()
       const [begin, end] = new BigUint64Array(data, 0, 2)
-      const lists = new Uint32Array(data, 16, 8)[3]
+      const [, , , lists, crowded, leftOut] = new Uint32Array(data, 16, 8)
       readback.unmap()
       reading = false
       if (stamps && end > begin) {
@@ -857,11 +976,52 @@ async function start() {
       if (from !== simulation) return // restarted meanwhile
       if (lastReading && steps > lastReading.steps)
         stats.lists = (lists - lastReading.lists) / (steps - lastReading.steps)
-      lastReading = { lists, steps }
+      // per list made: how many particles found their cell full, and how many neighbours found
+      // no room in a list of 32
+      if (lastReading && lists > lastReading.lists) {
+        stats.leftOut = (leftOut - lastReading.leftOut) / (lists - lastReading.lists)
+        stats.crowded = (crowded - lastReading.crowded) / (lists - lastReading.lists)
+      }
+      lastReading = { lists, steps, crowded, leftOut }
     }, showError)
   }
 
   restart()
+
+  // ?check in the address: after the first step, when the first lists exist, print how many
+  // neighbours they hold and a sum that does not depend on their order. The two ways of keeping
+  // the grid must print the same, as long as no cell was full.
+  if (query.has('check') && simulation) {
+    const sim = simulation
+    const encoder = device.createCommandEncoder()
+    moveBall(sim.particleCount, 1, sim.substeps, settings.ball)
+    sim.encode(encoder, ballPath, 0)
+    const sizes = [sim.particleCount * 4, sim.particleCount * MAX_NEIGHBOURS * 4]
+    const copies = [sim.neighbourCounts, sim.neighbours].map((from, k) => {
+      const to = device.createBuffer({
+        size: sizes[k],
+        usage: GPUBufferUsage.MAP_READ | GPUBufferUsage.COPY_DST,
+      })
+      encoder.copyBufferToBuffer(from, 0, to, 0, sizes[k])
+      return to
+    })
+    device.queue.submit([encoder.finish()])
+    await Promise.all(copies.map((b) => b.mapAsync(GPUMapMode.READ)))
+    const counts = new Uint32Array(copies[0].getMappedRange())
+    const lists = new Uint32Array(copies[1].getMappedRange())
+    let total = 0
+    let sum = 0
+    counts.forEach((n, i) => {
+      total += n
+      for (let s = 0; s < n; s++)
+        sum = (sum + Math.imul(i + 1, lists[i * MAX_NEIGHBOURS + s] + 7)) >>> 0
+    })
+    const note = document.createElement('p')
+    note.id = 'check'
+    note.textContent = `check ${settings.cells}: ${total} neighbours, sum ${sum}`
+    document.querySelector('.crumb')?.append(note)
+    for (const b of copies) b.destroy()
+  }
 
   let last: number | undefined
   let frame = 0

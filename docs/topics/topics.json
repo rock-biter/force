@@ -1267,7 +1267,8 @@
         "docs/logbook/024-twenty-seven-cells.md",
         "docs/logbook/030-the-lazy-list.md",
         "docs/decisions/016-a-list-made-when-needed.md",
-        "docs/logbook/035-the-grid-stays-still.md"
+        "docs/logbook/035-the-grid-stays-still.md",
+        "docs/logbook/036-the-address-book.md"
       ],
       "code": ["examples/contact-cost/main.ts", "examples/contact-cost/grid.wgsl"]
     },
@@ -1277,13 +1278,15 @@
       "title": "Spatial hashing",
       "summary": "A uniform grid stored in a hash table, so it can cover endless space with little memory",
       "area": "physics",
-      "status": "mentioned",
+      "status": "seen",
       "since": {
-        "mentioned": "2026-11-05"
+        "mentioned": "2026-11-05",
+        "seen": "2026-11-20"
       },
       "partOf": "broad-phase",
       "related": ["uniform-grid", "neighbour-search"],
-      "citedIn": ["docs/logbook/004-the-detour.md"]
+      "citedIn": ["docs/logbook/004-the-detour.md", "docs/logbook/036-the-address-book.md"],
+      "code": ["examples/force-plus/cells-table.wgsl"]
     },
     {
       "id": "gjk",
@@ -1914,13 +1917,19 @@
       "id": "prefix-sum",
       "kind": "concept",
       "title": "Prefix sum (scan)",
-      "summary": "Turning a list of counts into running totals, in parallel: the GPU's way of packing results",
+      "summary": "Turning a list of counts into running totals: each entry becomes the sum of all those before it. On the GPU it is made in blocks",
       "area": "gpu",
-      "status": "mentioned",
+      "status": "seen",
       "since": {
-        "mentioned": "2026-11-08"
+        "mentioned": "2026-11-08",
+        "seen": "2026-11-20"
       },
-      "citedIn": ["docs/logbook/004-the-detour.md"]
+      "citedIn": ["docs/logbook/004-the-detour.md", "docs/logbook/036-the-address-book.md"],
+      "code": [
+        "examples/force-plus/book-blocks.wgsl",
+        "examples/force-plus/book-scan.wgsl",
+        "examples/force-plus/book-ends.wgsl"
+      ]
     },
     {
       "id": "parallel-sort",
@@ -1936,7 +1945,8 @@
       "citedIn": [
         "docs/logbook/004-the-detour.md",
         "particle-simulation-cuda",
-        "docs/logbook/024-twenty-seven-cells.md"
+        "docs/logbook/024-twenty-seven-cells.md",
+        "docs/logbook/036-the-address-book.md"
       ]
     },
     {
@@ -6821,7 +6831,8 @@
       "citedIn": [
         "particle-simulation-cuda",
         "gpu-gems-rigid-bodies",
-        "docs/logbook/024-twenty-seven-cells.md"
+        "docs/logbook/024-twenty-seven-cells.md",
+        "docs/logbook/036-the-address-book.md"
       ]
     },
     {
@@ -6836,7 +6847,11 @@
       },
       "partOf": "uniform-grid",
       "related": ["parallel-sort"],
-      "citedIn": ["particle-simulation-cuda", "docs/logbook/024-twenty-seven-cells.md"]
+      "citedIn": [
+        "particle-simulation-cuda",
+        "docs/logbook/024-twenty-seven-cells.md",
+        "docs/logbook/036-the-address-book.md"
+      ]
     },
     {
       "id": "contact-normal",
@@ -7133,6 +7148,38 @@
       },
       "related": ["friction"],
       "citedIn": ["docs/logbook/034-the-box-on-the-ramp.md", "unified-particle-physics-paper"]
+    },
+    {
+      "id": "counting-sort",
+      "kind": "concept",
+      "title": "Counting sort",
+      "summary": "Sorting by a small key without comparing: count how many have each key, sum the counts to find where each key's part begins, then drop every item into its part",
+      "area": "gpu",
+      "status": "seen",
+      "since": {
+        "seen": "2026-11-20"
+      },
+      "related": ["prefix-sum", "grid-by-sorting"],
+      "citedIn": ["docs/logbook/036-the-address-book.md"],
+      "code": ["examples/force-plus/book-fill.wgsl"]
+    },
+    {
+      "id": "optimized-spatial-hashing",
+      "kind": "paper",
+      "title": "Optimized Spatial Hashing for Collision Detection of Deformable Objects",
+      "summary": "A grid of endless space kept in a small hash table: the hash of a cell from three primes, and how to choose the table and cell sizes",
+      "area": "physics",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-20"
+      },
+      "about": ["spatial-hashing", "uniform-grid"],
+      "citedIn": ["docs/logbook/036-the-address-book.md"],
+      "url": "https://matthias-research.github.io/pages/publications/tetraederCollision.pdf",
+      "file": "library/optimized-spatial-hashing.pdf",
+      "authors": "Matthias Teschner, Bruno Heidelberger, Matthias Müller, Danat Pomeranets, Markus Gross",
+      "year": 2003,
+      "claudeRead": "parts"
     }
   ]
 }
