@@ -16,11 +16,11 @@ documentation of the library will live there too.
 
 *Updated November 20, 2026*
 
-**Latest step:** [two kinds of bounce](./docs/logbook/032-two-kinds-of-bounce.md). On our live
-page ([try it](https://rock-biter.github.io/force/force-plus/)) some particles bounced too much when
-they landed. We measured why: a particle that moves more than its radius in one step ends up inside
-others and is thrown out, and without friction a glancing hit keeps its sideways speed, which the
-next particle turns upward.
+**Latest step:** [the speed limit](./docs/logbook/033-the-speed-limit.md). On our live page
+([try it](https://rock-biter.github.io/force/force-plus/)) fast particles splashed meters high. A
+particle that moves more than its radius in one small step ends up inside others and is thrown
+out ([why](./docs/logbook/032-two-kinds-of-bounce.md)). Now no particle may go faster than one
+radius per small step, 12 m/s, and the splashes are gone at almost no visible cost.
 
 **Next:** friction, measured on the same falls and on the slope of a pile.
 

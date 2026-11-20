@@ -1,9 +1,10 @@
 // FORCE+ on the GPU, live. Up to 100 000 particles in a box as big as the grid, pushed apart by
 // moving their positions with half and half, masses seen as m^α and levels in the pile (decision
 // 015), through lists of neighbours made when needed (decision 016). The pointer pushes them away
-// with a ball. The shaders come from contact-cost, where they were checked against JavaScript; only
-// the round is this page's own, the same one plus the ball. three.js draws the particles straight
-// from the position buffer, on the same device (decision 012).
+// with a ball. The shaders come from contact-cost, where they were checked against JavaScript; two
+// are this page's own: the round, the same one plus the ball, and finish, the same one plus a speed
+// limit. three.js draws the particles straight from the position buffer, on the same device
+// (decision 012).
 
 import type { ButtonGridApi, FpsGraphBladeApi } from '@tweakpane/plugin-essentials'
 import * as EssentialsPlugin from '@tweakpane/plugin-essentials'
@@ -32,7 +33,6 @@ import {
 import { Pane } from 'tweakpane'
 import clearIfCode from '../contact-cost/clear-if.wgsl?raw'
 import commonCode from '../contact-cost/common.wgsl?raw'
-import finishCode from '../contact-cost/finish.wgsl?raw'
 import gridIfCode from '../contact-cost/grid-if.wgsl?raw'
 import levelsListCode from '../contact-cost/levels-list.wgsl?raw'
 import listCode from '../contact-cost/list.wgsl?raw'
@@ -41,6 +41,7 @@ import rebuildCode from '../contact-cost/rebuild.wgsl?raw'
 import watchCode from '../contact-cost/watch.wgsl?raw'
 import { ParticleView } from '../debug/particles.js'
 import { showError } from '../debug/viewer.js'
+import finishLimitCode from './finish-limit.wgsl?raw'
 import roundPushCode from './round-push.wgsl?raw'
 
 type Vec3 = [number, number, number]
@@ -142,12 +143,15 @@ async function makePipelines(device: GPUDevice) {
       rebuildCode + listCode,
       levelsListCode,
       roundPushCode,
-      finishCode,
+      finishLimitCode,
     ].map(make),
   )
   return { predict, watch, clearIf, gridIf, list, levels, round, finish }
 }
 type Pipelines = Awaited<ReturnType<typeof makePipelines>>
+
+/** One radius per substep, in m/s: 6 with 1 substep, 12 with 2, the safe limit (decision 017). */
+const speedLimit = (substeps: number) => (RADIUS * substeps) / STEP
 
 /**
  * The particles on the GPU and how to encode one step of them: the step of contact-cost's part 4,
@@ -250,7 +254,19 @@ function makeSimulation(
       ]),
     ),
   )
-  const finishGroup = group(kit.finish, [params, positions, velocities, predicted[ROUNDS % 2]])
+  // The speed limit of finish-limit.wgsl, in m/s: 4 bytes, in a buffer of the usual 16.
+  const limit = device.createBuffer({
+    size: 16,
+    usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
+  })
+  buffers.push(limit)
+  const finishGroup = group(kit.finish, [
+    params,
+    positions,
+    velocities,
+    predicted[ROUNDS % 2],
+    limit,
+  ])
   const workgroups = Math.ceil(count / 64)
   const cellWorkgroups = Math.ceil(cellCount / 64)
   let parity = 0
@@ -311,13 +327,15 @@ function makeSimulation(
     },
 
     /**
-     * α, c and the substeps, from the next step on. A substep lasts 1/60 s divided by their
-     * number: predict and finish read it from the params.
+     * α, c, the substeps and the speed limit, from the next step on. A substep lasts 1/60 s
+     * divided by their number: predict and finish read it from the params. No particle may go
+     * faster than `maxSpeed`, in m/s, 0 for no limit (decisions 017 and 018).
      */
-    setSolver(alpha: number, levelStrength: number, count: number) {
+    setSolver(alpha: number, levelStrength: number, count: number, maxSpeed: number) {
       substeps = count
       device.queue.writeBuffer(params, 3 * 4, new Float32Array([STEP / count]))
       device.queue.writeBuffer(params, 13 * 4, new Float32Array([alpha, levelStrength]))
+      device.queue.writeBuffer(limit, 0, new Float32Array([maxSpeed]))
     },
 
     destroy() {
@@ -489,11 +507,23 @@ async function start() {
   const settings = {
     ...FORCE_PLUS,
     levels: 1.5, // a gentler start than decision 015, as in compare's tunable copy
+    // 2 substeps and the safe speed limit stop the splashes of fast particles, at little cost
+    // (chapter 033). The limit is 'auto', the safe one, 'custom', `speed` in m/s, or 'off'.
+    substeps: 2,
+    maxSpeed: 'auto',
+    speed: 20,
     particles: asked >= 1 && asked <= 100 ? asked * 1000 : 20000,
     masses: '1 to 100 kg',
     ball: BALL_RADIUS,
   }
   const stats = { gpu: Number.NaN, lists: Number.NaN }
+  /** The speed limit asked for, in m/s, 0 for none. */
+  const maxSpeed = () =>
+    settings.maxSpeed === 'auto'
+      ? speedLimit(settings.substeps)
+      : settings.maxSpeed === 'custom'
+        ? settings.speed
+        : 0
   let simulation: Simulation | undefined
   let view: ParticleView | undefined
   let paused = false
@@ -508,7 +538,7 @@ async function start() {
     simulation?.destroy()
     const masses = MASSES[settings.masses]
     simulation = makeSimulation(device, kit, pointerBuffer, settings.particles, masses)
-    simulation.setSolver(settings.alpha, settings.levels, settings.substeps)
+    simulation.setSolver(settings.alpha, settings.levels, settings.substeps, maxSpeed())
     view = new ParticleView(renderer, simulation, { massRange: masses })
     scene.add(view.mesh)
     owed = 0
@@ -516,7 +546,7 @@ async function start() {
     stats.lists = Number.NaN
   }
   const applySolver = () =>
-    simulation?.setSolver(settings.alpha, settings.levels, settings.substeps)
+    simulation?.setSolver(settings.alpha, settings.levels, settings.substeps, maxSpeed())
 
   const pane = new Pane({ title: 'FORCE+ on the GPU', expanded: window.innerWidth >= 600 })
   pane.registerPlugin(EssentialsPlugin)
@@ -531,6 +561,29 @@ async function start() {
   const substeps = solver
     .addBinding(settings, 'substeps', { min: 1, max: MAX_SUBSTEPS, step: 1 })
     .on('change', applySolver)
+  // The speed limit: the safe one by default, one radius per substep; or any speed in m/s, at the
+  // risk of splashes above the safe one (decision 018).
+  solver
+    .addBinding(settings, 'maxSpeed', {
+      label: 'max speed',
+      options: { 'safe (auto)': 'auto', 'in m/s': 'custom', off: 'off' },
+    })
+    .on('change', () => {
+      speed.disabled = settings.maxSpeed !== 'custom'
+      applySolver()
+    })
+  const speed = solver
+    .addBinding(settings, 'speed', { label: 'm/s', min: 1, max: 60, step: 1, disabled: true })
+    .on('change', applySolver)
+  // The limit in use, and the safe one, read again by the panel a few times per second.
+  const cap = {
+    get value() {
+      const now = maxSpeed()
+      const safe = speedLimit(settings.substeps).toFixed(0)
+      return `${now ? `${now.toFixed(0)} m/s` : 'none'}, safe ${safe}`
+    },
+  }
+  solver.addBinding(cap, 'value', { label: 'limit', readonly: true })
   solver.addButton({ title: 'as decision 015' }).on('click', () => {
     Object.assign(settings, FORCE_PLUS)
     alpha.refresh()

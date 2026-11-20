@@ -5,7 +5,7 @@
 Everything we have met while building FORCE, concepts and sources, and how far we went with each
 one. Use it to look up a term, to find what to read, or to pick what to explore next.
 
-- **261 concepts:** ● 24 studied · ◐ 131 seen · ○ 106 mentioned
+- **261 concepts:** ● 24 studied · ◐ 132 seen · ○ 105 mentioned
 - **146 sources:** ● 15 studied · ◐ 16 seen · ○ 115 mentioned · read by Claude: 69 parts, 15 in full
 
 | | Status | What it means |
@@ -158,7 +158,7 @@ How things move, collide and stay together.
 | ◐ | Solver | The part of the engine that corrects velocities so constraints are obeyed | Simulation step | [001](../logbook/001-the-flip-book.md) |
 | ○ | Spatial hashing | A uniform grid stored in a hash table, so it can cover endless space with little memory | Broad phase | [004](../logbook/004-the-detour.md) |
 | ◐ | Speculative contact | A contact kept before the bodies touch: it only removes the speed that would make them overlap within the step | Contact | [Box2D, contact_solver.c](https://github.com/erincatto/box2d/blob/main/src/contact_solver.c) |
-| ○ | Speed limit | A cap on how fast a particle goes, or on how fast its speed can change, so that a deep overlap cannot throw it: FleX calls them maxSpeed and maxAcceleration |  | [FleX, NvFlex.h](https://github.com/NVIDIAGameWorks/FleX/blob/master/include/NvFlex.h) |
+| ◐ | Speed limit | A cap on how fast a particle goes, or on how fast its speed can change, so that a deep overlap cannot throw it: FleX calls them maxSpeed and maxAcceleration |  | [FleX, NvFlex.h](https://github.com/NVIDIAGameWorks/FleX/blob/master/include/NvFlex.h) |
 | ○ | SPH | Smoothed particle hydrodynamics: a fluid's density and pressure at each particle, estimated from its neighbours | Fluid | [004](../logbook/004-the-detour.md) |
 | ● | **[Spiral of death](fixed-timestep.md#the-spiral-of-death)** | When catching up on physics takes so long that every frame falls further behind | Fixed timestep | [004](../logbook/004-the-detour.md) |
 | ○ | Split impulse | PhysX's name for solving the position error and the velocity error in separate rounds, so the correction does not stay in the final velocity | Solver | [PhysX, Rigid Body Dynamics](https://nvidia-omniverse.github.io/PhysX/physx/5.6.1/docs/RigidBodyDynamics.html) |

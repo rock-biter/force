@@ -274,7 +274,8 @@
         "docs/logbook/001-the-flip-book.md",
         "docs/logbook/010-the-ground.md",
         "advanced-character-physics",
-        "docs/logbook/032-two-kinds-of-bounce.md"
+        "docs/logbook/032-two-kinds-of-bounce.md",
+        "docs/logbook/033-the-speed-limit.md"
       ]
     },
     {
@@ -1027,7 +1028,8 @@
         "docs/logbook/025-the-pillow.md",
         "docs/logbook/028-the-ranking.md",
         "docs/logbook/031-the-yellow-ball.md",
-        "docs/logbook/032-two-kinds-of-bounce.md"
+        "docs/logbook/032-two-kinds-of-bounce.md",
+        "docs/logbook/033-the-speed-limit.md"
       ],
       "page": "docs/topics/integration.md#substeps",
       "code": ["src/world.ts"]
@@ -7011,7 +7013,8 @@
       "citedIn": [
         "unified-particle-physics-paper",
         "docs/logbook/031-the-yellow-ball.md",
-        "docs/logbook/032-two-kinds-of-bounce.md"
+        "docs/logbook/032-two-kinds-of-bounce.md",
+        "docs/logbook/033-the-speed-limit.md"
       ]
     },
     {
@@ -7052,7 +7055,7 @@
         "sleeping",
         "stiff-stacks"
       ],
-      "citedIn": ["docs/logbook/032-two-kinds-of-bounce.md"],
+      "citedIn": ["docs/logbook/032-two-kinds-of-bounce.md", "docs/logbook/033-the-speed-limit.md"],
       "url": "https://github.com/NVIDIAGameWorks/FleX/blob/master/include/NvFlex.h",
       "authors": "NVIDIA",
       "claudeRead": "parts"
@@ -7063,12 +7066,19 @@
       "title": "Speed limit",
       "summary": "A cap on how fast a particle goes, or on how fast its speed can change, so that a deep overlap cannot throw it: FleX calls them maxSpeed and maxAcceleration",
       "area": "physics",
-      "status": "mentioned",
+      "status": "seen",
       "since": {
-        "mentioned": "2026-11-20"
+        "seen": "2026-11-20"
       },
       "related": ["tunneling", "pre-stabilization"],
-      "citedIn": ["flex-header", "docs/logbook/032-two-kinds-of-bounce.md"]
+      "citedIn": [
+        "flex-header",
+        "docs/logbook/032-two-kinds-of-bounce.md",
+        "docs/logbook/033-the-speed-limit.md",
+        "docs/decisions/017-a-speed-limit-per-substep.md",
+        "docs/decisions/018-max-speed-in-meters-per-second.md"
+      ],
+      "code": ["examples/force-plus/finish-limit.wgsl"]
     },
     {
       "id": "contact-dissipation",
