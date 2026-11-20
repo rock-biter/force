@@ -1,4 +1,4 @@
-// The scenes of chapters 025 to 030, to watch every way side by side, and four that move, after
+// The scenes of chapters 025 to 030, to watch every way side by side, and four that move, inspired by
 // the benchmarks of Box2D (erincatto/box2d, shared/benchmarks.c): Rain, Spinner, Smash and Tumbler.
 
 import { DIAMETER, type Plane, RADIUS, STEP, type Vec3, type World } from './methods.js'
@@ -93,7 +93,7 @@ function box(
 }
 
 export const SCENES: Record<string, () => Scene> = {
-  // ---- moving, after Box2D's benchmarks ----
+  // ---- moving, inspired by Box2D's benchmarks ----
   rain: () => {
     // Box2D's Rain makes new bodies every 8 steps. Here one particle comes in every 2 steps, from a
     // random point above the box. The others wait far below, held still, until their turn.
@@ -105,7 +105,7 @@ export const SCENES: Record<string, () => Scene> = {
       (Math.floor(i / 20) - 8) * 0.5,
     ])
     return {
-      label: 'Rain, after Box2D',
+      label: 'Rain · inspired by Box2D',
       kind: 'moving',
       positions: waiting,
       masses: new Array(count).fill(1),
@@ -142,7 +142,7 @@ export const SCENES: Record<string, () => Scene> = {
       for (const r of [-0.5, -0.3, -0.1, 0.1, 0.3, 0.5]) bar.push([r, y])
     const speed = 2
     return {
-      label: 'Spinner, after Box2D',
+      label: 'Spinner · inspired by Box2D',
       kind: 'moving',
       positions: [...heap, ...bar.map(([r, y]) => [r, y, 0] as Vec3)],
       masses: [...base.masses, ...bar.map(() => Number.POSITIVE_INFINITY)],
@@ -173,7 +173,7 @@ export const SCENES: Record<string, () => Scene> = {
             -0.4 + c * DIAMETER + (next() - 0.5) * 0.002,
           ])
     return {
-      label: 'Smash, after Box2D',
+      label: 'Smash · inspired by Box2D',
       kind: 'moving',
       positions: [...positions, [-1.2, 0.5, 0]],
       masses: [...positions.map(() => 1), 10],
@@ -218,7 +218,7 @@ export const SCENES: Record<string, () => Scene> = {
             -0.44 + c * 0.22 + (next() - 0.5) * 0.02,
           ])
     return {
-      label: 'Tumbler, after Box2D',
+      label: 'Tumbler · inspired by Box2D',
       kind: 'moving',
       positions,
       masses: positions.map(() => 1),

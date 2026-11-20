@@ -5,6 +5,7 @@
 
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 import {
+  BackSide,
   BoxGeometry,
   Color,
   DirectionalLight,
@@ -15,6 +16,8 @@ import {
   LineBasicMaterial,
   LineSegments,
   Matrix4,
+  Mesh,
+  MeshBasicMaterial,
   MeshStandardMaterial,
   PerspectiveCamera,
   SphereGeometry,
@@ -73,10 +76,17 @@ class Pane {
     this.select.value = method
     this.select.addEventListener('change', () => {
       this.method = this.select.value
+      this.mark()
       onChange()
     })
+    this.mark()
     this.element.append(this.select, this.source, this.stats)
     panesElement.append(this.element)
+  }
+
+  /** A light blue frame around the three versions of FORCE. */
+  private mark() {
+    this.element.classList.toggle('ours', this.method.startsWith('force'))
   }
 
   /** Starts the scene again from the beginning, with this pane's method. */
@@ -85,7 +95,16 @@ class Pane {
     this.time = 0
     this.released = false
     const m = METHODS[this.method]
-    this.source.textContent = m.source
+    // the source, then a link to each logbook chapter, opened in the site's logbook
+    this.source.replaceChildren(`${m.source} · logbook `)
+    for (const [k, chapter] of m.logbook.entries()) {
+      const link = document.createElement('a')
+      link.href = `../logbook/#${chapter}`
+      link.target = '_blank'
+      link.textContent = chapter.slice(0, 3)
+      link.title = chapter
+      this.source.append(k ? ', ' : '', link)
+    }
     this.stepper = m.create()
     this.world = {
       x: spec.positions.map((p) => [...p]),
@@ -98,6 +117,16 @@ class Pane {
     this.script = spec.script?.()
 
     this.scene = new ThreeScene()
+    if (this.method.startsWith('force')) {
+      // A light blue backdrop for the three versions of FORCE: a big sphere seen from inside, behind
+      // everything. scene.background would clear the whole canvas, the other panes too.
+      const backdrop = new Mesh(
+        new SphereGeometry(50, 16, 8),
+        new MeshBasicMaterial({ color: 0xdde9f8, side: BackSide, depthWrite: false }),
+      )
+      backdrop.renderOrder = -1
+      this.scene.add(backdrop)
+    }
     this.scene.add(new HemisphereLight(0xffffff, 0x777788, 2))
     const sun = new DirectionalLight(0xffffff, 2)
     sun.position.set(2, 5, 3)
@@ -181,7 +210,7 @@ async function start() {
 
   // the scene menu, in two groups
   for (const [kind, title] of [
-    ['moving', 'Moving, after Box2D'],
+    ['moving', 'Moving, inspired by Box2D'],
     ['settling', 'Settling'],
   ] as const) {
     const group = document.createElement('optgroup')

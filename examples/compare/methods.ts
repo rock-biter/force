@@ -23,8 +23,10 @@ export interface World {
 
 export interface Method {
   label: string
-  /** Where the idea comes from. */
+  /** Where the idea comes from: an author, a paper. */
   source: string
+  /** The logbook chapters that tell how we met it and what it did, by their file names. */
+  logbook: string[]
   /** Makes the stepper for one world: it may keep memory of its own, such as levels or pushes. */
   create(): (world: World) => void
 }
@@ -77,7 +79,8 @@ const RULES: Record<string, Rule> = {
   sum: sumOf,
   average: averageOf,
   averageMore: (l) => scale(averageOf(l), 1.5),
-  halfAndHalf: (l) => scale(add(sumOf(l), averageOf(l)), 0.5),
+  // Lomarco position sum and average: half the sum plus half the average (chapter 026)
+  sumAndAverage: (l) => scale(add(sumOf(l), averageOf(l)), 0.5),
   axisMaximum: (l) =>
     [0, 1, 2].map(
       (a) => Math.max(0, ...l.map((c) => c[a])) + Math.min(0, ...l.map((c) => c[a])),
@@ -176,7 +179,8 @@ function positionSubstep(
 
 // ---- 2. changing velocities --------------------------------------------------------------------------
 // Catto's velocity rule with a 20% nudge, his stored pushes and pushes that can be taken back, the
-// copies of mass splitting with the half and half count, and Box2D's relax rounds (chapter 027).
+// copies of mass splitting counted as in the Lomarco sum and average, and Box2D's relax rounds
+// (chapter 027).
 function velocities(rounds: number, relax: number) {
   const NUDGE = 0.2
   interface Contact {
@@ -236,7 +240,7 @@ function velocities(rounds: number, relax: number) {
         pushing[c.i]++
         if (c.j >= 0) pushing[c.j]++
       }
-    const copies = pushing.map((n) => (n > 1 ? (2 * n) / (n + 1) : 1)) // half and half
+    const copies = pushing.map((n) => (n > 1 ? (2 * n) / (n + 1) : 1)) // Lomarco sum and average
     for (let r = 0; r < count; r++) {
       const change: Vec3[] = v.map(() => [0, 0, 0])
       for (const c of contacts) {
@@ -336,57 +340,69 @@ export const tunable = { ...FORCE_PLUS, levels: 1.5 }
 export const METHODS: Record<string, Method> = {
   forcePlus: {
     label: 'FORCE+',
-    source: 'half and half, masses m^0.5, levels in the pile · decision 015',
-    create: positions(RULES.halfAndHalf, () => FORCE_PLUS),
+    source:
+      'Lomarco position sum and average, masses m^0.5, levels in the pile: Macklin 2014 §5.2, improved',
+    logbook: ['026-the-marble-in-the-pocket', '029-heavy-on-light', '030-the-lazy-list'],
+    create: positions(RULES.sumAndAverage, () => FORCE_PLUS),
   },
   forcePlusTuned: {
     label: 'FORCE+ tunable',
     source: 'FORCE+ with the knobs at the top of the page',
-    create: positions(RULES.halfAndHalf, () => tunable),
+    logbook: ['029-heavy-on-light'],
+    create: positions(RULES.sumAndAverage, () => tunable),
   },
   force: {
     label: 'FORCE',
-    source: 'half and half · chapter 026',
-    create: positions(RULES.halfAndHalf, () => ({})),
+    source: 'Lomarco position sum and average',
+    logbook: ['026-the-marble-in-the-pocket'],
+    create: positions(RULES.sumAndAverage, () => ({})),
   },
   average: {
     label: 'Constraint averaging',
     source: 'Macklin, Müller, Chentanez, Kim 2014, §4.2',
+    logbook: ['026-the-marble-in-the-pocket', '028-the-ranking'],
     create: positions(RULES.average, () => ({})),
   },
   averageMore: {
     label: 'Averaging × 1.5 (SOR)',
     source: 'Macklin, Müller, Chentanez, Kim 2014, §4.3',
+    logbook: ['026-the-marble-in-the-pocket'],
     create: positions(RULES.averageMore, () => ({})),
   },
   sum: {
     label: 'Jacobi sum',
     source: 'Macklin, Müller, Chentanez, Kim 2014, §4.2',
+    logbook: ['026-the-marble-in-the-pocket', '028-the-ranking'],
     create: positions(RULES.sum, () => ({})),
   },
   stiffStacks: {
     label: 'Stiff stacks',
     source: 'Macklin, Müller, Chentanez, Kim 2014, §5.2',
-    create: positions(RULES.halfAndHalf, () => ({ height: 5 })),
+    logbook: ['029-heavy-on-light'],
+    create: positions(RULES.sumAndAverage, () => ({ height: 5 })),
   },
   axisMaximum: {
     label: 'Largest push per axis',
-    source: 'a test of the user · chapter 026',
+    source: 'Lomarco, a test set aside',
+    logbook: ['026-the-marble-in-the-pocket'],
     create: positions(RULES.axisMaximum, () => ({})),
   },
   spring: {
     label: 'Spring (DEM)',
     source: 'Green 2010, Harada 2007 · 50 000 N/m, 8 substeps',
+    logbook: ['025-the-pillow', '028-the-ranking'],
     create: springs(8, () => 50000, 0.3),
   },
   springHertz: {
     label: 'Spring in hertz',
     source: 'Catto, Box2D Soft Step · 60 Hz, 8 substeps',
+    logbook: ['015-the-stiff-spring', '029-heavy-on-light', '030-the-lazy-list'],
     create: springs(8, hertz(60), 0.3),
   },
   velocities: {
     label: 'Velocities + relax',
     source: 'Catto 2005, Tonge 2012, Box2D · 4 + 4 rounds',
+    logbook: ['027-the-stored-nudge', '028-the-ranking'],
     create: velocities(4, 4),
   },
 }
