@@ -6,11 +6,14 @@
 // the pointer in each step, at 20 m/s at most, and grows it in a few steps, so it pushes particles
 // away instead of throwing them. It moves at every substep, a piece of the way each time.
 //
-// Then friction, as decision 020 sets it (chapter 034). Once the particle knows where this round's
-// pushes bring it, every contact looks at how far the two have slid past each other since the start
-// of the substep, across the line between them, and asks to take back up to µ × the overlap of
-// that slide. The particle moves by the average of what its contacts ask. The ball has no
-// friction: it only pushes.
+// Then friction, in the same loop as the pushes (decision 025). Every contact looks at how far
+// the two have slid past each other since the start of the substep, up to where the last round
+// left them, across the line between them, and asks to take back up to µ × the overlap of that
+// slide. The particle moves by the average of what its contacts ask. The ball has no friction: it
+// only pushes.
+//
+// Decision 020 measured the slide after this round's pushes, which is more exact but reads every
+// neighbour a second time, and made the rounds twice as long. To come back to.
 
 struct Pointer {
   center: vec3f, // meters
@@ -63,6 +66,10 @@ fn main(@builtin(global_invocation_id) id: vec3u) {
   let diameter = 2.0 * params.radius;
   var sum = vec3f(0.0);
   var n = 0.0;
+  // Friction, in the same loop as the pushes: how far this particle has slid up to the last round.
+  let rubbing = friction > 0.0;
+  let slid = p - start[i].xyz;
+  var back = vec3f(0.0);
 
   for (var s = 0u; s < neighbourCounts[i]; s++) {
     let j = neighbours[i * MAX_NEIGHBOURS + s];
@@ -83,6 +90,10 @@ fn main(@builtin(global_invocation_id) id: vec3u) {
     let wj = lightness(other.w);
     sum += away / distance * ((diameter - distance) * wi / (wi + wj));
     n += 1.0;
+    if (rubbing) {
+      let theirSlide = other.xyz - start[j].xyz;
+      back += rub(slid - theirSlide, away / distance, diameter - distance) * (wi / (wi + wj));
+    }
   }
   for (var k = 0u; k < params.planeCount; k++) {
     let plane = planes[k];
@@ -90,6 +101,9 @@ fn main(@builtin(global_invocation_id) id: vec3u) {
     if (overlap > 0.0) {
       sum += plane.xyz * overlap;
       n += 1.0;
+      if (rubbing) {
+        back += rub(slid, plane.xyz, overlap);
+      }
     }
   }
   // The ball: like a plane, nothing pushes it back, so the particle takes the whole overlap.
@@ -107,37 +121,7 @@ fn main(@builtin(global_invocation_id) id: vec3u) {
   if (n > 0.0) {
     moved = p + sum * (0.5 + 0.5 / n);
   }
-  if (n > 0.0 && friction > 0.0) {
-    // The same contacts again, now that the pushes are known. A neighbour's slide is taken up to
-    // where the last round left it: its pushes of this round are its own thread's business.
-    let slid = moved - start[i].xyz;
-    var back = vec3f(0.0);
-    for (var s = 0u; s < neighbourCounts[i]; s++) {
-      let j = neighbours[i * MAX_NEIGHBOURS + s];
-      let other = before[j];
-      let away = p - other.xyz;
-      let squared = dot(away, away);
-      if (squared >= diameter * diameter || squared == 0.0) {
-        continue;
-      }
-      let distance = sqrt(squared);
-      var tilt = 1.0;
-      let theirs = levels[j];
-      if (params.levelStrength > 0.0 && level != NO_LEVEL && theirs != NO_LEVEL) {
-        tilt = exp(params.levelStrength * (f32(level) - f32(theirs)));
-      }
-      let wi = mine * tilt;
-      let wj = lightness(other.w);
-      let theirSlide = other.xyz - start[j].xyz;
-      back += rub(slid - theirSlide, away / distance, diameter - distance) * (wi / (wi + wj));
-    }
-    for (var k = 0u; k < params.planeCount; k++) {
-      let plane = planes[k];
-      let overlap = params.radius - (dot(p, plane.xyz) - plane.w);
-      if (overlap > 0.0) {
-        back += rub(slid, plane.xyz, overlap);
-      }
-    }
+  if (n > 0.0 && rubbing) {
     moved += back / n;
   }
   after[i] = vec4f(moved, me.w);

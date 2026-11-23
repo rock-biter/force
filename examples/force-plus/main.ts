@@ -69,7 +69,12 @@ const CELL = DIAMETER // a cell as wide as a particle (chapter 024)
 const PLACES = 4 // per cell (decision 016)
 const STEP = 1 / 60 // seconds
 const GRAVITY = 9.81
-const ROUNDS = 6 // decision 022
+// decision 022. ?rounds=3 in the address, to measure: this many rounds per substep, from 1 to 12.
+const ROUNDS =
+  Math.min(
+    Math.max(Math.round(Number(new URLSearchParams(location.search).get('rounds'))), 0),
+    12,
+  ) || 6
 const MARGIN = 0.05 // the lists look 5 cm beyond touching (decision 016)
 const MAX_NEIGHBOURS = 32 // as in list.wgsl
 const NO_LEVEL = 0xffffffff
@@ -853,6 +858,8 @@ async function start() {
     // FORCE+ ('plus') or FORCE ('force'): the same rule, with α = 1 and c = 0
     method: 'plus',
     ...FORCE_PLUS,
+    // ?substeps=2 in the address starts with that many
+    substeps: MathUtils.clamp(Math.round(Number(query.get('substeps'))) || 1, 1, MAX_SUBSTEPS),
     // a gentler start than decision 015, as in compare's tunable copy; ?c=0 starts without levels
     levels: query.has('c') ? MathUtils.clamp(Number(query.get('c')) || 0, 0, 4) : 1.5,
     // The speed limit: 'auto', the default of 1.5 × the safe one, 'safe', 'custom', `speed` in
@@ -1249,11 +1256,8 @@ async function start() {
     steps: [] as number[], // substeps run so far, after each profiled step
     whole: Number.NaN, // a step in one pass, as the panel showed it just before
   }
-  /**
-   * How deep the particles are into each other now: the positions are read back, and every pair
-   * closer than a diameter is measured in JavaScript, with a grid of its own.
-   */
-  async function overlaps(sim: Simulation) {
+  /** The positions as they are now, read back from the GPU: x, y, z and 1 / mass each. */
+  async function positionsOf(sim: Simulation) {
     const size = sim.particleCount * 16
     const back = device.createBuffer({
       size,
@@ -1265,6 +1269,48 @@ async function start() {
     await back.mapAsync(GPUMapMode.READ)
     const p = new Float32Array(back.getMappedRange().slice(0))
     back.destroy()
+    return p
+  }
+
+  /**
+   * How still the particles are: how far each one goes in about a second, as a speed. Not with
+   * ?sorted, which moves the particles to other rows between the two readings.
+   */
+  async function rest(sim: Simulation) {
+    const from = sim.substepCount
+    const before = await positionsOf(sim)
+    while (sim.substepCount < from + 60 * settings.substeps)
+      await new Promise((done) => setTimeout(done, 50))
+    const after = await positionsOf(sim)
+    const seconds = ((sim.substepCount - from) / settings.substeps) * STEP
+    let fast = 0
+    let slow = 0
+    let fastest = 0
+    let height = 0
+    for (let i = 0; i < sim.particleCount; i++) {
+      const speed =
+        Math.hypot(
+          after[i * 4] - before[i * 4],
+          after[i * 4 + 1] - before[i * 4 + 1],
+          after[i * 4 + 2] - before[i * 4 + 2],
+        ) / seconds
+      if (speed > 0.1) fast++
+      if (speed > 0.01) slow++
+      fastest = Math.max(fastest, speed)
+      height += after[i * 4 + 1] / sim.particleCount
+    }
+    return (
+      `rest: over ${seconds.toFixed(2)} s, ${fast} particles faster than 10 cm/s, ${slow} faster ` +
+      `than 1 cm/s, the fastest at ${(100 * fastest).toFixed(1)} cm/s, mean height ${height.toFixed(4)} m`
+    )
+  }
+
+  /**
+   * How deep the particles are into each other now: the positions are read back, and every pair
+   * closer than a diameter is measured in JavaScript, with a grid of its own.
+   */
+  async function overlaps(sim: Simulation) {
+    const p = await positionsOf(sim)
     const cellOf = (i: number, a: number) => Math.floor(p[i * 4 + a] / DIAMETER) + 4096
     const key = (x: number, y: number, z: number) => (x * 8192 + y) * 8192 + z
     const grid = new Map<number, number[]>()
@@ -1335,6 +1381,7 @@ async function start() {
         (Math.max(...profiled.leftOut) - Math.min(...profiled.leftOut)) / Math.max(made, 1)
       ).toFixed(0)}`,
       simulation ? await overlaps(simulation) : '',
+      simulation && !query.has('sorted') ? await rest(simulation) : '',
     ]
     const note = document.createElement('pre')
     note.id = 'profile'

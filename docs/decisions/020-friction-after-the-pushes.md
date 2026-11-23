@@ -1,6 +1,6 @@
 # 020 · Friction on positions, measured after the pushes
 
-*Accepted · November 20, 2026 · The user, after following a thrown drop substep by substep ([chapter 034](../logbook/034-the-box-on-the-ramp.md))*
+*Accepted, "after the pushes" superseded by [025](./025-friction-in-one-pass.md) · November 20, 2026 · The user, after following a thrown drop substep by substep ([chapter 034](../logbook/034-the-box-on-the-ramp.md))*
 
 **Decision:** we will give particles friction by moving positions, inside each round: a particle first works out the pushes of its contacts, then each contact asks to take back the slide the two have made since the start of the substep, measured from where those pushes bring the particle, up to µ × their overlap, and the particle moves by the average of what its contacts ask.
 
