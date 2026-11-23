@@ -1268,7 +1268,8 @@
         "docs/logbook/030-the-lazy-list.md",
         "docs/decisions/016-a-list-made-when-needed.md",
         "docs/logbook/035-the-grid-stays-still.md",
-        "docs/logbook/036-the-address-book.md"
+        "docs/logbook/036-the-address-book.md",
+        "docs/logbook/037-the-lonely-thread.md"
       ],
       "code": ["examples/contact-cost/main.ts", "examples/contact-cost/grid.wgsl"]
     },
@@ -1285,7 +1286,11 @@
       },
       "partOf": "broad-phase",
       "related": ["uniform-grid", "neighbour-search"],
-      "citedIn": ["docs/logbook/004-the-detour.md", "docs/logbook/036-the-address-book.md"],
+      "citedIn": [
+        "docs/logbook/004-the-detour.md",
+        "docs/logbook/036-the-address-book.md",
+        "docs/logbook/037-the-lonely-thread.md"
+      ],
       "code": ["examples/force-plus/cells-table.wgsl"]
     },
     {
@@ -1924,12 +1929,44 @@
         "mentioned": "2026-11-08",
         "seen": "2026-11-20"
       },
-      "citedIn": ["docs/logbook/004-the-detour.md", "docs/logbook/036-the-address-book.md"],
+      "citedIn": [
+        "docs/logbook/004-the-detour.md",
+        "docs/logbook/036-the-address-book.md",
+        "docs/logbook/037-the-lonely-thread.md"
+      ],
       "code": [
         "examples/force-plus/book-blocks.wgsl",
         "examples/force-plus/book-scan.wgsl",
         "examples/force-plus/book-ends.wgsl"
       ]
+    },
+    {
+      "id": "hillis-steele-scan",
+      "kind": "concept",
+      "title": "Hillis and Steele scan",
+      "summary": "A prefix sum in few rounds: every element adds the one 1 place to its left, then 2 places, then 4. Fast to finish, but it makes more additions than a plain walk",
+      "area": "gpu",
+      "status": "seen",
+      "since": {
+        "seen": "2026-11-23"
+      },
+      "partOf": "prefix-sum",
+      "related": ["ping-pong-buffers"],
+      "citedIn": ["gpu-gems-prefix-sum", "docs/logbook/037-the-lonely-thread.md"]
+    },
+    {
+      "id": "blelloch-scan",
+      "kind": "concept",
+      "title": "Blelloch scan",
+      "summary": "A prefix sum that adds pairs up like a tournament and then comes back down: few rounds, and about twice the additions of a plain walk",
+      "area": "gpu",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-23"
+      },
+      "partOf": "prefix-sum",
+      "related": ["hillis-steele-scan"],
+      "citedIn": ["gpu-gems-prefix-sum", "docs/logbook/037-the-lonely-thread.md"]
     },
     {
       "id": "parallel-sort",
@@ -2772,6 +2809,30 @@
       "authors": "Scott Le Grand",
       "year": 2007,
       "claudeRead": "parts"
+    },
+    {
+      "id": "gpu-gems-prefix-sum",
+      "kind": "book",
+      "title": "Parallel Prefix Sum (Scan) with CUDA",
+      "summary": "How the threads of a GPU share a prefix sum: a simple scan, a work-efficient one, and blocks for arrays of any size",
+      "area": "gpu",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-23"
+      },
+      "partOf": "gpu-gems-3",
+      "about": ["prefix-sum", "gpu-parallelism", "hillis-steele-scan", "blelloch-scan"],
+      "citedIn": ["gpu-gems-3", "docs/logbook/037-the-lonely-thread.md"],
+      "url": "https://developer.nvidia.com/gpugems/gpugems3/part-vi-gpu-computing/chapter-39-parallel-prefix-sum-scan-cuda",
+      "authors": "Mark Harris, Shubhabrata Sengupta, John D. Owens",
+      "year": 2007,
+      "claudeRead": "parts",
+      "suggestedBy": [
+        {
+          "user": "fracabu",
+          "issue": 1
+        }
+      ]
     },
     {
       "id": "gpu-gems-rigid-bodies",
@@ -7017,7 +7078,7 @@
         "seen": "2026-11-20"
       },
       "related": ["storage-buffer"],
-      "citedIn": ["docs/logbook/030-the-lazy-list.md"],
+      "citedIn": ["docs/logbook/030-the-lazy-list.md", "docs/logbook/037-the-lonely-thread.md"],
       "code": ["examples/contact-cost/round.wgsl", "examples/contact-cost/spring.wgsl"]
     },
     {
