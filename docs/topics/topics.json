@@ -1252,7 +1252,7 @@
       "id": "uniform-grid",
       "kind": "concept",
       "title": "Uniform grid",
-      "summary": "Space split into equal cells: only objects in the same or nearby cells get compared",
+      "summary": "Space split into equal cells, as wide as the distance searched: only objects in the same or nearby cells get compared",
       "area": "physics",
       "status": "seen",
       "since": {
@@ -1269,7 +1269,11 @@
         "docs/decisions/016-a-list-made-when-needed.md",
         "docs/logbook/035-the-grid-stays-still.md",
         "docs/logbook/036-the-address-book.md",
-        "docs/logbook/037-the-lonely-thread.md"
+        "docs/logbook/037-the-lonely-thread.md",
+        "docs/logbook/038-one-hundred-twenty-five-cells.md",
+        "docs/decisions/023-cells-as-wide-as-the-reach.md",
+        "docs/logbook/039-far-apart-in-memory.md",
+        "docs/decisions/024-cells-in-a-hashed-table.md"
       ],
       "code": ["examples/contact-cost/main.ts", "examples/contact-cost/grid.wgsl"]
     },
@@ -1289,9 +1293,46 @@
       "citedIn": [
         "docs/logbook/004-the-detour.md",
         "docs/logbook/036-the-address-book.md",
-        "docs/logbook/037-the-lonely-thread.md"
+        "docs/logbook/037-the-lonely-thread.md",
+        "docs/logbook/038-one-hundred-twenty-five-cells.md",
+        "docs/logbook/039-far-apart-in-memory.md",
+        "docs/logbook/040-the-table.md",
+        "docs/decisions/024-cells-in-a-hashed-table.md"
       ],
       "code": ["examples/force-plus/cells-table.wgsl"]
+    },
+    {
+      "id": "memory-locality",
+      "kind": "concept",
+      "title": "Memory locality",
+      "summary": "A GPU reads things that sit close together in memory faster than things scattered over it, as with the texels of a texture; a larger or more scattered table can be slower",
+      "area": "gpu",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-23"
+      },
+      "related": ["spatial-hashing", "z-order-curve"],
+      "citedIn": [
+        "docs/logbook/039-far-apart-in-memory.md",
+        "docs/logbook/040-the-table.md",
+        "docs/decisions/024-cells-in-a-hashed-table.md",
+        "particle-simulation-cuda"
+      ],
+      "code": ["examples/force-plus/cells-table.wgsl"]
+    },
+    {
+      "id": "particle-reordering",
+      "kind": "concept",
+      "title": "Reordering particles by cell",
+      "summary": "Moving the positions and velocities themselves into the order of their cells, so that particles close in space are close in memory when their neighbours are read",
+      "area": "gpu",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-23"
+      },
+      "partOf": "memory-locality",
+      "related": ["grid-by-sorting", "z-order-curve"],
+      "citedIn": ["particle-simulation-cuda", "unified-particle-physics-paper"]
     },
     {
       "id": "gjk",
@@ -1824,7 +1865,10 @@
         "docs/logbook/012-the-family-tree.md",
         "docs/logbook/024-twenty-seven-cells.md",
         "docs/logbook/030-the-lazy-list.md",
-        "docs/decisions/016-a-list-made-when-needed.md"
+        "docs/decisions/016-a-list-made-when-needed.md",
+        "docs/logbook/038-one-hundred-twenty-five-cells.md",
+        "docs/logbook/039-far-apart-in-memory.md",
+        "docs/decisions/024-cells-in-a-hashed-table.md"
       ],
       "code": ["examples/contact-cost/list.wgsl"]
     },
@@ -2554,7 +2598,8 @@
         "pre-stabilization",
         "position-based-friction",
         "static-and-kinetic-friction",
-        "angle-of-repose"
+        "angle-of-repose",
+        "particle-reordering"
       ],
       "citedIn": [
         "docs/logbook/004-the-detour.md",
@@ -6076,7 +6121,9 @@
         "atomic-operations",
         "z-order-curve",
         "discrete-element-method",
-        "prefix-sum"
+        "prefix-sum",
+        "memory-locality",
+        "particle-reordering"
       ],
       "citedIn": [
         "docs/logbook/012-the-family-tree.md",
@@ -6630,7 +6677,8 @@
         "webgpu-spec-timestamp-query",
         "new-in-webgpu-120",
         "mdn-begin-compute-pass",
-        "docs/logbook/022-the-bell-that-rang-early.md"
+        "docs/logbook/022-the-bell-that-rang-early.md",
+        "docs/logbook/038-one-hundred-twenty-five-cells.md"
       ],
       "code": ["examples/dispatch-cost/main.ts"],
       "page": "docs/guides/timestamp-queries.md"
@@ -7063,7 +7111,9 @@
       "citedIn": [
         "docs/logbook/030-the-lazy-list.md",
         "docs/decisions/016-a-list-made-when-needed.md",
-        "docs/logbook/031-the-yellow-ball.md"
+        "docs/logbook/031-the-yellow-ball.md",
+        "docs/logbook/038-one-hundred-twenty-five-cells.md",
+        "docs/decisions/023-cells-as-wide-as-the-reach.md"
       ],
       "code": ["examples/contact-cost/list.wgsl", "examples/contact-cost/watch.wgsl"]
     },

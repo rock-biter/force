@@ -27,13 +27,15 @@ The choices that shape FORCE, one per page: what we decided, why, what we left o
 | 013 | [A flat ground, the simplest way](./013-a-flat-ground.md) | Accepted | November 11, 2026 |
 | 014 | [Damping as a knob, off by default](./014-damping-off-by-default.md) | Accepted | November 19, 2026 |
 | 015 | [Particles pushed apart by moving positions, half and half](./015-half-and-half-on-positions.md) | Accepted, rounds superseded by 022 | November 20, 2026 |
-| 016 | [Neighbours: a grid, and a list made when needed](./016-a-list-made-when-needed.md) | Accepted | November 20, 2026 |
+| 016 | [Neighbours: a grid, and a list made when needed](./016-a-list-made-when-needed.md) | Accepted, cell width superseded by 023, grid with 4 places by 024 | November 20, 2026 |
 | 017 | [A speed limit of one radius per substep](./017-a-speed-limit-per-substep.md) | Superseded by 019 | November 20, 2026 |
 | 018 | [The speed limit, set in m/s](./018-max-speed-in-meters-per-second.md) | Accepted | November 20, 2026 |
 | 019 | [A default speed limit of 1.5 radii per substep](./019-default-speed-limit.md) | Accepted | November 20, 2026 |
 | 020 | [Friction on positions, measured after the pushes](./020-friction-after-the-pushes.md) | Accepted | November 20, 2026 |
 | 021 | [A grid fixed in the world](./021-a-grid-fixed-in-the-world.md) | Accepted | November 20, 2026 |
 | 022 | [Six rounds per substep](./022-six-rounds.md) | Accepted | November 20, 2026 |
+| 023 | [Cells as wide as the lists reach](./023-cells-as-wide-as-the-reach.md) | Accepted | November 23, 2026 |
+| 024 | [Cells kept in a hashed table](./024-cells-in-a-hashed-table.md) | Accepted | November 23, 2026 |
 
 ## Rules
 

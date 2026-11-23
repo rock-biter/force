@@ -16,15 +16,16 @@ documentation of the library will live there too.
 
 *Updated November 23, 2026*
 
-**Latest step:** [the lonely thread](./docs/logbook/037-the-lonely-thread.md). To find which
-particles touch, we sort them by the small cell of space they are in
-([try it](https://rock-biter.github.io/force/force-tilt/)), and that needs a running sum over the
-cells. A reader sent us a chapter on how to make that sum faster on a GPU, our first suggestion. We
-timed our own sum first: 9 ms when every cell of the world has its row in memory, 0.2 ms when memory
-follows the particles instead. So it is the second way we lean to, and its sum is fast enough.
+**Latest steps:** chapters [038](./docs/logbook/038-one-hundred-twenty-five-cells.md),
+[039](./docs/logbook/039-far-apart-in-memory.md) and [040](./docs/logbook/040-the-table.md). To find
+which particles touch, each one looks into the small cells of space around it
+([try it](https://rock-biter.github.io/force/force-tilt/)). We timed every part of a step and found
+that this search took most of it: each particle read 125 cells where we believed 27, and the way of
+storing the cells we liked best scattered them in memory. With both fixed, a pile of 50 000 particles
+in a corner takes 8 ms a step instead of 13, loses no particle, and the cells cost 1 MB whatever the
+size of the world.
 
-**Next:** find where the time of a step goes with that second way, then choose how the engine keeps
-its cells.
+**Next:** run it on a phone.
 
 Every step, with what we learned and what went wrong, is in the [logbook](./docs/README.md).
 

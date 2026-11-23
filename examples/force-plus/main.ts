@@ -1,6 +1,7 @@
 // FORCE+ on the GPU, live. Up to 100 000 particles in a box as big as the grid, pushed apart by
 // moving their positions with half and half, masses seen as m^α and levels in the pile (decision
-// 015), through lists of neighbours made when needed (decision 016). A menu switches to FORCE, the
+// 015), through lists of neighbours made when needed (decision 016), from cells kept in a hashed table
+// (decision 024). A menu switches to FORCE, the
 // same rule with the real masses and no levels (chapter 026), as in the compare page. The pointer pushes them away
 // with a ball. The shaders come from contact-cost, where they were checked against JavaScript; two
 // are this page's own: the round, the same one plus the ball, and finish, the same one plus a speed
@@ -144,8 +145,14 @@ function cube(count: number, masses: readonly [number, number]): Float32Array {
   return data
 }
 
+// ?hash=scattered in the address, to measure: the hash of cells-table.wgsl, which keeps the cells
+// of a row along x together, is replaced by the one of Teschner and others, which scrambles all
+// three coordinates (chapter 039).
+const HASH = '(((u.y * 19349663u) ^ (u.z * 83492791u)) + u.x) % slots'
+const HASH_SCATTERED = '((u.x * 73856093u) ^ (u.y * 19349663u) ^ (u.z * 83492791u)) % slots'
+
 /** The compute pipelines, made once: every restart uses them again. */
-async function makePipelines(device: GPUDevice) {
+async function makePipelines(device: GPUDevice, scattered: boolean) {
   const make = (code: string) =>
     device.createComputePipelineAsync({
       layout: 'auto',
@@ -167,7 +174,10 @@ async function makePipelines(device: GPUDevice) {
       rebuildCode + bookEndsCode,
       // its three shaders that file a particle under its cell, once with a slot per cell of the
       // grid and once with the slots of a table
-      ...[cellsGridCode, cellsTableCode].flatMap((cellsCode) =>
+      ...[
+        cellsGridCode,
+        scattered ? cellsTableCode.replace(HASH, HASH_SCATTERED) : cellsTableCode,
+      ].flatMap((cellsCode) =>
         [bookCountCode, bookFillCode, bookListCode].map((code) => rebuildCode + cellsCode + code),
       ),
     ].map(make),
@@ -214,15 +224,18 @@ interface Grid {
  * cells of a space with no border (spatial hashing).
  */
 type Cells = 'places' | 'book' | 'table'
-/** The grid the level box fills exactly. */
-const LEVEL_GRID: Grid = { origin: [-HALF, 0, -HALF], size: SIZE }
+/** The grid of the level box, with cells of this width: 120 by 45 by 120 of them at 20 cm. */
+const levelGrid = (cell: number): Grid => ({
+  origin: [-HALF, 0, -HALF],
+  size: SIZE.map((n) => Math.ceil((n * CELL) / cell - 1e-6)) as Vec3,
+})
 
 /**
  * The grid never turns: its cells stay along the world's axes. So for a box that tilts, it must be
  * big enough to hold the box at every tilt, up to `most` degrees around X and around Z. The box
  * turns around the middle of its floor.
  */
-function gridAround(most: number): Grid {
+function gridAround(most: number, cell: number): Grid {
   const low = new Vector3(
     Number.POSITIVE_INFINITY,
     Number.POSITIVE_INFINITY,
@@ -242,8 +255,8 @@ function gridAround(most: number): Grid {
             high.max(corner)
           }
     }
-  const origin = low.toArray().map((v) => Math.floor(v / CELL) * CELL - CELL) as Vec3
-  const size = high.toArray().map((v, a) => Math.ceil((v - origin[a]) / CELL) + 1) as Vec3
+  const origin = low.toArray().map((v) => Math.floor(v / cell) * cell - cell) as Vec3
+  const size = high.toArray().map((v, a) => Math.ceil((v - origin[a]) / cell) + 1) as Vec3
   return { origin, size }
 }
 
@@ -260,6 +273,9 @@ function makeSimulation(
   grid: Grid,
   box: Matrix4,
   cells: Cells,
+  margin: number,
+  cell: number,
+  slotsEach: number,
 ) {
   // The cube stands on the floor of the box, wherever the box is turned.
   const start = cube(count, masses)
@@ -270,10 +286,10 @@ function makeSimulation(
   }
   const bytes = start.byteLength
   // The slots that count particles: one per cell of the grid, or those of the table, the first
-  // power of two that gives at least two per particle.
+  // power of two that gives at least `slotsEach` per particle.
   const cellCount =
     cells === 'table'
-      ? 2 ** Math.ceil(Math.log2(Math.max(2 * count, 1024)))
+      ? 2 ** Math.ceil(Math.log2(Math.max(slotsEach * count, 1024)))
       : grid.size[0] * grid.size[1] * grid.size[2]
   const buffers: GPUBuffer[] = []
   const storage = (size: number, extra = 0) => {
@@ -284,7 +300,7 @@ function makeSimulation(
     buffers.push(buffer)
     return buffer
   }
-  const positions = storage(bytes)
+  const positions = storage(bytes, GPUBufferUsage.COPY_SRC) // read back by ?profile
   const velocities = storage(bytes)
   const predicted = [storage(bytes), storage(bytes)]
   const counts = storage(cellCount * 4)
@@ -318,11 +334,11 @@ function makeSimulation(
   const data = new ArrayBuffer(80)
   const floats = new Float32Array(data)
   const words = new Uint32Array(data)
-  floats.set([0, -GRAVITY, 0, STEP, ...grid.origin, CELL])
+  floats.set([0, -GRAVITY, 0, STEP, ...grid.origin, cell])
   words.set([...grid.size, PLACES], 8)
   floats.set([RADIUS, FORCE_PLUS.alpha, FORCE_PLUS.levels], 12)
   words[15] = PLANES.length
-  floats[19] = MARGIN // 16 to 18 belong to the spring, not used here
+  floats[19] = margin // 16 to 18 belong to the spring, not used here
   device.queue.writeBuffer(params, 0, data)
 
   const group = (p: GPUComputePipeline, entries: GPUBuffer[]) =>
@@ -433,49 +449,72 @@ function makeSimulation(
      * One step of 1/60 s, cut into substeps. Each one: predict, the list if needed, the levels, 6
      * rounds with the ball, finish. Before each substep its own ball is copied from `path`, from
      * entry `from` on, into the Pointer uniform. With a `clock`, the GPU clock is read when the
-     * first substep starts and when the last one ends.
+     * first substep starts and when the last one ends. With a `profile`, every shader runs in a
+     * compute pass of its own, between two readings of the profile's clock, and its name is added
+     * to the profile's names: pass k of the step wrote entries 2k and 2k + 1.
      */
-    encode(encoder: GPUCommandEncoder, path: GPUBuffer, from: number, clock?: GPUQuerySet) {
+    encode(
+      encoder: GPUCommandEncoder,
+      path: GPUBuffer,
+      from: number,
+      clock?: GPUQuerySet,
+      profile?: Profile,
+    ) {
       for (let s = 0; s < substeps; s++) {
         const first = s === 0
         const last = s === substeps - 1
         encoder.copyBufferToBuffer(path, (from + s) * 16, pointer, 0, 16)
         encoder.clearBuffer(control, 8, 4) // the largest move, measured again at every substep
-        const pass = encoder.beginComputePass(
-          clock && (first || last)
-            ? {
-                timestampWrites: {
-                  querySet: clock,
-                  beginningOfPassWriteIndex: first ? 0 : undefined,
-                  endOfPassWriteIndex: last ? 1 : undefined,
-                },
-              }
-            : undefined,
-        )
-        const dispatch = (p: GPUComputePipeline, g: GPUBindGroup, n = workgroups) => {
+        const whole = profile
+          ? undefined
+          : encoder.beginComputePass(
+              clock && (first || last)
+                ? {
+                    timestampWrites: {
+                      querySet: clock,
+                      beginningOfPassWriteIndex: first ? 0 : undefined,
+                      endOfPassWriteIndex: last ? 1 : undefined,
+                    },
+                  }
+                : undefined,
+            )
+        const dispatch = (name: string, p: GPUComputePipeline, g: GPUBindGroup, n = workgroups) => {
+          const k = profile?.names.push(name) ?? 0
+          const pass =
+            whole ??
+            encoder.beginComputePass({
+              timestampWrites: {
+                querySet: (profile as Profile).clock,
+                beginningOfPassWriteIndex: 2 * k - 2,
+                endOfPassWriteIndex: 2 * k - 1,
+              },
+            })
           pass.setPipeline(p)
           pass.setBindGroup(0, g)
           pass.dispatchWorkgroups(n)
+          if (!whole) pass.end()
         }
-        dispatch(kit.predict, predictGroup)
-        dispatch(kit.watch, watchGroup)
-        dispatch(kit.clearIf, clearGroup, cellWorkgroups)
+        dispatch('predict', kit.predict, predictGroup)
+        dispatch('watch', kit.watch, watchGroup)
+        dispatch('clear', kit.clearIf, clearGroup, cellWorkgroups)
         if (cells === 'places') {
-          dispatch(kit.gridIf, gridGroup)
-          dispatch(kit.list, listGroup)
+          dispatch('fill', kit.gridIf, gridGroup)
+          dispatch('list', kit.list, listGroup)
         } else {
-          dispatch(file.bookCount, bookGroups.count)
-          dispatch(kit.bookBlocks, bookGroups.blocks, blockWorkgroups)
-          dispatch(kit.bookScan, bookGroups.scan, 1)
-          dispatch(kit.bookEnds, bookGroups.ends, blockWorkgroups)
-          dispatch(file.bookFill, bookGroups.fill)
-          dispatch(file.bookList, bookGroups.list)
+          dispatch('count', file.bookCount, bookGroups.count)
+          dispatch('sum', kit.bookBlocks, bookGroups.blocks, blockWorkgroups)
+          dispatch('sum', kit.bookScan, bookGroups.scan, 1)
+          dispatch('sum', kit.bookEnds, bookGroups.ends, blockWorkgroups)
+          dispatch('fill', file.bookFill, bookGroups.fill)
+          dispatch('list', file.bookList, bookGroups.list)
         }
-        if (levelsOn) dispatch(kit.levels, levelGroups[parity])
-        for (let r = 0; r < ROUNDS; r++) dispatch(kit.round, roundGroups[parity][r % 2])
-        dispatch(kit.finish, finishGroup)
-        pass.end()
-        encoder.clearBuffer(control, 0, 4) // only the first substep asks for a list
+        if (levelsOn) dispatch('levels', kit.levels, levelGroups[parity])
+        for (let r = 0; r < ROUNDS; r++) dispatch('rounds', kit.round, roundGroups[parity][r % 2])
+        dispatch('finish', kit.finish, finishGroup)
+        whole?.end()
+        // Only the first substep asks for a list. With no margin every substep does: a list that
+        // looks no further than touching is right only where it was made.
+        if (margin > 0) encoder.clearBuffer(control, 0, 4)
         parity = 1 - parity
         this.substepCount++
       }
@@ -516,6 +555,10 @@ function makeSimulation(
   }
 }
 type Simulation = ReturnType<typeof makeSimulation>
+/** A clock with two entries per shader of a step, and the names of the shaders that wrote them. */
+type Profile = { clock: GPUQuerySet; names: string[] }
+// The most shaders a step runs: ten and the rounds, in every substep.
+const MAX_PASSES = (10 + ROUNDS) * MAX_SUBSTEPS
 
 async function start() {
   const adapter = await navigator.gpu?.requestAdapter()
@@ -532,7 +575,10 @@ async function start() {
     if (!seen.has(message)) showError(message)
     seen.add(message)
   })
-  const kit = await makePipelines(device)
+  const kit = await makePipelines(
+    device,
+    new URLSearchParams(location.search).get('hash') === 'scattered',
+  )
 
   const renderer = new WebGPURenderer({ device, antialias: true })
   await renderer.init()
@@ -723,13 +769,19 @@ async function start() {
     // How the particles are drawn: as shaded spheres with their own depth, as flat discs, or not
     // at all, to see how much of a frame goes into drawing them.
     draw: askedDraw === 'flat' || askedDraw === 'none' ? askedDraw : 'spheres',
-    // How the grid keeps its particles: 4 places per cell, the address book, or the address book
-    // with a table. ?cells=book or ?cells=table
-    cells: (['book', 'table'].includes(query.get('cells') ?? '')
+    // How the cells keep their particles: the address book with a table (decision 024), the
+    // address book with a slot per cell of the grid, or 4 places per cell. ?cells=book or
+    // ?cells=places
+    cells: (['book', 'places'].includes(query.get('cells') ?? '')
       ? query.get('cells')
-      : 'places') as Cells,
+      : 'table') as Cells,
     ball: BALL_RADIUS,
   }
+  // ?margin=0 in the address: how far beyond touching the lists look, in meters. With 0 a
+  // particle reads 3 × 3 × 3 cells, not 5 × 5 × 5, and the lists are made again at every step.
+  const margin = query.has('margin')
+    ? MathUtils.clamp(Number(query.get('margin')) || 0, 0, CELL)
+    : MARGIN
   const stats = { gpu: Number.NaN, lists: Number.NaN, crowded: Number.NaN, leftOut: Number.NaN }
   /** α and c as the solver sees them: FORCE uses the real masses and no levels. */
   const solverAlpha = () => (settings.method === 'plus' ? settings.alpha : 1)
@@ -744,7 +796,16 @@ async function start() {
           ? settings.speed
           : 0
   // A page that tilts the box needs a grid that holds it at every tilt.
-  const grid = document.body.dataset.tilt !== undefined ? gridAround(MAX_TILT) : LEVEL_GRID
+  // Cells as wide as the lists reach, a diameter plus the margin, so that 3 × 3 × 3 of them are
+  // enough (decision 023). With ?narrow in the address, cells as wide as a particle, as before.
+  // The 4 places per cell keep cells as wide as a particle: a wider cell holds more than 4, and
+  // particles are left out (chapter 039).
+  const cellWidth = () =>
+    !query.has('narrow') && settings.cells !== 'places' ? DIAMETER + margin : CELL
+  const gridOf = (cell: number) =>
+    document.body.dataset.tilt !== undefined ? gridAround(MAX_TILT, cell) : levelGrid(cell)
+  // ?slots=8 in the address: slots of the table per particle, at least; 2 without it.
+  const slotsEach = Math.max(Number(query.get('slots')) || 2, 1)
   let simulation: Simulation | undefined
   let view: ParticleView | undefined
   let paused = false
@@ -775,9 +836,12 @@ async function start() {
       pointerBuffer,
       settings.particles,
       masses,
-      grid,
+      gridOf(cellWidth()),
       world.matrixWorld,
       settings.cells,
+      margin,
+      cellWidth(),
+      slotsEach,
     )
     simulation.setBox(world.quaternion)
     applySolver()
@@ -1023,6 +1087,121 @@ async function start() {
     for (const b of copies) b.destroy()
   }
 
+  // ?profile=120 in the address: once ?after=600 steps have run, time every shader of the next 120
+  // steps on the GPU clock, each in a pass of its own, and write under the title how many ms of a
+  // step each one takes, on average. Shaders with the same name are added up: the three of the
+  // sum, the six rounds.
+  const profileSteps = hasClock && query.has('profile') ? Number(query.get('profile')) || 120 : 0
+  const profileAfter = Number(query.get('after')) || 600
+  const profileClock = profileSteps
+    ? device.createQuerySet({ type: 'timestamp', count: 2 * MAX_PASSES })
+    : undefined
+  const profileResolved = device.createBuffer({
+    size: 16 * MAX_PASSES,
+    usage: GPUBufferUsage.QUERY_RESOLVE | GPUBufferUsage.COPY_SRC,
+  })
+  const profiled = {
+    sent: 0,
+    read: 0,
+    ms: new Map<string, number>(),
+    lists: [] as number[], // lists made so far, after each profiled step
+    leftOut: [] as number[], // particles that found their cell full so far
+    steps: [] as number[], // substeps run so far, after each profiled step
+    whole: Number.NaN, // a step in one pass, as the panel showed it just before
+  }
+  /**
+   * How deep the particles are into each other now: the positions are read back, and every pair
+   * closer than a diameter is measured in JavaScript, with a grid of its own.
+   */
+  async function overlaps(sim: Simulation) {
+    const size = sim.particleCount * 16
+    const back = device.createBuffer({
+      size,
+      usage: GPUBufferUsage.MAP_READ | GPUBufferUsage.COPY_DST,
+    })
+    const encoder = device.createCommandEncoder()
+    encoder.copyBufferToBuffer(sim.positionBuffer, 0, back, 0, size)
+    device.queue.submit([encoder.finish()])
+    await back.mapAsync(GPUMapMode.READ)
+    const p = new Float32Array(back.getMappedRange().slice(0))
+    back.destroy()
+    const cellOf = (i: number, a: number) => Math.floor(p[i * 4 + a] / DIAMETER) + 4096
+    const key = (x: number, y: number, z: number) => (x * 8192 + y) * 8192 + z
+    const grid = new Map<number, number[]>()
+    for (let i = 0; i < sim.particleCount; i++) {
+      const k = key(cellOf(i, 0), cellOf(i, 1), cellOf(i, 2))
+      const cell = grid.get(k)
+      if (cell) cell.push(i)
+      else grid.set(k, [i])
+    }
+    let touching = 0
+    let deep = 0
+    let deepest = 0
+    for (let i = 0; i < sim.particleCount; i++)
+      for (let dx = -1; dx <= 1; dx++)
+        for (let dy = -1; dy <= 1; dy++)
+          for (let dz = -1; dz <= 1; dz++)
+            for (const j of grid.get(
+              key(cellOf(i, 0) + dx, cellOf(i, 1) + dy, cellOf(i, 2) + dz),
+            ) ?? []) {
+              if (j <= i) continue
+              const depth =
+                DIAMETER -
+                Math.hypot(
+                  p[i * 4] - p[j * 4],
+                  p[i * 4 + 1] - p[j * 4 + 1],
+                  p[i * 4 + 2] - p[j * 4 + 2],
+                )
+              if (depth <= 0) continue
+              touching++
+              if (depth > 0.1 * RADIUS) deep++
+              deepest = Math.max(deepest, depth)
+            }
+    return (
+      `overlaps: ${touching} pairs closer than a diameter, ${deep} of them by more than ` +
+      `${RADIUS * 10} cm, the deepest by ${(deepest * 100).toFixed(1)} cm`
+    )
+  }
+
+  /** Reads the clock entries of one step, and the count of lists made, copied after them. */
+  async function readProfile(back: GPUBuffer, names: string[], steps: number) {
+    await back.mapAsync(GPUMapMode.READ)
+    const data = back.getMappedRange()
+    const times = new BigUint64Array(data, 0, 2 * names.length)
+    names.forEach((name, k) => {
+      const ms = Number(times[2 * k + 1] - times[2 * k]) / 1e6
+      profiled.ms.set(name, (profiled.ms.get(name) ?? 0) + ms)
+    })
+    const control = new Uint32Array(data, 16 * names.length, 8)
+    profiled.lists.push(control[3])
+    profiled.leftOut.push(control[5])
+    profiled.steps.push(steps)
+    back.destroy()
+    if (++profiled.read < profileSteps) return
+    const made = Math.max(...profiled.lists) - Math.min(...profiled.lists)
+    const ran = Math.max(...profiled.steps) - Math.min(...profiled.steps)
+    const total = [...profiled.ms.values()].reduce((a, b) => a + b, 0) / profileSteps
+    const lines = [
+      `profile ${settings.cells}: ${settings.particles} particles, ${profileSteps} steps after ` +
+        `${profileAfter}, ${settings.substeps} substeps, margin ${margin} m, cells of ${cellWidth()} m${query.get('hash') === 'scattered' ? ', scattered hash' : ''}${settings.cells === 'table' ? `, ${slotsEach} slots each` : ''}, lists made again in ${made} of ${ran} substeps`,
+      ...[...profiled.ms].map(
+        ([name, ms]) =>
+          `${name.padEnd(8)} ${(ms / profileSteps).toFixed(3).padStart(7)} ms  ` +
+          `${((100 * ms) / profileSteps / total).toFixed(0).padStart(3)}%`,
+      ),
+      `${'total'.padEnd(8)} ${total.toFixed(3).padStart(7)} ms`,
+      `a step in one pass, just before: ${profiled.whole.toFixed(2)} ms`,
+      `left out of a full cell, per list: ${(
+        (Math.max(...profiled.leftOut) - Math.min(...profiled.leftOut)) / Math.max(made, 1)
+      ).toFixed(0)}`,
+      simulation ? await overlaps(simulation) : '',
+    ]
+    const note = document.createElement('pre')
+    note.id = 'profile'
+    note.textContent = lines.join('\n')
+    document.querySelector('.crumb')?.append(note)
+  }
+
   let last: number | undefined
   let frame = 0
   renderer.setAnimationLoop((now) => {
@@ -1043,9 +1222,35 @@ async function start() {
       if (owed >= STEP) owed = 0 // the GPU cannot keep up: slow down rather than pile up
       moveBall(sim.particleCount, steps, sim.substeps, settings.ball)
       const sample = steps > 0 && !reading && frame++ % SAMPLE_EVERY === 0
+      // the first step of this frame is profiled, if ?profile asks and the wait is over
+      const profile =
+        profileClock &&
+        steps > 0 &&
+        profiled.sent < profileSteps &&
+        sim.substepCount >= profileAfter * sim.substeps
+          ? { clock: profileClock, names: [] as string[] }
+          : undefined
+      if (profile && profiled.sent++ === 0) profiled.whole = stats.gpu
       const encoder = device.createCommandEncoder()
       for (let s = 0; s < steps; s++)
-        sim.encode(encoder, ballPath, s * sim.substeps, sample && s === 0 ? stamps : undefined)
+        sim.encode(
+          encoder,
+          ballPath,
+          s * sim.substeps,
+          sample && s === 0 && !profile ? stamps : undefined,
+          s === 0 ? profile : undefined,
+        )
+      let profileBack: GPUBuffer | undefined
+      if (profile) {
+        const size = 16 * profile.names.length
+        profileBack = device.createBuffer({
+          size: size + 32,
+          usage: GPUBufferUsage.MAP_READ | GPUBufferUsage.COPY_DST,
+        })
+        encoder.resolveQuerySet(profile.clock, 0, 2 * profile.names.length, profileResolved, 0)
+        encoder.copyBufferToBuffer(profileResolved, 0, profileBack, 0, size)
+        encoder.copyBufferToBuffer(sim.control, 0, profileBack, size, 32)
+      }
       if (sample) {
         if (stamps) {
           encoder.resolveQuerySet(stamps, 0, 2, resolved, 0)
@@ -1055,6 +1260,8 @@ async function start() {
       }
       device.queue.submit([encoder.finish()])
       if (sample) read(sim)
+      if (profile && profileBack)
+        readProfile(profileBack, profile.names, sim.substepCount).catch(showError)
     }
     // Same queue, same order: the steps sent above run before this drawing reads the positions.
     renderer.render(scene, camera)

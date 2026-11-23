@@ -28,9 +28,12 @@ fn main(@builtin(global_invocation_id) id: vec3u) {
   var n = 0u;
   let slots = arrayLength(&counts);
   let home = cellOf(p);
-  for (var dz = -2; dz <= 2; dz++) {
-    for (var dy = -2; dy <= 2; dy++) {
-      for (var dx = -2; dx <= 2; dx++) {
+  // How many cells away a neighbour can be: 1 when the cell is as wide as the reach, 3 × 3 × 3
+  // cells in all, and 2 when the margin makes the reach longer than a cell, 5 × 5 × 5.
+  let span = i32(ceil(reach / params.cell - 0.001));
+  for (var dz = -span; dz <= span; dz++) {
+    for (var dy = -span; dy <= span; dy++) {
+      for (var dx = -span; dx <= span; dx++) {
         let c = home + vec3i(dx, dy, dz);
         if (!known(c)) {
           continue;

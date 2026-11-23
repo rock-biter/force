@@ -1,5 +1,5 @@
 // The list of neighbours, step d: each particle writes down every other one closer than a diameter
-// plus the margin, from the 27 cells around it, and where it is now. Only when the list is made again.
+// plus the margin, from the cells around it, and where it is now. Only when the list is made again.
 
 const MAX_NEIGHBOURS = 32u;
 
@@ -25,9 +25,12 @@ fn main(@builtin(global_invocation_id) id: vec3u) {
   let reach = 2.0 * params.radius + params.margin;
   var n = 0u;
   let home = cellCoords(p);
-  for (var dz = -2; dz <= 2; dz++) {
-    for (var dy = -2; dy <= 2; dy++) {
-      for (var dx = -2; dx <= 2; dx++) {
+  // How many cells away a neighbour can be: 1 when the cell is as wide as the reach, 3 × 3 × 3
+  // cells in all, and 2 when the margin makes the reach longer than a cell, 5 × 5 × 5.
+  let span = i32(ceil(reach / params.cell - 0.001));
+  for (var dz = -span; dz <= span; dz++) {
+    for (var dy = -span; dy <= span; dy++) {
+      for (var dx = -span; dx <= span; dx++) {
         let c = home + vec3i(dx, dy, dz);
         if (any(c < vec3i(0)) || any(c >= vec3i(params.size))) {
           continue;

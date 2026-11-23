@@ -1,6 +1,6 @@
 # 016 · Neighbours: a grid, and a list made when needed
 
-*Accepted · November 20, 2026 · The user, after timing the lists of neighbours ([chapter 030](../logbook/030-the-lazy-list.md))*
+*Accepted, its cell width superseded by [023](./023-cells-as-wide-as-the-reach.md) and its grid with 4 places by [024](./024-cells-in-a-hashed-table.md) · November 20, 2026 · The user, after timing the lists of neighbours ([chapter 030](../logbook/030-the-lazy-list.md))*
 
 **Decision:** we will find the particles that touch with a grid of cells one diameter wide, 4 places each, filled with `atomicAdd`. From it each particle writes a list of up to 32 neighbours closer than a diameter plus 5 cm. The rounds read only that list. The GPU makes the lists again by itself when some particle has moved more than 2 cm since the last ones.
 

@@ -44,6 +44,9 @@ This is where we tell how FORCE gets built, one step at a time. If you are new h
 | 035 | [The Grid Stays Still](./logbook/035-the-grid-stays-still.md) | A box that tilts: turning gravity instead made the corners explode, so the grid stays fixed and the box turns inside it |
 | 036 | [The Address Book](./logbook/036-the-address-book.md) | Four places per cell lose particles under pressure; a list sorted by cell loses none, and a hashed table gives it 1 MB instead of 78, read slower |
 | 037 | [The Lonely Thread](./logbook/037-the-lonely-thread.md) | The first suggestion from a reader, on how GPU threads share a running sum: ours costs 0.2 ms with the table and 9 ms with a slot per cell, and not where we expected |
+| 038 | [One Hundred Twenty-Five Cells](./logbook/038-one-hundred-twenty-five-cells.md) | A clock for every shader of a step: the lists of neighbours read 125 cells, not 27, and cells as wide as the lists look halve a step |
+| 039 | [Far Apart in Memory](./logbook/039-far-apart-in-memory.md) | Why the hashed table was the slowest: its neighbouring cells are scattered in memory. With wide cells the gap almost closes, and 4 places per cell lose particles |
+| 040 | [The Table](./logbook/040-the-table.md) | A hash that keeps rows of cells together makes the hashed table as fast as the grid at 100 000 particles: chosen for the engine, and now what the pages run |
 
 ## For reference
 
