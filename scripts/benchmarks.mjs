@@ -28,6 +28,7 @@ const OUT = new URL('../docs/topics/cells-devices.json', import.meta.url)
 const THANKS =
   'Thank you! Your numbers are in, and your device is on the charts page, with your name next to it: https://rock-biter.github.io/force/cells-study/'
 
+const OWNER = 'rock-biter'
 const has = (flag) => process.argv.includes(flag)
 const at = process.argv.indexOf('--accept')
 const named = at < 0 ? [] : (process.argv[at + 1] ?? '').split(',').map(Number).filter(Boolean)
@@ -111,7 +112,8 @@ if (take.length) {
     const { issue, result } = found
     const entry = {
       issue: number,
-      by: issue.author?.login ?? '',
+      // the owner of the repo asked not to be in the credits: no name for what he sends himself
+      by: issue.author?.login === OWNER ? '' : (issue.author?.login ?? ''),
       sent: issue.createdAt.slice(0, 10),
       // the model as its owner wrote it, in the form or on the page
       device: result.deviceField || result.header.device,
@@ -127,6 +129,8 @@ if (take.length) {
   }
   kept.sort((a, b) => a.issue - b.issue)
   writeFileSync(OUT, `${JSON.stringify({ columns: COLUMNS, devices: kept }, null, 2)}\n`)
+  // as the repo's formatter wants it, or `npm run lint` fails: a row on one line
+  execFileSync('npx', ['biome', 'format', '--write', OUT.pathname], { stdio: 'ignore' })
   console.log(`Taken in ${list(take)}: ${kept.length} devices in ${OUT.pathname}`)
   console.log('Now commit and push, so that the charts page shows them, then --close.')
 }
