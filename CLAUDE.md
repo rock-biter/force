@@ -40,4 +40,4 @@ Everything in the repo is in English: code, comments, docs and skills. Chat in I
 
 ## Commands
 
-`npm run dev` (examples), `npm test`, `npm run typecheck`, `npm run lint`, `npm run build`, `npm run build:site` (the website, from `examples/` into `_site/`), `npm run topics` (checks the topic map and regenerates its index), `npm run benchmarks` (reports on the benchmark issues; `-- --accept 5,6` adds those to the results).
+`npm run dev` (examples), `npm test`, `npm run typecheck`, `npm run lint`, `npm run build`, `npm run build:site` (the website, from `examples/` into `_site/`), `npm run topics` (checks the topic map and regenerates its index), `npm run benchmarks` (reports on the benchmark issues; `-- --batch` and `-- --close` show what taking in the clean ones and closing them would do, and do it with `--yes`).
