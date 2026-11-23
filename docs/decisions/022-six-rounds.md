@@ -1,6 +1,6 @@
 # 022 · Six rounds per substep
 
-*Accepted · November 20, 2026 · The user, to make a step cheaper on the live page ([chapter 034](../logbook/034-the-box-on-the-ramp.md))*
+*Superseded by [026](./026-two-rounds-two-substeps.md) · November 20, 2026 · The user, to make a step cheaper on the live page ([chapter 034](../logbook/034-the-box-on-the-ramp.md))*
 
 **Decision:** we will push touching particles apart in 6 rounds per substep by default, not 8. A world can ask for more or fewer.
 

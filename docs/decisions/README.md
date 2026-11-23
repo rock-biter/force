@@ -33,10 +33,11 @@ The choices that shape FORCE, one per page: what we decided, why, what we left o
 | 019 | [A default speed limit of 1.5 radii per substep](./019-default-speed-limit.md) | Accepted | November 20, 2026 |
 | 020 | [Friction on positions, measured after the pushes](./020-friction-after-the-pushes.md) | Accepted, "after the pushes" superseded by 025 | November 20, 2026 |
 | 021 | [A grid fixed in the world](./021-a-grid-fixed-in-the-world.md) | Accepted | November 20, 2026 |
-| 022 | [Six rounds per substep](./022-six-rounds.md) | Accepted | November 20, 2026 |
+| 022 | [Six rounds per substep](./022-six-rounds.md) | Superseded by 026 | November 20, 2026 |
 | 023 | [Cells as wide as the lists reach](./023-cells-as-wide-as-the-reach.md) | Accepted | November 23, 2026 |
 | 024 | [Cells kept in a hashed table](./024-cells-in-a-hashed-table.md) | Accepted | November 23, 2026 |
 | 025 | [Friction in the same pass as the pushes](./025-friction-in-one-pass.md) | Accepted | November 23, 2026 |
+| 026 | [Two rounds, in each of two substeps](./026-two-rounds-two-substeps.md) | Accepted | November 23, 2026 |
 
 ## Rules
 

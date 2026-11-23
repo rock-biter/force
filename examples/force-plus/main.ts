@@ -69,12 +69,12 @@ const CELL = DIAMETER // a cell as wide as a particle (chapter 024)
 const PLACES = 4 // per cell (decision 016)
 const STEP = 1 / 60 // seconds
 const GRAVITY = 9.81
-// decision 022. ?rounds=3 in the address, to measure: this many rounds per substep, from 1 to 12.
+// decision 026. ?rounds=6 in the address, to measure: this many rounds per substep, from 1 to 12.
 const ROUNDS =
   Math.min(
     Math.max(Math.round(Number(new URLSearchParams(location.search).get('rounds'))), 0),
     12,
-  ) || 6
+  ) || 2
 const MARGIN = 0.05 // the lists look 5 cm beyond touching (decision 016)
 const MAX_NEIGHBOURS = 32 // as in list.wgsl
 const NO_LEVEL = 0xffffffff
@@ -94,7 +94,7 @@ const BALL_GROWTH = 8 // m/s: how fast its radius grows or shrinks
 const MAX_STEPS_PER_FRAME = 2
 const MAX_SUBSTEPS = 8
 const SAMPLE_EVERY = 30 // frames between two readings of the GPU's numbers
-const FORCE_PLUS = { alpha: 0.5, levels: 2, substeps: 1 } // decisions 015 and 022
+const FORCE_PLUS = { alpha: 0.5, levels: 2, substeps: 2 } // decisions 015 and 026
 // The choices of the masses menu: the lightest and the heaviest, in kg. Only their ratio changes
 // what the solver does: gravity pulls every mass alike, and a contact shares by w_i / (w_i + w_j).
 const MASSES: Record<string, readonly [number, number]> = {
@@ -267,7 +267,7 @@ type Pipelines = Awaited<ReturnType<typeof makePipelines>>
 
 /** One radius per substep, in m/s: 6 with 1 substep, 12 with 2, the safe limit (decision 017). */
 const safeSpeed = (substeps: number) => (RADIUS * substeps) / STEP
-/** The default limit, as a share of the safe one: 9 m/s with 1 substep (decision 019). */
+/** The default limit, as a share of the safe one: 9 m/s with 1 substep, 18 with 2 (decision 019). */
 const DEFAULT_SHARE = 1.5
 
 /** The grid of cells: where its first corner is, in meters, and how many cells along x, y, z. */
@@ -858,12 +858,16 @@ async function start() {
     // FORCE+ ('plus') or FORCE ('force'): the same rule, with α = 1 and c = 0
     method: 'plus',
     ...FORCE_PLUS,
-    // ?substeps=2 in the address starts with that many
-    substeps: MathUtils.clamp(Math.round(Number(query.get('substeps'))) || 1, 1, MAX_SUBSTEPS),
+    // ?substeps=1 in the address starts with that many
+    substeps: MathUtils.clamp(
+      Math.round(Number(query.get('substeps'))) || FORCE_PLUS.substeps,
+      1,
+      MAX_SUBSTEPS,
+    ),
     // a gentler start than decision 015, as in compare's tunable copy; ?c=0 starts without levels
     levels: query.has('c') ? MathUtils.clamp(Number(query.get('c')) || 0, 0, 4) : 1.5,
     // The speed limit: 'auto', the default of 1.5 × the safe one, 'safe', 'custom', `speed` in
-    // m/s, or 'off' (decisions 017 to 019). With the default 1 substep, 'auto' is 9 m/s.
+    // m/s, or 'off' (decisions 017 to 019). With the default 2 substeps, 'auto' is 18 m/s.
     maxSpeed: 'auto',
     speed: 20,
     // µ: 0 is the liquid of chapter 031, 0.3 already makes a pile stand (chapter 034). A page

@@ -1,4 +1,4 @@
-// Step 4, run 6 times (decision 022): one round of half and half through the list of neighbours, as in
+// Step 4, run twice per substep (decision 026): one round of half and half through the list of neighbours, as in
 // contact-cost/round-list.wgsl, plus the ball under the pointer.
 //
 // The ball is a solid sphere: a particle that overlaps it is pushed out, straight away from its
