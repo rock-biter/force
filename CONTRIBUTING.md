@@ -31,12 +31,21 @@ The theory pages are written while learning, so some of them will be wrong or un
 **[Report a mistake](https://github.com/rock-biter/force/issues/new?template=mistake.yml)**, with a
 source we can open. It gets fixed, and the logbook tells what we had wrong.
 
+## Run the benchmark on your device
+
+FORCE chooses how it works by measuring, and so far it has measured one computer. The
+**[benchmark page](https://rock-biter.github.io/force/bench/)** runs the same measure in your browser,
+on a computer or a phone, in a few seconds to a couple of minutes. It sends nothing by itself: at the end it shows
+the numbers, and a button opens an issue here with them. A phone, an old laptop, a gaming PC: each
+one tells us something our own machine cannot.
+
 ## What happens next
 
 | On GitHub | What it means |
 | --- | --- |
 | Label `suggestion` or `correction` | Received, not checked yet |
 | Label `on the map` | Checked, and on the topic map with your name. Waiting for its moment |
+| Label `benchmark` | The numbers of a device, waiting to be added to the others |
 | Closed as completed | Studied, or fixed: the issue links to the page we wrote |
 | Closed as not planned | Not for FORCE, with the reason |
 

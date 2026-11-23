@@ -198,7 +198,8 @@ const server = http.createServer((request, response) => {
   }
 })
 
-server.listen(PORT, () => {
+// Only this computer can reach the page: nothing else on the network can talk to this server.
+server.listen(PORT, '127.0.0.1', () => {
   chrome = spawn(
     CHROME,
     [
@@ -207,7 +208,7 @@ server.listen(PORT, () => {
       '--enable-webgpu-developer-features', // exact timestamps, not rounded to 0.1 ms
       '--no-first-run',
       `--user-data-dir=${profile}`,
-      `http://localhost:${PORT}/`,
+      `http://127.0.0.1:${PORT}/`,
     ],
     { stdio: 'ignore' },
   )

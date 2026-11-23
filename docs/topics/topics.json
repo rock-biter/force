@@ -705,7 +705,8 @@
         "docs/logbook/020-a-cheap-launch.md",
         "docs/logbook/021-a-short-trip.md",
         "docs/guides/readback.md",
-        "docs/logbook/022-the-bell-that-rang-early.md"
+        "docs/logbook/022-the-bell-that-rang-early.md",
+        "docs/logbook/043-other-peoples-devices.md"
       ],
       "code": [
         "examples/hello-compute/main.ts",
@@ -1273,7 +1274,9 @@
         "docs/logbook/038-one-hundred-twenty-five-cells.md",
         "docs/decisions/023-cells-as-wide-as-the-reach.md",
         "docs/logbook/039-far-apart-in-memory.md",
-        "docs/decisions/024-cells-in-a-hashed-table.md"
+        "docs/decisions/024-cells-in-a-hashed-table.md",
+        "docs/logbook/041-next-to-each-other.md",
+        "docs/logbook/042-no-best-way.md"
       ],
       "code": ["examples/contact-cost/main.ts", "examples/contact-cost/grid.wgsl"]
     },
@@ -1297,7 +1300,9 @@
         "docs/logbook/038-one-hundred-twenty-five-cells.md",
         "docs/logbook/039-far-apart-in-memory.md",
         "docs/logbook/040-the-table.md",
-        "docs/decisions/024-cells-in-a-hashed-table.md"
+        "docs/decisions/024-cells-in-a-hashed-table.md",
+        "docs/logbook/041-next-to-each-other.md",
+        "docs/logbook/042-no-best-way.md"
       ],
       "code": ["examples/force-plus/cells-table.wgsl"]
     },
@@ -1316,7 +1321,9 @@
         "docs/logbook/039-far-apart-in-memory.md",
         "docs/logbook/040-the-table.md",
         "docs/decisions/024-cells-in-a-hashed-table.md",
-        "particle-simulation-cuda"
+        "particle-simulation-cuda",
+        "docs/logbook/041-next-to-each-other.md",
+        "docs/logbook/042-no-best-way.md"
       ],
       "code": ["examples/force-plus/cells-table.wgsl"]
     },
@@ -1332,7 +1339,13 @@
       },
       "partOf": "memory-locality",
       "related": ["grid-by-sorting", "z-order-curve"],
-      "citedIn": ["particle-simulation-cuda", "unified-particle-physics-paper"]
+      "citedIn": [
+        "particle-simulation-cuda",
+        "unified-particle-physics-paper",
+        "docs/logbook/041-next-to-each-other.md",
+        "docs/logbook/042-no-best-way.md"
+      ],
+      "code": ["examples/force-plus/book-move.wgsl", "examples/force-plus/book-settle.wgsl"]
     },
     {
       "id": "gjk",
@@ -1868,7 +1881,8 @@
         "docs/decisions/016-a-list-made-when-needed.md",
         "docs/logbook/038-one-hundred-twenty-five-cells.md",
         "docs/logbook/039-far-apart-in-memory.md",
-        "docs/decisions/024-cells-in-a-hashed-table.md"
+        "docs/decisions/024-cells-in-a-hashed-table.md",
+        "docs/logbook/042-no-best-way.md"
       ],
       "code": ["examples/contact-cost/list.wgsl"]
     },
@@ -2135,7 +2149,7 @@
       "since": {
         "mentioned": "2026-11-05"
       },
-      "citedIn": ["docs/logbook/004-the-detour.md"]
+      "citedIn": ["docs/logbook/004-the-detour.md", "docs/logbook/043-other-peoples-devices.md"]
     },
     {
       "id": "thermal-throttling",
@@ -2609,7 +2623,8 @@
         "docs/logbook/029-heavy-on-light.md",
         "docs/logbook/031-the-yellow-ball.md",
         "docs/logbook/032-two-kinds-of-bounce.md",
-        "docs/logbook/034-the-box-on-the-ramp.md"
+        "docs/logbook/034-the-box-on-the-ramp.md",
+        "docs/logbook/041-next-to-each-other.md"
       ],
       "url": "https://doi.org/10.1145/2601097.2601152",
       "authors": "Miles Macklin, Matthias Müller, Nuttapong Chentanez, Tae-Yong Kim",
@@ -6129,7 +6144,9 @@
         "docs/logbook/012-the-family-tree.md",
         "docs/logbook/024-twenty-seven-cells.md",
         "docs/logbook/025-the-pillow.md",
-        "docs/logbook/030-the-lazy-list.md"
+        "docs/logbook/030-the-lazy-list.md",
+        "docs/logbook/041-next-to-each-other.md",
+        "docs/logbook/042-no-best-way.md"
       ],
       "url": "https://developer.download.nvidia.com/assets/cuda/files/particles.pdf",
       "file": "library/particle-simulation-cuda.pdf",
@@ -6678,7 +6695,8 @@
         "new-in-webgpu-120",
         "mdn-begin-compute-pass",
         "docs/logbook/022-the-bell-that-rang-early.md",
-        "docs/logbook/038-one-hundred-twenty-five-cells.md"
+        "docs/logbook/038-one-hundred-twenty-five-cells.md",
+        "docs/logbook/043-other-peoples-devices.md"
       ],
       "code": ["examples/dispatch-cost/main.ts"],
       "page": "docs/guides/timestamp-queries.md"
@@ -6918,12 +6936,19 @@
       "title": "Z-order curve",
       "summary": "A way to number the cells of a grid so that cells close in space get close numbers, and the memory read for neighbours is close too",
       "area": "gpu",
-      "status": "mentioned",
+      "status": "seen",
       "since": {
-        "mentioned": "2026-11-18"
+        "mentioned": "2026-11-18",
+        "seen": "2026-11-23"
       },
       "partOf": "uniform-grid",
-      "citedIn": ["particle-simulation-cuda", "docs/logbook/024-twenty-seven-cells.md"]
+      "citedIn": [
+        "particle-simulation-cuda",
+        "docs/logbook/024-twenty-seven-cells.md",
+        "docs/logbook/041-next-to-each-other.md",
+        "docs/logbook/042-no-best-way.md"
+      ],
+      "code": ["examples/force-plus/main.ts", "docs/topics/cells-study.mjs"]
     },
     {
       "id": "grid-by-counting",

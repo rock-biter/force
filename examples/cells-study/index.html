@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>FORCE: which way to keep the cells</title>
+    <meta
+      name="description"
+      content="Charts of how the ways to find neighbouring particles on the GPU change with the number of particles, the size of the world, the hash and its blocks."
+    />
+    <link rel="stylesheet" href="../site.css" />
+    <style>
+      .chart {
+        margin: 16px 0 8px;
+      }
+      .chart svg {
+        display: block;
+        width: 100%;
+        height: auto;
+        overflow: visible;
+      }
+      .chart text {
+        font: inherit;
+        fill: var(--ink);
+      }
+      .chart .quiet {
+        fill: var(--grey);
+      }
+      .chart .rule {
+        stroke: #dcdbd4;
+        stroke-width: 1;
+      }
+      .legend {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px 16px;
+        margin: 8px 0;
+      }
+      .legend i {
+        display: inline-block;
+        width: 16px;
+        height: 0;
+        margin-right: 6px;
+        vertical-align: middle;
+        border-top: 3px solid;
+      }
+      .legend i.dashed {
+        border-top-style: dashed;
+      }
+      .tip {
+        position: fixed;
+        z-index: 1;
+        padding: 6px 8px;
+        border: 1px solid var(--ink);
+        background: var(--paper);
+        pointer-events: none;
+        white-space: pre;
+      }
+      .study table {
+        border-collapse: collapse;
+        margin: 8px 0 24px;
+      }
+      .study th,
+      .study td {
+        padding: 2px 12px 2px 0;
+        text-align: right;
+        white-space: nowrap;
+      }
+      .study th:first-child,
+      .study td:first-child {
+        text-align: left;
+      }
+      .study th {
+        color: var(--grey);
+        font-weight: normal;
+      }
+      .study details {
+        margin-bottom: 24px;
+      }
+      .study summary {
+        color: var(--grey);
+        cursor: pointer;
+      }
+      .study .scroll {
+        overflow-x: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="column prose study">
+      <nav class="crumb"><a href="../">← FORCE</a> · <a href="../lab/">lab</a> · which way to keep the cells</nav>
+      <div id="study">Loading…</div>
+    </main>
+    <script type="module" src="./main.ts"></script>
+  </body>
+</html>

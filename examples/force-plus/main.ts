@@ -53,7 +53,9 @@ import bookCountCode from './book-count.wgsl?raw'
 import bookEndsCode from './book-ends.wgsl?raw'
 import bookFillCode from './book-fill.wgsl?raw'
 import bookListCode from './book-list.wgsl?raw'
+import bookMoveCode from './book-move.wgsl?raw'
 import bookScanCode from './book-scan.wgsl?raw'
+import bookSettleCode from './book-settle.wgsl?raw'
 import cellsGridCode from './cells-grid.wgsl?raw'
 import cellsTableCode from './cells-table.wgsl?raw'
 import finishLimitCode from './finish-limit.wgsl?raw'
@@ -145,14 +147,44 @@ function cube(count: number, masses: readonly [number, number]): Float32Array {
   return data
 }
 
-// ?hash=scattered in the address, to measure: the hash of cells-table.wgsl, which keeps the cells
-// of a row along x together, is replaced by the one of Teschner and others, which scrambles all
-// three coordinates (chapter 039).
+// ?hash= in the address, to measure: the hash of cells-table.wgsl, which keeps the cells of a row
+// along x together, is replaced by another. ?hash=scattered: the one of Teschner and others, which
+// scrambles all three coordinates (chapter 039).
+// ?hash=zorder: the slot is the cell's number along the Z-order curve, which weaves the bits of
+// x, y and z, so cells close in space along all three axes get slots close in memory. With slots
+// that are a power of two, a cube of cells keeps that order and repeats through space.
+// ?hash=blocks: the same curve inside blocks of 8 × 8 × 8 cells, and the blocks scattered.
 const HASH = '(((u.y * 19349663u) ^ (u.z * 83492791u)) + u.x) % slots'
-const HASH_SCATTERED = '((u.x * 73856093u) ^ (u.y * 19349663u) ^ (u.z * 83492791u)) % slots'
+const SPREAD = `
+// The low 10 bits of n, with two empty bits after each one.
+fn spread(n: u32) -> u32 {
+  var x = n & 0x3ffu;
+  x = (x | (x << 16u)) & 0x030000ffu;
+  x = (x | (x << 8u)) & 0x0300f00fu;
+  x = (x | (x << 4u)) & 0x030c30c3u;
+  x = (x | (x << 2u)) & 0x09249249u;
+  return x;
+}
+fn zorder(u: vec3u) -> u32 {
+  return spread(u.x) | (spread(u.y) << 1u) | (spread(u.z) << 2u);
+}
+`
+const HASHES: Record<string, string> = {
+  scattered: '((u.x * 73856093u) ^ (u.y * 19349663u) ^ (u.z * 83492791u)) % slots',
+  zorder: 'zorder(u) % slots',
+  blocks:
+    '((((u.x >> 3u) * 73856093u) ^ ((u.y >> 3u) * 19349663u) ^ ((u.z >> 3u) * 83492791u)) * 512u + zorder(u & vec3u(7u))) % slots',
+}
+
+// When the particles are kept in the order of the book, row s of a cell is particle s: the list
+// of neighbours needs no book to read.
+const listInOrder = (code: string) =>
+  code
+    .replace('@group(0) @binding(8) var<storage, read> book: array<u32>;', '')
+    .replace('let j = book[first + s];', 'let j = first + s;')
 
 /** The compute pipelines, made once: every restart uses them again. */
-async function makePipelines(device: GPUDevice, scattered: boolean) {
+async function makePipelines(device: GPUDevice, hash: string) {
   const make = (code: string) =>
     device.createComputePipelineAsync({
       layout: 'auto',
@@ -172,21 +204,26 @@ async function makePipelines(device: GPUDevice, scattered: boolean) {
       rebuildCode + bookBlocksCode,
       rebuildCode + bookScanCode,
       rebuildCode + bookEndsCode,
+      rebuildCode + bookMoveCode,
+      rebuildCode + bookSettleCode,
       // its three shaders that file a particle under its cell, once with a slot per cell of the
       // grid and once with the slots of a table
       ...[
         cellsGridCode,
-        scattered ? cellsTableCode.replace(HASH, HASH_SCATTERED) : cellsTableCode,
+        HASHES[hash] ? SPREAD + cellsTableCode.replace(HASH, HASHES[hash]) : cellsTableCode,
       ].flatMap((cellsCode) =>
-        [bookCountCode, bookFillCode, bookListCode].map((code) => rebuildCode + cellsCode + code),
+        [bookCountCode, bookFillCode, bookListCode, listInOrder(bookListCode)].map(
+          (code) => rebuildCode + cellsCode + code,
+        ),
       ),
     ].map(make),
   )
-  const [bookBlocks, bookScan, bookEnds, ...filed] = book
+  const [bookBlocks, bookScan, bookEnds, bookMove, bookSettle, ...filed] = book
   const filing = (k: number) => ({
-    bookCount: filed[3 * k],
-    bookFill: filed[3 * k + 1],
-    bookList: filed[3 * k + 2],
+    bookCount: filed[4 * k],
+    bookFill: filed[4 * k + 1],
+    bookList: filed[4 * k + 2],
+    bookListInOrder: filed[4 * k + 3],
   })
   return {
     predict,
@@ -200,6 +237,8 @@ async function makePipelines(device: GPUDevice, scattered: boolean) {
     bookBlocks,
     bookScan,
     bookEnds,
+    bookMove,
+    bookSettle,
     byGrid: filing(0),
     byTable: filing(1),
   }
@@ -276,6 +315,7 @@ function makeSimulation(
   margin: number,
   cell: number,
   slotsEach: number,
+  inOrder: boolean,
 ) {
   // The cube stands on the floor of the box, wherever the box is turned.
   const start = cube(count, masses)
@@ -309,6 +349,9 @@ function makeSimulation(
   const blockCount = Math.ceil(cellCount / BLOCK)
   const places = storage(cells === 'places' ? cellCount * PLACES * 4 : 4)
   const booked = cells !== 'places'
+  // The particles kept in the order of the book (book-move.wgsl): only with a book.
+  const sorted = booked && inOrder
+  const spare = storage(sorted ? bytes : 16)
   const book = storage(booked ? count * 4 : 4)
   const starts = storage(booked ? cellCount * 4 : 4)
   const blocks = storage(booked ? blockCount * 4 : 4)
@@ -366,7 +409,7 @@ function makeSimulation(
     scan: group(kit.bookScan, [params, control, blocks]),
     ends: group(kit.bookEnds, [params, control, counts, blocks, starts]),
     fill: group(file.bookFill, [params, predicted[0], starts, book, control]),
-    list: group(file.bookList, [
+    list: group(sorted ? file.bookListInOrder : file.bookList, [
       params,
       predicted[0],
       counts,
@@ -375,8 +418,36 @@ function makeSimulation(
       neighbours,
       neighbourCounts,
       anchors,
-      book,
+      ...(sorted ? [] : [book]),
     ]),
+    // Moving the particles into the order of the book, in a substep whose levels are read from
+    // levels[k]. The spare buffers: the second buffer of the rounds, free until the first round,
+    // one more for the predicted positions, and the levels the substep is about to write.
+    move: [0, 1].map((k) =>
+      group(kit.bookMove, [
+        params,
+        control,
+        book,
+        positions,
+        predicted[0],
+        levels[k],
+        predicted[1],
+        spare,
+        levels[1 - k],
+      ]),
+    ),
+    settle: [0, 1].map((k) =>
+      group(kit.bookSettle, [
+        params,
+        control,
+        predicted[1],
+        spare,
+        levels[1 - k],
+        positions,
+        predicted[0],
+        levels[k],
+      ]),
+    ),
   }
   // µ, the friction of round-push.wgsl: 4 bytes, in a buffer of the usual 16.
   const rub = device.createBuffer({
@@ -506,7 +577,11 @@ function makeSimulation(
           dispatch('sum', kit.bookScan, bookGroups.scan, 1)
           dispatch('sum', kit.bookEnds, bookGroups.ends, blockWorkgroups)
           dispatch('fill', file.bookFill, bookGroups.fill)
-          dispatch('list', file.bookList, bookGroups.list)
+          if (sorted) {
+            dispatch('move', kit.bookMove, bookGroups.move[parity])
+            dispatch('move', kit.bookSettle, bookGroups.settle[parity])
+          }
+          dispatch('list', sorted ? file.bookListInOrder : file.bookList, bookGroups.list)
         }
         if (levelsOn) dispatch('levels', kit.levels, levelGroups[parity])
         for (let r = 0; r < ROUNDS; r++) dispatch('rounds', kit.round, roundGroups[parity][r % 2])
@@ -557,8 +632,8 @@ function makeSimulation(
 type Simulation = ReturnType<typeof makeSimulation>
 /** A clock with two entries per shader of a step, and the names of the shaders that wrote them. */
 type Profile = { clock: GPUQuerySet; names: string[] }
-// The most shaders a step runs: ten and the rounds, in every substep.
-const MAX_PASSES = (10 + ROUNDS) * MAX_SUBSTEPS
+// The most shaders a step runs: thirteen and the rounds, in every substep.
+const MAX_PASSES = (13 + ROUNDS) * MAX_SUBSTEPS
 
 async function start() {
   const adapter = await navigator.gpu?.requestAdapter()
@@ -575,10 +650,7 @@ async function start() {
     if (!seen.has(message)) showError(message)
     seen.add(message)
   })
-  const kit = await makePipelines(
-    device,
-    new URLSearchParams(location.search).get('hash') === 'scattered',
-  )
+  const kit = await makePipelines(device, new URLSearchParams(location.search).get('hash') ?? '')
 
   const renderer = new WebGPURenderer({ device, antialias: true })
   await renderer.init()
@@ -842,6 +914,8 @@ async function start() {
       margin,
       cellWidth(),
       slotsEach,
+      // ?sorted in the address: the particles kept in the order of the address book
+      query.has('sorted'),
     )
     simulation.setBox(world.quaternion)
     applySolver()
@@ -1183,7 +1257,7 @@ async function start() {
     const total = [...profiled.ms.values()].reduce((a, b) => a + b, 0) / profileSteps
     const lines = [
       `profile ${settings.cells}: ${settings.particles} particles, ${profileSteps} steps after ` +
-        `${profileAfter}, ${settings.substeps} substeps, margin ${margin} m, cells of ${cellWidth()} m${query.get('hash') === 'scattered' ? ', scattered hash' : ''}${settings.cells === 'table' ? `, ${slotsEach} slots each` : ''}, lists made again in ${made} of ${ran} substeps`,
+        `${profileAfter}, ${settings.substeps} substeps, margin ${margin} m, cells of ${cellWidth()} m${query.has('hash') ? `, hash ${query.get('hash')}` : ''}${settings.cells === 'table' ? `, ${slotsEach} slots each` : ''}${query.has('sorted') ? ', particles in order' : ''}, lists made again in ${made} of ${ran} substeps`,
       ...[...profiled.ms].map(
         ([name, ms]) =>
           `${name.padEnd(8)} ${(ms / profileSteps).toFixed(3).padStart(7)} ms  ` +

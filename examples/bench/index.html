@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>FORCE: benchmark your device</title>
+    <meta
+      name="description"
+      content="Run FORCE's benchmark on your own device, a computer or a phone: how fast its GPU finds neighbouring particles, in a minute or two, and send us the numbers."
+    />
+    <link rel="stylesheet" href="../site.css" />
+    <style>
+      .bench button,
+      .bench .button {
+        display: inline-block;
+        margin: 8px 8px 8px 0;
+        padding: 8px 12px;
+        border: 1px solid var(--ink);
+        background: var(--ink);
+        color: var(--paper);
+        font: inherit;
+        text-decoration: none;
+        cursor: pointer;
+      }
+      .bench button:disabled {
+        background: none;
+        color: var(--grey);
+        border-color: var(--grey);
+        cursor: default;
+      }
+      .bench input,
+      .bench textarea {
+        display: block;
+        box-sizing: border-box;
+        width: 100%;
+        margin: 4px 0 12px;
+        padding: 8px;
+        border: 1px solid var(--ink);
+        background: none;
+        color: var(--ink);
+        font: inherit;
+      }
+      .bench textarea {
+        height: 160px;
+        white-space: pre;
+      }
+      .bench .scroll {
+        overflow-x: auto;
+      }
+      .bench td:not(:first-child),
+      .bench th:not(:first-child) {
+        text-align: right;
+        white-space: nowrap;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="column prose bench">
+      <nav class="crumb"><a href="../">← FORCE</a> · <a href="../lab/">lab</a> · benchmark</nav>
+
+      <h1>Benchmark your device</h1>
+      <p>
+        FORCE is a physics engine that runs on the GPU. To choose how it works we measure, and so
+        far on one machine only. This page runs the same measure on yours, a computer or a phone:
+        how long its GPU takes to find which particles touch, in several ways, with up to 100 000
+        particles. It takes a few seconds on a recent computer, and maybe a minute or two on
+        a phone. Keep the page open and in front while it runs.
+      </p>
+      <p class="note">
+        Nothing is sent anywhere by this page. At the end you see the numbers, and you choose
+        whether to send them to us as a public issue on GitHub.
+      </p>
+
+      <button id="run" type="button">Run the benchmark</button>
+      <pre id="log" hidden></pre>
+
+      <section id="done" hidden>
+        <h2>Your numbers</h2>
+        <p>Milliseconds per step of 1/60 s spent on finding neighbours and pushing them apart. Lower is better.</p>
+        <div id="tables"></div>
+
+        <h2>Send them to us</h2>
+        <p>
+          Tell us what device this is, then open an issue on GitHub: the text below goes in it, and
+          nothing else. You need a GitHub account, and the issue is public. Thank you: every device
+          makes the choices of the engine a little less blind.
+        </p>
+        <label for="device">Your device and browser</label>
+        <input id="device" type="text" placeholder="iPhone 16 Pro, Safari 18 / MacBook Air M1, Chrome 157" />
+        <label for="payload">What will be sent</label>
+        <textarea id="payload" readonly></textarea>
+        <a
+          id="send"
+          class="button"
+          href="https://github.com/rock-biter/force/issues/new?template=benchmark.yml"
+          target="_blank"
+          rel="noopener"
+          >Open an issue on GitHub</a>
+        <button id="copy" type="button">Copy the text</button>
+        <p id="hint" class="note"></p>
+      </section>
+    </main>
+    <script type="module" src="./main.ts"></script>
+  </body>
+</html>

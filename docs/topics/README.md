@@ -5,7 +5,7 @@
 Everything we have met while building FORCE, concepts and sources, and how far we went with each
 one. Use it to look up a term, to find what to read, or to pick what to explore next.
 
-- **268 concepts:** ● 24 studied · ◐ 137 seen · ○ 107 mentioned
+- **268 concepts:** ● 24 studied · ◐ 138 seen · ○ 106 mentioned
 - **148 sources:** ● 15 studied · ◐ 16 seen · ○ 117 mentioned · read by Claude: 71 parts, 15 in full
 
 | | Status | What it means |
@@ -384,7 +384,7 @@ WebGPU, WGSL and how to make thousands of threads work.
 | ◐ | Workgroup variable | A var<workgroup>: memory shared by the threads of one workgroup, only in compute shaders, starting at zero | Address space | [WGSL specification, §7.3 var Declarations](https://www.w3.org/TR/WGSL/#var-decls) |
 | ● | **[Workgroups and dispatch](../guides/dispatch-and-workgroups.md)** | Threads start in blocks: the shader fixes the size of a block (a workgroup), and each dispatch says how many blocks to launch. Threads = size × count, so the count is rounded up and the extra threads return at once | WebGPU | [guides index](../guides/README.md) |
 | ○ | Writable binding aliasing | The same range of a buffer in two slots of a dispatch, with at least one writable: WebGPU refuses it. In Chrome: "Writable storage buffer binding aliasing found" | Bind group | [WebGPU specification, §14.1 Bind Groups](https://www.w3.org/TR/webgpu/#programmable-passes-bind-groups) |
-| ○ | Z-order curve | A way to number the cells of a grid so that cells close in space get close numbers, and the memory read for neighbours is close too | Uniform grid | [Particle Simulation using CUDA](https://developer.download.nvidia.com/assets/cuda/files/particles.pdf) |
+| ◐ | Z-order curve | A way to number the cells of a grid so that cells close in space get close numbers, and the memory read for neighbours is close too | Uniform grid | [Particle Simulation using CUDA](https://developer.download.nvidia.com/assets/cuda/files/particles.pdf) |
 | ○ | Zero value | What a variable holds when it is declared with no initial value: all zeros, never garbage | var declaration | [WGSL specification, §7.3 var Declarations](https://www.w3.org/TR/WGSL/#var-decls) |
 
 | | Source | Kind | What it gives us | About | First cited in | Claude read |

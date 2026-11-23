@@ -1,0 +1,30 @@
+name: Send benchmark results
+description: The numbers of the benchmark page, run on your device
+title: "Benchmark: "
+labels: ["benchmark"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you! Run the [benchmark page](https://rock-biter.github.io/force/bench/) on your device, then press "Open an issue on GitHub" there: it fills this form for you. Every device makes the choices of the engine a little less blind.
+  - type: input
+    id: device
+    attributes:
+      label: Device and browser
+      description: The model of the computer or phone, and the browser with its version.
+      placeholder: iPhone 16 Pro, Safari 18 / MacBook Air M1, Chrome 157
+    validations:
+      required: true
+  - type: textarea
+    id: results
+    attributes:
+      label: Results
+      description: The text the benchmark page shows under "What will be sent", as it is. It holds numbers, the name of your GPU and of your browser, and nothing else.
+      render: json
+    validations:
+      required: true
+  - type: textarea
+    id: notes
+    attributes:
+      label: Anything we should know?
+      description: "For example: the device was hot, on battery saver, or the page was in the background."

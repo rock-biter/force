@@ -25,7 +25,18 @@ storing the cells we liked best scattered them in memory. With both fixed, a pil
 in a corner takes 8 ms a step instead of 13, loses no particle, and the cells cost 1 MB whatever the
 size of the world.
 
-**Next:** run it on a phone.
+Then we moved the particles themselves into the order of their cells
+([chapter 041](./docs/logbook/041-next-to-each-other.md)): faster again, and much more so with one
+way of storing the cells than with the one we had just chosen.
+
+Last, a study with [charts](https://rock-biter.github.io/force/cells-study/) of what makes one way
+better than another: the size of the world, above all
+([chapter 042](./docs/logbook/042-no-best-way.md)).
+
+**You can help:** [run the benchmark](https://rock-biter.github.io/force/bench/) on your own device,
+a computer or a phone, and send us the numbers ([chapter 043](./docs/logbook/043-other-peoples-devices.md)).
+
+**Next:** the same measures on a phone.
 
 Every step, with what we learned and what went wrong, is in the [logbook](./docs/README.md).
 

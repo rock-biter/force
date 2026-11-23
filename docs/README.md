@@ -47,6 +47,9 @@ This is where we tell how FORCE gets built, one step at a time. If you are new h
 | 038 | [One Hundred Twenty-Five Cells](./logbook/038-one-hundred-twenty-five-cells.md) | A clock for every shader of a step: the lists of neighbours read 125 cells, not 27, and cells as wide as the lists look halve a step |
 | 039 | [Far Apart in Memory](./logbook/039-far-apart-in-memory.md) | Why the hashed table was the slowest: its neighbouring cells are scattered in memory. With wide cells the gap almost closes, and 4 places per cell lose particles |
 | 040 | [The Table](./logbook/040-the-table.md) | A hash that keeps rows of cells together makes the hashed table as fast as the grid at 100 000 particles: chosen for the engine, and now what the pages run |
+| 041 | [Next to Each Other](./logbook/041-next-to-each-other.md) | Particles moved into the order of their cells, as Green and FleX do: the lists take a third of the time, and on a grid the pushes take half, which the table does not get |
+| 042 | [No Best Way](./logbook/042-no-best-way.md) | The Z-order curve, then a study: what in a project makes one way to keep the cells better than another, measured on fixed scenes and drawn as charts |
+| 043 | [Other People's Devices](./logbook/043-other-peoples-devices.md) | A public page runs the benchmark in anyone's browser, a phone too, and prepares a GitHub issue with the numbers; a second clock for devices whose GPU has none |
 
 ## For reference
 
