@@ -6,7 +6,7 @@ Everything we have met while building FORCE, concepts and sources, and how far w
 one. Use it to look up a term, to find what to read, or to pick what to explore next.
 
 - **269 concepts:** ● 24 studied · ◐ 138 seen · ○ 107 mentioned
-- **148 sources:** ● 15 studied · ◐ 16 seen · ○ 117 mentioned · read by Claude: 71 parts, 15 in full
+- **149 sources:** ● 15 studied · ◐ 16 seen · ○ 118 mentioned · read by Claude: 72 parts, 15 in full
 
 | | Status | What it means |
 | --- | --- | --- |
@@ -214,6 +214,7 @@ How things move, collide and stay together.
 | ○ | [Bullet Physics](https://github.com/bulletphysics/bullet3) | Project | A long-lived open source C++ library: rigid bodies, collision detection and soft bodies | Rigid body, Collision detection, Soft body | [004](../logbook/004-the-detour.md) |  |
 | ○ | [cannon-es](https://github.com/pmndrs/cannon-es) | Project | A 3D physics engine written in JavaScript | Rigid body | [004](../logbook/004-the-detour.md) |  |
 | ○ | [Computer "Experiments" on Classical Fluids. I. Thermodynamical Properties of Lennard-Jones Molecules](https://doi.org/10.1103/PhysRev.159.98)<br>*Loup Verlet, 1967* | Paper | The paper the Verlet integrator is named after: a simulation of molecules, from 1967 | Verlet integration | [Advanced Character Physics](https://edelkas.github.io/n/files/bib/jakobsen.pdf) |  |
+| ○ | [crashcat](https://github.com/isaac-mason/crashcat)<br>*Isaac Mason, 2025* | Project | A 3D rigid body engine in plain JavaScript, on the CPU: a lighter choice than the WebAssembly engines for scenes of hundreds of bodies | Physics engine, Rigid body, Bounding volume hierarchy (BVH), Continuous collision detection, Sleeping, Determinism, Fixed timestep | [045](../logbook/045-a-million-and-one-pass.md) | Parts |
 | ○ | [d3-force-3d](https://github.com/vasturiano/d3-force-3d)<br>*Vasco Asturiano* | Project | A small library that simulates forces between points in 1, 2 or 3 dimensions, made to lay out graphs | Force-directed layout, Spring | [011](../logbook/011-the-living-map.md) | Parts |
 | ○ | [Detailed Rigid Body Simulation with Extended Position Based Dynamics](https://diglib.eg.org/items/114b20b0-8543-4c54-bd04-42ee60c71946)<br>*Matthias Müller, Miles Macklin, Nuttapong Chentanez, Stefan Jeschke, Tae-Yong Kim, 2020* | Paper | Rigid bodies, contacts and joints solved with XPBD, with implementation details | XPBD, Rigid body, Joint, Contact, Substepping, Floating point precision | [004](../logbook/004-the-detour.md) | Parts |
 | ○ | [Dynamic Simulation of Non-Penetrating Rigid Bodies](https://www.cs.cmu.edu/~baraff/papers/index.html)<br>*David Baraff, 1992* | Paper | David Baraff's Ph.D. thesis on rigid bodies that touch without overlapping: one of the precise methods that games simplify | Rigid body, Contact, Resting contact | [Advanced Character Physics](https://edelkas.github.io/n/files/bib/jakobsen.pdf) |  |

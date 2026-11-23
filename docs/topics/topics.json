@@ -7339,6 +7339,32 @@
       "authors": "Matthias Teschner, Bruno Heidelberger, Matthias Müller, Danat Pomeranets, Markus Gross",
       "year": 2003,
       "claudeRead": "parts"
+    },
+    {
+      "id": "crashcat",
+      "kind": "project",
+      "title": "crashcat",
+      "summary": "A 3D rigid body engine in plain JavaScript, on the CPU: a lighter choice than the WebAssembly engines for scenes of hundreds of bodies",
+      "area": "physics",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-23"
+      },
+      "related": ["rapier", "jolt", "cannon-es"],
+      "about": [
+        "physics-engine",
+        "rigid-body",
+        "bounding-volume-hierarchy",
+        "continuous-collision-detection",
+        "sleeping",
+        "determinism",
+        "fixed-timestep"
+      ],
+      "citedIn": ["docs/logbook/045-a-million-and-one-pass.md"],
+      "url": "https://github.com/isaac-mason/crashcat",
+      "authors": "Isaac Mason",
+      "year": 2025,
+      "claudeRead": "parts"
     }
   ]
 }

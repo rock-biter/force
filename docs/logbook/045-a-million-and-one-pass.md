@@ -54,6 +54,7 @@ The third wins: friction one round late ([decision 025](../decisions/025-frictio
 ## Sources
 
 - The live page with `?rounds=`, `?substeps=` and `?profile=` in the address ([main.ts](../../examples/force-plus/main.ts)), and its round shader ([round-push.wgsl](../../examples/force-plus/round-push.wgsl)).
+- [crashcat](https://github.com/isaac-mason/crashcat), an engine the user found the same evening: rigid bodies in plain JavaScript, on the CPU, with a README that says when to prefer it to engines compiled to WebAssembly such as Rapier. Only its README read, for the map; a reference for the web engines of stop 4 of the route.
 
 ## Next step
 
