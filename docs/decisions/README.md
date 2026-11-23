@@ -26,18 +26,21 @@ The choices that shape FORCE, one per page: what we decided, why, what we left o
 | 012 | [Renderers draw from the world's GPU buffer](./012-renderers-read-the-gpu-buffer.md) | Accepted | November 11, 2026 |
 | 013 | [A flat ground, the simplest way](./013-a-flat-ground.md) | Accepted | November 11, 2026 |
 | 014 | [Damping as a knob, off by default](./014-damping-off-by-default.md) | Accepted | November 19, 2026 |
-| 015 | [Particles pushed apart by moving positions, half and half](./015-half-and-half-on-positions.md) | Accepted, rounds superseded by 022 | November 20, 2026 |
+| 015 | [Particles pushed apart by moving positions, half and half](./015-half-and-half-on-positions.md) | Accepted, rounds superseded by 022, level strength by 028 | November 20, 2026 |
 | 016 | [Neighbours: a grid, and a list made when needed](./016-a-list-made-when-needed.md) | Accepted, cell width superseded by 023, grid with 4 places by 024 | November 20, 2026 |
 | 017 | [A speed limit of one radius per substep](./017-a-speed-limit-per-substep.md) | Superseded by 019 | November 20, 2026 |
 | 018 | [The speed limit, set in m/s](./018-max-speed-in-meters-per-second.md) | Accepted | November 20, 2026 |
-| 019 | [A default speed limit of 1.5 radii per substep](./019-default-speed-limit.md) | Accepted | November 20, 2026 |
+| 019 | [A default speed limit of 1.5 radii per substep](./019-default-speed-limit.md) | Superseded by 027 | November 20, 2026 |
 | 020 | [Friction on positions, measured after the pushes](./020-friction-after-the-pushes.md) | Accepted, "after the pushes" superseded by 025 | November 20, 2026 |
 | 021 | [A grid fixed in the world](./021-a-grid-fixed-in-the-world.md) | Accepted | November 20, 2026 |
-| 022 | [Six rounds per substep](./022-six-rounds.md) | Superseded by 026 | November 20, 2026 |
+| 022 | [Six rounds per substep](./022-six-rounds.md) | Superseded by 026, then 029 | November 20, 2026 |
 | 023 | [Cells as wide as the lists reach](./023-cells-as-wide-as-the-reach.md) | Accepted | November 23, 2026 |
 | 024 | [Cells kept in a hashed table](./024-cells-in-a-hashed-table.md) | Accepted | November 23, 2026 |
 | 025 | [Friction in the same pass as the pushes](./025-friction-in-one-pass.md) | Accepted | November 23, 2026 |
-| 026 | [Two rounds, in each of two substeps](./026-two-rounds-two-substeps.md) | Accepted | November 23, 2026 |
+| 026 | [Two rounds, in each of two substeps](./026-two-rounds-two-substeps.md) | Superseded by 029 | November 23, 2026 |
+| 027 | [The safe speed limit by default](./027-the-safe-speed-limit-by-default.md) | Accepted | November 23, 2026 |
+| 028 | [A level strength of 1.5](./028-level-strength.md) | Accepted | November 23, 2026 |
+| 029 | [Three rounds, in each of two substeps](./029-three-rounds-two-substeps.md) | Accepted | November 23, 2026 |
 
 ## Rules
 

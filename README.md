@@ -39,6 +39,10 @@ a computer or a phone, and send us the numbers ([chapter 043](./docs/logbook/043
 The first devices are in, with thanks to those who sent them
 ([chapter 044](./docs/logbook/044-the-first-devices.md)).
 
+The live page now holds up to a million particles, and a step got cheaper: friction read every
+particle's neighbours twice, and now reads them once
+([chapter 045](./docs/logbook/045-a-million-and-one-pass.md)).
+
 **Next:** more devices, then read our rules again against them.
 
 Every step, with what we learned and what went wrong, is in the [logbook](./docs/README.md).

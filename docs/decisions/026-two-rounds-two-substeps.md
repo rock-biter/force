@@ -1,6 +1,6 @@
 # 026 · Two rounds, in each of two substeps
 
-*Accepted · November 23, 2026 · The user, after timing four mixes of rounds and substeps on the live page*
+*Superseded by [029](./029-three-rounds-two-substeps.md) · November 23, 2026 · The user, after timing four mixes of rounds and substeps on the live page ([chapter 045](../logbook/045-a-million-and-one-pass.md))*
 
 **Decision:** we will split a step into 2 substeps by default and push touching particles apart in 2 rounds in each, 4 rounds a step, not 6 rounds in 1 substep. A world can ask for other numbers.
 
@@ -27,7 +27,8 @@ The times with friction are noisy: an hour earlier 6 × 1 took 11.6 ms. Earlier 
 ## Consequences
 
 - A step has a third fewer rounds. In a liquid that is no saving: the second substep costs what the rounds give back.
-- The default speed limit doubles, from 9 to 18 m/s: it is a share of one radius per substep ([decision 019](./019-default-speed-limit.md)).
+- The default speed limit doubles, from 9 to 18 m/s: it is a share of one radius per substep ([decision 019](./019-default-speed-limit.md)), until [decision 027](./027-the-safe-speed-limit-by-default.md) sets it to 12 m/s.
+- On the compare page FORCE and FORCE+ now run 2 × 2, 4 rounds a step, next to methods that keep 8: the panes no longer share one budget, as they did for the ranking of [chapter 028](../logbook/028-the-ranking.md).
 - The slope of a pile changes with the substeps ([decision 020](./020-friction-after-the-pushes.md)): piles with friction will stand lower than before.
 
 ## Still open

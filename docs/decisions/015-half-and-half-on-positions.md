@@ -1,6 +1,6 @@
 # 015 · Particles pushed apart by moving positions, half and half
 
-*Accepted, its 8 rounds superseded by [022](./022-six-rounds.md) · November 20, 2026 · The user, after timing both candidates on the GPU ([chapter 030](../logbook/030-the-lazy-list.md))*
+*Accepted, its 8 rounds superseded by [022](./022-six-rounds.md), its level strength by [028](./028-level-strength.md) · November 20, 2026 · The user, after timing both candidates on the GPU ([chapter 030](../logbook/030-the-lazy-list.md))*
 
 **Decision:** we will push touching particles apart by moving their positions, in 8 rounds per step. Each particle adds half the sum and half the average of what its contacts ask (*half and half*). The solver sees each mass as m^0.5, and in a pile it weighs the lower particle e^(2 × difference of levels) more.
 

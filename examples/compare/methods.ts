@@ -328,20 +328,21 @@ function springs(substeps: number, stiffnessOf: (m: number) => number, damper: n
 }
 const hertz = (f: number) => (m: number) => m * (2 * Math.PI * f) ** 2
 
-/** FORCE+ as decision 015 sets it. */
-export const FORCE_PLUS = { alpha: 0.5, levels: 2, rounds: 8, substeps: 1 }
+/** How many rounds and substeps FORCE and FORCE+ run with by default (decision 029). */
+const PACE = { rounds: 3, substeps: 2 }
+/** FORCE+ as decisions 015, 028 and 029 set it. The other methods keep 8 rounds in 1 substep. */
+export const FORCE_PLUS = { alpha: 0.5, levels: 1.5, ...PACE }
 /**
- * The knobs of the tunable copy of FORCE+, which the page changes while the worlds run. It starts
- * with a gentler level strength than decision 015, as the user asked.
+ * The knobs of the tunable copy of FORCE+, which the page changes while the worlds run.
  */
-export const tunable = { ...FORCE_PLUS, levels: 1.5 }
+export const tunable = { ...FORCE_PLUS }
 
 // ---- the list -------------------------------------------------------------------------------------
 export const METHODS: Record<string, Method> = {
   forcePlus: {
     label: 'FORCE+',
     source:
-      'Lomarco position sum and average, masses m^0.5, levels in the pile: Macklin 2014 §5.2, improved',
+      'Lomarco position sum and average, masses m^0.5, levels in the pile: Macklin 2014 §5.2, improved · 3 rounds in each of 2 substeps',
     logbook: ['026-the-marble-in-the-pocket', '029-heavy-on-light', '030-the-lazy-list'],
     create: positions(RULES.sumAndAverage, () => FORCE_PLUS),
   },
@@ -353,9 +354,9 @@ export const METHODS: Record<string, Method> = {
   },
   force: {
     label: 'FORCE',
-    source: 'Lomarco position sum and average',
+    source: 'Lomarco position sum and average · 3 rounds in each of 2 substeps',
     logbook: ['026-the-marble-in-the-pocket'],
-    create: positions(RULES.sumAndAverage, () => ({})),
+    create: positions(RULES.sumAndAverage, () => PACE),
   },
   average: {
     label: 'Constraint averaging',

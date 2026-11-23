@@ -1030,7 +1030,8 @@
         "docs/logbook/028-the-ranking.md",
         "docs/logbook/031-the-yellow-ball.md",
         "docs/logbook/032-two-kinds-of-bounce.md",
-        "docs/logbook/033-the-speed-limit.md"
+        "docs/logbook/033-the-speed-limit.md",
+        "docs/logbook/045-a-million-and-one-pass.md"
       ],
       "page": "docs/topics/integration.md#substeps",
       "code": ["src/world.ts"]
@@ -1302,7 +1303,8 @@
         "docs/logbook/040-the-table.md",
         "docs/decisions/024-cells-in-a-hashed-table.md",
         "docs/logbook/041-next-to-each-other.md",
-        "docs/logbook/042-no-best-way.md"
+        "docs/logbook/042-no-best-way.md",
+        "docs/logbook/045-a-million-and-one-pass.md"
       ],
       "code": ["examples/force-plus/cells-table.wgsl"]
     },
@@ -1439,7 +1441,8 @@
         "iterative-dynamics-paper",
         "docs/logbook/014-the-mirror.md",
         "docs/logbook/032-two-kinds-of-bounce.md",
-        "docs/logbook/034-the-box-on-the-ramp.md"
+        "docs/logbook/034-the-box-on-the-ramp.md",
+        "docs/logbook/045-a-million-and-one-pass.md"
       ],
       "code": ["src/shaders/integrate.wgsl"]
     },
@@ -7210,8 +7213,10 @@
         "docs/logbook/031-the-yellow-ball.md",
         "docs/logbook/032-two-kinds-of-bounce.md",
         "docs/logbook/034-the-box-on-the-ramp.md",
-        "docs/logbook/035-the-grid-stays-still.md"
-      ]
+        "docs/logbook/035-the-grid-stays-still.md",
+        "docs/logbook/045-a-million-and-one-pass.md"
+      ],
+      "code": ["examples/force-plus/round-push.wgsl"]
     },
     {
       "id": "flex-header",

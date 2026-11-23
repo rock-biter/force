@@ -1,6 +1,6 @@
 # 025 · Friction in the same pass as the pushes
 
-*Accepted · November 23, 2026 · The user asked for one pass, for now, after seeing the rounds take twice as long with friction; Claude chose which one, by measuring three*
+*Accepted · November 23, 2026 · The user asked for one pass, for now, after seeing the rounds take twice as long with friction; Claude chose which one, by measuring three ([chapter 045](../logbook/045-a-million-and-one-pass.md))*
 
 **Decision:** we will, for now, work out friction in the same loop as the pushes: a contact measures the slide of the two particles up to where the last round left them, not from where this round's pushes bring them.
 

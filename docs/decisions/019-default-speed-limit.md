@@ -1,6 +1,6 @@
 # 019 · A default speed limit of 1.5 radii per substep
 
-*Accepted · November 20, 2026 · The user, choosing the defaults of the base simulation after the measures of [chapter 033](../logbook/033-the-speed-limit.md)*
+*Superseded by [027](./027-the-safe-speed-limit-by-default.md) · November 20, 2026 · The user, choosing the defaults of the base simulation after the measures of [chapter 033](../logbook/033-the-speed-limit.md)*
 
 **Decision:** we will cut every particle's speed, at the end of each substep, to 1.5 radii per substep by default, 1.5 × radius × 60 × substeps, with 1 substep by default: 9 m/s for spheres of 10 cm.
 

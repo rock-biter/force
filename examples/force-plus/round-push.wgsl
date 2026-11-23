@@ -1,9 +1,9 @@
-// Step 4, run twice per substep (decision 026): one round of half and half through the list of neighbours, as in
+// Step 4, run 3 times per substep (decision 029): one round of half and half through the list of neighbours, as in
 // contact-cost/round-list.wgsl, plus the ball under the pointer.
 //
 // The ball is a solid sphere: a particle that overlaps it is pushed out, straight away from its
-// center, like by the planes of the floor and the walls. The page moves it a tenth of the way to
-// the pointer in each step, at 20 m/s at most, and grows it in a few steps, so it pushes particles
+// center, like by the planes of the floor and the walls. The page moves it a fifth of the way to
+// the pointer in each step, at 30 m/s at most, and grows it in a few steps, so it pushes particles
 // away instead of throwing them. It moves at every substep, a piece of the way each time.
 //
 // Then friction, in the same loop as the pushes (decision 025). Every contact looks at how far
