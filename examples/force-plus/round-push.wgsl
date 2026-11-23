@@ -67,8 +67,12 @@ fn main(@builtin(global_invocation_id) id: vec3u) {
   var sum = vec3f(0.0);
   var n = 0.0;
   // Friction, in the same loop as the pushes: how far this particle has slid up to the last round.
+  // With no friction nothing more is read than the pushes need.
   let rubbing = friction > 0.0;
-  let slid = p - start[i].xyz;
+  var slid = vec3f(0.0);
+  if (rubbing) {
+    slid = p - start[i].xyz;
+  }
   var back = vec3f(0.0);
 
   for (var s = 0u; s < neighbourCounts[i]; s++) {
