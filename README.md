@@ -36,7 +36,10 @@ better than another: the size of the world, above all
 **You can help:** [run the benchmark](https://rock-biter.github.io/force/bench/) on your own device,
 a computer or a phone, and send us the numbers ([chapter 043](./docs/logbook/043-other-peoples-devices.md)).
 
-**Next:** the same measures on a phone.
+The first devices are in, with thanks to those who sent them
+([chapter 044](./docs/logbook/044-the-first-devices.md)).
+
+**Next:** more devices, then read our rules again against them.
 
 Every step, with what we learned and what went wrong, is in the [logbook](./docs/README.md).
 

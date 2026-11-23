@@ -575,7 +575,8 @@ fn zorder(u: vec3u) -> u32 {
   }
   const info = adapter.info
   return {
-    gpu: [info?.vendor, info?.architecture, info?.device, info?.description]
+    // Safari gives the same word four times: once is enough.
+    gpu: [...new Set([info?.vendor, info?.architecture, info?.device, info?.description])]
       .filter(Boolean)
       .join(' '),
     clock: gpuClock ? 'gpu' : 'page',

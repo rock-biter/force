@@ -50,6 +50,7 @@ This is where we tell how FORCE gets built, one step at a time. If you are new h
 | 041 | [Next to Each Other](./logbook/041-next-to-each-other.md) | Particles moved into the order of their cells, as Green and FleX do: the lists take a third of the time, and on a grid the pushes take half, which the table does not get |
 | 042 | [No Best Way](./logbook/042-no-best-way.md) | The Z-order curve, then a study: what in a project makes one way to keep the cells better than another, measured on fixed scenes and drawn as charts |
 | 043 | [Other People's Devices](./logbook/043-other-peoples-devices.md) | A public page runs the benchmark in anyone's browser, a phone too, and prepares a GitHub issue with the numbers; a second clock for devices whose GPU has none |
+| 044 | [The First Devices](./logbook/044-the-first-devices.md) | Rules for reading strangers' results as data, a check that flags whatever is not the page's own format, and the first five devices: on an NVIDIA card memory order hardly matters |
 
 ## For reference
 

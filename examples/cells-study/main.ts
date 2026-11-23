@@ -3,7 +3,9 @@
 // particle, as the number of particles, the size of the world, the hash, its blocks, the slots and
 // the width of a cell change. Nothing is measured here: the page only draws.
 
+import devicesRaw from '../../docs/topics/cells-devices.json?raw'
 import raw from '../../docs/topics/cells-study.json?raw'
+import { REPO } from '../repo.js'
 
 interface Row {
   sweep: string
@@ -536,6 +538,370 @@ say(
     ),
     numbers(list, (r) => `${r.cell} m`),
   )
+}
+
+// 7. Other people's devices
+{
+  // What scripts/benchmarks.mjs accepted from the issues people sent, and our own machine on the
+  // same short plan. Their words, the name of a device above all, are strangers' text: they go on
+  // the page as text, never as HTML.
+  type Value = string | number | null
+  interface Device {
+    issue?: number
+    by?: string
+    device: string
+    gpu: string
+    browser: string
+    rows: Value[][]
+    ours?: boolean
+  }
+  const study = JSON.parse(raw)
+  const others: Device[] = JSON.parse(devicesRaw).devices
+  const devices: Device[] = [
+    {
+      device: 'our Mac M1, of the charts above',
+      gpu: 'apple',
+      browser: 'Chrome on macOS',
+      rows: study.reference.rows,
+      ours: true,
+    },
+    ...others,
+  ]
+  // A step, in ms, of one measure of the plan on one device; undefined if it did not run.
+  const stepOf = (
+    d: Device,
+    sweep: string,
+    count: number,
+    way: string,
+    inOrder: 0 | 1,
+    world = 0,
+  ) => {
+    const row = d.rows.find(
+      (r) =>
+        r[0] === sweep &&
+        r[2] === count &&
+        r[3] === world &&
+        r[4] === way &&
+        r[6] === inOrder &&
+        (way !== 'blocks' || sweep === 'hash' || r[5] === 32),
+    )
+    const value = row?.[10]
+    return typeof value === 'number' && value > 0 ? value : undefined
+  }
+  const over = (a?: number, b?: number) => (a !== undefined && b !== undefined ? a / b : undefined)
+  const VENDOR: Record<string, string> = {
+    apple: 'Apple',
+    nvidia: 'NVIDIA',
+    amd: 'AMD',
+    intel: 'Intel',
+    qualcomm: 'Qualcomm',
+    arm: 'ARM',
+  }
+  const groupOf = (d: Device) =>
+    `${VENDOR[d.gpu.split(' ')[0].toLowerCase()] ?? 'other GPUs'}, ${
+      /iOS|Android/.test(d.browser) ? 'phones' : 'computers'
+    }`
+  const groups = by(devices as unknown as Row[], (d) =>
+    groupOf(d as unknown as Device),
+  ) as unknown as Map<string, Device[]>
+  const short = (text: string) => (text.length > 34 ? `${text.slice(0, 33)}…` : text)
+  const INK = '#16161a'
+
+  interface Dot {
+    name: string
+    color: string
+    ring?: boolean
+    value: (d: Device) => number | undefined
+  }
+  /**
+   * One row per device, grouped by the maker of its GPU and by phone or computer. Each dot is a
+   * ratio between two ways on that device, on a logarithmic axis where 1 is "the same", or, with
+   * `frame`, a time in ms against the 16.7 ms of a frame.
+   */
+  function compare(marks: Dot[], frame = false): HTMLElement {
+    const W = 720
+    const ROW = 20
+    const box = { left: 250, right: W - 70, top: 6 }
+    const ticks = frame ? [0, 5, 10, 15, 20] : [0.5, 1, 2, 4, 8, 16]
+    const sx = (v: number) => {
+      const t = frame
+        ? v / 20
+        : (Math.log(v) - Math.log(ticks[0])) / (Math.log(16) - Math.log(ticks[0]))
+      return box.left + Math.min(Math.max(t, 0), 1) * (box.right - box.left)
+    }
+    const show = (v: number) => (frame ? ms(v) : `${v.toFixed(v < 10 ? 1 : 0)}×`)
+    const lines = [...groups].flatMap(([name, list]) => [name, ...list])
+    const H = box.top + lines.length * ROW + 24
+    const figure = html('div', '', 'chart')
+    if (marks.length > 1) {
+      const legend = html('div', '', 'legend')
+      for (const m of marks) {
+        const item = html('span')
+        // a dot as in the chart: full, or a ring
+        const swatch = html('b')
+        swatch.style.cssText = `display:inline-block;width:6px;height:6px;margin-right:6px;border-radius:50%;border:2px solid ${m.color};background:${m.ring ? 'none' : m.color}`
+        item.append(swatch, m.name)
+        legend.append(item)
+      }
+      figure.append(legend)
+    }
+    const root = svg('svg', { viewBox: `0 0 ${W} ${H}`, role: 'img' })
+    for (const t of ticks) {
+      root.append(
+        svg('line', { class: 'rule', x1: sx(t), x2: sx(t), y1: box.top, y2: H - 22 }),
+        svg(
+          'text',
+          { class: 'quiet', x: sx(t), y: H - 6, 'text-anchor': 'middle' },
+          frame ? String(t) : t === 0.5 ? '½×' : `${t}×`,
+        ),
+      )
+    }
+    // The line that matters: the same time for both ways, or the time of a frame.
+    const mark = frame ? 1000 / 60 : 1
+    root.append(
+      svg('line', {
+        x1: sx(mark),
+        x2: sx(mark),
+        y1: box.top,
+        y2: H - 22,
+        stroke: INK,
+        'stroke-width': 1,
+      }),
+    )
+    if (frame)
+      root.append(svg('text', { class: 'quiet', x: sx(mark) + 6, y: box.top + 10 }, 'one frame'))
+    let y = box.top
+    for (const [name, list] of groups) {
+      root.append(svg('text', { class: 'quiet', x: 0, y: y + ROW / 2 + 4 }, name))
+      y += ROW
+      // With five devices or more, the middle one of the group for the first dot.
+      const values = list.map(marks[0].value).filter((v) => v !== undefined) as number[]
+      if (values.length >= 5) {
+        const middle = values.sort((a, b) => a - b)[values.length >> 1]
+        root.append(
+          svg('line', {
+            x1: sx(middle),
+            x2: sx(middle),
+            y1: y,
+            y2: y + list.length * ROW,
+            stroke: marks[0].color,
+            'stroke-width': 2,
+          }),
+        )
+      }
+      for (const d of list) {
+        const at = y + ROW / 2
+        const label = svg('text', { x: 16, y: at + 4 }, short(d.device))
+        if (d.ours) label.setAttribute('font-weight', '700')
+        const group = svg('g')
+        const found = marks.map((m) => ({ m, v: m.value(d) }))
+        for (const { m, v } of found) {
+          if (v === undefined) continue
+          group.append(
+            svg('circle', {
+              cx: sx(v),
+              cy: at,
+              r: m.ring ? 4 : 5,
+              fill: m.ring ? 'none' : m.color,
+              stroke: m.ring ? m.color : 'var(--paper)',
+              'stroke-width': 2,
+            }),
+          )
+        }
+        group.append(svg('rect', { x: 0, y, width: W, height: ROW, fill: 'transparent' }))
+        const told = found
+          .map(({ m, v }) => `${(v === undefined ? 'not run' : show(v)).padStart(9)}  ${m.name}`)
+          .join('\n')
+        group.addEventListener('pointermove', (event) =>
+          showTip(event as PointerEvent, `${d.device}\n${told}`),
+        )
+        group.addEventListener('pointerleave', () => {
+          tip.hidden = true
+        })
+        const first = found[0].v
+        root.append(label, group)
+        root.append(
+          svg('text', { x: box.right + 10, y: at + 4 }, first === undefined ? '—' : show(first)),
+        )
+        y += ROW
+      }
+    }
+    figure.append(root)
+    return figure
+  }
+  /** "on 5 of 6 devices, from 1.4× to 4.3×": how many devices have this ratio clearly above 1. */
+  const verdict = (value: (d: Device) => number | undefined) => {
+    const values = devices.map(value).filter((v) => v !== undefined) as number[]
+    const above = values.filter((v) => v > 1.05)
+    return `${above.length} of ${values.length} devices${
+      above.length
+        ? `, by ${Math.min(...above).toFixed(1)}× to ${Math.max(...above).toFixed(1)}×`
+        : ''
+    }`
+  }
+  const ask = (question: string, text: string) => {
+    say('h3', question)
+    say('p', text)
+  }
+
+  say('h2', "7. Other people's devices")
+  say(
+    'p',
+    `The charts above are one Mac. People ran a short version of the same measure on their own devices, from the benchmark page, and sent it as issues on GitHub: ${others.length} devices so far. A fast device and a slow one cannot be compared in milliseconds, so each chart divides two times of the same device: a ratio of 2× means twice as long, and 1× the same. Every chart asks one question about a choice we made. With so few devices of each kind these are hints, and no average is drawn until a group has five.`,
+  )
+
+  const unsortedTable = (d: Device) =>
+    over(stepOf(d, 'count', 100000, 'blocks', 0), stepOf(d, 'count', 100000, 'blocks', 1))
+  ask(
+    'Is it worth keeping the particles in the order of their cells?',
+    `How many times longer a step takes with the particles left in random order, 100 000 of them. Our rule says always. Longer on ${verdict(unsortedTable)} with the table.`,
+  )
+  page.append(
+    compare([
+      { name: 'table, blocks of 32', color: COLOR.blocks, value: unsortedTable },
+      {
+        name: 'book on a grid',
+        color: COLOR.grid,
+        ring: true,
+        value: (d) =>
+          over(stepOf(d, 'count', 100000, 'grid', 0), stepOf(d, 'count', 100000, 'grid', 1)),
+      },
+    ]),
+  )
+
+  const tableOverGrid = (d: Device) =>
+    over(stepOf(d, 'count', 100000, 'blocks', 1), stepOf(d, 'count', 100000, 'grid', 1))
+  ask(
+    'In a small, full world, is the grid faster than the table?',
+    `The table with blocks of 32 against the book on a grid, 100 000 particles in a layer. Our Mac said the grid, by a fifth. The table takes longer on ${verdict(tableOverGrid)}.`,
+  )
+  page.append(compare([{ name: 'table over grid', color: INK, value: tableOverGrid }]))
+
+  const gridOverTable = (world: number) => (d: Device) =>
+    over(
+      stepOf(d, 'world', 100000, 'grid', 1, world),
+      stepOf(d, 'world', 100000, 'blocks', 1, world),
+    )
+  const tooLarge = devices.filter((d) => stepOf(d, 'world', 100000, 'grid', 1, 320) === undefined)
+  ask(
+    'When the world grows, does the table take over?',
+    `The grid against the table, 100 heaps of particles in a world of 20 m and of 40 m. Our rule says a table as soon as the world is large. At 40 m the grid takes longer on ${verdict(gridOverTable(40))}. At 320 m the grid did not fit on ${tooLarge.length} of ${devices.length}.`,
+  )
+  page.append(
+    compare([
+      { name: 'grid over table, world of 40 m', color: INK, value: gridOverTable(40) },
+      { name: 'world of 20 m', color: INK, ring: true, value: gridOverTable(20) },
+    ]),
+  )
+
+  const hash = (way: Row['way']) => (d: Device) =>
+    over(stepOf(d, 'hash', 100000, way, 1), stepOf(d, 'count', 100000, 'blocks', 1))
+  const zorder = (d: Device) =>
+    over(stepOf(d, 'count', 100000, 'zorder', 1), stepOf(d, 'count', 100000, 'blocks', 1))
+  ask(
+    'Which hash for the table?',
+    `Each hash against blocks of 32 cells, 100 000 particles in a layer. Our Mac said large blocks, and that keeping rows together, the hash of decision 024, is slower. Rows together take longer than blocks of 32 on ${verdict(hash('rows'))}.`,
+  )
+  page.append(
+    compare([
+      { name: NAME.rows, color: COLOR.rows, value: hash('rows') },
+      { name: NAME.scattered, color: COLOR.scattered, value: hash('scattered') },
+      { name: 'table, blocks of 8', color: COLOR.blocks, ring: true, value: hash('blocks') },
+      { name: NAME.zorder, color: COLOR.zorder, value: zorder },
+    ]),
+  )
+
+  const places = (count: number) => (d: Device) => {
+    const best = Math.min(
+      ...(['grid', 'blocks', 'zorder']
+        .map((way) => stepOf(d, 'count', count, way, 1))
+        .filter((v) => v !== undefined) as number[]),
+    )
+    return over(stepOf(d, 'count', count, 'places', 0), best)
+  }
+  ask(
+    'Are 4 places per cell really out?',
+    `The simplest way, 4 places per cell, against the best of the others on the same device. We set it aside because it loses particles under pressure and was slow with many. With 100 000 particles it takes longer on ${verdict(places(100000))}; with 10 000 on ${verdict(places(10000))}.`,
+  )
+  page.append(
+    compare([
+      { name: '100 000 particles', color: COLOR.places, value: places(100000) },
+      { name: '10 000 particles', color: COLOR.places, ring: true, value: places(10000) },
+    ]),
+  )
+
+  const table = (d: Device) => stepOf(d, 'count', 100000, 'blocks', 1)
+  const fits = devices.filter((d) => (table(d) ?? 99) < 1000 / 60).length
+  ask(
+    'Does a step with 100 000 particles fit in a frame?',
+    `The only chart in milliseconds: what finding the neighbours and six rounds of pushes cost, with the table, against the 16.7 ms of a frame at 60 per second. The rest of a frame is not counted here. It fits on ${fits} of ${devices.length} devices.`,
+  )
+  page.append(
+    compare(
+      [
+        { name: 'table, blocks of 32', color: COLOR.blocks, value: table },
+        {
+          name: 'book on a grid',
+          color: COLOR.grid,
+          ring: true,
+          value: (d) => stepOf(d, 'count', 100000, 'grid', 1),
+        },
+      ],
+      true,
+    ),
+  )
+
+  say('h3', 'The devices, and who sent them')
+  say('p', 'Thank you to everyone who ran the benchmark. A step with 100 000 particles, in ms.')
+  const scroll = html('div', '', 'scroll devices')
+  const grid = html('table')
+  const top = html('tr')
+  for (const h of [
+    'device',
+    'sent by',
+    'grid',
+    'blocks of 32',
+    'Z-order',
+    'not in order',
+    '4 places',
+  ])
+    top.append(html('th', h))
+  grid.append(top)
+  const two = (v?: number) => (v === undefined ? '—' : v.toFixed(2))
+  for (const d of others) {
+    const tr = html('tr')
+    // The GPU and the browser, as they name themselves, each word once: under the pointer.
+    const first = html('td', d.device)
+    first.title = `${[...new Set(d.gpu.split(' '))].join(' ')}, ${d.browser}`
+    const cell = html('td')
+    // A link only for a name made of the characters GitHub allows in one.
+    const sender = d.by ?? ''
+    if (/^[A-Za-z0-9-]{1,39}$/.test(sender)) {
+      const who = html('a', sender) as HTMLAnchorElement
+      who.href = `https://github.com/${sender}`
+      cell.append(who)
+    } else cell.append(sender)
+    const issue = html('a', `#${d.issue}`) as HTMLAnchorElement
+    issue.href = `${REPO}/issues/${d.issue}`
+    cell.append(' ', issue)
+    tr.append(
+      first,
+      cell,
+      html('td', two(stepOf(d, 'count', 100000, 'grid', 1))),
+      html('td', two(stepOf(d, 'count', 100000, 'blocks', 1))),
+      html('td', two(stepOf(d, 'count', 100000, 'zorder', 1))),
+      html('td', two(stepOf(d, 'count', 100000, 'blocks', 0))),
+      html('td', two(stepOf(d, 'count', 100000, 'places', 0))),
+    )
+    grid.append(tr)
+  }
+  scroll.append(grid)
+  page.append(scroll)
+  const invite = html('p')
+  const link = html('a', 'Run the benchmark on your device') as HTMLAnchorElement
+  link.href = '../bench/'
+  invite.append(link, ' and add a row.')
+  page.append(invite)
 }
 
 say('h2', 'What a project should look at')

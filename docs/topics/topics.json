@@ -1323,7 +1323,8 @@
         "docs/decisions/024-cells-in-a-hashed-table.md",
         "particle-simulation-cuda",
         "docs/logbook/041-next-to-each-other.md",
-        "docs/logbook/042-no-best-way.md"
+        "docs/logbook/042-no-best-way.md",
+        "docs/logbook/044-the-first-devices.md"
       ],
       "code": ["examples/force-plus/cells-table.wgsl"]
     },
@@ -1343,7 +1344,8 @@
         "particle-simulation-cuda",
         "unified-particle-physics-paper",
         "docs/logbook/041-next-to-each-other.md",
-        "docs/logbook/042-no-best-way.md"
+        "docs/logbook/042-no-best-way.md",
+        "docs/logbook/044-the-first-devices.md"
       ],
       "code": ["examples/force-plus/book-move.wgsl", "examples/force-plus/book-settle.wgsl"]
     },
@@ -2149,7 +2151,23 @@
       "since": {
         "mentioned": "2026-11-05"
       },
-      "citedIn": ["docs/logbook/004-the-detour.md", "docs/logbook/043-other-peoples-devices.md"]
+      "citedIn": [
+        "docs/logbook/004-the-detour.md",
+        "docs/logbook/043-other-peoples-devices.md",
+        "docs/logbook/044-the-first-devices.md"
+      ]
+    },
+    {
+      "id": "prompt-injection",
+      "kind": "concept",
+      "title": "Prompt injection",
+      "summary": "Text written by a stranger that speaks to an AI assistant as if it were its user: it must be read as data, never followed",
+      "area": "method",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-23"
+      },
+      "citedIn": ["docs/logbook/044-the-first-devices.md"]
     },
     {
       "id": "thermal-throttling",

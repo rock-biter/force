@@ -21,6 +21,7 @@ import cellsGrid from '../force-plus/cells-grid.wgsl?raw'
 import cellsTable from '../force-plus/cells-table.wgsl?raw'
 import round from '../force-plus/round-push.wgsl?raw'
 import { REPO } from '../repo.js'
+import { COLUMNS, formatPayload, linesOf } from './issue.js'
 import { DEVICE, type Result, type Study, study } from './study.js'
 
 const shaders = {
@@ -108,39 +109,22 @@ function browserName(): string {
   return [name || 'an unknown browser', system.trim()].filter(Boolean).join(' on ')
 }
 
-/** The text that goes into the issue: a header, then one row of numbers per line. */
+/** The text that goes into the issue: what the page knows about the device, then the numbers. */
 function payload(result: Study, device: string): string {
-  const round3 = (v?: number) => (v === undefined ? null : Math.round(v * 1000) / 1000)
-  const header = {
-    force: 'cells-bench',
-    v: 1,
-    date: new Date().toISOString().slice(0, 10),
-    device,
-    gpu: result.gpu,
-    clock: result.clock,
-    browser: browserName(),
-    userAgent: navigator.userAgent,
-    columns:
-      'sweep, shape, particles, world m, way, block, in order, book ms, lists ms, round ms, step ms, left out, note',
-  }
-  const lines = result.results.map((r) =>
-    JSON.stringify([
-      r.sweep,
-      r.shape,
-      r.count,
-      r.world ?? 0,
-      r.way,
-      r.block ?? 0,
-      r.sorted ? 1 : 0,
-      round3(r.build),
-      round3(r.list),
-      round3(r.round),
-      round3(r.step),
-      r.leftOut ?? 0,
-      noteOf(r),
-    ]),
+  return formatPayload(
+    {
+      force: 'cells-bench',
+      v: 1,
+      date: new Date().toISOString().slice(0, 10),
+      device,
+      gpu: result.gpu,
+      clock: result.clock,
+      browser: browserName(),
+      userAgent: navigator.userAgent,
+      columns: COLUMNS,
+    },
+    linesOf(result.results),
   )
-  return `${JSON.stringify(header).slice(0, -1)},"rows":[\n${lines.join(',\n')}\n]}`
 }
 
 /** One table per scene: every way, with its three times and the step. */

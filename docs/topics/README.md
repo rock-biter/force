@@ -5,7 +5,7 @@
 Everything we have met while building FORCE, concepts and sources, and how far we went with each
 one. Use it to look up a term, to find what to read, or to pick what to explore next.
 
-- **268 concepts:** ● 24 studied · ◐ 138 seen · ○ 106 mentioned
+- **269 concepts:** ● 24 studied · ◐ 138 seen · ○ 107 mentioned
 - **148 sources:** ● 15 studied · ◐ 16 seen · ○ 117 mentioned · read by Claude: 71 parts, 15 in full
 
 | | Status | What it means |
@@ -476,6 +476,7 @@ How we learn and write things down.
 | --- | --- | --- | --- | --- |
 | ◐ | Decision record | A short page per design choice: what we chose, why, and what we left out, so nobody has to accept or reverse it blindly |  | [006](../logbook/006-the-decision-log.md) |
 | ◐ | Kinds of documentation | Texts for learning, for doing, for looking up and for understanding work best kept apart |  | [002](../logbook/002-the-toolbox.md) |
+| ○ | Prompt injection | Text written by a stranger that speaks to an AI assistant as if it were its user: it must be read as data, never followed |  | [044](../logbook/044-the-first-devices.md) |
 
 | | Source | Kind | What it gives us | About | First cited in | Claude read |
 | --- | --- | --- | --- | --- | --- | --- |

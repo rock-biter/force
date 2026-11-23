@@ -6,6 +6,7 @@
 //   node docs/topics/cells-study.mjs            every sweep, about ten minutes
 //   node docs/topics/cells-study.mjs blocks     only the sweeps whose name starts with "blocks":
 //                                               their rows replace the old ones in the results
+//   node docs/topics/cells-study.mjs device     the short plan of the bench page, on our machine
 //
 // It serves a page on localhost, opens it in Chrome without a window, and writes what the page
 // measured to docs/topics/cells-study.json. It needs Google Chrome on a Mac; set CHROME to its
@@ -22,7 +23,8 @@ import http from 'node:http'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 // The measure itself, shared with the bench page of the site. Node strips its types.
-import { FULL, study } from '../../examples/bench/study.ts'
+import { linesOf } from '../../examples/bench/issue.ts'
+import { DEVICE, FULL, study } from '../../examples/bench/study.ts'
 
 const CHROME = process.env.CHROME ?? '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
 const PORT = 8792
@@ -52,7 +54,9 @@ const shaders = {
 
 // ---- the server ------------------------------------------------------------------------------
 const PASSES = Number(process.env.PASSES) || 1
-const chosen = FULL.filter((job) => job.sweep.startsWith(only))
+// `device` is not a sweep: it is the short plan the bench page runs on other people's devices,
+// run here to have our own machine next to theirs.
+const chosen = only === 'device' ? DEVICE : FULL.filter((job) => job.sweep.startsWith(only))
 const jobs = Array.from({ length: PASSES }, () => chosen).flat()
 const page = `<!doctype html><meta charset="utf-8"><script type="module">
 ${study}
@@ -133,12 +137,22 @@ const server = http.createServer(async (request, response) => {
     }
     const out = new URL('./cells-study.json', import.meta.url)
     // A run of some sweeps only keeps the rows of the others.
-    const kept = only
-      ? JSON.parse(readFileSync(out, 'utf8')).results.filter((r) => !r.sweep.startsWith(only))
-      : []
+    const before = JSON.parse(readFileSync(out, 'utf8'))
+    // Our machine on the plan of the bench page, written as the page writes a device.
+    const reference =
+      only === 'device'
+        ? { gpu: result.gpu, clock: result.clock, passes: PASSES, rows: linesOf(rows) }
+        : before.reference
+    const kept =
+      only === 'device'
+        ? before.results
+        : only
+          ? before.results.filter((r) => !r.sweep.startsWith(only))
+          : []
+    const results = only === 'device' ? kept : [...kept, ...rows]
     writeFileSync(
       out,
-      `${JSON.stringify({ gpu: result.gpu, results: [...kept, ...rows] }, null, 2)}\n`,
+      `${JSON.stringify({ gpu: before.gpu ?? result.gpu, results, reference }, null, 2)}\n`,
     )
     console.log(`GPU: ${result.gpu}. Written to ${out.pathname}`)
     close(0)

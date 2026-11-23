@@ -37,7 +37,8 @@ FORCE chooses how it works by measuring, and so far it has measured one computer
 **[benchmark page](https://rock-biter.github.io/force/bench/)** runs the same measure in your browser,
 on a computer or a phone, in a few seconds to a couple of minutes. It sends nothing by itself: at the end it shows
 the numbers, and a button opens an issue here with them. A phone, an old laptop, a gaming PC: each
-one tells us something our own machine cannot.
+one tells us something our own machine cannot. Once checked, your numbers go on the
+[charts page](https://rock-biter.github.io/force/cells-study/), next to your device and your name.
 
 ## What happens next
 
@@ -46,6 +47,7 @@ one tells us something our own machine cannot.
 | Label `suggestion` or `correction` | Received, not checked yet |
 | Label `on the map` | Checked, and on the topic map with your name. Waiting for its moment |
 | Label `benchmark` | The numbers of a device, waiting to be added to the others |
+| `benchmark`, closed as completed | Added to the results, with your name on the charts page |
 | Closed as completed | Studied, or fixed: the issue links to the page we wrote |
 | Closed as not planned | Not for FORCE, with the reason |
 
