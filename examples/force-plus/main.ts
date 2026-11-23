@@ -1,4 +1,4 @@
-// FORCE+ on the GPU, live. Up to 100 000 particles in a box as big as the grid, pushed apart by
+// FORCE+ on the GPU, live. Up to a million particles in a box that grows with them, pushed apart by
 // moving their positions with half and half, masses seen as m^α and levels in the pile (decision
 // 015), through lists of neighbours made when needed (decision 016), from cells kept in a hashed table
 // (decision 024). A menu switches to FORCE, the
@@ -74,10 +74,12 @@ const MARGIN = 0.05 // the lists look 5 cm beyond touching (decision 016)
 const MAX_NEIGHBOURS = 32 // as in list.wgsl
 const NO_LEVEL = 0xffffffff
 const BLOCK = 512 // cells per block of the prefix sum, as in book-blocks.wgsl
-const HALF = 12 // the box is 24 m by 24 m on the floor...
-const SIZE: Vec3 = [120, 45, 120] // ...and 9 m tall: 120 by 45 by 120 cells of 20 cm
+const HALF = 12 // the box is 24 m by 24 m on the floor, wider when the particles need it (halfFor)...
+const HEIGHT = 9 // ...and 9 m tall: 120 by 45 by 120 cells of 20 cm
+const ROOM = 1.25 // the floor is at least this many times as wide as the block the particles start in
+const MAX_PARTICLES = 1000000
 const MAX_TILT = 30 // degrees, around X and around Z, on the page that tilts the box
-const TILT_SPEED = 20 // degrees per second: the floor's far corner, 17 m away, then moves 9.9 cm per step, just under a radius
+const TILT_SPEED = 20 // degrees per second: the floor's far corner, 17 m away, then moves 9.9 cm per step, just under a radius. A wider box turns slower, to keep that
 const GAP = 0.01 // between particles at the start, in meters
 const LAYERS = 28 // at most, at the start: about 5.9 m, well inside the grid's 9 m
 const BALL_RADIUS = 2 // meters, at the start: the panel changes it
@@ -96,14 +98,27 @@ const MASSES: Record<string, readonly [number, number]> = {
   '1 to 100 kg': [1, 100],
 }
 
-// The floor and four walls, as in contact-cost: the normal in xyz, the offset in w.
-const PLANES = [
+// The floor and four walls, as in contact-cost: the normal in xyz, the offset in w. `half` is half
+// the side of the floor, in meters.
+const planesOf = (half: number) => [
   [0, 1, 0, 0],
-  [1, 0, 0, -HALF],
-  [-1, 0, 0, -HALF],
-  [0, 0, 1, -HALF],
-  [0, 0, -1, -HALF],
+  [1, 0, 0, -half],
+  [-1, 0, 0, -half],
+  [0, 0, 1, -half],
+  [0, 0, -1, -half],
 ]
+
+/** How many particles on a side of the block they start in: see `cube`. */
+const blockSide = (count: number) =>
+  Math.max(Math.ceil(Math.cbrt(count)), Math.ceil(Math.sqrt(count / LAYERS)))
+
+/**
+ * Half the side of the floor for this many particles, in meters. 12 m up to about 230 000: beyond,
+ * the block they start in would not leave room around it, 364 000 would not fit at all, and the
+ * box grows to stay ROOM times as wide as the block. A million start 39.7 m wide, in a box of 50 m.
+ */
+const halfFor = (count: number) =>
+  Math.max(HALF, Math.ceil(((blockSide(count) * (DIAMETER + GAP)) / 2) * ROOM))
 
 /** Repeats the same numbers at every run, so every restart starts from the same cube. */
 function random(seed: number): () => number {
@@ -124,7 +139,7 @@ function random(seed: number): () => number {
  */
 function cube(count: number, masses: readonly [number, number]): Float32Array {
   const [lightest, heaviest] = masses
-  const side = Math.max(Math.ceil(Math.cbrt(count)), Math.ceil(Math.sqrt(count / LAYERS)))
+  const side = blockSide(count)
   const spacing = DIAMETER + GAP
   const corner = (-(side - 1) * spacing) / 2
   const next = random(1)
@@ -263,10 +278,13 @@ interface Grid {
  * cells of a space with no border (spatial hashing).
  */
 type Cells = 'places' | 'book' | 'table'
-/** The grid of the level box, with cells of this width: 120 by 45 by 120 of them at 20 cm. */
-const levelGrid = (cell: number): Grid => ({
-  origin: [-HALF, 0, -HALF],
-  size: SIZE.map((n) => Math.ceil((n * CELL) / cell - 1e-6)) as Vec3,
+/**
+ * The grid of the level box, with cells of this width: 120 by 45 by 120 of them at 20 cm, in the
+ * box of 24 m.
+ */
+const levelGrid = (cell: number, half: number): Grid => ({
+  origin: [-half, 0, -half],
+  size: [2 * half, HEIGHT, 2 * half].map((m) => Math.ceil(m / cell - 1e-6)) as Vec3,
 })
 
 /**
@@ -274,7 +292,7 @@ const levelGrid = (cell: number): Grid => ({
  * big enough to hold the box at every tilt, up to `most` degrees around X and around Z. The box
  * turns around the middle of its floor.
  */
-function gridAround(most: number, cell: number): Grid {
+function gridAround(most: number, cell: number, half: number): Grid {
   const low = new Vector3(
     Number.POSITIVE_INFINITY,
     Number.POSITIVE_INFINITY,
@@ -286,9 +304,9 @@ function gridAround(most: number, cell: number): Grid {
   for (let x = -most; x <= most; x += 5)
     for (let z = -most; z <= most; z += 5) {
       turn.set(MathUtils.degToRad(x), 0, MathUtils.degToRad(z))
-      for (const sx of [-HALF, HALF])
-        for (const y of [0, SIZE[1] * CELL])
-          for (const sz of [-HALF, HALF]) {
+      for (const sx of [-half, half])
+        for (const y of [0, HEIGHT])
+          for (const sz of [-half, half]) {
             corner.set(sx, y, sz).applyEuler(turn)
             low.min(corner)
             high.max(corner)
@@ -316,6 +334,7 @@ function makeSimulation(
   cell: number,
   slotsEach: number,
   inOrder: boolean,
+  half: number,
 ) {
   // The cube stands on the floor of the box, wherever the box is turned.
   const start = cube(count, masses)
@@ -357,7 +376,8 @@ function makeSimulation(
   const blocks = storage(booked ? blockCount * 4 : 4)
   const file = cells === 'table' ? kit.byTable : kit.byGrid
   const levels = [storage(count * 4), storage(count * 4)]
-  const planes = storage(PLANES.length * 16)
+  const walls = planesOf(half)
+  const planes = storage(walls.length * 16)
   const neighbours = storage(count * MAX_NEIGHBOURS * 4, GPUBufferUsage.COPY_SRC)
   const neighbourCounts = storage(count * 4, GPUBufferUsage.COPY_SRC)
   const anchors = storage(bytes)
@@ -370,7 +390,7 @@ function makeSimulation(
 
   device.queue.writeBuffer(positions, 0, start)
   for (const b of levels) device.queue.writeBuffer(b, 0, new Uint32Array(count).fill(NO_LEVEL))
-  device.queue.writeBuffer(planes, 0, new Float32Array(PLANES.flat()))
+  device.queue.writeBuffer(planes, 0, new Float32Array(walls.flat()))
   // A list asked for at the first step; from then on the GPU decides by itself.
   device.queue.writeBuffer(control, 0, new Uint32Array([1, 1, 0, 0, 0]))
   // The Params struct of common.wgsl: 80 bytes, in its order.
@@ -380,7 +400,7 @@ function makeSimulation(
   floats.set([0, -GRAVITY, 0, STEP, ...grid.origin, cell])
   words.set([...grid.size, PLACES], 8)
   floats.set([RADIUS, FORCE_PLUS.alpha, FORCE_PLUS.levels], 12)
-  words[15] = PLANES.length
+  words[15] = walls.length
   floats[19] = margin // 16 to 18 belong to the spring, not used here
   device.queue.writeBuffer(params, 0, data)
 
@@ -612,7 +632,7 @@ function makeSimulation(
     /** The floor and the walls, turned as the box is: only their normals change. */
     setBox(turn: Quaternion) {
       const normal = new Vector3()
-      const data = PLANES.flatMap(([x, y, z, offset]) => [
+      const data = walls.flatMap(([x, y, z, offset]) => [
         ...normal.set(x, y, z).applyQuaternion(turn).toArray(),
         offset,
       ])
@@ -671,17 +691,31 @@ async function start() {
   // the world, where the grid of cells stays still and gravity points down.
   const world = new Group()
   scene.add(world)
-  world.add(new GridHelper(2 * HALF, 2 * HALF, 0xbcbcbc, 0xd4d4d4))
-  const height = SIZE[1] * CELL
-  const box = new LineSegments(
-    new EdgesGeometry(new BoxGeometry(2 * HALF, height, 2 * HALF)),
-    new LineBasicMaterial({ color: 0x9a9a9a }),
-  )
-  box.position.y = height / 2
-  world.add(box)
-
   const camera = new PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 200)
   camera.position.set(17, 14, 23)
+  // The box is as wide as the particles need (halfFor): its lines are drawn again when it changes,
+  // and the camera moves back or forth by as much, to keep the whole box in view.
+  let half = 0
+  const lines: (GridHelper | LineSegments)[] = []
+  function fitBox(next: number) {
+    if (next === half) return
+    for (const line of lines.splice(0)) {
+      world.remove(line)
+      line.geometry.dispose()
+    }
+    const box = new LineSegments(
+      new EdgesGeometry(new BoxGeometry(2 * next, HEIGHT, 2 * next)),
+      new LineBasicMaterial({ color: 0x9a9a9a }),
+    )
+    box.position.y = HEIGHT / 2
+    lines.push(new GridHelper(2 * next, 2 * next, 0xbcbcbc, 0xd4d4d4), box)
+    world.add(...lines)
+    if (half) camera.position.multiplyScalar(next / half)
+    camera.far = (200 * next) / HALF
+    camera.updateProjectionMatrix()
+    half = next
+  }
+  fitBox(HALF)
   const orbit = new OrbitControls(camera, renderer.domElement)
   orbit.target.set(0, 0.5, 0)
   orbit.enableDamping = true
@@ -767,7 +801,7 @@ async function start() {
    * toward `radius`, and writes where it is at every substep into `ballPath`.
    */
   function moveBall(count: number, steps: number, substeps: number, radius: number) {
-    const top = Math.max(count / (150 * (2 * HALF) ** 2), DIAMETER)
+    const top = Math.max(count / (150 * (2 * half) ** 2), DIAMETER)
     surface.constant = -top // the plane y = top
     raycaster.setFromCamera(screen, camera)
     // the ray as the box sees it, since the plane and the ball are the box's own
@@ -803,7 +837,7 @@ async function start() {
   }
 
   // ---- the simulation and the panel ----------------------------------------------------------------
-  // ?particles=20000 in the address starts with that many, in thousands from 1000 to 100 000.
+  // ?particles=20000 in the address starts with that many, in thousands from 1000 to a million.
   // ?draw=flat or ?draw=none starts with the cheap discs, or with no particles drawn at all.
   const query = new URLSearchParams(location.search)
   const asked = Math.round(Number(query.get('particles')) / 1000)
@@ -836,7 +870,7 @@ async function start() {
     // ?tiltX=20 in the address starts tilted that much; else as the page's <body> says.
     tiltX: startTilt('tiltX'),
     tiltZ: startTilt('tiltZ'),
-    particles: asked >= 1 && asked <= 100 ? asked * 1000 : 20000,
+    particles: asked >= 1 && asked <= MAX_PARTICLES / 1000 ? asked * 1000 : 20000,
     masses: '1 to 100 kg',
     // How the particles are drawn: as shaded spheres with their own depth, as flat discs, or not
     // at all, to see how much of a frame goes into drawing them.
@@ -875,9 +909,15 @@ async function start() {
   const cellWidth = () =>
     !query.has('narrow') && settings.cells !== 'places' ? DIAMETER + margin : CELL
   const gridOf = (cell: number) =>
-    document.body.dataset.tilt !== undefined ? gridAround(MAX_TILT, cell) : levelGrid(cell)
+    document.body.dataset.tilt !== undefined
+      ? gridAround(MAX_TILT, cell, half)
+      : levelGrid(cell, half)
   // ?slots=8 in the address: slots of the table per particle, at least; 2 without it.
   const slotsEach = Math.max(Number(query.get('slots')) || 2, 1)
+  let switching = false
+  const note = document.createElement('p')
+  note.style.cssText = 'position:fixed;left:16px;bottom:16px;margin:0;max-width:60ch'
+  document.body.append(note)
   let simulation: Simulation | undefined
   let view: ParticleView | undefined
   let paused = false
@@ -900,7 +940,27 @@ async function start() {
   }
 
   function restart() {
+    if (switching) return // the menu was only told of the change below
     simulation?.destroy()
+    fitBox(halfFor(settings.particles))
+    // A grid has a slot per cell, and a shader with a thread per cell: beyond what the device
+    // can dispatch or bind, the cells go into the table, which has no such limit (decision 024).
+    note.textContent = ''
+    if (settings.cells !== 'table') {
+      const cellCount = gridOf(cellWidth()).size.reduce((a, b) => a * b)
+      const perCell = settings.cells === 'places' ? PLACES * 4 : 4 // bytes
+      const most = Math.min(
+        device.limits.maxComputeWorkgroupsPerDimension * 64,
+        device.limits.maxStorageBufferBindingSize / perCell,
+      )
+      if (cellCount > most) {
+        note.textContent = `A grid for this box has ${cellCount.toLocaleString('en')} cells, more than the ${most.toLocaleString('en')} this device takes: switched to the table.`
+        settings.cells = 'table'
+        switching = true
+        cellsMenu.refresh()
+        switching = false
+      }
+    }
     const masses = MASSES[settings.masses]
     simulation = makeSimulation(
       device,
@@ -916,6 +976,7 @@ async function start() {
       slotsEach,
       // ?sorted in the address: the particles kept in the order of the address book
       query.has('sorted'),
+      half,
     )
     simulation.setBox(world.quaternion)
     applySolver()
@@ -936,7 +997,7 @@ async function start() {
   /** Moves the box toward the tilt the sliders ask, for a frame that lasted dt seconds. */
   const followTilt = (dt: number) => {
     if (tilt.x === settings.tiltX && tilt.z === settings.tiltZ) return
-    const most = TILT_SPEED * dt
+    const most = ((TILT_SPEED * HALF) / half) * dt
     tilt.x += MathUtils.clamp(settings.tiltX - tilt.x, -most, most)
     tilt.z += MathUtils.clamp(settings.tiltZ - tilt.z, -most, most)
     turnBox()
@@ -1004,7 +1065,12 @@ async function start() {
   const particles = pane.addFolder({ title: 'Particles' })
   // A new count builds everything again, so only when the slider is let go.
   particles
-    .addBinding(settings, 'particles', { label: 'count', min: 1000, max: 100000, step: 1000 })
+    .addBinding(settings, 'particles', {
+      label: 'count',
+      min: 1000,
+      max: MAX_PARTICLES,
+      step: 1000,
+    })
     .on('change', (event) => {
       if (event.last) restart()
     })
@@ -1014,7 +1080,7 @@ async function start() {
     })
     .on('change', restart)
   // A new way to keep the grid builds everything again.
-  particles
+  const cellsMenu = particles
     .addBinding(settings, 'cells', {
       label: 'grid',
       options: {
