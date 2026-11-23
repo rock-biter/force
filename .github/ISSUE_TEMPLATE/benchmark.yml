@@ -6,13 +6,13 @@ body:
   - type: markdown
     attributes:
       value: |
-        Thank you! Run the [benchmark page](https://rock-biter.github.io/force/bench/) on your device, then press "Open an issue on GitHub" there: it fills this form for you. Every device makes the choices of the engine a little less blind.
+        Thank you! Run the [benchmark page](https://rock-biter.github.io/force/bench/) on your device, then press "Record the benchmark on GitHub" there: it fills this form for you. Every device makes the choices of the engine a little less blind.
   - type: input
     id: device
     attributes:
       label: Device and browser
-      description: The model of the computer or phone, and the browser with its version.
-      placeholder: iPhone 16 Pro, Safari 18 / MacBook Air M1, Chrome 157
+      description: The model of the computer or phone, and the browser with its version. The benchmark page fills in the browser by itself.
+      placeholder: iPhone 16 Pro, Safari 18 on iOS 18.1
     validations:
       required: true
   - type: textarea

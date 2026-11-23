@@ -22,6 +22,10 @@
         text-decoration: none;
         cursor: pointer;
       }
+      .bench button.quiet {
+        background: none;
+        color: var(--ink);
+      }
       .bench button:disabled {
         background: none;
         color: var(--grey);
@@ -81,22 +85,24 @@
 
         <h2>Send them to us</h2>
         <p>
-          Tell us what device this is, then open an issue on GitHub: the text below goes in it, and
+          Write what device this is, then open an issue on GitHub: the text below goes in it, and
           nothing else. You need a GitHub account, and the issue is public. Thank you: every device
           makes the choices of the engine a little less blind.
         </p>
-        <label for="device">Your device and browser</label>
-        <input id="device" type="text" placeholder="iPhone 16 Pro, Safari 18 / MacBook Air M1, Chrome 157" />
         <label for="payload">What will be sent</label>
         <textarea id="payload" readonly></textarea>
+        <label for="device">Your device: its model, which a browser cannot tell</label>
+        <input id="device" type="text" placeholder="iPhone 16 Pro / MacBook Air M1 / a PC with an RTX 4070" />
+        <p class="note">Browser, read from this page: <span id="browser"></span></p>
         <a
           id="send"
           class="button"
           href="https://github.com/rock-biter/force/issues/new?template=benchmark.yml"
           target="_blank"
           rel="noopener"
-          >Open an issue on GitHub</a>
-        <button id="copy" type="button">Copy the text</button>
+          >Record the benchmark on GitHub (open an issue)</a
+        >
+        <button id="copy" type="button" class="quiet">or copy the text</button>
         <p id="hint" class="note"></p>
       </section>
     </main>

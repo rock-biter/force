@@ -63,6 +63,51 @@ const sceneOf = (r: Result) =>
     : `${r.count.toLocaleString('en')} particles in a layer`
 const noteOf = (r: Result) => (r.tooLarge ? 'too large' : (r.error ?? ''))
 
+/**
+ * The browser and the system, as the browser tells them: "Chrome 158 on macOS". Chromium browsers
+ * give a list of names with versions; the others only the long User-Agent text, read by its marks.
+ */
+function browserName(): string {
+  interface Brands {
+    brands?: { brand: string; version: string }[]
+    platform?: string
+  }
+  const told = (navigator as Navigator & { userAgentData?: Brands }).userAgentData
+  const ua = navigator.userAgent
+  const system = /iPhone|iPod/.test(ua)
+    ? `iOS ${ua.match(/OS (\d+[_\d]*)/)?.[1]?.replace(/_/g, '.') ?? ''}`
+    : /iPad/.test(ua)
+      ? 'iPadOS'
+      : /Android/.test(ua)
+        ? `Android ${ua.match(/Android (\d+)/)?.[1] ?? ''}`
+        : /Windows/.test(ua)
+          ? 'Windows'
+          : /Mac OS X/.test(ua)
+            ? 'macOS'
+            : /CrOS/.test(ua)
+              ? 'ChromeOS'
+              : /Linux/.test(ua)
+                ? 'Linux'
+                : (told?.platform ?? '')
+  // The real name comes after the two every Chromium browser lists: "Chromium" and a made-up one.
+  const brand = told?.brands?.find((b) => !/Chromium|Not.?A.?Brand/i.test(b.brand))
+  const marks: [RegExp, string][] = [
+    [/Edg(?:e|A|iOS)?\/(\d+)/, 'Edge'],
+    [/OPR\/(\d+)/, 'Opera'],
+    [/SamsungBrowser\/(\d+)/, 'Samsung Internet'],
+    [/(?:Firefox|FxiOS)\/(\d+)/, 'Firefox'],
+    [/(?:Chrome|CriOS)\/(\d+)/, 'Chrome'],
+    [/Version\/(\d+(?:\.\d+)?).*Safari/, 'Safari'],
+  ]
+  let name = brand ? `${brand.brand.replace(/^Google |^Microsoft /, '')} ${brand.version}` : ''
+  for (const [mark, label] of marks) {
+    if (name) break
+    const found = ua.match(mark)
+    if (found) name = `${label} ${found[1]}`
+  }
+  return [name || 'an unknown browser', system.trim()].filter(Boolean).join(' on ')
+}
+
 /** The text that goes into the issue: a header, then one row of numbers per line. */
 function payload(result: Study, device: string): string {
   const round3 = (v?: number) => (v === undefined ? null : Math.round(v * 1000) / 1000)
@@ -73,7 +118,8 @@ function payload(result: Study, device: string): string {
     device,
     gpu: result.gpu,
     clock: result.clock,
-    browser: navigator.userAgent,
+    browser: browserName(),
+    userAgent: navigator.userAgent,
     columns:
       'sweep, shape, particles, world m, way, block, in order, book ms, lists ms, round ms, step ms, left out, note',
   }
@@ -168,12 +214,16 @@ async function run() {
   const text = $<HTMLTextAreaElement>('payload')
   const send = $<HTMLAnchorElement>('send')
   const hint = $('hint')
+  const browser = browserName()
+  $('browser').textContent = browser
   const fill = () => {
-    text.value = payload(result, device.value.trim())
+    const model = device.value.trim()
+    text.value = payload(result, model)
     const address = new URL(`${REPO}/issues/new`)
     address.searchParams.set('template', 'benchmark.yml')
-    address.searchParams.set('title', `Benchmark: ${device.value.trim() || 'my device'}`)
-    address.searchParams.set('device', device.value.trim())
+    address.searchParams.set('title', `Benchmark: ${model ? `${model}, ` : ''}${browser}`)
+    // Without a model the field stays empty: GitHub asks for it there, where it is required.
+    if (model) address.searchParams.set('device', `${model}, ${browser}`)
     address.searchParams.set('results', text.value)
     // A long address may be cut on the way: then the visitor pastes the text by hand.
     if (address.href.length > 7000) {
@@ -187,7 +237,7 @@ async function run() {
   fill()
   $('copy').onclick = async () => {
     await navigator.clipboard.writeText(text.value)
-    $('copy').textContent = 'Copied'
+    $('copy').textContent = 'copied'
   }
   $('done').hidden = false
 }
