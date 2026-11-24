@@ -12,6 +12,18 @@ import type { ButtonGridApi, FpsGraphBladeApi } from '@tweakpane/plugin-essentia
 import * as EssentialsPlugin from '@tweakpane/plugin-essentials'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 import {
+  abs,
+  Fn,
+  float,
+  fract,
+  fwidth,
+  min,
+  mix,
+  positionLocal,
+  saturate,
+  uniform,
+} from 'three/tsl'
+import {
   BoxGeometry,
   Color,
   DirectionalLight,
@@ -28,6 +40,7 @@ import {
   MeshStandardMaterial,
   PerspectiveCamera,
   Plane,
+  PlaneGeometry,
   type Quaternion,
   Raycaster,
   Scene,
@@ -46,7 +59,8 @@ import listCode from '../contact-cost/list.wgsl?raw'
 import predictCode from '../contact-cost/predict.wgsl?raw'
 import rebuildCode from '../contact-cost/rebuild.wgsl?raw'
 import watchCode from '../contact-cost/watch.wgsl?raw'
-import { ParticleView } from '../debug/particles.js'
+import { ParticleView, SUN } from '../debug/particles.js'
+import { CASTERS, ShadowStage, SURFACES } from '../debug/shadows.js'
 import { showError } from '../debug/viewer.js'
 import bookBlocksCode from './book-blocks.wgsl?raw'
 import bookCountCode from './book-count.wgsl?raw'
@@ -678,7 +692,8 @@ async function start() {
   })
   const kit = await makePipelines(device, new URLSearchParams(location.search).get('hash') ?? '')
 
-  const renderer = new WebGPURenderer({ device, antialias: true })
+  // three.js times its own drawing on the GPU clock too, for the "GPU draw" of the panel.
+  const renderer = new WebGPURenderer({ device, antialias: true, trackTimestamp: hasClock })
   await renderer.init()
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
   renderer.setSize(window.innerWidth, window.innerHeight)
@@ -686,11 +701,23 @@ async function start() {
 
   const scene = new Scene()
   scene.background = new Color(0xe9e9e9)
-  // Light for the ball only: the particles shade themselves (debug/particles.ts).
+  // Light for the ball only, when it is not lit by the stage: the particles shade themselves
+  // (debug/particles.ts), from the same direction.
   scene.add(new HemisphereLight(0xffffff, 0x777788, 2))
   const sun = new DirectionalLight(0xffffff, 2)
-  sun.position.set(2, 5, 3)
+  sun.position.copy(SUN.value)
   scene.add(sun)
+  // The shadows (debug/shadows.ts, decision 030). ?shadowmap=4096 in the address sets the side of
+  // the shadow map, ?soft=3 the width of the soft edge, both in texels.
+  const asks = new URLSearchParams(location.search)
+  const stage = new ShadowStage(renderer, scene, {
+    size: MathUtils.clamp(
+      Math.round(Number(asks.get('shadowmap'))) || 2048,
+      256,
+      device.limits.maxTextureDimension2D,
+    ),
+    softness: asks.has('soft') ? Number(asks.get('soft')) || 0 : undefined,
+  })
   // The floor, with a line every meter, 5 cells of the grid, and the box the grid fills.
   // They and the ball sit in one group, the box. The force-tilt page turns the group, and the
   // floor and the walls of the simulation with it. The particles are not in the group: they live in
@@ -703,8 +730,35 @@ async function start() {
   // and the camera moves back or forth by as much, to keep the whole box in view.
   let half = 0
   const lines: (GridHelper | LineSegments)[] = []
+  // A floor to take the shadows, of the color of the background. Only the stage draws it: without
+  // it the floor is the grid's lines alone, as before. Lines drawn the usual way come after the
+  // light and take no shadow, so with the stage the floor paints the same grid itself, a line
+  // every meter, and the lines of the GridHelper are hidden (floorLines).
+  const floorSide = uniform(1) // meters
+  const floorGrid = Fn(() => {
+    // Where this pixel is on the floor, in meters from its center, and how far from the nearest
+    // line, in pixels: fwidth says how many meters one pixel covers here, as in GLSL.
+    const at = positionLocal.xy.mul(floorSide)
+    const pixel = fwidth(at)
+    const toLine = abs(fract(at.sub(0.5)).sub(0.5)).div(pixel)
+    const toAxis = abs(at).div(pixel)
+    const line = saturate(float(1).sub(min(toLine.x, toLine.y)))
+    const axis = saturate(float(1).sub(min(toAxis.x, toAxis.y)))
+    const ground = uniform(scene.background as Color)
+    return mix(mix(ground, uniform(new Color(0xd4d4d4)), line), uniform(new Color(0xbcbcbc)), axis)
+  })()
+  const floor = new Mesh(new PlaneGeometry(1, 1), stage.matte(floorGrid))
+  let floorLines = false // whether the floor is drawn, with its own lines
+  floor.rotation.x = -Math.PI / 2
+  floor.position.y = -0.005
+  floor.layers.set(SURFACES)
+  world.add(floor)
   function fitBox(next: number) {
     if (next === half) return
+    floor.scale.set(2 * next, 2 * next, 1)
+    floorSide.value = 2 * next
+    // The light covers a ball around the box, at any tilt: the box turns around its floor's center.
+    stage.fit(new Vector3(), Math.hypot(next, next, HEIGHT))
     for (const line of lines.splice(0)) {
       world.remove(line)
       line.geometry.dispose()
@@ -715,6 +769,7 @@ async function start() {
     )
     box.position.y = HEIGHT / 2
     lines.push(new GridHelper(2 * next, 2 * next, 0xbcbcbc, 0xd4d4d4), box)
+    lines[0].visible = !floorLines
     world.add(...lines)
     if (half) camera.position.multiplyScalar(next / half)
     camera.far = (200 * next) / HALF
@@ -792,10 +847,15 @@ async function start() {
   // nothing comes back straight under the pointer. Only its upper half is drawn: the floor is made
   // of lines, and the lower half would show through it.
   const ball = { x: 0, z: 0, radius: 0 }
-  const ballMesh = new Mesh(
+  // Two materials: three.js's own, lit by the lights of the scene, and one that takes its light
+  // and its shadows from the last pass of the stage. The ball casts a shadow too.
+  const ballLit = new MeshStandardMaterial({ color: 0xf2c200, roughness: 1, metalness: 0 }) // matte yellow
+  const ballShadowed = stage.matte(ballLit.color)
+  const ballMesh: Mesh = new Mesh(
     new SphereGeometry(1, 48, 12, 0, 2 * Math.PI, 0, Math.PI / 2),
-    new MeshStandardMaterial({ color: 0xf2c200, roughness: 1, metalness: 0 }), // matte yellow
+    ballLit,
   )
+  stage.cast(ballMesh)
   world.add(ballMesh)
   const raycaster = new Raycaster()
   const surface = new Plane(new Vector3(0, 1, 0), 0)
@@ -890,9 +950,29 @@ async function start() {
     tiltZ: startTilt('tiltZ'),
     particles: asked >= 1 && asked <= MAX_PARTICLES / 1000 ? asked * 1000 : 20000,
     masses: '1 to 100 kg',
-    // How the particles are drawn: as shaded spheres with their own depth, as flat discs, or not
-    // at all, to see how much of a frame goes into drawing them.
-    draw: askedDraw === 'flat' || askedDraw === 'none' ? askedDraw : 'spheres',
+    // How the particles are drawn. 'deferred': spheres that write only their depth, color and
+    // normal, lit in a later pass once per pixel (decision 030). 'spheres': each sphere lit in its
+    // own shader, as before. Flat discs, or nothing at all, to see how much of a frame goes into
+    // drawing them. ?draw=spheres, ?draw=flat or ?draw=none in the address starts with that one.
+    draw: ['spheres', 'flat', 'none'].includes(askedDraw ?? '')
+      ? (askedDraw as string)
+      : 'deferred',
+    // The shadows the spheres cast on each other, on the floor and on the ball, only with
+    // 'deferred'. What the light sees of a particle is its sphere, 'sphere', or a flat disc,
+    // 'flat', which the GPU can skip when hidden. ?shadows=flat or ?shadows=off in the address.
+    shadows: ['flat', 'off'].includes(query.get('shadows') ?? '')
+      ? (query.get('shadows') as string)
+      : 'sphere',
+    // The color of the lightest particle and of the heaviest: the others are in between, by the
+    // logarithm of their mass. With one mass for all, only the first is used.
+    light: '#4ea3ff',
+    heavy: '#d1495b',
+    // The side of the shadow map, in texels: as ?shadowmap=4096 in the address asks, or 2048.
+    shadowMap: stage.mapSize,
+    // How dark a shadow is, from 0, only the sun taken away, to 1, black. ?dark=0.7 in the address.
+    darkness: query.has('dark')
+      ? MathUtils.clamp(Number(query.get('dark')) || 0, 0, 1)
+      : stage.darkness.value,
     // How the cells keep their particles: the address book with a table (decision 024), the
     // address book with a slot per cell of the grid, or 4 places per cell. ?cells=book or
     // ?cells=places
@@ -906,7 +986,13 @@ async function start() {
   const margin = query.has('margin')
     ? MathUtils.clamp(Number(query.get('margin')) || 0, 0, CELL)
     : MARGIN
-  const stats = { gpu: Number.NaN, lists: Number.NaN, crowded: Number.NaN, leftOut: Number.NaN }
+  const stats = {
+    gpu: Number.NaN,
+    draw: Number.NaN,
+    lists: Number.NaN,
+    crowded: Number.NaN,
+    leftOut: Number.NaN,
+  }
   /** α and c as the solver sees them: FORCE uses the real masses and no levels. */
   const solverAlpha = () => (settings.method === 'plus' ? settings.alpha : 1)
   const solverLevels = () => (settings.method === 'plus' ? settings.levels : 0)
@@ -937,24 +1023,46 @@ async function start() {
   note.style.cssText = 'position:fixed;left:16px;bottom:16px;margin:0;max-width:60ch'
   document.body.append(note)
   let simulation: Simulation | undefined
+  // The colors of the lightest and of the heaviest particle, which the panel can change.
+  const massColors = [new Color(settings.light), new Color(settings.heavy)] as const
   let view: ParticleView | undefined
+  let caster: ParticleView | undefined // the same particles as the light sees them
+  /** Whether this frame is drawn in the stage's passes, and whether with shadows. */
+  const deferred = () => settings.draw === 'deferred'
+  const shadowed = () => deferred() && settings.shadows !== 'off'
   let paused = false
   let owed = 0 // simulated time the steps still owe to real time
   let lastReading: { lists: number; steps: number; crowded: number; leftOut: number } | undefined
 
   /** Draws the same simulation again, in the way the panel asks. */
   function redraw() {
-    if (view) {
-      scene.remove(view.mesh)
-      view.dispose()
-      view = undefined
+    for (const each of [view, caster]) {
+      if (!each) continue
+      scene.remove(each.mesh)
+      each.dispose()
     }
+    view = caster = undefined
+    // With shadows the ball takes its light from the stage's last pass, like the spheres.
+    ballMesh.material = deferred() ? ballShadowed : ballLit
+    ballMesh.layers.set(deferred() ? SURFACES : 0)
+    stage.shadows = shadowed()
+    floorLines = deferred()
+    lines[0].visible = !floorLines
     if (!simulation || settings.draw === 'none') return
     view = new ParticleView(renderer, simulation, {
       massRange: MASSES[settings.masses],
-      look: settings.draw === 'flat' ? 'flat' : 'sphere',
+      massColors,
+      look: settings.draw === 'flat' ? 'flat' : deferred() ? 'surface' : 'sphere',
     })
     scene.add(view.mesh)
+    if (!deferred()) return
+    view.mesh.layers.set(SURFACES)
+    if (!shadowed()) return
+    caster = new ParticleView(renderer, simulation, {
+      look: settings.shadows === 'flat' ? 'caster-flat' : 'caster',
+    })
+    caster.mesh.layers.set(CASTERS)
+    scene.add(caster.mesh)
   }
 
   function restart() {
@@ -1110,9 +1218,61 @@ async function start() {
     .on('change', restart)
   particles
     .addBinding(settings, 'draw', {
-      options: { spheres: 'spheres', 'flat discs': 'flat', nothing: 'none' },
+      options: {
+        'spheres, deferred': 'deferred',
+        spheres: 'spheres',
+        'flat discs': 'flat',
+        nothing: 'none',
+      },
     })
-    .on('change', redraw)
+    .on('change', () => {
+      shadowsMenu.disabled = !deferred()
+      shadowMapMenu.disabled = darknessSlider.disabled = !shadowed()
+      redraw()
+    })
+  particles.addBinding(settings, 'light', { label: 'color, light' }).on('change', () => {
+    massColors[0].set(settings.light)
+  })
+  particles.addBinding(settings, 'heavy', { label: 'color, heavy' }).on('change', () => {
+    massColors[1].set(settings.heavy)
+  })
+  const shadowsMenu = particles
+    .addBinding(settings, 'shadows', {
+      options: { 'from spheres': 'sphere', 'from flat discs': 'flat', off: 'off' },
+      disabled: !deferred(),
+    })
+    .on('change', () => {
+      shadowMapMenu.disabled = darknessSlider.disabled = !shadowed()
+      redraw()
+    })
+  // A map this device cannot hold is not offered. One asked for in the address always is.
+  const mapSizes = [512, 1024, 2048, 4096, 8192].filter(
+    (size) => size <= device.limits.maxTextureDimension2D,
+  )
+  if (!mapSizes.includes(settings.shadowMap)) mapSizes.push(settings.shadowMap)
+  const darknessSlider = particles
+    .addBinding(settings, 'darkness', {
+      label: 'shadow dark',
+      min: 0,
+      max: 1,
+      step: 0.05,
+      disabled: !shadowed(),
+    })
+    .on('change', () => {
+      stage.darkness.value = settings.darkness
+    })
+  stage.darkness.value = settings.darkness
+  const shadowMapMenu = particles
+    .addBinding(settings, 'shadowMap', {
+      label: 'shadow map',
+      options: Object.fromEntries(
+        mapSizes.sort((a, b) => a - b).map((size) => [`${size} px`, size]),
+      ),
+      disabled: !shadowed(),
+    })
+    .on('change', () => {
+      stage.mapSize = settings.shadowMap
+    })
   const buttons = particles.addBlade({
     view: 'buttongrid',
     size: [2, 1],
@@ -1148,6 +1308,12 @@ async function start() {
   const fps = numbers.addBlade({ view: 'fpsgraph', label: 'fps', rows: 2 }) as FpsGraphBladeApi
   numbers.addBinding(stats, 'gpu', {
     label: 'GPU step',
+    readonly: true,
+    format: (v) => (Number.isNaN(v) ? 'n/a' : `${v.toFixed(2)} ms`),
+  })
+  // What three.js spends drawing a frame, all its passes added up, on the same clock.
+  numbers.addBinding(stats, 'draw', {
+    label: 'GPU draw',
     readonly: true,
     format: (v) => (Number.isNaN(v) ? 'n/a' : `${v.toFixed(2)} ms`),
   })
@@ -1402,6 +1568,8 @@ async function start() {
 
   let last: number | undefined
   let frame = 0
+  let drawn = 0
+  let timing = false
   renderer.setAnimationLoop((now) => {
     fps.begin()
     const dt = last === undefined ? 0 : Math.min((now - last) / 1000, 0.1)
@@ -1462,7 +1630,17 @@ async function start() {
         readProfile(profileBack, profile.names, sim.substepCount).catch(showError)
     }
     // Same queue, same order: the steps sent above run before this drawing reads the positions.
-    renderer.render(scene, camera)
+    if (deferred()) stage.render(camera)
+    else renderer.render(scene, camera)
+    // Every SAMPLE_EVERY frames, ask three.js how long its passes took on the GPU.
+    if (hasClock && !timing && drawn++ % SAMPLE_EVERY === 0) {
+      timing = true
+      renderer.resolveTimestampsAsync('render').then((ms) => {
+        timing = false
+        if (typeof ms !== 'number' || !(ms > 0)) return
+        stats.draw = Number.isNaN(stats.draw) ? ms : 0.7 * stats.draw + 0.3 * ms
+      }, showError)
+    }
     fps.end()
   })
 }

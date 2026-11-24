@@ -2,11 +2,16 @@
 // triangle always faces the camera, the fragment shader cuts a disc out of it, shades the disc as
 // if it were round, and writes the depth a real sphere would have, so spheres cross correctly.
 // The shaders are TSL, three.js's way to write shaders in JavaScript: it compiles them to WGSL.
+//
+// A view can also be one half of a drawing in two passes (shadows.ts, decision 030): 'surface'
+// writes only what the sphere is made of, for a later pass to light, and 'caster' is the sphere as
+// the light sees it, for the shadow map.
 
 import {
   cameraFar,
   cameraNear,
   cameraProjectionMatrix,
+  cameraViewMatrix,
   Discard,
   dot,
   Fn,
@@ -16,6 +21,7 @@ import {
   max,
   mix,
   modelViewMatrix,
+  mrt,
   normalize,
   positionGeometry,
   pow,
@@ -26,6 +32,7 @@ import {
   varying,
   vec3,
   vec4,
+  viewZToOrthographicDepth,
   viewZToPerspectiveDepth,
 } from 'three/tsl'
 import {
@@ -34,7 +41,9 @@ import {
   InstancedBufferGeometry,
   Mesh,
   MeshBasicNodeMaterial,
+  type Node,
   StorageInstancedBufferAttribute,
+  Vector3,
   type WebGPURenderer,
 } from 'three/webgpu'
 
@@ -43,11 +52,33 @@ import {
 const SQRT3 = Math.sqrt(3)
 const CORNERS = [0, 2, 0, -SQRT3, -1, 0, SQRT3, -1, 0]
 
-// Where the light comes from, in view space: up, right, and toward the camera.
-const LIGHT = normalize(vec3(0.4, 0.6, 0.7))
-// Halfway between the light and the eye, for the highlight (Blinn-Phong). The eye is taken straight
-// ahead, along +Z in view space: close enough for small spheres.
-const HALFWAY = normalize(LIGHT.add(vec3(0, 0, 1)))
+/**
+ * Where the light comes from, in the world: it stands still when the camera turns, as a shadow
+ * needs. One light for every view, and for the shadows.
+ */
+export const SUN = uniform(new Vector3(0.35, 1, 0.5).normalize())
+
+/**
+ * The light of one point of a surface, from its normal in view space: some light everywhere
+ * (ambient), more where the surface faces the light (diffuse), and a white highlight where it
+ * mirrors the light toward the eye (specular), as in GLSL. `lit` is 1 in the light and 0 in a
+ * shadow, which leaves only the ambient. The highlight wants the direction halfway between the
+ * light and the eye (Blinn-Phong); the eye is taken straight ahead, along +Z in view space: close
+ * enough for small spheres.
+ */
+export function shade(normal: Node<'vec3'>, lit: Node<'float'> | number = 1) {
+  // The same direction as the camera sees it: view space is where the normals are.
+  const light = cameraViewMatrix.mul(vec4(SUN, 0)).xyz
+  const halfway = normalize(light.add(vec3(0, 0, 1)))
+  return {
+    diffuse: max(dot(normal, light), 0).mul(lit).mul(0.6).add(0.4),
+    // How much the surface faces the light: 1 straight at it, 0 edge-on, below 0 turned away.
+    facing: dot(normal, light),
+    specular: pow(max(dot(normal, halfway), 0), 20)
+      .mul(lit)
+      .mul(0.45),
+  }
+}
 
 /**
  * What the view draws: a FORCE World, or any GPU buffer of one vec4f per particle, the center in
@@ -66,12 +97,24 @@ export interface ParticleViewOptions {
    */
   massRange?: readonly [lightest: number, heaviest: number]
   /**
-   * 'sphere', the default, shades each disc as a round sphere and writes the sphere's depth.
-   * 'flat' is the cheapest drawing we could think of, to see what the spheres cost: a disc with a
-   * diagonal gradient, at the depth of its flat triangle.
+   * The two colors of `massRange`, in place of light blue and red. The view keeps these very
+   * objects: change one, with `set`, and the particles change color at the next frame.
    */
-  look?: 'sphere' | 'flat'
+  massColors?: readonly [lightest: Color, heaviest: Color]
+  /** How the particles are drawn: see Look. */
+  look?: Look
 }
+
+/**
+ * - 'sphere', the default, shades each disc as a round sphere and writes the sphere's depth.
+ * - 'flat' is the cheapest drawing we could think of, to see what the spheres cost.
+ * - 'surface' writes the sphere's depth, its color with no light on it, and its normal in a second
+ *   texture: the light comes in a later pass, once per pixel (shadows.ts).
+ * - 'caster' is the sphere for the shadow map: only its depth, seen from a light with no
+ *   perspective. 'caster-flat' leaves the depth to the flat triangle, which the GPU can test before
+ *   it runs the shader.
+ */
+export type Look = 'sphere' | 'flat' | 'surface' | 'caster' | 'caster-flat'
 
 /** The particles of one world, drawn straight from its GPU buffer. */
 export class ParticleView {
@@ -92,7 +135,7 @@ export class ParticleView {
     // The color: one for all, or from the mass m = 1 / w. log(m / lightest) / log(heaviest /
     // lightest) is 0 at the lightest and 1 at the heaviest; it is worked out in the vertex shader,
     // once per corner, and handed to the fragment shader.
-    const light = uniform(new Color(0x4ea3ff))
+    const light = uniform(options.massColors?.[0] ?? new Color(0x4ea3ff))
     const [lightest, heaviest] = options.massRange ?? [1, 1]
     const spread = Math.log(heaviest / lightest)
     const tint = !options.massRange
@@ -101,7 +144,7 @@ export class ParticleView {
         ? varying(
             mix(
               light,
-              uniform(new Color(0xd1495b)),
+              uniform(options.massColors?.[1] ?? new Color(0xd1495b)),
               saturate(log(particle.w).negate().sub(Math.log(lightest)).div(spread)),
             ),
           )
@@ -142,19 +185,26 @@ export class ParticleView {
       this.mesh.frustumCulled = false
       return
     }
+    const look = options.look ?? 'sphere'
     this.material.colorNode = Fn(() => {
       If(dot(disc, disc).greaterThan(1), () => {
         Discard() // outside the disc: this pixel was only part of the triangle
       })
-      // Some light everywhere (ambient), more where the surface faces the light (diffuse), and a
-      // white highlight where it mirrors the light toward the eye (specular), as in GLSL.
-      const diffuse = max(dot(normal, LIGHT), 0)
-      const specular = pow(max(dot(normal, HALFWAY), 0), 20).mul(0.45)
-      return vec4(tint.mul(diffuse.mul(0.6).add(0.4)).add(specular), 1)
+      // For the shadow map only the depth counts. For a later pass, the color with no light on it.
+      if (look === 'caster' || look === 'caster-flat') return vec4(0, 0, 0, 1)
+      if (look === 'surface') return vec4(tint, 1)
+      const { diffuse, specular } = shade(normal)
+      return vec4(tint.mul(diffuse).add(specular), 1)
     })()
+    // The second texture of that later pass: the normal, and 1 for "this surface shines".
+    if (look === 'surface') this.material.mrtNode = mrt({ normal: vec4(normal, 1) })
     // The depth of the sphere's surface, not of the flat triangle: like gl_FragDepth in GLSL.
+    // The light of the shadow map has no perspective, so its depth is worked out another way.
     const surfaceZ = sphereCenter.z.add(normal.z.mul(radius))
-    this.material.depthNode = viewZToPerspectiveDepth(surfaceZ, cameraNear, cameraFar)
+    if (look === 'caster')
+      this.material.depthNode = viewZToOrthographicDepth(surfaceZ, cameraNear, cameraFar)
+    else if (look !== 'caster-flat')
+      this.material.depthNode = viewZToPerspectiveDepth(surfaceZ, cameraNear, cameraFar)
 
     this.mesh = new Mesh(this.geometry, this.material)
     // three.js would cull by the three corners around the origin, not by where the particles are.
