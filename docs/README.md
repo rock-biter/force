@@ -52,6 +52,7 @@ This is where we tell how FORCE gets built, one step at a time. If you are new h
 | 043 | [Other People's Devices](./logbook/043-other-peoples-devices.md) | A public page runs the benchmark in anyone's browser, a phone too, and prepares a GitHub issue with the numbers; a second clock for devices whose GPU has none |
 | 044 | [The First Devices](./logbook/044-the-first-devices.md) | Rules for reading strangers' results as data, a check that flags whatever is not the page's own format, and the first five devices: on an NVIDIA card memory order hardly matters |
 | 045 | [A Million, and One Pass](./logbook/045-a-million-and-one-pass.md) | A million particles in a box that grows, friction that read every neighbour twice and now reads it once, and 3 rounds in each of 2 substeps in place of 6 rounds in one |
+| 046 | [A Promise Not Yet Kept](./logbook/046-a-promise-not-yet-kept.md) | Soft shadows for the debug viewer: the depth promise that browsers do not take yet, and the choice to shade once per pixel |
 
 ## For reference
 

@@ -14,7 +14,7 @@ documentation of the library will live there too.
 
 ## Where we are
 
-*Updated November 23, 2026*
+*Updated November 24, 2026*
 
 **Latest steps:** chapters [038](./docs/logbook/038-one-hundred-twenty-five-cells.md),
 [039](./docs/logbook/039-far-apart-in-memory.md) and [040](./docs/logbook/040-the-table.md). To find
@@ -43,7 +43,11 @@ The live page now holds up to a million particles, and a step got cheaper: frict
 particle's neighbours twice, and now reads them once
 ([chapter 045](./docs/logbook/045-a-million-and-one-pass.md)).
 
-**Next:** more devices, then read our rules again against them.
+Before going on with the engine, we want the particles of our viewer to cast soft shadows on each
+other. The trick that would make them cheap is not in the browsers yet, so we chose another way to
+draw them ([chapter 046](./docs/logbook/046-a-promise-not-yet-kept.md)). 27 devices are in by now.
+
+**Next:** the shadows, one pass at a time. Then more devices, and our rules read again against them.
 
 Every step, with what we learned and what went wrong, is in the [logbook](./docs/README.md).
 

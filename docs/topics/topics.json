@@ -2526,7 +2526,8 @@
         "buffer",
         "webgpu-errors",
         "error-scope",
-        "shader-module"
+        "shader-module",
+        "early-depth-test"
       ],
       "citedIn": [
         "README.md",
@@ -2540,7 +2541,8 @@
         "docs/logbook/020-a-cheap-launch.md",
         "docs/guides/timestamp-queries.md",
         "docs/logbook/021-a-short-trip.md",
-        "docs/guides/readback.md"
+        "docs/guides/readback.md",
+        "docs/logbook/046-a-promise-not-yet-kept.md"
       ],
       "url": "https://www.w3.org/TR/webgpu/",
       "claudeRead": "parts"
@@ -2556,12 +2558,21 @@
         "mentioned": "2026-11-05",
         "seen": "2026-11-13"
       },
-      "about": ["wgsl", "memory-alignment", "compute-shader", "override-constant", "shader-module"],
+      "about": [
+        "wgsl",
+        "memory-alignment",
+        "compute-shader",
+        "override-constant",
+        "shader-module",
+        "conservative-depth",
+        "wgsl-language-feature"
+      ],
       "citedIn": [
         ".claude/skills/guide/SKILL.md",
         "docs/logbook/004-the-detour.md",
         "docs/guides/buffers.md",
-        "docs/guides/compute-shader.md"
+        "docs/guides/compute-shader.md",
+        "docs/logbook/046-a-promise-not-yet-kept.md"
       ],
       "url": "https://www.w3.org/TR/WGSL/",
       "claudeRead": "parts"
@@ -3710,7 +3721,10 @@
         "seen": "2026-11-11"
       },
       "related": ["instancing"],
-      "citedIn": ["docs/logbook/009-the-first-picture.md"],
+      "citedIn": [
+        "docs/logbook/009-the-first-picture.md",
+        "docs/logbook/046-a-promise-not-yet-kept.md"
+      ],
       "code": ["examples/debug/particles.ts"]
     },
     {
@@ -7365,6 +7379,123 @@
       "authors": "Isaac Mason",
       "year": 2025,
       "claudeRead": "parts"
+    },
+    {
+      "id": "early-depth-test",
+      "kind": "concept",
+      "title": "Early depth test",
+      "summary": "The GPU compares a pixel with what is already drawn before running its shader, and skips the hidden ones for free",
+      "area": "gpu",
+      "status": "seen",
+      "since": {
+        "seen": "2026-11-24"
+      },
+      "related": ["impostor", "overdraw"],
+      "citedIn": ["docs/logbook/046-a-promise-not-yet-kept.md"]
+    },
+    {
+      "id": "conservative-depth",
+      "kind": "concept",
+      "title": "Conservative depth",
+      "summary": "A promise that the depth a shader writes is only farther, or only nearer, than its triangle, so the early depth test can still run: @builtin(frag_depth, greater) in WGSL",
+      "area": "gpu",
+      "status": "seen",
+      "since": {
+        "seen": "2026-11-24"
+      },
+      "partOf": "early-depth-test",
+      "code": ["examples/depth-promise/main.ts"],
+      "citedIn": ["docs/logbook/046-a-promise-not-yet-kept.md"]
+    },
+    {
+      "id": "wgsl-language-feature",
+      "kind": "concept",
+      "title": "WGSL language feature",
+      "summary": "A named addition to the shader language that a browser lists in navigator.gpu.wgslLanguageFeatures when it knows it",
+      "area": "gpu",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-24"
+      },
+      "related": ["wgsl"],
+      "code": ["examples/depth-promise/main.ts"],
+      "citedIn": ["docs/logbook/046-a-promise-not-yet-kept.md"]
+    },
+    {
+      "id": "overdraw",
+      "kind": "concept",
+      "title": "Overdraw",
+      "summary": "Pixels painted more than once in a frame, because several shapes cover them",
+      "area": "gpu",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-24"
+      },
+      "citedIn": ["docs/logbook/046-a-promise-not-yet-kept.md"]
+    },
+    {
+      "id": "shadow-map",
+      "kind": "concept",
+      "title": "Shadow map",
+      "summary": "A picture of how far the first thing is as seen from the light: a pixel farther than that is in shadow",
+      "area": "gpu",
+      "status": "seen",
+      "since": {
+        "seen": "2026-11-24"
+      },
+      "related": ["percentage-closer-filtering"],
+      "citedIn": ["docs/logbook/046-a-promise-not-yet-kept.md"]
+    },
+    {
+      "id": "percentage-closer-filtering",
+      "kind": "concept",
+      "title": "Percentage-closer filtering (PCF)",
+      "summary": "Reading the shadow map at a few points nearby and averaging the answers, for a soft edge",
+      "area": "gpu",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-24"
+      },
+      "partOf": "shadow-map",
+      "citedIn": ["docs/logbook/046-a-promise-not-yet-kept.md"]
+    },
+    {
+      "id": "deferred-shading",
+      "kind": "concept",
+      "title": "Deferred shading",
+      "summary": "Drawing first only what each pixel shows (depth, normal, color), then working out the light once per pixel",
+      "area": "gpu",
+      "status": "seen",
+      "since": {
+        "seen": "2026-11-24"
+      },
+      "related": ["early-depth-test", "multiple-render-targets"],
+      "citedIn": ["docs/logbook/046-a-promise-not-yet-kept.md"]
+    },
+    {
+      "id": "multiple-render-targets",
+      "kind": "concept",
+      "title": "Multiple render targets",
+      "summary": "One pass that writes several textures at once, such as color and normal",
+      "area": "gpu",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-24"
+      },
+      "citedIn": ["docs/logbook/046-a-promise-not-yet-kept.md"]
+    },
+    {
+      "id": "depth-pre-pass",
+      "kind": "concept",
+      "title": "Depth pre-pass",
+      "summary": "A cheap first drawing that fills only the depth, so the costly one can skip what is hidden",
+      "area": "gpu",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-24"
+      },
+      "related": ["early-depth-test"],
+      "citedIn": ["docs/logbook/046-a-promise-not-yet-kept.md"]
     }
   ]
 }
