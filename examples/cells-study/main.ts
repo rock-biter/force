@@ -549,6 +549,8 @@ say(
   interface Device {
     issue?: number
     by?: string
+    /** Who ran it, when they sent it through someone else's account: a person's name, never a link. */
+    name?: string
     device: string
     gpu: string
     browser: string
@@ -875,8 +877,8 @@ say(
     first.title = `${[...new Set(d.gpu.split(' '))].join(' ')}, ${d.browser}`
     const cell = html('td')
     // A link only for a name made of the characters GitHub allows in one.
-    const sender = d.by ?? ''
-    if (/^[A-Za-z0-9-]{1,39}$/.test(sender)) {
+    const sender = d.by || d.name || ''
+    if (d.by && /^[A-Za-z0-9-]{1,39}$/.test(sender)) {
       const who = html('a', sender) as HTMLAnchorElement
       who.href = `https://github.com/${sender}`
       cell.append(who)

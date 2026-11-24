@@ -219,7 +219,10 @@
       "gpu": "qualcomm adreno-8xx",
       "clock": "gpu",
       "browser": "Chrome 158 on Android 10",
-      "flags": ["not sent through the form: the body is the bare results", "device named in a comment on the issue, not on the page"],
+      "flags": [
+        "not sent through the form: the body is the bare results",
+        "device named in a comment on the issue, not on the page"
+      ],
       "rows": [
         ["count", "slab", 10000, 0, "places", 0, 0, 0.109, 0.109, 0.044, 0.481, 0, ""],
         ["count", "slab", 10000, 0, "grid", 0, 1, 0.306, 0.066, 0.049, 0.666, 0, ""],
@@ -424,6 +427,7 @@
     {
       "issue": 14,
       "by": "",
+      "name": "Fulvio",
       "sent": "2026-11-23",
       "device": "macbook air 13' M2 16gb con mac golden gate",
       "gpu": "apple metal-3",
@@ -466,6 +470,7 @@
     {
       "issue": 15,
       "by": "",
+      "name": "Gianluca D'Arcangelo",
       "sent": "2026-11-23",
       "device": "Acer Aspire 5",
       "gpu": "intel gen-12lp",
@@ -802,6 +807,7 @@
     {
       "issue": 23,
       "by": "",
+      "name": "Andrea Bovo",
       "sent": "2026-11-24",
       "device": "5060 ti",
       "gpu": "nvidia blackwell 0x2d04 NVIDIA GeForce RTX 5060 Ti",
