@@ -18,7 +18,7 @@ A shader can read 8 storage buffers unless the device is asked for more ([guide]
 
 - The three shaders with sizes read `properties[i].x`. The other three numbers are free.
 - To make room in the shader of the lists, a particle's row of neighbours now begins with its count: 33 numbers, and no buffer of counts. With that, the lists read 8 buffers, the rounds 7, the levels 6.
-- These shaders are copies, in [examples/mixed-sizes](../../examples/mixed-sizes/list-sized.wgsl): the benchmark page times the originals, which must stay as they are until the benchmarks are closed. Two copies of each to keep in step, for now.
+- These shaders are copies, in [examples/mixed-sizes](https://github.com/rock-biter/force/blob/c983d82/examples/mixed-sizes/list-sized.wgsl): the benchmark page times the originals, which must stay as they are until the benchmarks are closed. Two copies of each to keep in step, for now.
 - A property that changes at every step does not belong here.
 
 ## Still open

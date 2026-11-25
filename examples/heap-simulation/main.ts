@@ -1,12 +1,14 @@
 // FORCE+ on the GPU, live. Up to a million particles in a box that grows with them, pushed apart by
 // moving their positions with half and half, masses seen as m^α and levels in the pile (decision
-// 015), through lists of neighbours made when needed (decision 016), from cells kept in a hashed table
-// (decision 024). A menu switches to FORCE, the
-// same rule with the real masses and no levels (chapter 026), as in the compare page. The pointer pushes them away
-// with a ball. The shaders come from contact-cost, where they were checked against JavaScript; two
-// are this page's own: the round, the same one plus the ball, and finish, the same one plus a speed
-// limit. three.js draws the particles straight from the position buffer, on the same device
-// (decision 012).
+// 015). Who touches whom is found at every round in the cells around each particle, kept in an
+// address book on a grid or in a hashed table (decisions 024 and 034), with the particles in the
+// order of the book (decision 033). A menu switches to FORCE, the same rule with the real masses
+// and no levels (chapter 026), as in the compare page. The pointer pushes them away with a ball.
+// three.js draws the particles straight from the position buffer, on the same device (decision
+// 012).
+//
+// The benchmark page times the shaders with lists of neighbours, book-list.wgsl and
+// round-push.wgsl: they stay in this folder for it, and this page no longer runs them.
 
 import type { ButtonGridApi, FpsGraphBladeApi } from '@tweakpane/plugin-essentials'
 import * as EssentialsPlugin from '@tweakpane/plugin-essentials'
@@ -53,27 +55,19 @@ import {
 import { Pane } from 'tweakpane'
 import clearIfCode from '../contact-cost/clear-if.wgsl?raw'
 import commonCode from '../contact-cost/common.wgsl?raw'
-import gridIfCode from '../contact-cost/grid-if.wgsl?raw'
-import levelsListCode from '../contact-cost/levels-list.wgsl?raw'
-import listCode from '../contact-cost/list.wgsl?raw'
 import predictCode from '../contact-cost/predict.wgsl?raw'
 import rebuildCode from '../contact-cost/rebuild.wgsl?raw'
-import watchCode from '../contact-cost/watch.wgsl?raw'
 import { ParticleView, SUN } from '../debug/particles.js'
 import { CASTERS, ShadowStage, SURFACES } from '../debug/shadows.js'
 import { showError } from '../debug/viewer.js'
 import levelsCellsSizedCode from '../mixed-sizes/levels-cells-sized.wgsl?raw'
-import levelsSizedCode from '../mixed-sizes/levels-sized.wgsl?raw'
-import listSizedCode from '../mixed-sizes/list-sized.wgsl?raw'
 import propertiesMoveCode from '../mixed-sizes/properties-move.wgsl?raw'
 import propertiesSettleCode from '../mixed-sizes/properties-settle.wgsl?raw'
 import roundCellsSizedCode from '../mixed-sizes/round-cells-sized.wgsl?raw'
-import roundSizedCode from '../mixed-sizes/round-sized.wgsl?raw'
 import bookBlocksCode from './book-blocks.wgsl?raw'
 import bookCountCode from './book-count.wgsl?raw'
 import bookEndsCode from './book-ends.wgsl?raw'
 import bookFillCode from './book-fill.wgsl?raw'
-import bookListCode from './book-list.wgsl?raw'
 import bookMoveCode from './book-move.wgsl?raw'
 import bookScanCode from './book-scan.wgsl?raw'
 import bookSettleCode from './book-settle.wgsl?raw'
@@ -82,14 +76,12 @@ import cellsTableCode from './cells-table.wgsl?raw'
 import finishLimitCode from './finish-limit.wgsl?raw'
 import levelsCellsCode from './levels-cells.wgsl?raw'
 import roundCellsCode from './round-cells.wgsl?raw'
-import roundPushCode from './round-push.wgsl?raw'
 
 type Vec3 = [number, number, number]
 
 const RADIUS = 0.1 // meters, as in every scene since chapter 025
 const DIAMETER = 2 * RADIUS
 const CELL = DIAMETER // a cell as wide as a particle (chapter 024)
-const PLACES = 4 // per cell (decision 016)
 const STEP = 1 / 60 // seconds
 const GRAVITY = 9.81
 // decision 029. ?rounds=6 in the address, to measure: this many rounds per substep, from 1 to 12.
@@ -98,8 +90,7 @@ const ROUNDS =
     Math.max(Math.round(Number(new URLSearchParams(location.search).get('rounds'))), 0),
     12,
   ) || 3
-const MARGIN = 0.05 // the lists look 5 cm beyond touching (decision 016)
-const MAX_NEIGHBOURS = 32 // as in list.wgsl
+const MARGIN = 0.05 // a cell is 5 cm wider than a particle (decision 034)
 const NO_LEVEL = 0xffffffff
 const BLOCK = 512 // cells per block of the prefix sum, as in book-blocks.wgsl
 const HALF = 12 // the box is 24 m by 24 m on the floor, wider when the particles need it (halfFor)...
@@ -115,13 +106,9 @@ const MOST_PARTICLES = Number(document.body.dataset.maxParticles) || MAX_PARTICL
 // know nothing of sizes. The largest keeps the radius of the other pages, RADIUS.
 const SIZES = Number(document.body.dataset.sizes) || 0
 const MIXED = SIZES > 0
-// ?lists=off in the address, a study (chapters 050 to 053): no lists of neighbours. The levels and
-// every round read the cells of the address book themselves (round-cells.wgsl), and the book is
-// made again at every substep. With the book on a grid or in a table.
-const DIRECT = new URLSearchParams(location.search).get('lists') === 'off'
 // The particles are kept in the order of the address book (chapter 041, decision 033), unless
-// ?sorted=off in the address. With sizes and no lists, always: see round-cells-sized.wgsl.
-const IN_ORDER = new URLSearchParams(location.search).get('sorted') !== 'off' || (MIXED && DIRECT)
+// ?sorted=off in the address. With sizes, always: see ../mixed-sizes/round-cells-sized.wgsl.
+const IN_ORDER = new URLSearchParams(location.search).get('sorted') !== 'off' || MIXED
 const MAX_SIZES = 2 // the largest over the smallest, at most (decision 031)
 const MAX_TILT = 30 // degrees, around X and around Z, on the page that tilts the box
 const TILT_SPEED = 20 // degrees per second: the floor's far corner, 17 m away, then moves 9.9 cm per step, just under a radius. A wider box turns slower, to keep that
@@ -247,17 +234,16 @@ const HASHES: Record<string, string> = {
     '((((u.x >> 3u) * 73856093u) ^ ((u.y >> 3u) * 19349663u) ^ ((u.z >> 3u) * 83492791u)) * 512u + zorder(u & vec3u(7u))) % slots',
 }
 
-// When the particles are kept in the order of the book, row s of a cell is particle s: the list
-// of neighbours needs no book to read.
+// When the particles are kept in the order of the book, row s of a cell is particle s: a shader
+// that reads the cells needs no book.
 const listInOrder = (code: string) =>
   code
     .replace(/@group\(0\) @binding\(\d+\) var<storage, read> book: array<u32>;/, '')
     .replace('let j = book[first + s];', 'let j = first + s;')
 
 // A radius for each particle (decisions 031 and 032). The shaders of this folder are written for
-// one radius, and the benchmark page times them as they are: they must not change. So a page with
-// sizes has its own copies of the three that need the radius, in ../mixed-sizes: the lists, the
-// levels and the rounds. They read `properties`, four numbers per particle, the radius first.
+// one radius. A page with sizes has its own copies of the two that need it, in ../mixed-sizes:
+// the levels and the rounds. They read `properties`, four numbers per particle, the radius first.
 /** The compute pipelines, made once: every restart uses them again. */
 async function makePipelines(device: GPUDevice, hash: string) {
   // The table, with the hash ?hash= asks for.
@@ -269,36 +255,26 @@ async function makePipelines(device: GPUDevice, hash: string) {
       layout: 'auto',
       compute: { module: device.createShaderModule({ code: commonCode + code }) },
     })
-  const [predict, watch, clearIf, gridIf, list, levels, round, finish, ...book] = await Promise.all(
+  const [predict, clearIf, finish, ...book] = await Promise.all(
     [
       predictCode,
-      watchCode,
       rebuildCode + clearIfCode,
-      rebuildCode + gridIfCode,
-      rebuildCode + listCode,
-      MIXED ? levelsSizedCode : levelsListCode,
-      MIXED ? roundSizedCode : roundPushCode,
       finishLimitCode,
-      // the address book: the particles sorted by cell, instead of 4 places per cell
+      // the address book: the particles sorted by cell
       rebuildCode + bookBlocksCode,
       rebuildCode + bookScanCode,
       rebuildCode + bookEndsCode,
       rebuildCode + bookMoveCode,
       rebuildCode + bookSettleCode,
-      // its three shaders that file a particle under its cell, once with a slot per cell of the
+      // its two shaders that file a particle under its cell, once with a slot per cell of the
       // grid and once with the slots of a table
       ...[cellsGridCode, tableCode].flatMap((cellsCode) =>
-        [
-          bookCountCode,
-          bookFillCode,
-          MIXED ? listSizedCode : bookListCode,
-          listInOrder(MIXED ? listSizedCode : bookListCode),
-        ].map((code) => rebuildCode + cellsCode + code),
+        [bookCountCode, bookFillCode].map((code) => rebuildCode + cellsCode + code),
       ),
     ].map(make),
   )
   const [bookBlocks, bookScan, bookEnds, bookMove, bookSettle, ...filed] = book
-  // With no lists: the levels and the rounds that read the book, and the same with the particles
+  // The levels and the rounds, which read the cells of the book, and the same with the particles
   // kept in its order.
   // In a table, two of the 27 cells a particle reads can share a slot, and its particles would
   // count twice: `repeated` says whether the cell at `offset` from `home` has the slot of one read
@@ -340,41 +316,38 @@ fn repeated(home: vec3i, offset: vec3i, slots: u32) -> bool {
         [propertiesMoveCode, propertiesSettleCode].map((code) => make(rebuildCode + code)),
       )
     : undefined
-  const direct = DIRECT
-    ? await Promise.all(
-        [cellsGridCode + NEVER, tableCode + FIRST].flatMap((cellsCode) =>
-          // With sizes only the two in order exist: they stand in for the others, never used.
-          (MIXED
-            ? [
-                listInOrder(levelsCellsSizedCode),
-                listInOrder(levelsCellsSizedCode),
-                listInOrder(roundCellsSizedCode),
-                listInOrder(roundCellsSizedCode),
-              ]
-            : [
-                levelsCellsCode,
-                listInOrder(levelsCellsCode),
-                roundCellsCode,
-                listInOrder(roundCellsCode),
-              ]
-          ).map((code) => make(cellsCode + code)),
-        ),
-      )
-    : undefined
+  const reading = await Promise.all(
+    [cellsGridCode + NEVER, tableCode + FIRST].flatMap((cellsCode) =>
+      // With sizes only the two in order exist: they stand in for the others, never used.
+      (MIXED
+        ? [
+            listInOrder(levelsCellsSizedCode),
+            listInOrder(levelsCellsSizedCode),
+            listInOrder(roundCellsSizedCode),
+            listInOrder(roundCellsSizedCode),
+          ]
+        : [
+            levelsCellsCode,
+            listInOrder(levelsCellsCode),
+            roundCellsCode,
+            listInOrder(roundCellsCode),
+          ]
+      ).map((code) => make(cellsCode + code)),
+    ),
+  )
+  // For a grid, k = 0, and for a table, k = 1: the shaders that file the particles, and those
+  // that read the cells, each one as it is and for particles in order.
   const filing = (k: number) => ({
-    bookCount: filed[4 * k],
-    bookFill: filed[4 * k + 1],
-    bookList: filed[4 * k + 2],
-    bookListInOrder: filed[4 * k + 3],
+    bookCount: filed[2 * k],
+    bookFill: filed[2 * k + 1],
+    levels: reading[4 * k],
+    levelsInOrder: reading[4 * k + 1],
+    round: reading[4 * k + 2],
+    roundInOrder: reading[4 * k + 3],
   })
   return {
     predict,
-    watch,
     clearIf,
-    gridIf,
-    list,
-    levels,
-    round,
     finish,
     bookBlocks,
     bookScan,
@@ -383,7 +356,6 @@ fn repeated(home: vec3i, offset: vec3i, slots: u32) -> bool {
     bookSettle,
     byGrid: filing(0),
     byTable: filing(1),
-    direct,
     moveProperties,
   }
 }
@@ -400,13 +372,12 @@ interface Grid {
   size: Vec3
 }
 /**
- * How the grid keeps its particles. 'places': 4 places per cell, and a particle that finds its cell
- * full is left out (decision 016). 'book': one list of all the particles sorted by cell, the
- * address book of chapter 024, where a cell is never full, with a slot for every cell of the grid.
- * 'table': the same book with the slots of a table, about two per particle, shared by all the
- * cells of a space with no border (spatial hashing).
+ * How the cells keep their particles: one list of all the particles sorted by cell, the address
+ * book of chapter 024, where a cell is never full. 'book': with a slot for every cell of the grid.
+ * 'table': with the slots of a table, about two per particle, shared by all the cells of a space
+ * with no border (spatial hashing).
  */
-type Cells = 'places' | 'book' | 'table'
+type Cells = 'book' | 'table'
 /**
  * The grid of the level box, with cells of this width: 120 by 45 by 120 of them at 20 cm, in the
  * box of 24 m.
@@ -447,8 +418,7 @@ function gridAround(most: number, cell: number, half: number): Grid {
 }
 
 /**
- * The particles on the GPU and how to encode one step of them: the step of contact-cost's part 4,
- * with the list made when needed.
+ * The particles on the GPU and how to encode one step of them.
  */
 function makeSimulation(
   device: GPUDevice,
@@ -498,30 +468,20 @@ function makeSimulation(
   const velocities = storage(bytes)
   const predicted = [storage(bytes), storage(bytes)]
   const counts = storage(cellCount * 4)
-  // 4 places per cell, or the address book: a row per particle, where each cell's rows begin, and
-  // the sums of the blocks the prefix sum is made in
+  // The address book: a row per particle, where each cell's rows begin, and the sums of the
+  // blocks the prefix sum is made in
   const blockCount = Math.ceil(cellCount / BLOCK)
-  const places = storage(cells === 'places' ? cellCount * PLACES * 4 : 4)
-  const booked = cells !== 'places'
-  // The particles kept in the order of the book (book-move.wgsl): only with a book. With sizes
-  // their properties move with them, in two passes of their own.
-  const sorted = booked && inOrder
+  // The particles kept in the order of the book (book-move.wgsl). With sizes their properties
+  // move with them, in two passes of their own.
+  const sorted = inOrder
   const spare = storage(sorted ? bytes : 16)
-  const book = storage(booked ? count * 4 : 4)
-  const starts = storage(booked ? cellCount * 4 : 4)
-  const blocks = storage(booked ? blockCount * 4 : 4)
+  const book = storage(count * 4)
+  const starts = storage(cellCount * 4)
+  const blocks = storage(blockCount * 4)
   const file = cells === 'table' ? kit.byTable : kit.byGrid
   const levels = [storage(count * 4), storage(count * 4)]
   const walls = planesOf(half)
   const planes = storage(walls.length * 16)
-  // With sizes a row of the lists begins with its count, 33 numbers, and the shaders read the
-  // properties where the others read the counts (../mixed-sizes/list-sized.wgsl).
-  const neighbours = storage(
-    count * (MAX_NEIGHBOURS + (sizes ? 1 : 0)) * 4,
-    GPUBufferUsage.COPY_SRC,
-  )
-  const neighbourCounts = storage(count * 4, GPUBufferUsage.COPY_SRC)
-  const anchors = storage(bytes)
   const control = storage(32, GPUBufferUsage.COPY_SRC) // see rebuild.wgsl
   const params = device.createBuffer({
     size: 80,
@@ -543,57 +503,33 @@ function makeSimulation(
   device.queue.writeBuffer(positions, 0, start)
   for (const b of levels) device.queue.writeBuffer(b, 0, new Uint32Array(count).fill(NO_LEVEL))
   device.queue.writeBuffer(planes, 0, new Float32Array(walls.flat()))
-  // A list asked for at the first step; from then on the GPU decides by itself.
+  // The shaders of the address book ask `rebuild()` whether to run (contact-cost/rebuild.wgsl), as
+  // when lists of neighbours decided it: here the first flag stays up, and they always do.
   device.queue.writeBuffer(control, 0, new Uint32Array([1, 1, 0, 0, 0]))
   // The Params struct of common.wgsl: 80 bytes, in its order.
   const data = new ArrayBuffer(80)
   const floats = new Float32Array(data)
   const words = new Uint32Array(data)
   floats.set([0, -GRAVITY, 0, STEP, ...grid.origin, cell])
-  words.set([...grid.size, PLACES], 8)
+  words.set([...grid.size, 0], 8) // no places per cell: the address book
   floats.set([RADIUS, FORCE_PLUS.alpha, FORCE_PLUS.levels], 12)
   words[15] = walls.length
   floats[19] = margin // 16 to 18 belong to the spring, not used here
   device.queue.writeBuffer(params, 0, data)
 
-  // Where the shaders of one size read the counts of the lists, those with sizes read the properties.
-  const tally = sizes ? properties : neighbourCounts
   const group = (p: GPUComputePipeline, entries: GPUBuffer[]) =>
     device.createBindGroup({
       layout: p.getBindGroupLayout(0),
       entries: entries.map((buffer, binding) => ({ binding, resource: { buffer } })),
     })
   const predictGroup = group(kit.predict, [params, positions, velocities, predicted[0]])
-  const watchGroup = group(kit.watch, [params, predicted[0], anchors, control])
   const clearGroup = group(kit.clearIf, [params, control, counts])
-  const gridGroup = group(kit.gridIf, [params, predicted[0], counts, places, control])
-  const listGroup = group(kit.list, [
-    params,
-    predicted[0],
-    counts,
-    places,
-    control,
-    neighbours,
-    neighbourCounts,
-    anchors,
-  ])
   const bookGroups = {
     count: group(file.bookCount, [params, predicted[0], counts, control]),
     blocks: group(kit.bookBlocks, [params, control, counts, blocks]),
     scan: group(kit.bookScan, [params, control, blocks]),
     ends: group(kit.bookEnds, [params, control, counts, blocks, starts]),
     fill: group(file.bookFill, [params, predicted[0], starts, book, control]),
-    list: group(sorted ? file.bookListInOrder : file.bookList, [
-      params,
-      predicted[0],
-      counts,
-      starts,
-      control,
-      neighbours,
-      tally,
-      anchors,
-      ...(sorted ? [] : [book]),
-    ]),
     // Moving the particles into the order of the book, in a substep whose levels are read from
     // levels[k]. The spare buffers: the second buffer of the rounds, free until the first round,
     // one more for the predicted positions, and the levels the substep is about to write.
@@ -638,20 +574,17 @@ function makeSimulation(
         ]
       : undefined
   // Levels alternate between two buffers, a step each; positions between two, a round each.
-  // With no lists (DIRECT), the levels and the rounds read the book in their place.
-  const [levelsCells, levelsCellsInOrder, roundCells, roundCellsInOrder] = (kit.direct ?? []).slice(
-    cells === 'table' ? 4 : 0,
-  )
-  const levelsKit = kit.direct ? (sorted ? levelsCellsInOrder : levelsCells) : kit.levels
-  const roundKit = kit.direct ? (sorted ? roundCellsInOrder : roundCells) : kit.round
-  const cellBuffers = kit.direct ? [counts, starts] : undefined
-  // After the usual buffers: the properties, with sizes, then the book, unless in order.
-  const bookLast = kit.direct ? [...(sizes ? [properties] : []), ...(sorted ? [] : [book])] : []
+  // The levels and the rounds read the cells of the book: the counts and the starts, then, after
+  // their other buffers, the properties, with sizes, and the book, unless in order.
+  const levelsKit = sorted ? file.levelsInOrder : file.levels
+  const roundKit = sorted ? file.roundInOrder : file.round
+  const bookLast = [...(sizes ? [properties] : []), ...(sorted ? [] : [book])]
   const levelGroups = [0, 1].map((k) =>
     group(levelsKit, [
       params,
       predicted[0],
-      ...(cellBuffers ?? [neighbours, tally]),
+      counts,
+      starts,
       planes,
       levels[k],
       levels[1 - k],
@@ -664,7 +597,8 @@ function makeSimulation(
         params,
         predicted[from],
         predicted[1 - from],
-        ...(cellBuffers ?? [neighbours, tally]),
+        counts,
+        starts,
         planes,
         levels[1 - k],
         pointer,
@@ -700,9 +634,6 @@ function makeSimulation(
     // four numbers per particle, the radius first: for who draws them
     propertiesBuffer: sizes ? properties : undefined,
     positionBuffer: positions,
-    control,
-    neighbours,
-    neighbourCounts,
     substepCount: 0,
 
     get substeps() {
@@ -710,7 +641,7 @@ function makeSimulation(
     },
 
     /**
-     * One step of 1/60 s, cut into substeps. Each one: predict, the list if needed, the levels, 6
+     * One step of 1/60 s, cut into substeps. Each one: predict, the address book, the levels, the
      * rounds with the ball, finish. Before each substep its own ball is copied from `path`, from
      * entry `from` on, into the Pointer uniform. With a `clock`, the GPU clock is read when the
      * first substep starts and when the last one ends. With a `profile`, every shader runs in a
@@ -759,36 +690,25 @@ function makeSimulation(
           if (!whole) pass.end()
         }
         dispatch('predict', kit.predict, predictGroup)
-        if (!kit.direct) dispatch('watch', kit.watch, watchGroup)
+        // The address book, made again at every substep: the cells are read at every round.
         dispatch('clear', kit.clearIf, clearGroup, cellWorkgroups)
-        if (cells === 'places') {
-          dispatch('fill', kit.gridIf, gridGroup)
-          dispatch('list', kit.list, listGroup)
-        } else {
-          dispatch('count', file.bookCount, bookGroups.count)
-          dispatch('sum', kit.bookBlocks, bookGroups.blocks, blockWorkgroups)
-          dispatch('sum', kit.bookScan, bookGroups.scan, 1)
-          dispatch('sum', kit.bookEnds, bookGroups.ends, blockWorkgroups)
-          dispatch('fill', file.bookFill, bookGroups.fill)
-          if (sorted) {
-            dispatch('move', kit.bookMove, bookGroups.move[parity])
-            dispatch('move', kit.bookSettle, bookGroups.settle[parity])
-            if (propertyGroups && kit.moveProperties) {
-              dispatch('move', kit.moveProperties[0], propertyGroups[0])
-              dispatch('move', kit.moveProperties[1], propertyGroups[1])
-            }
+        dispatch('count', file.bookCount, bookGroups.count)
+        dispatch('sum', kit.bookBlocks, bookGroups.blocks, blockWorkgroups)
+        dispatch('sum', kit.bookScan, bookGroups.scan, 1)
+        dispatch('sum', kit.bookEnds, bookGroups.ends, blockWorkgroups)
+        dispatch('fill', file.bookFill, bookGroups.fill)
+        if (sorted) {
+          dispatch('move', kit.bookMove, bookGroups.move[parity])
+          dispatch('move', kit.bookSettle, bookGroups.settle[parity])
+          if (propertyGroups && kit.moveProperties) {
+            dispatch('move', kit.moveProperties[0], propertyGroups[0])
+            dispatch('move', kit.moveProperties[1], propertyGroups[1])
           }
-          if (!kit.direct)
-            dispatch('list', sorted ? file.bookListInOrder : file.bookList, bookGroups.list)
         }
         if (levelsOn) dispatch('levels', levelsKit, levelGroups[parity])
         for (let r = 0; r < ROUNDS; r++) dispatch('rounds', roundKit, roundGroups[parity][r % 2])
         dispatch('finish', kit.finish, finishGroup)
         whole?.end()
-        // Only the first substep asks for a list. With no margin every substep does: a list that
-        // looks no further than touching is right only where it was made.
-        // With no lists the book is made again at every substep too: nothing says when to.
-        if (margin > 0 && !kit.direct) encoder.clearBuffer(control, 0, 4)
         parity = 1 - parity
         this.substepCount++
       }
@@ -1157,25 +1077,21 @@ async function start() {
     darkness: query.has('dark')
       ? MathUtils.clamp(Number(query.get('dark')) || 0, 0, 1)
       : stage.darkness.value,
-    // How the cells keep their particles: the address book with a table (decision 024), the
-    // address book with a slot per cell of the grid, or 4 places per cell. ?cells=book or
-    // ?cells=places
-    cells: ((MIXED || DIRECT ? ['book'] : ['book', 'places']).includes(query.get('cells') ?? '')
-      ? query.get('cells')
-      : 'table') as Cells,
+    // How the cells keep their particles: the address book with a table (decision 024), or with
+    // a slot per cell of the grid, with ?cells=book in the address.
+    cells: (query.get('cells') === 'book' ? 'book' : 'table') as Cells,
     ball: Number(document.body.dataset.ball) || BALL_RADIUS, // data-ball on the page's <body>
   }
-  // ?margin=0 in the address: how far beyond touching the lists look, in meters. With 0 a
-  // particle reads 3 × 3 × 3 cells, not 5 × 5 × 5, and the lists are made again at every step.
+  // How much wider than the largest particle a cell is, in meters. The cells are filed when a
+  // substep begins and read at every round, while the particles move a little: the margin is the
+  // room they have before one is looked for in the wrong cell. ?margin=0 in the address, to
+  // measure: cells as wide as a particle.
   const margin = query.has('margin')
     ? MathUtils.clamp(Number(query.get('margin')) || 0, 0, CELL)
     : MARGIN
   const stats = {
     gpu: Number.NaN,
     draw: Number.NaN,
-    lists: Number.NaN,
-    crowded: Number.NaN,
-    leftOut: Number.NaN,
   }
   /** α and c as the solver sees them: FORCE uses the real masses and no levels. */
   const solverAlpha = () => (settings.method === 'plus' ? settings.alpha : 1)
@@ -1190,16 +1106,11 @@ async function start() {
           ? settings.speed
           : 0
   // A page that tilts the box needs a grid that holds it at every tilt.
-  // Cells as wide as the lists reach, a diameter plus the margin, so that 3 × 3 × 3 of them are
-  // enough (decision 023). With ?narrow in the address, cells as wide as a particle, as before.
-  // The 4 places per cell keep cells as wide as a particle: a wider cell holds more than 4, and
-  // particles are left out (chapter 039).
-  // The margin of the lists follows the smallest particle: half its radius, as on the other pages.
-  // With the 5 cm of the largest, small particles fill the lists with neighbours they never touch
-  // (chapter 048).
+  // Cells as wide as the largest particle plus the margin, so that 3 × 3 × 3 of them hold every
+  // particle that can touch (decision 023). With sizes the margin follows the smallest particle,
+  // half its radius as with one size.
   const listMargin = () => (MIXED ? margin / settings.sizes : margin)
-  const cellWidth = () =>
-    !query.has('narrow') && settings.cells !== 'places' ? DIAMETER + listMargin() : CELL
+  const cellWidth = () => (query.has('narrow') ? CELL : DIAMETER + listMargin())
   const gridOf = (cell: number) =>
     document.body.dataset.tilt !== undefined
       ? gridAround(MAX_TILT, cell, half)
@@ -1224,7 +1135,6 @@ async function start() {
   const forward = () => shadowed() && !deferred()
   let paused = false
   let owed = 0 // simulated time the steps still owe to real time
-  let lastReading: { lists: number; steps: number; crowded: number; leftOut: number } | undefined
 
   /** The lightest and the heaviest particle, in kg: with sizes, a small one of the lightest stuff. */
   const massRange = (): readonly [number, number] => {
@@ -1274,7 +1184,7 @@ async function start() {
     note.textContent = ''
     if (settings.cells !== 'table') {
       const cellCount = gridOf(cellWidth()).size.reduce((a, b) => a * b)
-      const perCell = settings.cells === 'places' ? PLACES * 4 : 4 // bytes
+      const perCell = 4 // bytes
       const most = Math.min(
         device.limits.maxComputeWorkgroupsPerDimension * 64,
         device.limits.maxStorageBufferBindingSize / perCell,
@@ -1308,8 +1218,6 @@ async function start() {
     applySolver()
     redraw()
     owed = 0
-    lastReading = undefined
-    stats.lists = stats.crowded = stats.leftOut = Number.NaN
   }
   // The box as it is turned now, in degrees. It follows the sliders at TILT_SPEED, not at once: a
   // floor that jumped by one degree would move 21 cm at its edge, more than a particle's radius.
@@ -1423,13 +1331,7 @@ async function start() {
   const cellsMenu = particles
     .addBinding(settings, 'cells', {
       label: 'grid',
-      // With sizes there is no shader for the 4 places per cell: a cell made for the largest
-      // holds more than 4 small ones anyway.
-      options: {
-        ...(MIXED ? {} : { '4 places per cell': 'places' }),
-        'address book': 'book',
-        'address book, table': 'table',
-      },
+      options: { 'address book': 'book', 'address book, table': 'table' },
       hidden: renderPage,
     })
     .on('change', restart)
@@ -1540,102 +1442,33 @@ async function start() {
     readonly: true,
     format: (v) => (Number.isNaN(v) ? 'n/a' : `${v.toFixed(2)} ms`),
   })
-  // The grid has 4 places per cell (decision 016): a particle that finds its cell full is seen by
-  // nobody until the next list.
-  numbers.addBinding(stats, 'leftOut', {
-    label: 'cell full',
-    readonly: true,
-    hidden: renderPage,
-    format: (v) => (Number.isNaN(v) ? '…' : `${v.toFixed(0)} particles`),
-  })
-  numbers.addBinding(stats, 'crowded', {
-    label: 'list full',
-    readonly: true,
-    hidden: renderPage,
-    format: (v) => (Number.isNaN(v) ? '…' : `${v.toFixed(0)} neighbours`),
-  })
-  numbers.addBinding(stats, 'lists', {
-    label: 'new lists',
-    readonly: true,
-    hidden: renderPage,
-    format: (v) => (Number.isNaN(v) ? '…' : `${(v * 100).toFixed(0)}% of substeps`),
-  })
-
   // ---- the GPU's numbers ---------------------------------------------------------------------------
-  // Every SAMPLE_EVERY frames one step, all its substeps, is timed on the GPU clock, and the count
-  // of lists made is copied out, both into one buffer JavaScript can read when the GPU is done.
+  // Every SAMPLE_EVERY frames one step, all its substeps, is timed on the GPU clock, into a buffer
+  // JavaScript can read when the GPU is done.
   const stamps = hasClock ? device.createQuerySet({ type: 'timestamp', count: 2 }) : undefined
   const resolved = device.createBuffer({
     size: 16,
     usage: GPUBufferUsage.QUERY_RESOLVE | GPUBufferUsage.COPY_SRC,
   })
   const readback = device.createBuffer({
-    size: 48,
+    size: 16,
     usage: GPUBufferUsage.MAP_READ | GPUBufferUsage.COPY_DST,
   })
   let reading = false
-  function read(from: Simulation) {
+  function read() {
     reading = true
-    const steps = from.substepCount
     readback.mapAsync(GPUMapMode.READ).then(() => {
-      const data = readback.getMappedRange()
-      const [begin, end] = new BigUint64Array(data, 0, 2)
-      const [, , , lists, crowded, leftOut] = new Uint32Array(data, 16, 8)
+      const [begin, end] = new BigUint64Array(readback.getMappedRange(), 0, 2)
       readback.unmap()
       reading = false
-      if (stamps && end > begin) {
+      if (end > begin) {
         const ms = Number(end - begin) / 1e6
         stats.gpu = Number.isNaN(stats.gpu) ? ms : 0.7 * stats.gpu + 0.3 * ms
       }
-      if (from !== simulation) return // restarted meanwhile
-      if (lastReading && steps > lastReading.steps)
-        stats.lists = (lists - lastReading.lists) / (steps - lastReading.steps)
-      // per list made: how many particles found their cell full, and how many neighbours found
-      // no room in a list of 32
-      if (lastReading && lists > lastReading.lists) {
-        stats.leftOut = (leftOut - lastReading.leftOut) / (lists - lastReading.lists)
-        stats.crowded = (crowded - lastReading.crowded) / (lists - lastReading.lists)
-      }
-      lastReading = { lists, steps, crowded, leftOut }
     }, showError)
   }
 
   restart()
-
-  // ?check in the address: after the first step, when the first lists exist, print how many
-  // neighbours they hold and a sum that does not depend on their order. The two ways of keeping
-  // the grid must print the same, as long as no cell was full.
-  if (query.has('check') && simulation) {
-    const sim = simulation
-    const encoder = device.createCommandEncoder()
-    moveBall(1, sim.substeps, settings.ball)
-    sim.encode(encoder, ballPath, 0)
-    const sizes = [sim.particleCount * 4, sim.particleCount * MAX_NEIGHBOURS * 4]
-    const copies = [sim.neighbourCounts, sim.neighbours].map((from, k) => {
-      const to = device.createBuffer({
-        size: sizes[k],
-        usage: GPUBufferUsage.MAP_READ | GPUBufferUsage.COPY_DST,
-      })
-      encoder.copyBufferToBuffer(from, 0, to, 0, sizes[k])
-      return to
-    })
-    device.queue.submit([encoder.finish()])
-    await Promise.all(copies.map((b) => b.mapAsync(GPUMapMode.READ)))
-    const counts = new Uint32Array(copies[0].getMappedRange())
-    const lists = new Uint32Array(copies[1].getMappedRange())
-    let total = 0
-    let sum = 0
-    counts.forEach((n, i) => {
-      total += n
-      for (let s = 0; s < n; s++)
-        sum = (sum + Math.imul(i + 1, lists[i * MAX_NEIGHBOURS + s] + 7)) >>> 0
-    })
-    const note = document.createElement('p')
-    note.id = 'check'
-    note.textContent = `check ${settings.cells}: ${total} neighbours, sum ${sum}`
-    document.querySelector('.crumb')?.append(note)
-    for (const b of copies) b.destroy()
-  }
 
   // ?profile=120 in the address: once ?after=600 steps have run, time every shader of the next 120
   // steps on the GPU clock, each in a pass of its own, and write under the title how many ms of a
@@ -1654,9 +1487,6 @@ async function start() {
     sent: 0,
     read: 0,
     ms: new Map<string, number>(),
-    lists: [] as number[], // lists made so far, after each profiled step
-    leftOut: [] as number[], // particles that found their cell full so far
-    steps: [] as number[], // substeps run so far, after each profiled step
     whole: Number.NaN, // a step in one pass, as the panel showed it just before
   }
   /** The positions as they are now, read back from the GPU: x, y, z and 1 / mass each. */
@@ -1770,8 +1600,8 @@ async function start() {
     )
   }
 
-  /** Reads the clock entries of one step, and the count of lists made, copied after them. */
-  async function readProfile(back: GPUBuffer, names: string[], steps: number) {
+  /** Reads the clock entries of one step. */
+  async function readProfile(back: GPUBuffer, names: string[]) {
     await back.mapAsync(GPUMapMode.READ)
     const data = back.getMappedRange()
     const times = new BigUint64Array(data, 0, 2 * names.length)
@@ -1779,18 +1609,12 @@ async function start() {
       const ms = Number(times[2 * k + 1] - times[2 * k]) / 1e6
       profiled.ms.set(name, (profiled.ms.get(name) ?? 0) + ms)
     })
-    const control = new Uint32Array(data, 16 * names.length, 8)
-    profiled.lists.push(control[3])
-    profiled.leftOut.push(control[5])
-    profiled.steps.push(steps)
     back.destroy()
     if (++profiled.read < profileSteps) return
-    const made = Math.max(...profiled.lists) - Math.min(...profiled.lists)
-    const ran = Math.max(...profiled.steps) - Math.min(...profiled.steps)
     const total = [...profiled.ms.values()].reduce((a, b) => a + b, 0) / profileSteps
     const lines = [
       `profile ${settings.cells}: ${settings.particles} particles, ${profileSteps} steps after ` +
-        `${profileAfter}, ${settings.substeps} substeps, margin ${margin} m, cells of ${cellWidth()} m${query.has('hash') ? `, hash ${query.get('hash')}` : ''}${settings.cells === 'table' ? `, ${slotsEach} slots each` : ''}${IN_ORDER && settings.cells !== 'places' ? ', particles in order' : ''}, lists made again in ${made} of ${ran} substeps`,
+        `${profileAfter}, ${settings.substeps} substeps, margin ${margin} m, cells of ${cellWidth()} m${query.has('hash') ? `, hash ${query.get('hash')}` : ''}${settings.cells === 'table' ? `, ${slotsEach} slots each` : ''}${IN_ORDER ? ', particles in order' : ''}`,
       ...[...profiled.ms].map(
         ([name, ms]) =>
           `${name.padEnd(8)} ${(ms / profileSteps).toFixed(3).padStart(7)} ms  ` +
@@ -1798,11 +1622,8 @@ async function start() {
       ),
       `${'total'.padEnd(8)} ${total.toFixed(3).padStart(7)} ms`,
       `a step in one pass, just before: ${profiled.whole.toFixed(2)} ms`,
-      `left out of a full cell, per list: ${(
-        (Math.max(...profiled.leftOut) - Math.min(...profiled.leftOut)) / Math.max(made, 1)
-      ).toFixed(0)}`,
       simulation ? await overlaps(simulation) : '',
-      simulation && !(IN_ORDER && settings.cells !== 'places') ? await rest(simulation) : '',
+      simulation && !IN_ORDER ? await rest(simulation) : '',
     ]
     const note = document.createElement('pre')
     note.id = 'profile'
@@ -1872,24 +1693,19 @@ async function start() {
       if (profile) {
         const size = 16 * profile.names.length
         profileBack = device.createBuffer({
-          size: size + 32,
+          size,
           usage: GPUBufferUsage.MAP_READ | GPUBufferUsage.COPY_DST,
         })
         encoder.resolveQuerySet(profile.clock, 0, 2 * profile.names.length, profileResolved, 0)
         encoder.copyBufferToBuffer(profileResolved, 0, profileBack, 0, size)
-        encoder.copyBufferToBuffer(sim.control, 0, profileBack, size, 32)
       }
-      if (sample) {
-        if (stamps) {
-          encoder.resolveQuerySet(stamps, 0, 2, resolved, 0)
-          encoder.copyBufferToBuffer(resolved, 0, readback, 0, 16)
-        }
-        encoder.copyBufferToBuffer(sim.control, 0, readback, 16, 32)
+      if (sample && stamps) {
+        encoder.resolveQuerySet(stamps, 0, 2, resolved, 0)
+        encoder.copyBufferToBuffer(resolved, 0, readback, 0, 16)
       }
       device.queue.submit([encoder.finish()])
-      if (sample) read(sim)
-      if (profile && profileBack)
-        readProfile(profileBack, profile.names, sim.substepCount).catch(showError)
+      if (sample && stamps) read()
+      if (profile && profileBack) readProfile(profileBack, profile.names).catch(showError)
     }
     // Same queue, same order: the steps sent above run before this drawing reads the positions.
     if (deferred()) stage.render(camera)

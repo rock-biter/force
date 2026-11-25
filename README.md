@@ -56,19 +56,14 @@ there is a page to try it, with grains of one material or of several
 ([try it](https://rock-biter.github.io/force/mixed-sizes/),
 [chapter 049](./docs/logbook/049-a-radius-each.md)). 31 runs of the benchmark are in.
 
-Each particle keeps a list of its neighbours, which costs memory. We timed a step without the lists:
-much slower, unless the particles are kept in the order of the cells they are in, and then about
-the same ([chapter 050](./docs/logbook/050-the-price-of-remembering.md)). In the table that
-holds a world with no border, it is even a little faster
-([chapter 051](./docs/logbook/051-read-once.md)).
+Each particle kept a list of its neighbours, which cost memory. We timed a step without the lists:
+much slower, unless the particles are kept in the order of the cells they are in, and then about the
+same. So the particles are now always in order, and the lists are gone
+([chapters 050](./docs/logbook/050-the-price-of-remembering.md) to
+[054](./docs/logbook/054-without-the-lists.md)).
 
-What a particle is, its radius first, now moves with it when the particles are put in order
-([chapter 052](./docs/logbook/052-what-follows-a-particle.md)).
-
-The particles are now kept in that order on every page
-([chapter 053](./docs/logbook/053-in-order-by-default.md)).
-
-**Next:** take the lists of neighbours out. Then our rules read again against the devices.
+**Next:** particles joined by springs, or sizes further apart. Then our rules read again against the
+devices.
 
 Every step, with what we learned and what went wrong, is in the [logbook](./docs/README.md).
 

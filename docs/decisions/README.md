@@ -27,7 +27,7 @@ The choices that shape FORCE, one per page: what we decided, why, what we left o
 | 013 | [A flat ground, the simplest way](./013-a-flat-ground.md) | Accepted | November 11, 2026 |
 | 014 | [Damping as a knob, off by default](./014-damping-off-by-default.md) | Accepted | November 19, 2026 |
 | 015 | [Particles pushed apart by moving positions, half and half](./015-half-and-half-on-positions.md) | Accepted, rounds superseded by 022, level strength by 028 | November 20, 2026 |
-| 016 | [Neighbours: a grid, and a list made when needed](./016-a-list-made-when-needed.md) | Accepted, cell width superseded by 023, grid with 4 places by 024 | November 20, 2026 |
+| 016 | [Neighbours: a grid, and a list made when needed](./016-a-list-made-when-needed.md) | Superseded: cell width by 023, grid with 4 places by 024, lists by 034 | November 20, 2026 |
 | 017 | [A speed limit of one radius per substep](./017-a-speed-limit-per-substep.md) | Superseded by 019 | November 20, 2026 |
 | 018 | [The speed limit, set in m/s](./018-max-speed-in-meters-per-second.md) | Accepted | November 20, 2026 |
 | 019 | [A default speed limit of 1.5 radii per substep](./019-default-speed-limit.md) | Superseded by 027 | November 20, 2026 |
@@ -45,6 +45,7 @@ The choices that shape FORCE, one per page: what we decided, why, what we left o
 | 031 | [Particles of different sizes, up to 2 to 1](./031-particles-of-different-sizes.md) | Accepted | November 25, 2026 |
 | 032 | [One buffer for the properties of a particle](./032-a-buffer-of-particle-properties.md) | Accepted | November 25, 2026 |
 | 033 | [Particles in the order of their cells, by default](./033-particles-in-order-by-default.md) | Accepted | November 25, 2026 |
+| 034 | [No lists of neighbours: every round reads the cells](./034-no-lists-of-neighbours.md) | Accepted | November 25, 2026 |
 
 ## Rules
 

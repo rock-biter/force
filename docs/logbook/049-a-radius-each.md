@@ -16,7 +16,7 @@
 
 **One buffer for what a particle is.** As a texture in GLSL carries four values in its channels, a buffer can carry four numbers per particle: the radius first, three free ([decision 032](../decisions/032-a-buffer-of-particle-properties.md)). To make room for it in the lists, a particle's row of neighbours now begins with its count, 33 numbers, and the buffer of the counts is gone. The lists read 8 buffers again, and the page asks the device for nothing.
 
-**Not touching what people time.** The benchmark page runs our shader files, and people send us their times: the files must stay as they are. So the three shaders with sizes are copies, in [examples/mixed-sizes](../../examples/mixed-sizes/list-sized.wgsl). The user asked for it: copies, until the benchmarks are closed.
+**Not touching what people time.** The benchmark page runs our shader files, and people send us their times: the files must stay as they are. So the three shaders with sizes are copies, in [examples/mixed-sizes](https://github.com/rock-biter/force/blob/c983d82/examples/mixed-sizes/list-sized.wgsl). The user asked for it: copies, until the benchmarks are closed.
 
 **The page.** [mixed-sizes](../../examples/mixed-sizes/index.html): 20 000 particles with friction at 60 frames a second on our Mac M1, a step in 4.0 ms, no neighbour left out of a list. The viewer reads each sphere's radius from the same buffer.
 

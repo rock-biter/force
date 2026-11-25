@@ -1316,7 +1316,9 @@
         "docs/logbook/045-a-million-and-one-pass.md",
         "docs/logbook/048-big-and-small.md",
         "ogarko-luding-contact-detection",
-        "docs/logbook/051-read-once.md"
+        "docs/logbook/051-read-once.md",
+        "docs/logbook/054-without-the-lists.md",
+        "docs/decisions/034-no-lists-of-neighbours.md"
       ],
       "code": ["examples/heap-simulation/cells-table.wgsl"]
     },
@@ -1364,7 +1366,9 @@
         "docs/logbook/050-the-price-of-remembering.md",
         "docs/logbook/051-read-once.md",
         "docs/logbook/052-what-follows-a-particle.md",
-        "docs/logbook/053-in-order-by-default.md"
+        "docs/logbook/053-in-order-by-default.md",
+        "docs/logbook/054-without-the-lists.md",
+        "docs/decisions/034-no-lists-of-neighbours.md"
       ],
       "code": [
         "examples/heap-simulation/book-move.wgsl",
@@ -1909,7 +1913,9 @@
         "docs/decisions/024-cells-in-a-hashed-table.md",
         "docs/logbook/042-no-best-way.md",
         "docs/logbook/050-the-price-of-remembering.md",
-        "docs/logbook/051-read-once.md"
+        "docs/logbook/051-read-once.md",
+        "docs/logbook/054-without-the-lists.md",
+        "docs/decisions/034-no-lists-of-neighbours.md"
       ],
       "code": [
         "examples/contact-cost/list.wgsl",
@@ -7194,7 +7200,7 @@
       "id": "neighbour-list",
       "kind": "concept",
       "title": "Neighbour list (Verlet list)",
-      "summary": "Each particle writes down the others closer than a diameter plus a margin, and the rounds read only those; the list holds until some particle has moved half the margin, so it is made again only when needed",
+      "summary": "Each particle writes down the others closer than a diameter plus a margin, and the rounds read only those; the list holds until some particle has moved half the margin. FORCE used it until decision 034",
       "area": "gpu",
       "status": "seen",
       "since": {
@@ -7212,7 +7218,9 @@
         "docs/logbook/049-a-radius-each.md",
         "docs/logbook/050-the-price-of-remembering.md",
         "docs/logbook/051-read-once.md",
-        "docs/logbook/053-in-order-by-default.md"
+        "docs/logbook/053-in-order-by-default.md",
+        "docs/logbook/054-without-the-lists.md",
+        "docs/decisions/034-no-lists-of-neighbours.md"
       ],
       "code": ["examples/contact-cost/list.wgsl", "examples/contact-cost/watch.wgsl"]
     },
@@ -7589,9 +7597,6 @@
         "docs/topics/mixed-sizes.mjs",
         "examples/heap-simulation/main.ts",
         "examples/mixed-sizes/index.html",
-        "examples/mixed-sizes/list-sized.wgsl",
-        "examples/mixed-sizes/round-sized.wgsl",
-        "examples/mixed-sizes/levels-sized.wgsl",
         "examples/mixed-sizes/round-cells-sized.wgsl"
       ],
       "citedIn": [
@@ -7968,8 +7973,8 @@
       "related": ["storage-buffer", "device-limits", "mixed-particle-sizes"],
       "code": [
         "examples/heap-simulation/main.ts",
-        "examples/mixed-sizes/list-sized.wgsl",
-        "examples/mixed-sizes/properties-move.wgsl"
+        "examples/mixed-sizes/properties-move.wgsl",
+        "examples/mixed-sizes/round-cells-sized.wgsl"
       ],
       "citedIn": [
         "docs/logbook/049-a-radius-each.md",
