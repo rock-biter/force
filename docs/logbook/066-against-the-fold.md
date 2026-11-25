@@ -24,6 +24,8 @@
 
 **On the page.** Four more groups of springs, twelve in all: a bend link from column a is in one group when a / 2, rounded down, is even, in another when it is odd, and the same down the columns. A menu, "links", chooses 4, 8 or 12 per particle, and a slider how much the bend links give. With 8 links the edges of the cloth crumple as it swings. With 12 and a give of 0.1 mm per newton it hangs like a sheet of card, its edges straight.
 
+**Seeing the folds.** Two things the user asked of the drawing ([cloth.ts](../../examples/debug/cloth.ts)). A second light, from behind the cloth, cooler and weaker than the sun: a cloth has two sides, and the one turned away was flat and dark. And a third way to draw it, a *slab*: two faces, each half a thickness away from the particles along the normal, and a wall around the border, so that the particles are the middle of the slab and not one of its faces. The thickness is a slider, half a particle at the start. While doing it we found the sheet lit from the wrong side: its normal was turned by which way its triangles wind, not by where the eye is. It is now turned toward the eye.
+
 ### What surprised us
 
 **Bend links also hold the cloth's length.** With bend links as rods, the cloth of 10 000 particles stretches 0.41% on average and 5.5% at worst; without them, 1.3% and 24%. A link that spans two particles carries what happens at one end twice as far in a pass. The trouble of the tall cloth was the speed of that news ([chapter 060](./060-one-by-one-or-all-at-once.md)).
@@ -41,6 +43,7 @@
 - A link on the angle, for cloth that should really hold a shape.
 - Lighter particles: a cloth of 1 kg per particle is not a cloth.
 - The cloth draped on the ball, and folded on itself: not looked at.
+- The wall around a slab borrows the normals of its two faces, so its edge is lit as if it were part of them. It needs normals of its own, pointing out of the border: to do.
 
 ## Sources
 

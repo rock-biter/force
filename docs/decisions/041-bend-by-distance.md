@@ -1,6 +1,6 @@
 # 041 · Bend links by distance, with a softness of their own
 
-*Proposed · November 25, 2026 · Claude, after a script and a look at the cloth page ([chapter 066](../logbook/066-against-the-fold.md))*
+*Accepted · November 25, 2026 · The user, on Claude's proposal after a script and a look at the cloth page ([chapter 066](../logbook/066-against-the-fold.md))*
 
 **Decision:** we will let a cloth resist folding with springs that join each particle to the one two places further along each side, and give those springs a compliance of their own, apart from the one of the other links.
 

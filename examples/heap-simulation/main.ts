@@ -1382,9 +1382,12 @@ async function start() {
     // How much the bend links give, in millimeters per newton: the more, the sharper the cloth
     // folds. ?bend=0.1 in the address.
     bendGive: MathUtils.clamp(Number(query.get('bend') ?? 1) || 0, 0, 20),
-    // How a cloth is drawn: its particles, a surface through them, or the wires of that surface.
-    // ?cloth=surface or ?cloth=wires in the address starts with that one.
-    cloth: ['surface', 'wires'].includes(query.get('cloth') ?? '')
+    // How thick a cloth drawn as a slab is, in meters: half a particle at the start. The particles
+    // are in its middle. ?thickness=0.2 in the address.
+    thickness: MathUtils.clamp(Number(query.get('thickness')) || RADIUS, 0.01, 0.5),
+    // How a cloth is drawn: its particles, a surface through them, a slab with a thickness, or the
+    // wires of the surface. ?cloth=surface, ?cloth=slab or ?cloth=wires in the address.
+    cloth: ['surface', 'wires', 'slab'].includes(query.get('cloth') ?? '')
       ? (query.get('cloth') as string)
       : 'particles',
   }
@@ -1480,8 +1483,9 @@ async function start() {
         renderer,
         { ...simulation, ...simulation.cloth, registerBuffer: simulation.registerBuffer },
         massColors[0],
-        settings.cloth === 'wires',
+        settings.cloth as 'surface' | 'wires' | 'slab',
       )
+      clothView.thickness.value = settings.thickness
       scene.add(clothView.mesh)
       return
     }
@@ -1804,10 +1808,26 @@ async function start() {
   springFolder
     .addBinding(settings, 'cloth', {
       label: 'drawn as',
-      options: { particles: 'particles', 'a surface': 'surface', wires: 'wires' },
+      options: {
+        particles: 'particles',
+        'a surface': 'surface',
+        'a slab, with a thickness': 'slab',
+        wires: 'wires',
+      },
       hidden: !CLOTH,
     })
     .on('change', redraw)
+  springFolder
+    .addBinding(settings, 'thickness', {
+      label: 'thickness, m',
+      min: 0.01,
+      max: 0.5,
+      step: 0.01,
+      hidden: !CLOTH,
+    })
+    .on('change', () => {
+      if (clothView) clothView.thickness.value = settings.thickness
+    })
   const ballFolder = pane.addFolder({ title: 'Ball' })
   const ballSlider = ballFolder.addBinding(settings, 'ball', {
     label: 'radius',
