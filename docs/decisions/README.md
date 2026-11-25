@@ -41,7 +41,7 @@ The choices that shape FORCE, one per page: what we decided, why, what we left o
 | 027 | [The safe speed limit by default](./027-the-safe-speed-limit-by-default.md) | Accepted | November 23, 2026 |
 | 028 | [A level strength of 1.5](./028-level-strength.md) | Accepted | November 23, 2026 |
 | 029 | [Three rounds, in each of two substeps](./029-three-rounds-two-substeps.md) | Accepted | November 23, 2026 |
-| 030 | [Shadows in the debug viewer, shaded once per pixel](./030-viewer-shadows-shaded-once-per-pixel.md) | Proposed | November 24, 2026 |
+| 030 | [Shadows in the debug viewer, shaded once per pixel](./030-viewer-shadows-shaded-once-per-pixel.md) | Accepted | November 25, 2026 |
 
 ## Rules
 

@@ -1611,6 +1611,24 @@ async function start() {
     document.querySelector('.crumb')?.append(note)
   }
 
+  // ?drawtime=60 in the address: once ?after=600 steps have run, read 60 times how long a frame's
+  // drawing takes on the GPU clock, and write under the title the middle one of them, with the
+  // lowest and the highest. To compare the ways of drawing, one page load each.
+  const drawReadings = hasClock && query.has('drawtime') ? Number(query.get('drawtime')) || 60 : 0
+  const drawTimes: number[] = []
+  function reportDrawTimes() {
+    const sorted = [...drawTimes].sort((a, b) => a - b)
+    const size = renderer.getDrawingBufferSize(new Vector2())
+    const note = document.createElement('pre')
+    note.id = 'drawtime'
+    note.textContent =
+      `drawtime: draw ${settings.draw}, shadows ${shadowed() ? `${settings.shadows}, map ${stage.mapSize}` : 'off'}, ` +
+      `${settings.particles} particles, canvas ${size.x} × ${size.y}: ` +
+      `median ${sorted[sorted.length >> 1].toFixed(2)} ms, from ${sorted[0].toFixed(2)} to ` +
+      `${sorted[sorted.length - 1].toFixed(2)}, ${sorted.length} readings`
+    document.querySelector('.crumb')?.append(note)
+  }
+
   let last: number | undefined
   let frame = 0
   let drawn = 0
@@ -1678,13 +1696,19 @@ async function start() {
     if (deferred()) stage.render(camera)
     else if (forward()) stage.renderForward(camera)
     else renderer.render(scene, camera)
-    // Every SAMPLE_EVERY frames, ask three.js how long its passes took on the GPU.
-    if (hasClock && !timing && drawn++ % SAMPLE_EVERY === 0) {
+    // Every SAMPLE_EVERY frames, ask three.js how long its passes took on the GPU: all the passes
+    // of the last frame, added up. With ?drawtime, once the wait is over, at every frame it can.
+    const measuring =
+      drawTimes.length < drawReadings &&
+      simulation !== undefined &&
+      simulation.substepCount >= profileAfter * simulation.substeps
+    if (hasClock && !timing && (measuring || drawn++ % SAMPLE_EVERY === 0)) {
       timing = true
       renderer.resolveTimestampsAsync('render').then((ms) => {
         timing = false
         if (typeof ms !== 'number' || !(ms > 0)) return
         stats.draw = Number.isNaN(stats.draw) ? ms : 0.7 * stats.draw + 0.3 * ms
+        if (measuring && drawTimes.push(ms) === drawReadings) reportDrawTimes()
       }, showError)
     }
     fps.end()

@@ -6734,9 +6734,10 @@
         "mdn-begin-compute-pass",
         "docs/logbook/022-the-bell-that-rang-early.md",
         "docs/logbook/038-one-hundred-twenty-five-cells.md",
-        "docs/logbook/043-other-peoples-devices.md"
+        "docs/logbook/043-other-peoples-devices.md",
+        "docs/logbook/047-once-per-pixel.md"
       ],
-      "code": ["examples/dispatch-cost/main.ts"],
+      "code": ["examples/dispatch-cost/main.ts", "examples/heap-simulation/main.ts"],
       "page": "docs/guides/timestamp-queries.md"
     },
     {
@@ -7408,7 +7409,10 @@
       },
       "partOf": "early-depth-test",
       "code": ["examples/depth-promise/main.ts"],
-      "citedIn": ["docs/logbook/046-a-promise-not-yet-kept.md"]
+      "citedIn": [
+        "docs/logbook/046-a-promise-not-yet-kept.md",
+        "docs/logbook/047-once-per-pixel.md"
+      ]
     },
     {
       "id": "wgsl-language-feature",
@@ -7434,7 +7438,10 @@
       "since": {
         "mentioned": "2026-11-24"
       },
-      "citedIn": ["docs/logbook/046-a-promise-not-yet-kept.md"]
+      "citedIn": [
+        "docs/logbook/046-a-promise-not-yet-kept.md",
+        "docs/logbook/047-once-per-pixel.md"
+      ]
     },
     {
       "id": "shadow-map",
@@ -7447,7 +7454,11 @@
         "seen": "2026-11-24"
       },
       "related": ["percentage-closer-filtering"],
-      "citedIn": ["docs/logbook/046-a-promise-not-yet-kept.md"]
+      "citedIn": [
+        "docs/logbook/046-a-promise-not-yet-kept.md",
+        "docs/logbook/047-once-per-pixel.md"
+      ],
+      "code": ["examples/debug/shadows.ts"]
     },
     {
       "id": "percentage-closer-filtering",
@@ -7460,7 +7471,11 @@
         "mentioned": "2026-11-24"
       },
       "partOf": "shadow-map",
-      "citedIn": ["docs/logbook/046-a-promise-not-yet-kept.md"]
+      "citedIn": [
+        "docs/logbook/046-a-promise-not-yet-kept.md",
+        "docs/logbook/047-once-per-pixel.md"
+      ],
+      "code": ["examples/debug/shadows.ts"]
     },
     {
       "id": "deferred-shading",
@@ -7472,8 +7487,12 @@
       "since": {
         "seen": "2026-11-24"
       },
-      "related": ["early-depth-test", "multiple-render-targets"],
-      "citedIn": ["docs/logbook/046-a-promise-not-yet-kept.md"]
+      "related": ["early-depth-test", "multiple-render-targets", "forward-shading"],
+      "citedIn": [
+        "docs/logbook/046-a-promise-not-yet-kept.md",
+        "docs/logbook/047-once-per-pixel.md"
+      ],
+      "code": ["examples/debug/shadows.ts"]
     },
     {
       "id": "multiple-render-targets",
@@ -7485,7 +7504,11 @@
       "since": {
         "mentioned": "2026-11-24"
       },
-      "citedIn": ["docs/logbook/046-a-promise-not-yet-kept.md"]
+      "citedIn": [
+        "docs/logbook/046-a-promise-not-yet-kept.md",
+        "docs/logbook/047-once-per-pixel.md"
+      ],
+      "code": ["examples/debug/shadows.ts"]
     },
     {
       "id": "depth-pre-pass",
@@ -7499,6 +7522,19 @@
       },
       "related": ["early-depth-test"],
       "citedIn": ["docs/logbook/046-a-promise-not-yet-kept.md"]
+    },
+    {
+      "id": "forward-shading",
+      "kind": "concept",
+      "title": "Forward shading",
+      "summary": "Working out the light in each shape's own shader as it is drawn, hidden pixels included",
+      "area": "gpu",
+      "status": "seen",
+      "since": {
+        "seen": "2026-11-25"
+      },
+      "code": ["examples/debug/shadows.ts"],
+      "citedIn": ["docs/logbook/047-once-per-pixel.md"]
     }
   ]
 }

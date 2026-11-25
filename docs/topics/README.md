@@ -5,7 +5,7 @@
 Everything we have met while building FORCE, concepts and sources, and how far we went with each
 one. Use it to look up a term, to find what to read, or to pick what to explore next.
 
-- **278 concepts:** ● 24 studied · ◐ 142 seen · ○ 112 mentioned
+- **279 concepts:** ● 24 studied · ◐ 143 seen · ○ 112 mentioned
 - **149 sources:** ● 15 studied · ◐ 16 seen · ○ 118 mentioned · read by Claude: 72 parts, 15 in full
 
 | | Status | What it means |
@@ -332,6 +332,7 @@ WebGPU, WGSL and how to make thousands of threads work.
 | ◐ | Entry point | The function where a shader starts, marked @compute, @vertex or @fragment. A pipeline compiles only the code its entry point reaches: the rest of the module is dropped | WGSL | [WGSL specification, §2.1 Shader Lifecycle](https://www.w3.org/TR/WGSL/#shader-lifecycle) |
 | ○ | Error scope | Catches WebGPU errors in code: push a scope before the calls, pop it after to get the first error, or null | WebGPU errors | [buffers](../guides/buffers.md) |
 | ◐ | First-fit coloring | Giving each constraint the first group where both its bodies are free. Simple and kept from step to step, but it uses more groups than the minimum, and a body in more constraints than there are groups leaves some out | Constraint graph coloring | [Box2D, constraint_graph.c](https://github.com/erincatto/box2d/blob/main/src/constraint_graph.c) |
+| ◐ | Forward shading | Working out the light in each shape's own shader as it is drawn, hidden pixels included |  | [047](../logbook/047-once-per-pixel.md) |
 | ○ | GPU-resident simulation | Keeping the simulation's data on the GPU, and not reading it back every frame |  | [004](../logbook/004-the-detour.md) |
 | ◐ | Grid built by counting | A uniform grid as an array with a few places per cell and an atomic counter per cell: each particle takes the next place of its cell, and a particle that finds the cell full stays out | Uniform grid | [Particle Simulation using CUDA](https://developer.download.nvidia.com/assets/cuda/files/particles.pdf) |
 | ◐ | Grid built by sorting | A uniform grid as a list of particles sorted by cell, plus where each cell starts: no limit of particles per cell and no empty places, at the price of a sort on the GPU | Uniform grid | [Particle Simulation using CUDA](https://developer.download.nvidia.com/assets/cuda/files/particles.pdf) |
