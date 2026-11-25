@@ -62,7 +62,13 @@ the same ([chapter 050](./docs/logbook/050-the-price-of-remembering.md)). In the
 holds a world with no border, it is even a little faster
 ([chapter 051](./docs/logbook/051-read-once.md)).
 
-**Next:** choose between the two ways. Then our rules read again against the devices.
+What a particle is, its radius first, now moves with it when the particles are put in order
+([chapter 052](./docs/logbook/052-what-follows-a-particle.md)).
+
+The particles are now kept in that order on every page
+([chapter 053](./docs/logbook/053-in-order-by-default.md)).
+
+**Next:** take the lists of neighbours out. Then our rules read again against the devices.
 
 Every step, with what we learned and what went wrong, is in the [logbook](./docs/README.md).
 

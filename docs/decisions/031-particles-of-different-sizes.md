@@ -19,7 +19,7 @@ The user wants scenes with grains of several sizes, of one material or of severa
 - With the limit from the largest radius, two of the smallest that meet head on at full speed can pass through each other: measured at 4 to 1, in half of the shots, not at 2 to 1. Large against small never does.
 - The cell follows the largest radius. The margin of the lists follows the smallest, half its radius: lists are made more often.
 - On the GPU the radius is the first of a particle's properties ([decision 032](./032-a-buffer-of-particle-properties.md)), read for every neighbour. Only the pages with sizes pay for it: they run their own copies of three shaders, and the benchmark page keeps the originals.
-- Particles kept in the order of their cells (chapter 041) are off with sizes: the radii do not move with them yet.
+- Particles kept in the order of their cells (chapter 041) are off with sizes: the radii do not move with them yet. Since [chapter 052](../logbook/052-what-follows-a-particle.md) they do.
 
 ## Still open
 

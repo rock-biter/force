@@ -62,8 +62,12 @@ import watchCode from '../contact-cost/watch.wgsl?raw'
 import { ParticleView, SUN } from '../debug/particles.js'
 import { CASTERS, ShadowStage, SURFACES } from '../debug/shadows.js'
 import { showError } from '../debug/viewer.js'
+import levelsCellsSizedCode from '../mixed-sizes/levels-cells-sized.wgsl?raw'
 import levelsSizedCode from '../mixed-sizes/levels-sized.wgsl?raw'
 import listSizedCode from '../mixed-sizes/list-sized.wgsl?raw'
+import propertiesMoveCode from '../mixed-sizes/properties-move.wgsl?raw'
+import propertiesSettleCode from '../mixed-sizes/properties-settle.wgsl?raw'
+import roundCellsSizedCode from '../mixed-sizes/round-cells-sized.wgsl?raw'
 import roundSizedCode from '../mixed-sizes/round-sized.wgsl?raw'
 import bookBlocksCode from './book-blocks.wgsl?raw'
 import bookCountCode from './book-count.wgsl?raw'
@@ -111,10 +115,13 @@ const MOST_PARTICLES = Number(document.body.dataset.maxParticles) || MAX_PARTICL
 // know nothing of sizes. The largest keeps the radius of the other pages, RADIUS.
 const SIZES = Number(document.body.dataset.sizes) || 0
 const MIXED = SIZES > 0
-// ?lists=off in the address, a study (chapter 050): no lists of neighbours. The levels and every
-// round read the cells of the address book themselves (round-cells.wgsl), and the book is made
-// again at every substep. With the book on a grid or in a table, and with one size.
-const DIRECT = !MIXED && new URLSearchParams(location.search).get('lists') === 'off'
+// ?lists=off in the address, a study (chapters 050 to 053): no lists of neighbours. The levels and
+// every round read the cells of the address book themselves (round-cells.wgsl), and the book is
+// made again at every substep. With the book on a grid or in a table.
+const DIRECT = new URLSearchParams(location.search).get('lists') === 'off'
+// The particles are kept in the order of the address book (chapter 041, decision 033), unless
+// ?sorted=off in the address. With sizes and no lists, always: see round-cells-sized.wgsl.
+const IN_ORDER = new URLSearchParams(location.search).get('sorted') !== 'off' || (MIXED && DIRECT)
 const MAX_SIZES = 2 // the largest over the smallest, at most (decision 031)
 const MAX_TILT = 30 // degrees, around X and around Z, on the page that tilts the box
 const TILT_SPEED = 20 // degrees per second: the floor's far corner, 17 m away, then moves 9.9 cm per step, just under a radius. A wider box turns slower, to keep that
@@ -285,7 +292,7 @@ async function makePipelines(device: GPUDevice, hash: string) {
           bookCountCode,
           bookFillCode,
           MIXED ? listSizedCode : bookListCode,
-          listInOrder(bookListCode),
+          listInOrder(MIXED ? listSizedCode : bookListCode),
         ].map((code) => rebuildCode + cellsCode + code),
       ),
     ].map(make),
@@ -327,15 +334,30 @@ fn repeated(home: vec3i, offset: vec3i, slots: u32) -> bool {
   return false;
 }
 `
+  // With sizes and the particles kept in order: the two shaders that move the properties along.
+  const moveProperties = MIXED
+    ? await Promise.all(
+        [propertiesMoveCode, propertiesSettleCode].map((code) => make(rebuildCode + code)),
+      )
+    : undefined
   const direct = DIRECT
     ? await Promise.all(
         [cellsGridCode + NEVER, tableCode + FIRST].flatMap((cellsCode) =>
-          [
-            levelsCellsCode,
-            listInOrder(levelsCellsCode),
-            roundCellsCode,
-            listInOrder(roundCellsCode),
-          ].map((code) => make(cellsCode + code)),
+          // With sizes only the two in order exist: they stand in for the others, never used.
+          (MIXED
+            ? [
+                listInOrder(levelsCellsSizedCode),
+                listInOrder(levelsCellsSizedCode),
+                listInOrder(roundCellsSizedCode),
+                listInOrder(roundCellsSizedCode),
+              ]
+            : [
+                levelsCellsCode,
+                listInOrder(levelsCellsCode),
+                roundCellsCode,
+                listInOrder(roundCellsCode),
+              ]
+          ).map((code) => make(cellsCode + code)),
         ),
       )
     : undefined
@@ -362,6 +384,7 @@ fn repeated(home: vec3i, offset: vec3i, slots: u32) -> bool {
     byGrid: filing(0),
     byTable: filing(1),
     direct,
+    moveProperties,
   }
 }
 type Pipelines = Awaited<ReturnType<typeof makePipelines>>
@@ -480,9 +503,9 @@ function makeSimulation(
   const blockCount = Math.ceil(cellCount / BLOCK)
   const places = storage(cells === 'places' ? cellCount * PLACES * 4 : 4)
   const booked = cells !== 'places'
-  // The particles kept in the order of the book (book-move.wgsl): only with a book. Not with
-  // sizes: the radii would have to move with them, and do not yet.
-  const sorted = booked && inOrder && !sizes
+  // The particles kept in the order of the book (book-move.wgsl): only with a book. With sizes
+  // their properties move with them, in two passes of their own.
+  const sorted = booked && inOrder
   const spare = storage(sorted ? bytes : 16)
   const book = storage(booked ? count * 4 : 4)
   const starts = storage(booked ? cellCount * 4 : 4)
@@ -509,7 +532,7 @@ function makeSimulation(
   // What a particle is, and does not change during a step: four numbers each, in one buffer, so
   // that a shader spends one of its 8 storage buffers on all of them (decision 032). The radius
   // first; the other three are free, for what comes next.
-  const properties = storage(sizes ? count * 16 : 16)
+  const properties = storage(sizes ? count * 16 : 16, GPUBufferUsage.COPY_SRC) // read back by ?profile
   if (sizes) {
     const data = new Float32Array(count * 4)
     sizes.forEach((radius, i) => {
@@ -606,6 +629,14 @@ function makeSimulation(
     usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
   })
   buffers.push(rub)
+  const spareProperties = storage(sorted && sizes ? count * 16 : 16)
+  const propertyGroups =
+    sorted && sizes && kit.moveProperties
+      ? [
+          group(kit.moveProperties[0], [params, control, book, properties, spareProperties]),
+          group(kit.moveProperties[1], [params, control, spareProperties, properties]),
+        ]
+      : undefined
   // Levels alternate between two buffers, a step each; positions between two, a round each.
   // With no lists (DIRECT), the levels and the rounds read the book in their place.
   const [levelsCells, levelsCellsInOrder, roundCells, roundCellsInOrder] = (kit.direct ?? []).slice(
@@ -614,7 +645,8 @@ function makeSimulation(
   const levelsKit = kit.direct ? (sorted ? levelsCellsInOrder : levelsCells) : kit.levels
   const roundKit = kit.direct ? (sorted ? roundCellsInOrder : roundCells) : kit.round
   const cellBuffers = kit.direct ? [counts, starts] : undefined
-  const bookLast = kit.direct && !sorted ? [book] : []
+  // After the usual buffers: the properties, with sizes, then the book, unless in order.
+  const bookLast = kit.direct ? [...(sizes ? [properties] : []), ...(sorted ? [] : [book])] : []
   const levelGroups = [0, 1].map((k) =>
     group(levelsKit, [
       params,
@@ -741,6 +773,10 @@ function makeSimulation(
           if (sorted) {
             dispatch('move', kit.bookMove, bookGroups.move[parity])
             dispatch('move', kit.bookSettle, bookGroups.settle[parity])
+            if (propertyGroups && kit.moveProperties) {
+              dispatch('move', kit.moveProperties[0], propertyGroups[0])
+              dispatch('move', kit.moveProperties[1], propertyGroups[1])
+            }
           }
           if (!kit.direct)
             dispatch('list', sorted ? file.bookListInOrder : file.bookList, bookGroups.list)
@@ -795,8 +831,8 @@ function makeSimulation(
 type Simulation = ReturnType<typeof makeSimulation>
 /** A clock with two entries per shader of a step, and the names of the shaders that wrote them. */
 type Profile = { clock: GPUQuerySet; names: string[] }
-// The most shaders a step runs: thirteen and the rounds, in every substep.
-const MAX_PASSES = (13 + ROUNDS) * MAX_SUBSTEPS
+// The most shaders a step runs: fifteen and the rounds, in every substep.
+const MAX_PASSES = (15 + ROUNDS) * MAX_SUBSTEPS
 
 async function start() {
   const adapter = await navigator.gpu?.requestAdapter()
@@ -1264,8 +1300,7 @@ async function start() {
       listMargin(),
       cellWidth(),
       slotsEach,
-      // ?sorted in the address: the particles kept in the order of the address book
-      query.has('sorted'),
+      IN_ORDER,
       half,
       settings.sizes,
     )
@@ -1642,7 +1677,7 @@ async function start() {
 
   /**
    * How still the particles are: how far each one goes in about a second, as a speed. Not with
-   * ?sorted, which moves the particles to other rows between the two readings.
+   * the particles kept in order, which moves them to other rows between the two readings.
    */
   async function rest(sim: Simulation) {
     const from = sim.substepCount
@@ -1678,7 +1713,23 @@ async function start() {
    * closer than a diameter is measured in JavaScript, with a grid of its own.
    */
   async function overlaps(sim: Simulation) {
-    const p = await positionsOf(sim)
+    // The positions and, with sizes, the properties, copied at the same moment: kept in order, the
+    // particles change rows from one substep to the next.
+    const size = sim.particleCount * 16
+    const back = device.createBuffer({
+      size: 2 * size,
+      usage: GPUBufferUsage.MAP_READ | GPUBufferUsage.COPY_DST,
+    })
+    const encoder = device.createCommandEncoder()
+    encoder.copyBufferToBuffer(sim.positionBuffer, 0, back, 0, size)
+    if (sim.propertiesBuffer) encoder.copyBufferToBuffer(sim.propertiesBuffer, 0, back, size, size)
+    device.queue.submit([encoder.finish()])
+    await back.mapAsync(GPUMapMode.READ)
+    const both = new Float32Array(back.getMappedRange().slice(0))
+    back.destroy()
+    const p = both.subarray(0, sim.particleCount * 4)
+    const sized = sim.propertiesBuffer !== undefined
+    const radiusOf = (i: number) => (sized ? both[(sim.particleCount + i) * 4] : RADIUS)
     const cellOf = (i: number, a: number) => Math.floor(p[i * 4 + a] / DIAMETER) + 4096
     const key = (x: number, y: number, z: number) => (x * 8192 + y) * 8192 + z
     const grid = new Map<number, number[]>()
@@ -1700,7 +1751,8 @@ async function start() {
             ) ?? []) {
               if (j <= i) continue
               const depth =
-                DIAMETER -
+                radiusOf(i) +
+                radiusOf(j) -
                 Math.hypot(
                   p[i * 4] - p[j * 4],
                   p[i * 4 + 1] - p[j * 4 + 1],
@@ -1708,12 +1760,13 @@ async function start() {
                 )
               if (depth <= 0) continue
               touching++
-              if (depth > 0.1 * RADIUS) deep++
+              // deep: by more than a tenth of the smaller radius, 1 cm with one size
+              if (depth > 0.1 * Math.min(radiusOf(i), radiusOf(j))) deep++
               deepest = Math.max(deepest, depth)
             }
     return (
-      `overlaps: ${touching} pairs closer than a diameter, ${deep} of them by more than ` +
-      `${RADIUS * 10} cm, the deepest by ${(deepest * 100).toFixed(1)} cm`
+      `overlaps: ${touching} pairs closer than ${sized ? 'their two radii' : 'a diameter'}, ${deep} of them by more than ` +
+      `${sized ? 'a tenth of the smaller radius' : `${RADIUS * 10} cm`}, the deepest by ${(deepest * 100).toFixed(1)} cm`
     )
   }
 
@@ -1737,7 +1790,7 @@ async function start() {
     const total = [...profiled.ms.values()].reduce((a, b) => a + b, 0) / profileSteps
     const lines = [
       `profile ${settings.cells}: ${settings.particles} particles, ${profileSteps} steps after ` +
-        `${profileAfter}, ${settings.substeps} substeps, margin ${margin} m, cells of ${cellWidth()} m${query.has('hash') ? `, hash ${query.get('hash')}` : ''}${settings.cells === 'table' ? `, ${slotsEach} slots each` : ''}${query.has('sorted') ? ', particles in order' : ''}, lists made again in ${made} of ${ran} substeps`,
+        `${profileAfter}, ${settings.substeps} substeps, margin ${margin} m, cells of ${cellWidth()} m${query.has('hash') ? `, hash ${query.get('hash')}` : ''}${settings.cells === 'table' ? `, ${slotsEach} slots each` : ''}${IN_ORDER && settings.cells !== 'places' ? ', particles in order' : ''}, lists made again in ${made} of ${ran} substeps`,
       ...[...profiled.ms].map(
         ([name, ms]) =>
           `${name.padEnd(8)} ${(ms / profileSteps).toFixed(3).padStart(7)} ms  ` +
@@ -1749,7 +1802,7 @@ async function start() {
         (Math.max(...profiled.leftOut) - Math.min(...profiled.leftOut)) / Math.max(made, 1)
       ).toFixed(0)}`,
       simulation ? await overlaps(simulation) : '',
-      simulation && !query.has('sorted') ? await rest(simulation) : '',
+      simulation && !(IN_ORDER && settings.cells !== 'places') ? await rest(simulation) : '',
     ]
     const note = document.createElement('pre')
     note.id = 'profile'

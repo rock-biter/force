@@ -1348,9 +1348,10 @@
       "title": "Reordering particles by cell",
       "summary": "Moving the positions and velocities themselves into the order of their cells, so that particles close in space are close in memory when their neighbours are read",
       "area": "gpu",
-      "status": "mentioned",
+      "status": "seen",
       "since": {
-        "mentioned": "2026-11-23"
+        "mentioned": "2026-11-23",
+        "seen": "2026-11-25"
       },
       "partOf": "memory-locality",
       "related": ["grid-by-sorting", "z-order-curve"],
@@ -1361,7 +1362,9 @@
         "docs/logbook/042-no-best-way.md",
         "docs/logbook/044-the-first-devices.md",
         "docs/logbook/050-the-price-of-remembering.md",
-        "docs/logbook/051-read-once.md"
+        "docs/logbook/051-read-once.md",
+        "docs/logbook/052-what-follows-a-particle.md",
+        "docs/logbook/053-in-order-by-default.md"
       ],
       "code": [
         "examples/heap-simulation/book-move.wgsl",
@@ -7208,7 +7211,8 @@
         "docs/logbook/048-big-and-small.md",
         "docs/logbook/049-a-radius-each.md",
         "docs/logbook/050-the-price-of-remembering.md",
-        "docs/logbook/051-read-once.md"
+        "docs/logbook/051-read-once.md",
+        "docs/logbook/053-in-order-by-default.md"
       ],
       "code": ["examples/contact-cost/list.wgsl", "examples/contact-cost/watch.wgsl"]
     },
@@ -7587,9 +7591,15 @@
         "examples/mixed-sizes/index.html",
         "examples/mixed-sizes/list-sized.wgsl",
         "examples/mixed-sizes/round-sized.wgsl",
-        "examples/mixed-sizes/levels-sized.wgsl"
+        "examples/mixed-sizes/levels-sized.wgsl",
+        "examples/mixed-sizes/round-cells-sized.wgsl"
       ],
-      "citedIn": ["docs/logbook/048-big-and-small.md", "docs/logbook/049-a-radius-each.md"]
+      "citedIn": [
+        "docs/logbook/048-big-and-small.md",
+        "docs/logbook/049-a-radius-each.md",
+        "docs/logbook/052-what-follows-a-particle.md",
+        "docs/logbook/053-in-order-by-default.md"
+      ]
     },
     {
       "id": "hierarchical-grid",
@@ -7956,11 +7966,17 @@
         "seen": "2026-11-25"
       },
       "related": ["storage-buffer", "device-limits", "mixed-particle-sizes"],
-      "code": ["examples/heap-simulation/main.ts", "examples/mixed-sizes/list-sized.wgsl"],
+      "code": [
+        "examples/heap-simulation/main.ts",
+        "examples/mixed-sizes/list-sized.wgsl",
+        "examples/mixed-sizes/properties-move.wgsl"
+      ],
       "citedIn": [
         "docs/logbook/049-a-radius-each.md",
         "docs/decisions/032-a-buffer-of-particle-properties.md",
-        "docs/logbook/050-the-price-of-remembering.md"
+        "docs/logbook/050-the-price-of-remembering.md",
+        "docs/logbook/052-what-follows-a-particle.md",
+        "docs/logbook/053-in-order-by-default.md"
       ]
     }
   ]

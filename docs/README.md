@@ -58,6 +58,8 @@ This is where we tell how FORCE gets built, one step at a time. If you are new h
 | 049 | [A Radius Each](./logbook/049-a-radius-each.md) | A page with particles of different sizes, of one material or several: one more buffer on the GPU, and the limit of 8 storage buffers per shader |
 | 050 | [The Price of Remembering](./logbook/050-the-price-of-remembering.md) | Are the lists of neighbours still worth their buffers? In random order yes; with the particles in the order of their cells, a step without lists takes about the same |
 | 051 | [Read Once](./logbook/051-read-once.md) | A step with no lists in the hashed table too: read each shared slot once, and check the rare case first. In order, faster than with the lists |
+| 052 | [What Follows a Particle](./logbook/052-what-follows-a-particle.md) | The properties move with the particles kept in order: sizes and order go together, and a step with sizes takes half the time |
+| 053 | [In Order by Default](./logbook/053-in-order-by-default.md) | Particles kept in the order of their cells on every page, and a step with no lists for particles of different sizes too |
 
 ## For reference
 

@@ -44,6 +44,7 @@ The choices that shape FORCE, one per page: what we decided, why, what we left o
 | 030 | [Shadows in the debug viewer, shaded once per pixel](./030-viewer-shadows-shaded-once-per-pixel.md) | Accepted | November 25, 2026 |
 | 031 | [Particles of different sizes, up to 2 to 1](./031-particles-of-different-sizes.md) | Accepted | November 25, 2026 |
 | 032 | [One buffer for the properties of a particle](./032-a-buffer-of-particle-properties.md) | Accepted | November 25, 2026 |
+| 033 | [Particles in the order of their cells, by default](./033-particles-in-order-by-default.md) | Accepted | November 25, 2026 |
 
 ## Rules
 

@@ -5,7 +5,7 @@
 Everything we have met while building FORCE, concepts and sources, and how far we went with each
 one. Use it to look up a term, to find what to read, or to pick what to explore next.
 
-- **297 concepts:** ● 24 studied · ◐ 146 seen · ○ 127 mentioned
+- **297 concepts:** ● 24 studied · ◐ 147 seen · ○ 126 mentioned
 - **157 sources:** ● 15 studied · ◐ 17 seen · ○ 125 mentioned · read by Claude: 73 parts, 16 in full
 
 | | Status | What it means |
@@ -391,7 +391,7 @@ WebGPU, WGSL and how to make thousands of threads work.
 | ● | **[Readback](../guides/readback.md)** | Copying results from the GPU back into JavaScript: a copy into a buffer that can be mapped, then a promise that resolves when the GPU has finished with it | WebGPU | [guides index](../guides/README.md) |
 | ○ | References and pointers | A variable is a reference to memory, typed ref<address space, type, access mode>: reading it is a load, assigning to it a store, and & turns it into a pointer. Values have no memory, so no pointer | WGSL | [WGSL specification, §7.2 Value Declarations](https://www.w3.org/TR/WGSL/#value-decls) |
 | ○ | Render pipeline | The pipeline that draws: a vertex and a fragment shader plus their fixed settings, made with createRenderPipeline() | WebGPU | [WGSL specification, §2.1 Shader Lifecycle](https://www.w3.org/TR/WGSL/#shader-lifecycle) |
-| ○ | Reordering particles by cell | Moving the positions and velocities themselves into the order of their cells, so that particles close in space are close in memory when their neighbours are read | Memory locality | [Particle Simulation using CUDA](https://developer.download.nvidia.com/assets/cuda/files/particles.pdf) |
+| ◐ | Reordering particles by cell | Moving the positions and velocities themselves into the order of their cells, so that particles close in space are close in memory when their neighbours are read | Memory locality | [Particle Simulation using CUDA](https://developer.download.nvidia.com/assets/cuda/files/particles.pdf) |
 | ◐ | Resource interface | Everything a shader expects from outside: its uniform buffers, storage buffers, textures and samplers, each with a @group and a @binding | WGSL | [WGSL specification, §7.3 var Declarations](https://www.w3.org/TR/WGSL/#var-decls) |
 | ○ | Shader cache | Browsers keep what they have compiled: in Chrome a shader text seen before took 0.3 ms instead of 141. It makes naive timings lie | Compute pipeline | [pipeline-creation](../guides/pipeline-creation.md) |
 | ◐ | Shader lifecycle | The four moments in the life of a shader: its code becomes a module, the module becomes a pipeline, a draw or dispatch starts it, and it ends when every thread is done. Each kind of constant is fixed at one of them | WGSL | [WGSL specification, §7.2 Value Declarations](https://www.w3.org/TR/WGSL/#value-decls) |
