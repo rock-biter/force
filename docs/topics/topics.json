@@ -206,7 +206,8 @@
         "docs/logbook/001-the-flip-book.md",
         "docs/logbook/004-the-detour.md",
         "docs/logbook/010-the-ground.md",
-        "docs/logbook/024-twenty-seven-cells.md"
+        "docs/logbook/024-twenty-seven-cells.md",
+        "ogarko-luding-contact-detection"
       ],
       "code": ["src/shaders/integrate.wgsl"]
     },
@@ -225,7 +226,8 @@
       "citedIn": [
         "docs/logbook/001-the-flip-book.md",
         "docs/logbook/004-the-detour.md",
-        "docs/logbook/024-twenty-seven-cells.md"
+        "docs/logbook/024-twenty-seven-cells.md",
+        "ogarko-luding-contact-detection"
       ]
     },
     {
@@ -256,7 +258,8 @@
         "docs/logbook/001-the-flip-book.md",
         "docs/logbook/004-the-detour.md",
         "iterative-dynamics-paper",
-        "docs/logbook/024-twenty-seven-cells.md"
+        "docs/logbook/024-twenty-seven-cells.md",
+        "ogarko-luding-contact-detection"
       ]
     },
     {
@@ -275,7 +278,8 @@
         "docs/logbook/010-the-ground.md",
         "advanced-character-physics",
         "docs/logbook/032-two-kinds-of-bounce.md",
-        "docs/logbook/033-the-speed-limit.md"
+        "docs/logbook/033-the-speed-limit.md",
+        "docs/logbook/048-big-and-small.md"
       ]
     },
     {
@@ -763,7 +767,11 @@
         "mentioned": "2026-11-05"
       },
       "partOf": "broad-phase",
-      "citedIn": ["ten-minute-physics", "docs/logbook/004-the-detour.md"]
+      "citedIn": [
+        "ten-minute-physics",
+        "docs/logbook/004-the-detour.md",
+        "ogarko-luding-contact-detection"
+      ]
     },
     {
       "id": "bounding-volume-hierarchy",
@@ -1277,7 +1285,8 @@
         "docs/logbook/039-far-apart-in-memory.md",
         "docs/decisions/024-cells-in-a-hashed-table.md",
         "docs/logbook/041-next-to-each-other.md",
-        "docs/logbook/042-no-best-way.md"
+        "docs/logbook/042-no-best-way.md",
+        "docs/logbook/048-big-and-small.md"
       ],
       "code": ["examples/contact-cost/main.ts", "examples/contact-cost/grid.wgsl"]
     },
@@ -1304,7 +1313,9 @@
         "docs/decisions/024-cells-in-a-hashed-table.md",
         "docs/logbook/041-next-to-each-other.md",
         "docs/logbook/042-no-best-way.md",
-        "docs/logbook/045-a-million-and-one-pass.md"
+        "docs/logbook/045-a-million-and-one-pass.md",
+        "docs/logbook/048-big-and-small.md",
+        "ogarko-luding-contact-detection"
       ],
       "code": ["examples/heap-simulation/cells-table.wgsl"]
     },
@@ -1904,7 +1915,7 @@
       "since": {
         "mentioned": "2026-11-05"
       },
-      "citedIn": ["docs/logbook/004-the-detour.md"]
+      "citedIn": ["docs/logbook/004-the-detour.md", "ogarko-luding-contact-detection"]
     },
     {
       "id": "two-way-coupling",
@@ -2101,7 +2112,8 @@
         "docs/guides/bind-groups.md",
         "docs/guides/dispatch-and-workgroups.md",
         "docs/logbook/021-a-short-trip.md",
-        "docs/logbook/030-the-lazy-list.md"
+        "docs/logbook/030-the-lazy-list.md",
+        "docs/logbook/049-a-radius-each.md"
       ],
       "code": ["src/world.ts"]
     },
@@ -2284,7 +2296,8 @@
         "gpu-gems-rigid-bodies",
         "docs/logbook/024-twenty-seven-cells.md",
         "docs/logbook/025-the-pillow.md",
-        "docs/logbook/028-the-ranking.md"
+        "docs/logbook/028-the-ranking.md",
+        "ogarko-luding-contact-detection"
       ]
     },
     {
@@ -2648,7 +2661,8 @@
         "position-based-friction",
         "static-and-kinetic-friction",
         "angle-of-repose",
-        "particle-reordering"
+        "particle-reordering",
+        "mixed-particle-sizes"
       ],
       "citedIn": [
         "docs/logbook/004-the-detour.md",
@@ -2659,7 +2673,8 @@
         "docs/logbook/031-the-yellow-ball.md",
         "docs/logbook/032-two-kinds-of-bounce.md",
         "docs/logbook/034-the-box-on-the-ramp.md",
-        "docs/logbook/041-next-to-each-other.md"
+        "docs/logbook/041-next-to-each-other.md",
+        "docs/logbook/048-big-and-small.md"
       ],
       "url": "https://doi.org/10.1145/2601097.2601152",
       "authors": "Miles Macklin, Matthias Müller, Nuttapong Chentanez, Tae-Yong Kim",
@@ -4251,7 +4266,8 @@
       "citedIn": [
         "wgsl-spec-var-declarations",
         "docs/guides/compute-shader.md",
-        "docs/logbook/030-the-lazy-list.md"
+        "docs/logbook/030-the-lazy-list.md",
+        "docs/logbook/049-a-radius-each.md"
       ]
     },
     {
@@ -5061,7 +5077,8 @@
         "docs/logbook/015-the-stiff-spring.md",
         "physx-rigid-body-dynamics",
         "docs/logbook/029-heavy-on-light.md",
-        "docs/decisions/015-half-and-half-on-positions.md"
+        "docs/decisions/015-half-and-half-on-positions.md",
+        "docs/logbook/048-big-and-small.md"
       ]
     },
     {
@@ -5830,7 +5847,7 @@
         "mentioned": "2026-11-17"
       },
       "related": ["broad-phase", "uniform-grid"],
-      "citedIn": ["advanced-character-physics"]
+      "citedIn": ["advanced-character-physics", "ogarko-luding-contact-detection"]
     },
     {
       "id": "over-relaxation",
@@ -7177,7 +7194,9 @@
         "docs/decisions/016-a-list-made-when-needed.md",
         "docs/logbook/031-the-yellow-ball.md",
         "docs/logbook/038-one-hundred-twenty-five-cells.md",
-        "docs/decisions/023-cells-as-wide-as-the-reach.md"
+        "docs/decisions/023-cells-as-wide-as-the-reach.md",
+        "docs/logbook/048-big-and-small.md",
+        "docs/logbook/049-a-radius-each.md"
       ],
       "code": ["examples/contact-cost/list.wgsl", "examples/contact-cost/watch.wgsl"]
     },
@@ -7254,12 +7273,14 @@
         "friction",
         "restitution",
         "sleeping",
-        "stiff-stacks"
+        "stiff-stacks",
+        "mixed-particle-sizes"
       ],
       "citedIn": [
         "docs/logbook/032-two-kinds-of-bounce.md",
         "docs/logbook/033-the-speed-limit.md",
-        "docs/logbook/034-the-box-on-the-ramp.md"
+        "docs/logbook/034-the-box-on-the-ramp.md",
+        "docs/logbook/048-big-and-small.md"
       ],
       "url": "https://github.com/NVIDIAGameWorks/FleX/blob/master/include/NvFlex.h",
       "authors": "NVIDIA",
@@ -7282,7 +7303,8 @@
         "docs/logbook/033-the-speed-limit.md",
         "docs/decisions/017-a-speed-limit-per-substep.md",
         "docs/decisions/018-max-speed-in-meters-per-second.md",
-        "docs/decisions/019-default-speed-limit.md"
+        "docs/decisions/019-default-speed-limit.md",
+        "docs/logbook/048-big-and-small.md"
       ],
       "code": ["examples/heap-simulation/finish-limit.wgsl"]
     },
@@ -7535,6 +7557,397 @@
       },
       "code": ["examples/debug/shadows.ts"],
       "citedIn": ["docs/logbook/047-once-per-pixel.md"]
+    },
+    {
+      "id": "mixed-particle-sizes",
+      "kind": "concept",
+      "title": "Particles of different sizes",
+      "summary": "A radius for each particle: the cell follows the largest, the margin and the safe speed the smallest, and the lists and the ratio of the masses set how far apart the sizes can be",
+      "area": "physics",
+      "status": "seen",
+      "since": {
+        "seen": "2026-11-25"
+      },
+      "related": ["neighbour-list", "speed-limit", "mass-ratio", "tunneling", "hierarchical-grid"],
+      "code": [
+        "docs/topics/mixed-sizes.mjs",
+        "examples/heap-simulation/main.ts",
+        "examples/mixed-sizes/index.html",
+        "examples/mixed-sizes/list-sized.wgsl",
+        "examples/mixed-sizes/round-sized.wgsl",
+        "examples/mixed-sizes/levels-sized.wgsl"
+      ],
+      "citedIn": ["docs/logbook/048-big-and-small.md", "docs/logbook/049-a-radius-each.md"]
+    },
+    {
+      "id": "hierarchical-grid",
+      "kind": "concept",
+      "title": "Hierarchical grid",
+      "summary": "Several grids with cells of different widths, one for each class of sizes, each one hashed, so that small objects are not searched through cells made for large ones",
+      "area": "physics",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-25"
+      },
+      "related": ["uniform-grid"],
+      "citedIn": ["docs/logbook/048-big-and-small.md", "ogarko-luding-contact-detection"]
+    },
+    {
+      "id": "vellum-solver-docs",
+      "kind": "docs",
+      "title": "Houdini Vellum Solver",
+      "summary": "Grains with a radius per particle, and a switch for when all are the same, which allows a faster search of neighbours",
+      "area": "engine",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-25"
+      },
+      "about": ["mixed-particle-sizes"],
+      "citedIn": ["docs/logbook/048-big-and-small.md"],
+      "url": "https://www.sidefx.com/docs/houdini/nodes/dop/vellumsolver.html",
+      "authors": "SideFX",
+      "claudeRead": "parts"
+    },
+    {
+      "id": "ogarko-luding-contact-detection",
+      "kind": "paper",
+      "title": "Data structures and algorithms for contact detection in numerical simulation of discrete particle systems",
+      "summary": "Three ways to find contacts among grains of many sizes, compared: a grid in several levels, the fastest, a triangulation and an octree",
+      "area": "physics",
+      "status": "seen",
+      "since": {
+        "seen": "2026-11-25"
+      },
+      "about": [
+        "hierarchical-grid",
+        "mixed-particle-sizes",
+        "polydispersity",
+        "broad-phase",
+        "linked-cells",
+        "delaunay-triangulation",
+        "octree",
+        "discrete-element-method",
+        "spatial-hashing",
+        "volume-fraction",
+        "periodic-boundaries"
+      ],
+      "citedIn": ["docs/logbook/048-big-and-small.md"],
+      "url": "https://www2.msm.ctw.utwente.nl/sluding/PAPERS/OgarkoWCPT2010.pdf",
+      "authors": "V. Ogarko, S. Luding",
+      "year": 2010,
+      "claudeRead": "full"
+    },
+    {
+      "id": "linked-cells",
+      "kind": "concept",
+      "title": "Linked cells",
+      "summary": "A grid where each cell keeps the list of the particles inside it: the name physicists give to our uniform grid",
+      "area": "physics",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-25"
+      },
+      "citedIn": ["ogarko-luding-contact-detection"],
+      "related": ["uniform-grid"]
+    },
+    {
+      "id": "polydispersity",
+      "kind": "concept",
+      "title": "Polydispersity",
+      "summary": "How far apart the sizes of the particles of a system are: monodisperse is one size, bidisperse two, polydisperse many",
+      "area": "physics",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-25"
+      },
+      "citedIn": ["ogarko-luding-contact-detection"],
+      "related": ["mixed-particle-sizes"]
+    },
+    {
+      "id": "volume-fraction",
+      "kind": "concept",
+      "title": "Volume fraction",
+      "summary": "The share of space the particles fill: about 0.6 for spheres poured in a box, less for a dilute system",
+      "area": "physics",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-25"
+      },
+      "citedIn": ["ogarko-luding-contact-detection"],
+      "related": ["granular-material"]
+    },
+    {
+      "id": "periodic-boundaries",
+      "kind": "concept",
+      "title": "Periodic boundaries",
+      "summary": "A world with no walls where what leaves on one side comes back on the other, to imitate an endless one",
+      "area": "physics",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-25"
+      },
+      "citedIn": ["ogarko-luding-contact-detection"]
+    },
+    {
+      "id": "hash-collision",
+      "kind": "concept",
+      "title": "Hash collision",
+      "summary": "Two different cells that get the same slot of a hash table, so their particles must be told apart",
+      "area": "gpu",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-25"
+      },
+      "citedIn": ["ogarko-luding-contact-detection"],
+      "related": ["spatial-hashing"]
+    },
+    {
+      "id": "delaunay-triangulation",
+      "kind": "concept",
+      "title": "Delaunay triangulation",
+      "summary": "Joining points into triangles, or tetrahedra, so that near ones are joined: contacts are then looked for only along the edges. Weighted, it takes the radii into account; flipping updates it when points move",
+      "area": "math",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-25"
+      },
+      "citedIn": ["ogarko-luding-contact-detection"],
+      "related": ["broad-phase"]
+    },
+    {
+      "id": "granular-segregation",
+      "kind": "concept",
+      "title": "Segregation of grains",
+      "summary": "Shaken or poured grains of different sizes sort themselves, the large ones often ending on top",
+      "area": "physics",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-25"
+      },
+      "citedIn": ["ogarko-luding-contact-detection"],
+      "related": ["granular-material", "mixed-particle-sizes"]
+    },
+    {
+      "id": "jamming",
+      "kind": "concept",
+      "title": "Jamming",
+      "summary": "Grains that lock each other and stop flowing, like a solid, though nothing glues them",
+      "area": "physics",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-25"
+      },
+      "citedIn": ["ogarko-luding-contact-detection"],
+      "related": ["granular-material"]
+    },
+    {
+      "id": "granular-clustering",
+      "kind": "concept",
+      "title": "Clustering of grains",
+      "summary": "Grains that lose energy at each hit and gather into dense groups",
+      "area": "physics",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-25"
+      },
+      "citedIn": ["ogarko-luding-contact-detection"],
+      "related": ["granular-material"]
+    },
+    {
+      "id": "fragmentation",
+      "kind": "concept",
+      "title": "Fragmentation",
+      "summary": "Bodies that break into smaller ones during a simulation, so particles are added and removed",
+      "area": "physics",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-25"
+      },
+      "citedIn": ["ogarko-luding-contact-detection"],
+      "related": ["granular-material"]
+    },
+    {
+      "id": "two-phase-flow",
+      "kind": "concept",
+      "title": "Two-phase flow",
+      "summary": "Grains carried by a fluid, such as sand in air or in water",
+      "area": "physics",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-25"
+      },
+      "citedIn": ["ogarko-luding-contact-detection"],
+      "related": ["granular-material"]
+    },
+    {
+      "id": "molecular-dynamics",
+      "kind": "concept",
+      "title": "Molecular dynamics",
+      "summary": "Simulating many atoms or particles by the forces between each pair, step after step: where cell lists were born",
+      "area": "physics",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-25"
+      },
+      "citedIn": ["ogarko-luding-contact-detection"],
+      "related": ["discrete-element-method"]
+    },
+    {
+      "id": "soft-sphere-model",
+      "kind": "concept",
+      "title": "Soft spheres",
+      "summary": "Spheres allowed to overlap a little, pushed apart by a force that grows with the overlap, as an elastic ball would",
+      "area": "physics",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-25"
+      },
+      "citedIn": ["ogarko-luding-contact-detection"],
+      "related": ["penalty-method", "discrete-element-method"]
+    },
+    {
+      "id": "geometric-robustness",
+      "kind": "concept",
+      "title": "Robust geometric tests",
+      "summary": "Tests such as \"which side of this triangle is the point on\" that rounding errors can answer wrongly, and the exact or interval arithmetic used to trust them",
+      "area": "math",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-25"
+      },
+      "citedIn": ["ogarko-luding-contact-detection"],
+      "related": ["delaunay-triangulation"]
+    },
+    {
+      "id": "algorithmic-complexity",
+      "kind": "concept",
+      "title": "Complexity, O(N)",
+      "summary": "How the work grows with the number of objects: O(N) doubles when they double, O(N²) becomes four times",
+      "area": "math",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-25"
+      },
+      "citedIn": ["ogarko-luding-contact-detection"]
+    },
+    {
+      "id": "ogarko-luding-multilevel-paper",
+      "kind": "paper",
+      "title": "A fast multilevel algorithm for contact detection of arbitrarily polydisperse objects",
+      "summary": "The grid in several levels in full: which cells to check, and how to choose the levels for a given spread of sizes",
+      "area": "physics",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-25"
+      },
+      "about": ["hierarchical-grid", "polydispersity"],
+      "citedIn": ["ogarko-luding-contact-detection"],
+      "url": "https://doi.org/10.1016/j.cpc.2011.12.019",
+      "authors": "V. Ogarko, S. Luding",
+      "year": 2012
+    },
+    {
+      "id": "krijgsman-hierarchical-grid-paper",
+      "kind": "paper",
+      "title": "Optimal parameters for a hierarchical grid data structure for contact detection in arbitrarily polydisperse particle systems",
+      "summary": "How many levels and how wide their cells, for any spread of sizes",
+      "area": "physics",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-25"
+      },
+      "about": ["hierarchical-grid", "polydispersity"],
+      "citedIn": ["ogarko-luding-contact-detection"],
+      "url": "https://doi.org/10.1007/s40571-014-0020-9",
+      "authors": "D. Krijgsman, V. Ogarko, S. Luding",
+      "year": 2014
+    },
+    {
+      "id": "ericson-real-time-collision-detection",
+      "kind": "book",
+      "title": "Real-Time Collision Detection",
+      "summary": "The reference book on finding collisions in games: grids, hierarchical grids, trees, sorting",
+      "area": "physics",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-25"
+      },
+      "about": [
+        "collision-detection",
+        "broad-phase",
+        "hierarchical-grid",
+        "octree",
+        "sweep-and-prune"
+      ],
+      "citedIn": ["ogarko-luding-contact-detection"],
+      "url": "https://doi.org/10.1201/b14581",
+      "authors": "Christer Ericson",
+      "year": 2004
+    },
+    {
+      "id": "allen-tildesley-liquids",
+      "kind": "book",
+      "title": "Computer Simulation of Liquids",
+      "summary": "The classic book of molecular dynamics, where cell lists and lists of neighbours are explained",
+      "area": "physics",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-25"
+      },
+      "about": ["molecular-dynamics", "linked-cells", "neighbour-list"],
+      "citedIn": ["ogarko-luding-contact-detection"],
+      "url": "https://doi.org/10.1093/oso/9780198803195.001.0001",
+      "authors": "M. P. Allen, D. J. Tildesley",
+      "year": 2017
+    },
+    {
+      "id": "munjiza-nbs-paper",
+      "kind": "paper",
+      "title": "NBS contact detection algorithm for bodies of similar size",
+      "summary": "A cell method for bodies of about one size, in time and memory that grow with their number",
+      "area": "physics",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-25"
+      },
+      "about": ["linked-cells", "broad-phase"],
+      "citedIn": ["ogarko-luding-contact-detection"],
+      "url": "https://doi.org/10.1002/(SICI)1097-0207(19980915)43:1%3C131::AID-NME447%3E3.0.CO;2-S",
+      "authors": "A. Munjiza, K. R. F. Andrews",
+      "year": 1998
+    },
+    {
+      "id": "barnes-hut-paper",
+      "kind": "paper",
+      "title": "A hierarchical O(N log N) force-calculation algorithm",
+      "summary": "A tree of cubes that lets far groups of bodies count as one: the origin of octrees in simulation",
+      "area": "physics",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-25"
+      },
+      "about": ["octree", "algorithmic-complexity"],
+      "citedIn": ["ogarko-luding-contact-detection"],
+      "url": "https://doi.org/10.1038/324446a0",
+      "authors": "J. Barnes, P. Hut",
+      "year": 1986
+    },
+    {
+      "id": "particle-properties",
+      "kind": "concept",
+      "title": "Particle properties in one buffer",
+      "summary": "What a particle is and does not change in a step, four numbers each in one buffer, the radius first: one of a shader's 8 storage buffers for all of them",
+      "area": "engine",
+      "status": "seen",
+      "since": {
+        "seen": "2026-11-25"
+      },
+      "related": ["storage-buffer", "device-limits", "mixed-particle-sizes"],
+      "code": ["examples/heap-simulation/main.ts", "examples/mixed-sizes/list-sized.wgsl"],
+      "citedIn": [
+        "docs/logbook/049-a-radius-each.md",
+        "docs/decisions/032-a-buffer-of-particle-properties.md"
+      ]
     }
   ]
 }

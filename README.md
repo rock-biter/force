@@ -48,9 +48,16 @@ Before going on with the engine, we gave the particles of our viewer soft shadow
 not in the browsers yet ([chapter 046](./docs/logbook/046-a-promise-not-yet-kept.md)), so every
 sphere first writes only what it shows, and the light is worked out once for each pixel of the
 screen. We timed it against the usual way, up to a million particles: with shadows it always wins
-([chapter 047](./docs/logbook/047-once-per-pixel.md)). 27 devices are in by now.
+([chapter 047](./docs/logbook/047-once-per-pixel.md)).
 
-**Next:** back to the engine: more devices, and our rules read again against them.
+Back to the engine, with a question: can particles have different sizes? A test says yes, up to a
+large one twice as wide as a small one ([chapter 048](./docs/logbook/048-big-and-small.md)), and
+there is a page to try it, with grains of one material or of several
+([try it](https://rock-biter.github.io/force/mixed-sizes/),
+[chapter 049](./docs/logbook/049-a-radius-each.md)). 31 runs of the benchmark are in.
+
+**Next:** the lists of neighbours each particle keeps: what they cost in memory, and what they save.
+Then our rules read again against the devices.
 
 Every step, with what we learned and what went wrong, is in the [logbook](./docs/README.md).
 

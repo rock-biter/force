@@ -54,6 +54,8 @@ This is where we tell how FORCE gets built, one step at a time. If you are new h
 | 045 | [A Million, and One Pass](./logbook/045-a-million-and-one-pass.md) | A million particles in a box that grows, friction that read every neighbour twice and now reads it once, and 3 rounds in each of 2 substeps in place of 6 rounds in one |
 | 046 | [A Promise Not Yet Kept](./logbook/046-a-promise-not-yet-kept.md) | Soft shadows for the debug viewer: the depth promise that browsers do not take yet, and the choice to shade once per pixel |
 | 047 | [Once per Pixel](./logbook/047-once-per-pixel.md) | The shadows built and every way of drawing timed, up to a million particles: with shadows, light worked out once per pixel always wins |
+| 048 | [Big and Small](./logbook/048-big-and-small.md) | Particles of different sizes, tried by script in 3D: fine up to 2 to 1, then the lists of neighbours overflow and a heavy sphere on light ones is too much |
+| 049 | [A Radius Each](./logbook/049-a-radius-each.md) | A page with particles of different sizes, of one material or several: one more buffer on the GPU, and the limit of 8 storage buffers per shader |
 
 ## For reference
 
