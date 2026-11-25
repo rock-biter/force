@@ -6,7 +6,7 @@
 
 ## The story
 
-To find which particles touch, FORCE drops them into a grid of cells 20 cm wide, with 4 places per cell ([decision 016](../decisions/016-a-list-made-when-needed.md)). A fifth particle in a cell finds no place, and nobody sees it until the grid is filled again, which happens when particles have moved enough. Simon Green of NVIDIA gives 4 as enough for spheres one cell wide, and in [chapter 030](./030-the-lazy-list.md) no cell ever held more. The user wanted to get past that limit anyway. First we counted, on our two [pages that run live](../../examples/force-plus/main.ts), one with a level box and one with a box that tilts, how many particles find their cell full each time the grid is filled:
+To find which particles touch, FORCE drops them into a grid of cells 20 cm wide, with 4 places per cell ([decision 016](../decisions/016-a-list-made-when-needed.md)). A fifth particle in a cell finds no place, and nobody sees it until the grid is filled again, which happens when particles have moved enough. Simon Green of NVIDIA gives 4 as enough for spheres one cell wide, and in [chapter 030](./030-the-lazy-list.md) no cell ever held more. The user wanted to get past that limit anyway. First we counted, on our two [pages that run live](../../examples/heap-simulation/main.ts), one with a level box and one with a box that tilts, how many particles find their cell full each time the grid is filled:
 
 | Scene | Particles | Left out |
 | --- | --- | --- |
@@ -57,7 +57,7 @@ With 50 000 particles, two runs of each way, one after the other and then again,
 
 - Matthias Teschner, Bruno Heidelberger, Matthias Müller, Danat Pomeranets and Markus Gross, [Optimized Spatial Hashing for Collision Detection of Deformable Objects](https://matthias-research.github.io/pages/publications/tetraederCollision.pdf), 2003: section 4.1, the hash and its three primes.
 - Simon Green, [Particle Simulation using CUDA](https://developer.download.nvidia.com/assets/cuda/files/particles.pdf), NVIDIA, 2010: the two ways to keep a grid, read in chapter 024.
-- Our pages, [examples/force-plus](../../examples/force-plus/main.ts) and its `book-*.wgsl` and `cells-*.wgsl` shaders: every number of this chapter.
+- Our pages, [examples/heap-simulation](../../examples/heap-simulation/main.ts) and its `book-*.wgsl` and `cells-*.wgsl` shaders: every number of this chapter.
 
 ## Next step
 

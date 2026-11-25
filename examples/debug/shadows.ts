@@ -14,6 +14,11 @@
 // edges the canvas gives them.
 //
 // Who takes part is told by layers, three.js's way to show an object to some cameras only.
+//
+// The same shadows also work without passes 2 and 3, to compare what the two ways cost: the shadow
+// map is drawn as above, then everything straight to the screen, each sphere reading the shadow map
+// in its own shader (`lightOn`, `lit` and `renderForward`). That is forward shading: a sphere hidden
+// behind another pays for its shadow too.
 
 import {
   cameraProjectionMatrixInverse,
@@ -31,6 +36,7 @@ import {
   normalView,
   output,
   positionGeometry,
+  positionView,
   screenCoordinate,
   screenUV,
   smoothstep,
@@ -106,6 +112,7 @@ export class ShadowStage {
   private covered = 1 // the radius of the ball the light covers, in meters
   private readonly depthRange = uniform(1) // from the light's near plane to its far one, in meters
   private readonly bufferSize = new Vector2()
+  private readonly softness = uniform(2) // see ShadowOptions
 
   constructor(
     private readonly renderer: WebGPURenderer,
@@ -113,7 +120,7 @@ export class ShadowStage {
     options: ShadowOptions = {},
   ) {
     const size = options.size ?? 2048
-    const softness = uniform(options.softness ?? 2)
+    this.softness.value = options.softness ?? 2
 
     // The shadow map. Its depth texture answers a comparison, not a value: "is this depth nearer
     // than what you hold?", blended over the 4 texels around the point.
@@ -137,7 +144,6 @@ export class ShadowStage {
     const surface = texture(this.surfaces.textures[1], screenUV)
     // A depth texture gives one number, whatever three.js's types say.
     const depth = texture(this.surfaces.depthTexture, screenUV) as unknown as Node<'float'>
-    const shadowMap = this.map.depthTexture
     // Written twice: with the shadows, and with the light alone, which never reads the shadow map.
     const lightUp = (shadows: boolean) =>
       Fn(() => {
@@ -151,38 +157,9 @@ export class ShadowStage {
           return vec4(color.rgb.mul(diffuse).add(specular.mul(surface.w)), 1)
         }
         // Where the pixel is: from its place on the screen and its depth back to view space, the
-        // projection undone, then to the world.
+        // projection undone.
         const viewPosition = getViewPosition(screenUV, depth, cameraProjectionMatrixInverse)
-        const worldNormal = cameraWorldMatrix.mul(vec4(normal, 0)).xyz
-        // Moved a little off the surface, or the surface would shadow itself: the shadow map
-        // knows depths only texel by texel.
-        const worldPosition = cameraWorldMatrix
-          .mul(vec4(viewPosition, 1))
-          .xyz.add(worldNormal.mul(this.texel.mul(1.5)))
-        // The same point as the light sees it: x and y say where to read the shadow map, z is
-        // the depth to compare. A texture's y runs downward.
-        const seen = this.toLight.mul(vec4(worldPosition, 1))
-        const at = vec2(seen.x.mul(0.5).add(0.5), seen.y.mul(-0.5).add(0.5))
-        const mine = seen.z.sub(this.texel.div(this.depthRange))
-        // A soft edge: a few reads on a small disc around the point, averaged (PCF). The disc is
-        // turned by a different angle at every pixel, which trades bands for a fine grain.
-        const turn = interleavedGradientNoise(screenCoordinate.xy).mul(2 * Math.PI)
-        const reach = softness.div(this.side)
-        const read = (tap: number) =>
-          texture(
-            shadowMap,
-            at.add(vogelDiskSample(float(tap), float(TAPS), turn).mul(reach)),
-          ).compare(mine) as unknown as Node<'float'>
-        let lit = read(0)
-        for (let tap = 1; tap < TAPS; tap++) lit = lit.add(read(tap))
-        const { diffuse, specular, facing } = shade(normal, lit.div(TAPS))
-        // A shadow that only took the sun away would leave the ambient light, 40% of the full
-        // one: too pale. So it also dims what is left, by `darkness`. A side turned away from
-        // the sun is in its own shadow, and dims the same way: without that, the dark would start
-        // with a hard line where the shadow map takes over.
-        const sunlit = lit.div(TAPS).mul(smoothstep(0, 0.3, facing))
-        const dim = mix(this.darkness.oneMinus(), 1, sunlit)
-        return vec4(color.rgb.mul(diffuse).add(specular.mul(surface.w)).mul(dim), 1)
+        return vec4(this.lightOn(color.rgb, normal, viewPosition, surface.w), 1)
       })()
     const screenMaterial = (shadows: boolean) => {
       const material = new MeshBasicNodeMaterial()
@@ -204,6 +181,50 @@ export class ShadowStage {
     this.screen.renderOrder = -1 // before everything else in its pass
     this.screen.layers.set(SCREEN)
     scene.add(this.screen)
+  }
+
+  /**
+   * The color of a point of a surface with the light and the shadow on it, from its color with no
+   * light, its normal and where it is, both in view space. `shine` is 1 for a surface with a
+   * highlight, 0 for a matte one. A piece of shader for any material: the last pass uses it once
+   * per pixel, a sphere drawn straight to the screen once per pixel of every sphere.
+   */
+  lightOn(
+    color: Node<'vec3'>,
+    normal: Node<'vec3'>,
+    viewPosition: Node<'vec3'>,
+    shine: Node<'float'> | number = 0,
+  ): Node<'vec3'> {
+    const worldNormal = cameraWorldMatrix.mul(vec4(normal, 0)).xyz
+    // To the world, and moved a little off the surface, or the surface would shadow itself: the
+    // shadow map knows depths only texel by texel.
+    const worldPosition = cameraWorldMatrix
+      .mul(vec4(viewPosition, 1))
+      .xyz.add(worldNormal.mul(this.texel.mul(1.5)))
+    // The same point as the light sees it: x and y say where to read the shadow map, z is
+    // the depth to compare. A texture's y runs downward.
+    const seen = this.toLight.mul(vec4(worldPosition, 1))
+    const at = vec2(seen.x.mul(0.5).add(0.5), seen.y.mul(-0.5).add(0.5))
+    const mine = seen.z.sub(this.texel.div(this.depthRange))
+    // A soft edge: a few reads on a small disc around the point, averaged (PCF). The disc is
+    // turned by a different angle at every pixel, which trades bands for a fine grain.
+    const turn = interleavedGradientNoise(screenCoordinate.xy).mul(2 * Math.PI)
+    const reach = this.softness.div(this.side)
+    const shadowMap = this.map.depthTexture as DepthTexture
+    const read = (tap: number) =>
+      texture(shadowMap, at.add(vogelDiskSample(float(tap), float(TAPS), turn).mul(reach))).compare(
+        mine,
+      ) as unknown as Node<'float'>
+    let lit = read(0)
+    for (let tap = 1; tap < TAPS; tap++) lit = lit.add(read(tap))
+    const { diffuse, specular, facing } = shade(normal, lit.div(TAPS))
+    // A shadow that only took the sun away would leave the ambient light, 40% of the full
+    // one: too pale. So it also dims what is left, by `darkness`. A side turned away from
+    // the sun is in its own shadow, and dims the same way: without that, the dark would start
+    // with a hard line where the shadow map takes over.
+    const sunlit = lit.div(TAPS).mul(smoothstep(0, 0.3, facing))
+    const dim = mix(this.darkness.oneMinus(), 1, sunlit)
+    return color.mul(diffuse).add(specular.mul(shine)).mul(dim) as Node<'vec3'>
   }
 
   /** Tells the light what to cover: a ball of the world, by its center and radius in meters. */
@@ -249,6 +270,17 @@ export class ShadowStage {
     return material
   }
 
+  /**
+   * The same as `matte`, for a mesh drawn straight to the screen (`renderForward`): its material
+   * works out the light and reads the shadow map itself. The mesh stays on the usual layer.
+   */
+  lit(color: Color | Node<'vec3'>): MeshBasicNodeMaterial {
+    const material = new MeshBasicNodeMaterial()
+    const base = ('isColor' in color ? uniform(color) : color) as Node<'vec3'>
+    material.colorNode = vec4(this.lightOn(base, normalView, positionView), 1)
+    return material
+  }
+
   /** Makes a mesh cast a shadow: a copy of it that only the light sees, and that follows it. */
   cast(mesh: Mesh): void {
     const copy = new Mesh(mesh.geometry, new MeshBasicNodeMaterial())
@@ -258,17 +290,13 @@ export class ShadowStage {
 
   /** Draws a frame: the shadow map, the surfaces, then the screen with everything else. */
   render(camera: Camera): void {
-    const { renderer, scene, light } = this
+    const { renderer, scene } = this
     const { x, y } = renderer.getDrawingBufferSize(this.bufferSize)
     if (this.surfaces.width !== x || this.surfaces.height !== y) this.surfaces.setSize(x, y)
-    this.toLight.value.multiplyMatrices(light.projectionMatrix, light.matrixWorldInverse)
     const layers = camera.layers.mask
     this.screen.material = this.shadows ? this.materials.shadowed : this.materials.plain
 
-    if (this.shadows) {
-      renderer.setRenderTarget(this.map)
-      renderer.render(scene, light)
-    }
+    if (this.shadows) this.drawMap()
 
     camera.layers.set(SURFACES)
     renderer.setMRT(this.targets)
@@ -281,6 +309,24 @@ export class ShadowStage {
     camera.layers.enable(SCREEN)
     renderer.render(scene, camera)
     camera.layers.mask = layers
+  }
+
+  /**
+   * Draws a frame with no passes of its own but the shadow map: everything else goes straight to
+   * the screen, and takes shadows where its material asks for them (`lightOn`, `lit`).
+   */
+  renderForward(camera: Camera): void {
+    this.drawMap()
+    this.renderer.render(this.scene, camera)
+  }
+
+  /** The shadow map: what casts a shadow, as the light sees it now. */
+  private drawMap(): void {
+    const { renderer, scene, light } = this
+    this.toLight.value.multiplyMatrices(light.projectionMatrix, light.matrixWorldInverse)
+    renderer.setRenderTarget(this.map)
+    renderer.render(scene, light)
+    renderer.setRenderTarget(null)
   }
 
   dispose(): void {

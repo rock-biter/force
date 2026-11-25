@@ -278,7 +278,7 @@ const LIMITS = [
 ]
 
 // ---- part 1: the price, a free fall -------------------------------------------------------------
-// A sphere alone falls from 9 m, the height of the force-plus box, onto the floor. Without a limit
+// A sphere alone falls from 9 m, the height of the heap-simulation box, onto the floor. Without a limit
 // it lands after 1.35 s at 13.3 m/s, as √(2 × 9.81 × 8.9) says.
 /** When a sphere alone, falling from 9 m, touches the floor, and how fast it goes then. */
 function fall(substeps, limit) {

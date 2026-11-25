@@ -54,7 +54,7 @@ A whole step of the simulation, 1/60 s of it, took 10 to 17 ms with the table in
 ## Sources
 
 - Mark Harris, Shubhabrata Sengupta and John D. Owens, [Parallel Prefix Sum (Scan) with CUDA](https://developer.nvidia.com/gpugems/gpugems3/part-vi-gpu-computing/chapter-39-parallel-prefix-sum-scan-cuda), GPU Gems 3, 2007: sections 39.1 and 39.2, the two scans and the blocks. Suggested by fracabu in [issue 1](https://github.com/rock-biter/force/issues/1).
-- Our script, [docs/topics/prefix-sum.mjs](../topics/prefix-sum.mjs), and the `book-*.wgsl` shaders of [examples/force-plus](../../examples/force-plus/main.ts): every time of this chapter.
+- Our script, [docs/topics/prefix-sum.mjs](../topics/prefix-sum.mjs), and the `book-*.wgsl` shaders of [examples/heap-simulation](../../examples/heap-simulation/main.ts): every time of this chapter.
 
 ## Next step
 

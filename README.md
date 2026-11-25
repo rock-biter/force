@@ -19,7 +19,7 @@ documentation of the library will live there too.
 **Latest steps:** chapters [038](./docs/logbook/038-one-hundred-twenty-five-cells.md),
 [039](./docs/logbook/039-far-apart-in-memory.md) and [040](./docs/logbook/040-the-table.md). To find
 which particles touch, each one looks into the small cells of space around it
-([try it](https://rock-biter.github.io/force/force-tilt/)). We timed every part of a step and found
+([try it](https://rock-biter.github.io/force/tilted-box/)). We timed every part of a step and found
 that this search took most of it: each particle read 125 cells where we believed 27, and the way of
 storing the cells we liked best scattered them in memory. With both fixed, a pile of 50 000 particles
 in a corner takes 8 ms a step instead of 13, loses no particle, and the cells cost 1 MB whatever the

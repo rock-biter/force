@@ -18,7 +18,7 @@ To find which particles touch, FORCE cuts space into cells and keeps, for each c
 
 All three find the same 586 106 neighbours at the first step. The table is 0.3 ms from the grid, 2% of a step.
 
-**The choice.** Claude proposed the table with this hash, and the user took it ([decision 024](../decisions/024-cells-in-a-hashed-table.md)): as fast as the grid, and it does not pay for the size of the world, which was the user's point in [chapter 037](./037-the-lonely-thread.md). The [live page](../../examples/force-plus/main.ts) and the [one with a box that tilts](../../examples/force-tilt/index.html) now start that way, with cells 25 cm wide ([decision 023](../decisions/023-cells-as-wide-as-the-reach.md)). The other ways stay in the menu and in the address, for measuring.
+**The choice.** Claude proposed the table with this hash, and the user took it ([decision 024](../decisions/024-cells-in-a-hashed-table.md)): as fast as the grid, and it does not pay for the size of the world, which was the user's point in [chapter 037](./037-the-lonely-thread.md). The [live page](../../examples/heap-simulation/main.ts) and the [one with a box that tilts](../../examples/tilted-box/index.html) now start that way, with cells 25 cm wide ([decision 023](../decisions/023-cells-as-wide-as-the-reach.md)). The other ways stay in the menu and in the address, for measuring.
 
 Then the pages as they now start, with 50 000 particles, one run each. In the level box a step takes 6.1 ms. In the corner of the box tilted by 30° and −20° it takes 7.9 ms, and 9.0 with the old hash. Three days ago, in [chapter 036](./036-the-address-book.md), the same corner took 12.7 and 13.9 ms and left 2 000 particles out of their cells.
 
@@ -39,7 +39,7 @@ Then the pages as they now start, with 50 000 particles, one run each. In the le
 
 ## Sources
 
-- Our page, [examples/force-plus](../../examples/force-plus/main.ts), with `?profile`, `?cells=book` and `?hash=scattered`: every number of this chapter, in Chrome without a window on a Mac M1.
+- Our page, [examples/heap-simulation](../../examples/heap-simulation/main.ts), with `?profile`, `?cells=book` and `?hash=scattered`: every number of this chapter, in Chrome without a window on a Mac M1.
 
 ## Next step
 

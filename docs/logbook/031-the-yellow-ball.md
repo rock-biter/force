@@ -6,7 +6,7 @@
 
 ## The story
 
-After [chapter 030](./030-the-lazy-list.md) a page called [compare](../../examples/compare/) ran eight ways of pushing particles apart side by side, in JavaScript. Then the user asked for the chosen one alone, on the GPU: *FORCE+* ([decision 015](../decisions/015-half-and-half-on-positions.md)). There, each particle moves by half the sum and half the average of what its contacts ask, the solver sees each mass as m^α, and the lower of two particles in a pile counts as heavier, by e^(c × difference of levels). They wanted α and the level strength c on sliders, many particles in a big box, and the mouse pushing them away. The new page, [force-plus](../../examples/force-plus/main.ts), reuses the shaders of chapter 030, already checked against JavaScript. three.js draws the particles straight from their GPU buffer. Masses go from 1 to 100 kg, light blue to red.
+After [chapter 030](./030-the-lazy-list.md) a page called [compare](../../examples/compare/) ran eight ways of pushing particles apart side by side, in JavaScript. Then the user asked for the chosen one alone, on the GPU: *FORCE+* ([decision 015](../decisions/015-half-and-half-on-positions.md)). There, each particle moves by half the sum and half the average of what its contacts ask, the solver sees each mass as m^α, and the lower of two particles in a pile counts as heavier, by e^(c × difference of levels). They wanted α and the level strength c on sliders, many particles in a big box, and the mouse pushing them away. The new page, [heap-simulation](../../examples/heap-simulation/main.ts), reuses the shaders of chapter 030, already checked against JavaScript. three.js draws the particles straight from their GPU buffer. Masses go from 1 to 100 kg, light blue to red.
 
 **A speed is not enough.** The first push gave every particle near the pointer at least 4 m/s outward. No hole opened. A heap without friction behaves like a liquid, and a liquid 1 m deep flows back at about √(2 × 9.81 × 1) ≈ 4.4 m/s. So the push became a solid obstacle that the rounds, the passes over the contacts, treat like the walls: a particle inside it is moved out. First an upright pole, then, as the user asked, a matte yellow ball. Its center sits on the floor, it follows the pointer with a *lerp*, covering a tenth of the remaining way at each step, and a slider sets its radius, 2 m at the start. It moves at 20 m/s at most and grows at 8 m/s, so it pushes particles instead of throwing them.
 
@@ -46,7 +46,7 @@ A frame at 60 per second lasts 16.7 ms. Past that, the page shows fewer steps pe
 ## Sources
 
 - Miles Macklin and others, [Unified Particle Physics for Real-Time Applications](https://doi.org/10.1145/2601097.2601152), 2014: section 4.4, pre-stabilization, and 6.1, friction on positions.
-- Our page, [examples/force-plus](../../examples/force-plus/main.ts): every number of this chapter.
+- Our page, [examples/heap-simulation](../../examples/heap-simulation/main.ts): every number of this chapter.
 
 ## Next step
 

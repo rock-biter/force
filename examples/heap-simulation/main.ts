@@ -97,6 +97,10 @@ const HALF = 12 // the box is 24 m by 24 m on the floor, wider when the particle
 const HEIGHT = 9 // ...and 9 m tall: 120 by 45 by 120 cells of 20 cm
 const ROOM = 1.25 // the floor is at least this many times as wide as the block the particles start in
 const MAX_PARTICLES = 1000000
+// What a page asks for on its <body>, in place of the numbers above: data-half="4" for a smaller
+// box, data-max-particles="50000" for a shorter slider.
+const SMALLEST_HALF = Number(document.body.dataset.half) || HALF
+const MOST_PARTICLES = Number(document.body.dataset.maxParticles) || MAX_PARTICLES
 const MAX_TILT = 30 // degrees, around X and around Z, on the page that tilts the box
 const TILT_SPEED = 20 // degrees per second: the floor's far corner, 17 m away, then moves 9.9 cm per step, just under a radius. A wider box turns slower, to keep that
 const GAP = 0.01 // between particles at the start, in meters
@@ -133,12 +137,13 @@ const blockSide = (count: number) =>
   Math.max(Math.ceil(Math.cbrt(count)), Math.ceil(Math.sqrt(count / LAYERS)))
 
 /**
- * Half the side of the floor for this many particles, in meters. 12 m up to about 230 000: beyond,
+ * Half the side of the floor for this many particles, in meters, never less than the page asks
+ * (SMALLEST_HALF). With the usual 12 m, the box stays the same up to about 230 000: beyond,
  * the block they start in would not leave room around it, 364 000 would not fit at all, and the
  * box grows to stay ROOM times as wide as the block. A million start 39.7 m wide, in a box of 50 m.
  */
 const halfFor = (count: number) =>
-  Math.max(HALF, Math.ceil(((blockSide(count) * (DIAMETER + GAP)) / 2) * ROOM))
+  Math.max(SMALLEST_HALF, Math.ceil(((blockSide(count) * (DIAMETER + GAP)) / 2) * ROOM))
 
 /** Repeats the same numbers at every run, so every restart starts from the same cube. */
 function random(seed: number): () => number {
@@ -719,13 +724,15 @@ async function start() {
     softness: asks.has('soft') ? Number(asks.get('soft')) || 0 : undefined,
   })
   // The floor, with a line every meter, 5 cells of the grid, and the box the grid fills.
-  // They and the ball sit in one group, the box. The force-tilt page turns the group, and the
+  // They and the ball sit in one group, the box. The tilted-box page turns the group, and the
   // floor and the walls of the simulation with it. The particles are not in the group: they live in
   // the world, where the grid of cells stays still and gravity points down.
   const world = new Group()
   scene.add(world)
   const camera = new PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 200)
-  camera.position.set(17, 14, 23)
+  // A smaller box is still as tall, and the block the particles start in is tall too: the camera
+  // comes closer by less than the floor shrinks.
+  camera.position.set(17, 14, 23).multiplyScalar(Math.sqrt(SMALLEST_HALF / HALF))
   // The box is as wide as the particles need (halfFor): its lines are drawn again when it changes,
   // and the camera moves back or forth by as much, to keep the whole box in view.
   let half = 0
@@ -747,7 +754,11 @@ async function start() {
     const ground = uniform(scene.background as Color)
     return mix(mix(ground, uniform(new Color(0xd4d4d4)), line), uniform(new Color(0xbcbcbc)), axis)
   })()
-  const floor = new Mesh(new PlaneGeometry(1, 1), stage.matte(floorGrid))
+  // Two materials: lit by the stage's last pass, or by itself when all is drawn straight to the
+  // screen (redraw).
+  const floorDeferred = stage.matte(floorGrid)
+  const floorForward = stage.lit(floorGrid)
+  const floor = new Mesh(new PlaneGeometry(1, 1), floorDeferred)
   let floorLines = false // whether the floor is drawn, with its own lines
   floor.rotation.x = -Math.PI / 2
   floor.position.y = -0.005
@@ -776,7 +787,7 @@ async function start() {
     camera.updateProjectionMatrix()
     half = next
   }
-  fitBox(HALF)
+  fitBox(SMALLEST_HALF)
   const orbit = new OrbitControls(camera, renderer.domElement)
   orbit.target.set(0, 0.5, 0)
   orbit.enableDamping = true
@@ -839,9 +850,10 @@ async function start() {
     if (event.pointerType === 'mouse') pointing = false
   })
 
-  // The ball has its center on the floor, y = 0, under the point where the pointer meets the
-  // surface of the heap: a flat plane at the height the heap will settle to, since a packed heap
-  // holds about 150 particles per cubic meter. It does not jump to the pointer: in each step it
+  // The ball has its center on the floor, y = 0, at the point of the floor behind the pointer: so
+  // on the screen the pointer is on the ball's center, however deep the heap is. Aimed at the
+  // surface of the heap instead, with the center on the floor under it, the ball looked off to
+  // one side, by more the deeper the heap. It does not jump to the pointer: in each step it
   // covers BALL_FOLLOW of the way there, a lerp, at BALL_SPEED at most, and it grows from nothing at
   // BALL_GROWTH, so it pushes particles instead of throwing them. Only a ball that has shrunk to
   // nothing comes back straight under the pointer. Only its upper half is drawn: the floor is made
@@ -851,6 +863,7 @@ async function start() {
   // and its shadows from the last pass of the stage. The ball casts a shadow too.
   const ballLit = new MeshStandardMaterial({ color: 0xf2c200, roughness: 1, metalness: 0 }) // matte yellow
   const ballShadowed = stage.matte(ballLit.color)
+  const ballForward = stage.lit(ballLit.color)
   const ballMesh: Mesh = new Mesh(
     new SphereGeometry(1, 48, 12, 0, 2 * Math.PI, 0, Math.PI / 2),
     ballLit,
@@ -858,7 +871,7 @@ async function start() {
   stage.cast(ballMesh)
   world.add(ballMesh)
   const raycaster = new Raycaster()
-  const surface = new Plane(new Vector3(0, 1, 0), 0)
+  const surface = new Plane(new Vector3(0, 1, 0), 0) // the floor, y = 0
   const hit = new Vector3()
   const inside = new Matrix4()
   const center = new Vector3()
@@ -866,9 +879,7 @@ async function start() {
    * Moves the ball through the `steps` steps of this frame, `substeps` each, toward the pointer and
    * toward `radius`, and writes where it is at every substep into `ballPath`.
    */
-  function moveBall(count: number, steps: number, substeps: number, radius: number) {
-    const top = Math.max(count / (150 * (2 * half) ** 2), DIAMETER)
-    surface.constant = -top // the plane y = top
+  function moveBall(steps: number, substeps: number, radius: number) {
     raycaster.setFromCamera(screen, camera)
     // the ray as the box sees it, since the plane and the ball are the box's own
     raycaster.ray.applyMatrix4(inside.copy(world.matrixWorld).invert())
@@ -911,6 +922,10 @@ async function start() {
   // ?particles=20000 in the address starts with that many, in thousands from 1000 to a million.
   // ?draw=flat or ?draw=none starts with the cheap discs, or with no particles drawn at all.
   const query = new URLSearchParams(location.search)
+  // The debug-viewer page, with data-render on its <body>: a small simulation whose panel is about
+  // how the particles are drawn. On the other pages the panel is about the simulation, and the
+  // particles are spheres lit in their own shader, with no shadows.
+  const renderPage = document.body.dataset.render !== undefined
   const asked = Math.round(Number(query.get('particles')) / 1000)
   const askedDraw = query.get('draw')
   const askedFriction = Number(query.get('friction') ?? Number.NaN) // ?friction=0 starts as a liquid
@@ -943,26 +958,37 @@ async function start() {
       askedFriction >= 0 && askedFriction <= 1
         ? askedFriction
         : Number(document.body.dataset.friction ?? 0),
-    // The tilt of the box around X and around Z, in degrees: only the force-tilt page has the
+    // The tilt of the box around X and around Z, in degrees: only the tilted-box page has the
     // sliders.
     // ?tiltX=20 in the address starts tilted that much; else as the page's <body> says.
     tiltX: startTilt('tiltX'),
     tiltZ: startTilt('tiltZ'),
-    particles: asked >= 1 && asked <= MAX_PARTICLES / 1000 ? asked * 1000 : 20000,
+    // ?particles= in the address, or data-particles on the page's <body>, or 20 000.
+    particles:
+      asked >= 1 && asked <= MOST_PARTICLES / 1000
+        ? asked * 1000
+        : Number(document.body.dataset.particles) || 20000,
     masses: '1 to 100 kg',
-    // How the particles are drawn. 'deferred': spheres that write only their depth, color and
-    // normal, lit in a later pass once per pixel (decision 030). 'spheres': each sphere lit in its
-    // own shader, as before. Flat discs, or nothing at all, to see how much of a frame goes into
-    // drawing them. ?draw=spheres, ?draw=flat or ?draw=none in the address starts with that one.
-    draw: ['spheres', 'flat', 'none'].includes(askedDraw ?? '')
+    // How the particles are drawn. 'spheres': each sphere lit in its own shader. 'deferred':
+    // spheres that write only their depth, color and normal, lit in a later pass once per pixel
+    // (decision 030), where the debug-viewer page starts. Flat discs, or nothing at all, to see
+    // how much of a frame goes into drawing them. ?draw=deferred, ?draw=spheres, ?draw=flat or
+    // ?draw=none in the address starts with that one, on any page.
+    draw: ['deferred', 'spheres', 'flat', 'none'].includes(askedDraw ?? '')
       ? (askedDraw as string)
-      : 'deferred',
-    // The shadows the spheres cast on each other, on the floor and on the ball, only with
-    // 'deferred'. What the light sees of a particle is its sphere, 'sphere', or a flat disc,
-    // 'flat', which the GPU can skip when hidden. ?shadows=flat or ?shadows=off in the address.
-    shadows: ['flat', 'off'].includes(query.get('shadows') ?? '')
+      : renderPage
+        ? 'deferred'
+        : 'spheres',
+    // The shadows the spheres cast on each other, on the floor and on the ball, with 'deferred'
+    // and with 'spheres', where each sphere reads the shadow map in its own shader. What the
+    // light sees of a particle is its sphere, 'sphere', or a flat disc, 'flat', which the GPU can
+    // skip when hidden. Off but on the debug-viewer page. ?shadows=sphere, ?shadows=flat or
+    // ?shadows=off in the address.
+    shadows: ['sphere', 'flat', 'off'].includes(query.get('shadows') ?? '')
       ? (query.get('shadows') as string)
-      : 'sphere',
+      : renderPage
+        ? 'sphere'
+        : 'off',
     // The color of the lightest particle and of the heaviest: the others are in between, by the
     // logarithm of their mass. With one mass for all, only the first is used.
     light: '#4ea3ff',
@@ -979,7 +1005,7 @@ async function start() {
     cells: (['book', 'places'].includes(query.get('cells') ?? '')
       ? query.get('cells')
       : 'table') as Cells,
-    ball: BALL_RADIUS,
+    ball: Number(document.body.dataset.ball) || BALL_RADIUS, // data-ball on the page's <body>
   }
   // ?margin=0 in the address: how far beyond touching the lists look, in meters. With 0 a
   // particle reads 3 × 3 × 3 cells, not 5 × 5 × 5, and the lists are made again at every step.
@@ -1027,9 +1053,13 @@ async function start() {
   const massColors = [new Color(settings.light), new Color(settings.heavy)] as const
   let view: ParticleView | undefined
   let caster: ParticleView | undefined // the same particles as the light sees them
-  /** Whether this frame is drawn in the stage's passes, and whether with shadows. */
+  /**
+   * Whether this frame is drawn in the stage's passes, whether with shadows, and whether with
+   * shadows but straight to the screen, each sphere reading the shadow map itself.
+   */
   const deferred = () => settings.draw === 'deferred'
-  const shadowed = () => deferred() && settings.shadows !== 'off'
+  const shadowed = () => (deferred() || settings.draw === 'spheres') && settings.shadows !== 'off'
+  const forward = () => shadowed() && !deferred()
   let paused = false
   let owed = 0 // simulated time the steps still owe to real time
   let lastReading: { lists: number; steps: number; crowded: number; leftOut: number } | undefined
@@ -1042,21 +1072,24 @@ async function start() {
       each.dispose()
     }
     view = caster = undefined
-    // With shadows the ball takes its light from the stage's last pass, like the spheres.
-    ballMesh.material = deferred() ? ballShadowed : ballLit
+    // With shadows the ball takes its light from the stage, like the spheres: from its last pass,
+    // or in its own shader. So does the floor, which without the stage is not drawn at all.
+    ballMesh.material = deferred() ? ballShadowed : forward() ? ballForward : ballLit
     ballMesh.layers.set(deferred() ? SURFACES : 0)
+    floor.material = forward() ? floorForward : floorDeferred
+    floor.layers.set(forward() ? 0 : SURFACES)
     stage.shadows = shadowed()
-    floorLines = deferred()
+    floorLines = deferred() || forward()
     lines[0].visible = !floorLines
     if (!simulation || settings.draw === 'none') return
     view = new ParticleView(renderer, simulation, {
       massRange: MASSES[settings.masses],
       massColors,
       look: settings.draw === 'flat' ? 'flat' : deferred() ? 'surface' : 'sphere',
+      lighting: forward() ? (...surface) => stage.lightOn(...surface) : undefined,
     })
     scene.add(view.mesh)
-    if (!deferred()) return
-    view.mesh.layers.set(SURFACES)
+    if (deferred()) view.mesh.layers.set(SURFACES)
     if (!shadowed()) return
     caster = new ParticleView(renderer, simulation, {
       look: settings.shadows === 'flat' ? 'caster-flat' : 'caster',
@@ -1135,7 +1168,8 @@ async function start() {
 
   const pane = new Pane({ title: 'FORCE on the GPU', expanded: window.innerWidth >= 600 })
   pane.registerPlugin(EssentialsPlugin)
-  const solver = pane.addFolder({ title: 'Solver' })
+  // The debug-viewer page keeps the solver as decided, and does not show it.
+  const solver = pane.addFolder({ title: 'Solver', hidden: renderPage })
   // FORCE or FORCE+: with FORCE, α and c do not apply, and their sliders rest.
   const method = solver
     .addBinding(settings, 'method', { options: { 'FORCE+': 'plus', FORCE: 'force' } })
@@ -1194,7 +1228,7 @@ async function start() {
     .addBinding(settings, 'particles', {
       label: 'count',
       min: 1000,
-      max: MAX_PARTICLES,
+      max: MOST_PARTICLES,
       step: 1000,
     })
     .on('change', (event) => {
@@ -1203,6 +1237,7 @@ async function start() {
   particles
     .addBinding(settings, 'masses', {
       options: Object.fromEntries(Object.keys(MASSES).map((label) => [label, label])),
+      hidden: renderPage,
     })
     .on('change', restart)
   // A new way to keep the grid builds everything again.
@@ -1214,65 +1249,9 @@ async function start() {
         'address book': 'book',
         'address book, table': 'table',
       },
+      hidden: renderPage,
     })
     .on('change', restart)
-  particles
-    .addBinding(settings, 'draw', {
-      options: {
-        'spheres, deferred': 'deferred',
-        spheres: 'spheres',
-        'flat discs': 'flat',
-        nothing: 'none',
-      },
-    })
-    .on('change', () => {
-      shadowsMenu.disabled = !deferred()
-      shadowMapMenu.disabled = darknessSlider.disabled = !shadowed()
-      redraw()
-    })
-  particles.addBinding(settings, 'light', { label: 'color, light' }).on('change', () => {
-    massColors[0].set(settings.light)
-  })
-  particles.addBinding(settings, 'heavy', { label: 'color, heavy' }).on('change', () => {
-    massColors[1].set(settings.heavy)
-  })
-  const shadowsMenu = particles
-    .addBinding(settings, 'shadows', {
-      options: { 'from spheres': 'sphere', 'from flat discs': 'flat', off: 'off' },
-      disabled: !deferred(),
-    })
-    .on('change', () => {
-      shadowMapMenu.disabled = darknessSlider.disabled = !shadowed()
-      redraw()
-    })
-  // A map this device cannot hold is not offered. One asked for in the address always is.
-  const mapSizes = [512, 1024, 2048, 4096, 8192].filter(
-    (size) => size <= device.limits.maxTextureDimension2D,
-  )
-  if (!mapSizes.includes(settings.shadowMap)) mapSizes.push(settings.shadowMap)
-  const darknessSlider = particles
-    .addBinding(settings, 'darkness', {
-      label: 'shadow dark',
-      min: 0,
-      max: 1,
-      step: 0.05,
-      disabled: !shadowed(),
-    })
-    .on('change', () => {
-      stage.darkness.value = settings.darkness
-    })
-  stage.darkness.value = settings.darkness
-  const shadowMapMenu = particles
-    .addBinding(settings, 'shadowMap', {
-      label: 'shadow map',
-      options: Object.fromEntries(
-        mapSizes.sort((a, b) => a - b).map((size) => [`${size} px`, size]),
-      ),
-      disabled: !shadowed(),
-    })
-    .on('change', () => {
-      stage.mapSize = settings.shadowMap
-    })
   const buttons = particles.addBlade({
     view: 'buttongrid',
     size: [2, 1],
@@ -1302,6 +1281,69 @@ async function start() {
       pane.refresh()
     })
   }
+  stage.darkness.value = settings.darkness
+  // How the particles are drawn, their colors and their shadows: only on the debug-viewer page.
+  if (renderPage) {
+    const rendering = pane.addFolder({ title: 'Rendering' })
+    const shadows = pane.addFolder({ title: 'Shadows' })
+    rendering
+      .addBinding(settings, 'draw', {
+        options: {
+          'spheres, deferred': 'deferred',
+          'spheres, forward': 'spheres',
+          'flat discs': 'flat',
+          nothing: 'none',
+        },
+      })
+      .on('change', () => {
+        shadowsMenu.disabled = !deferred() && settings.draw !== 'spheres'
+        shadowMapMenu.disabled = darknessSlider.disabled = !shadowed()
+        redraw()
+      })
+    rendering.addBinding(settings, 'light', { label: 'color, light' }).on('change', () => {
+      massColors[0].set(settings.light)
+    })
+    rendering.addBinding(settings, 'heavy', { label: 'color, heavy' }).on('change', () => {
+      massColors[1].set(settings.heavy)
+    })
+    const shadowsMenu = shadows
+      .addBinding(settings, 'shadows', {
+        label: 'cast',
+        options: { 'from spheres': 'sphere', 'from flat discs': 'flat', off: 'off' },
+        disabled: !deferred() && settings.draw !== 'spheres',
+      })
+      .on('change', () => {
+        shadowMapMenu.disabled = darknessSlider.disabled = !shadowed()
+        redraw()
+      })
+    // A map this device cannot hold is not offered. One asked for in the address always is.
+    const mapSizes = [512, 1024, 2048, 4096, 8192].filter(
+      (size) => size <= device.limits.maxTextureDimension2D,
+    )
+    if (!mapSizes.includes(settings.shadowMap)) mapSizes.push(settings.shadowMap)
+    const darknessSlider = shadows
+      .addBinding(settings, 'darkness', {
+        label: 'darkness',
+        min: 0,
+        max: 1,
+        step: 0.05,
+        disabled: !shadowed(),
+      })
+      .on('change', () => {
+        stage.darkness.value = settings.darkness
+      })
+    const shadowMapMenu = shadows
+      .addBinding(settings, 'shadowMap', {
+        label: 'map',
+        options: Object.fromEntries(
+          mapSizes.sort((a, b) => a - b).map((size) => [`${size} px`, size]),
+        ),
+        disabled: !shadowed(),
+      })
+      .on('change', () => {
+        stage.mapSize = settings.shadowMap
+      })
+  }
   const ballFolder = pane.addFolder({ title: 'Ball' })
   ballFolder.addBinding(settings, 'ball', { label: 'radius', min: 0.3, max: 3, step: 0.1 })
   const numbers = pane.addFolder({ title: 'Numbers' })
@@ -1322,16 +1364,19 @@ async function start() {
   numbers.addBinding(stats, 'leftOut', {
     label: 'cell full',
     readonly: true,
+    hidden: renderPage,
     format: (v) => (Number.isNaN(v) ? '…' : `${v.toFixed(0)} particles`),
   })
   numbers.addBinding(stats, 'crowded', {
     label: 'list full',
     readonly: true,
+    hidden: renderPage,
     format: (v) => (Number.isNaN(v) ? '…' : `${v.toFixed(0)} neighbours`),
   })
   numbers.addBinding(stats, 'lists', {
     label: 'new lists',
     readonly: true,
+    hidden: renderPage,
     format: (v) => (Number.isNaN(v) ? '…' : `${(v * 100).toFixed(0)}% of substeps`),
   })
 
@@ -1382,7 +1427,7 @@ async function start() {
   if (query.has('check') && simulation) {
     const sim = simulation
     const encoder = device.createCommandEncoder()
-    moveBall(sim.particleCount, 1, sim.substeps, settings.ball)
+    moveBall(1, sim.substeps, settings.ball)
     sim.encode(encoder, ballPath, 0)
     const sizes = [sim.particleCount * 4, sim.particleCount * MAX_NEIGHBOURS * 4]
     const copies = [sim.neighbourCounts, sim.neighbours].map((from, k) => {
@@ -1586,7 +1631,7 @@ async function start() {
         steps++
       }
       if (owed >= STEP) owed = 0 // the GPU cannot keep up: slow down rather than pile up
-      moveBall(sim.particleCount, steps, sim.substeps, settings.ball)
+      moveBall(steps, sim.substeps, settings.ball)
       const sample = steps > 0 && !reading && frame++ % SAMPLE_EVERY === 0
       // the first step of this frame is profiled, if ?profile asks and the wait is over
       const profile =
@@ -1631,6 +1676,7 @@ async function start() {
     }
     // Same queue, same order: the steps sent above run before this drawing reads the positions.
     if (deferred()) stage.render(camera)
+    else if (forward()) stage.renderForward(camera)
     else renderer.render(scene, camera)
     // Every SAMPLE_EVERY frames, ask three.js how long its passes took on the GPU.
     if (hasClock && !timing && drawn++ % SAMPLE_EVERY === 0) {

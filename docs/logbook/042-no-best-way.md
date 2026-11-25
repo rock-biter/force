@@ -8,7 +8,7 @@
 
 To find which particles touch, FORCE cuts space into cells and keeps the particles of each cell in an *address book*, one list sorted by cell. The book is filed on a grid, a row of memory for every cell of the world, or in a *hashed table*, a few rows called slots, where a formula, the hash, gives each cell its slot. [Chapter 041](./041-next-to-each-other.md) moved the particles themselves into the order of the book, and found that the pushes then took half the time on a grid and no less in our table.
 
-**The Z-order curve.** Claude, the AI assistant we study with, proposed a hash that keeps blocks of cells together. "And trying the Z-order curve instead?" the user asked. It is the numbering Simon Green names in the paper we follow: weave the bits of a cell's x, y and z into one number, and cells close in space along all three axes get numbers close to each other. Taken as the hash, it gave the table the speed of the grid at 100 000 particles on our [live page](../../examples/force-plus/main.ts): 6.9 ms a step against 9.1, three runs each. With 50 000 it was the slowest hash. A table has fewer slots than space has cells, so the curve covers a cube of cells and then repeats: cells 16 m apart shared a slot, in a box 24 m wide. Blocks of 8 × 8 × 8 cells in Z-order, scattered over the table, never lost.
+**The Z-order curve.** Claude, the AI assistant we study with, proposed a hash that keeps blocks of cells together. "And trying the Z-order curve instead?" the user asked. It is the numbering Simon Green names in the paper we follow: weave the bits of a cell's x, y and z into one number, and cells close in space along all three axes get numbers close to each other. Taken as the hash, it gave the table the speed of the grid at 100 000 particles on our [live page](../../examples/heap-simulation/main.ts): 6.9 ms a step against 9.1, three runs each. With 50 000 it was the slowest hash. A table has fewer slots than space has cells, so the curve covers a cube of cells and then repeats: cells 16 m apart shared a slot, in a box 24 m wide. Blocks of 8 × 8 × 8 cells in Z-order, scattered over the table, never lost.
 
 **A different question.** Then the user set the goal: "not to find the best method in every scenario, but to let a project use the best one for it." Which parameters make one way win, with data, and tables and charts to read them from. No engine code yet: that waits for rigid bodies, cloth and fluids.
 
@@ -50,7 +50,7 @@ To find which particles touch, FORCE cuts space into cells and keeps the particl
 ## Sources
 
 - Simon Green, [Particle Simulation using CUDA](https://developer.download.nvidia.com/assets/cuda/files/particles.pdf), NVIDIA, 2010: the Z-order curve as a hash.
-- Our script, [docs/topics/cells-study.mjs](../topics/cells-study.mjs), its [numbers](../topics/cells-study.json) and the [page](../../examples/cells-study/index.html) that draws them. The numbers of the live page are from [examples/force-plus](../../examples/force-plus/main.ts) with `?sorted` and `?hash=zorder` or `?hash=blocks`.
+- Our script, [docs/topics/cells-study.mjs](../topics/cells-study.mjs), its [numbers](../topics/cells-study.json) and the [page](../../examples/cells-study/index.html) that draws them. The numbers of the live page are from [examples/heap-simulation](../../examples/heap-simulation/main.ts) with `?sorted` and `?hash=zorder` or `?hash=blocks`.
 
 ## Next step
 

@@ -1306,7 +1306,7 @@
         "docs/logbook/042-no-best-way.md",
         "docs/logbook/045-a-million-and-one-pass.md"
       ],
-      "code": ["examples/force-plus/cells-table.wgsl"]
+      "code": ["examples/heap-simulation/cells-table.wgsl"]
     },
     {
       "id": "memory-locality",
@@ -1328,7 +1328,7 @@
         "docs/logbook/042-no-best-way.md",
         "docs/logbook/044-the-first-devices.md"
       ],
-      "code": ["examples/force-plus/cells-table.wgsl"]
+      "code": ["examples/heap-simulation/cells-table.wgsl"]
     },
     {
       "id": "particle-reordering",
@@ -1349,7 +1349,10 @@
         "docs/logbook/042-no-best-way.md",
         "docs/logbook/044-the-first-devices.md"
       ],
-      "code": ["examples/force-plus/book-move.wgsl", "examples/force-plus/book-settle.wgsl"]
+      "code": [
+        "examples/heap-simulation/book-move.wgsl",
+        "examples/heap-simulation/book-settle.wgsl"
+      ]
     },
     {
       "id": "gjk",
@@ -1998,9 +2001,9 @@
         "docs/logbook/037-the-lonely-thread.md"
       ],
       "code": [
-        "examples/force-plus/book-blocks.wgsl",
-        "examples/force-plus/book-scan.wgsl",
-        "examples/force-plus/book-ends.wgsl"
+        "examples/heap-simulation/book-blocks.wgsl",
+        "examples/heap-simulation/book-scan.wgsl",
+        "examples/heap-simulation/book-ends.wgsl"
       ]
     },
     {
@@ -6983,7 +6986,7 @@
         "docs/logbook/041-next-to-each-other.md",
         "docs/logbook/042-no-best-way.md"
       ],
-      "code": ["examples/force-plus/main.ts", "docs/topics/cells-study.mjs"]
+      "code": ["examples/heap-simulation/main.ts", "docs/topics/cells-study.mjs"]
     },
     {
       "id": "grid-by-counting",
@@ -7230,7 +7233,7 @@
         "docs/logbook/035-the-grid-stays-still.md",
         "docs/logbook/045-a-million-and-one-pass.md"
       ],
-      "code": ["examples/force-plus/round-push.wgsl"]
+      "code": ["examples/heap-simulation/round-push.wgsl"]
     },
     {
       "id": "flex-header",
@@ -7280,7 +7283,7 @@
         "docs/decisions/018-max-speed-in-meters-per-second.md",
         "docs/decisions/019-default-speed-limit.md"
       ],
-      "code": ["examples/force-plus/finish-limit.wgsl"]
+      "code": ["examples/heap-simulation/finish-limit.wgsl"]
     },
     {
       "id": "contact-dissipation",
@@ -7334,7 +7337,7 @@
       },
       "related": ["prefix-sum", "grid-by-sorting"],
       "citedIn": ["docs/logbook/036-the-address-book.md"],
-      "code": ["examples/force-plus/book-fill.wgsl"]
+      "code": ["examples/heap-simulation/book-fill.wgsl"]
     },
     {
       "id": "optimized-spatial-hashing",

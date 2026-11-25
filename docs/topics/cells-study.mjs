@@ -1,5 +1,5 @@
 // What makes one way of keeping the cells better than another? Runs the shaders of
-// examples/force-plus on fixed scenes, changing one thing at a time: how many particles, the shape
+// examples/heap-simulation on fixed scenes, changing one thing at a time: how many particles, the shape
 // and the size of the world, the way the cells are kept, the hash, the size of its blocks, the
 // slots per particle, the width of a cell. The numbers of logbook chapter 042.
 //
@@ -39,17 +39,17 @@ const shaders = {
   clear: read('contact-cost/clear-if.wgsl'),
   gridIf: read('contact-cost/grid-if.wgsl'),
   placesList: read('contact-cost/list.wgsl'),
-  cellsGrid: read('force-plus/cells-grid.wgsl'),
-  cellsTable: read('force-plus/cells-table.wgsl'),
-  count: read('force-plus/book-count.wgsl'),
-  blocks: read('force-plus/book-blocks.wgsl'),
-  scan: read('force-plus/book-scan.wgsl'),
-  ends: read('force-plus/book-ends.wgsl'),
-  fill: read('force-plus/book-fill.wgsl'),
-  list: read('force-plus/book-list.wgsl'),
-  move: read('force-plus/book-move.wgsl'),
-  settle: read('force-plus/book-settle.wgsl'),
-  round: read('force-plus/round-push.wgsl'),
+  cellsGrid: read('heap-simulation/cells-grid.wgsl'),
+  cellsTable: read('heap-simulation/cells-table.wgsl'),
+  count: read('heap-simulation/book-count.wgsl'),
+  blocks: read('heap-simulation/book-blocks.wgsl'),
+  scan: read('heap-simulation/book-scan.wgsl'),
+  ends: read('heap-simulation/book-ends.wgsl'),
+  fill: read('heap-simulation/book-fill.wgsl'),
+  list: read('heap-simulation/book-list.wgsl'),
+  move: read('heap-simulation/book-move.wgsl'),
+  settle: read('heap-simulation/book-settle.wgsl'),
+  round: read('heap-simulation/round-push.wgsl'),
 }
 
 // ---- the server ------------------------------------------------------------------------------

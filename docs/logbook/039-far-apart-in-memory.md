@@ -12,7 +12,7 @@ The three ways store who is in each cell of space ([chapter 036](./036-the-addre
 
 **The same cells for all.** With cells of 20 cm, 125 read by every particle, and 50 000 particles in the box with a level floor, making the lists took 3.0 ms with the 4 places, 3.8 with the book on a grid and 8.4 with the table. So the table was the slowest by itself, whatever the cells.
 
-**Wide cells, but not for the 4 places.** `?wide` on our [live page](../../examples/force-plus/main.ts) gives cells of 25 cm, as wide as the lists look ([decision 023](../decisions/023-cells-as-wide-as-the-reach.md)). With the 4 places that fails: a cell of 25 cm holds more than 4 particles, 451 found no place each time the lists were made, and the deepest pair overlapped by 18.6 cm, with particles 20 cm wide. "Obviously," the user said: "with 4 places the cell must stay as wide as the particle, and the comparison must be made that way." So: 4 places with cells of 20 cm, the two books with cells of 25. A step of 1/60 s, in ms:
+**Wide cells, but not for the 4 places.** `?wide` on our [live page](../../examples/heap-simulation/main.ts) gives cells of 25 cm, as wide as the lists look ([decision 023](../decisions/023-cells-as-wide-as-the-reach.md)). With the 4 places that fails: a cell of 25 cm holds more than 4 particles, 451 found no place each time the lists were made, and the deepest pair overlapped by 18.6 cm, with particles 20 cm wide. "Obviously," the user said: "with 4 places the cell must stay as wide as the particle, and the comparison must be made that way." So: 4 places with cells of 20 cm, the two books with cells of 25. A step of 1/60 s, in ms:
 
 | | 4 places, cells of 20 cm | Book on a grid, 25 cm | Book on a table, 25 cm |
 | --- | --- | --- | --- |
@@ -62,7 +62,7 @@ Both tries point the same way. A larger table is slower, and a table whose neigh
 
 ## Sources
 
-- Our page, [examples/force-plus](../../examples/force-plus/main.ts), with `?profile`, `?wide`, `?slots=8` and `?hash=rows`: every number of this chapter.
+- Our page, [examples/heap-simulation](../../examples/heap-simulation/main.ts), with `?profile`, `?wide`, `?slots=8` and `?hash=rows`: every number of this chapter.
 
 ## Next step
 

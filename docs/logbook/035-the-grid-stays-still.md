@@ -6,7 +6,7 @@
 
 ## The story
 
-With friction on the [live page](../../examples/force-plus/main.ts) ([chapter 034](./034-the-box-on-the-ramp.md)), the user asked for a second page to see a pile hold a slope and then slide: the same page, starting with µ = 0.3, the friction coefficient, and with a box that tilts by up to 30° around X and around Z. It is [force-tilt](../../examples/force-tilt/index.html), and it runs the code of the first page, force-plus: its HTML only hands over other starting values. Force-plus starts without friction again, as the user asked.
+With friction on the [live page](../../examples/heap-simulation/main.ts) ([chapter 034](./034-the-box-on-the-ramp.md)), the user asked for a second page to see a pile hold a slope and then slide: the same page, starting with µ = 0.3, the friction coefficient, and with a box that tilts by up to 30° around X and around Z. It is [tilted-box](../../examples/tilted-box/index.html), and it runs the code of the first page, heap-simulation: its HTML only hands over other starting values. Force-plus starts without friction again, as the user asked.
 
 **The shortcut.** Particles find their neighbours through a grid of cells 20 cm wide, laid along the axes x, y and z ([chapter 024](./024-twenty-seven-cells.md)). A box turned by 30° no longer fits cells laid that way. So Claude, the AI assistant we study with, left the box and the grid level in the simulation and turned gravity the other way: seen from inside the box it is the same thing. Only the drawing turned.
 
@@ -45,7 +45,7 @@ So it was not friction. Nor was it the grid's limit of four particles per cell, 
 
 ## Sources
 
-- Our pages, [examples/force-plus](../../examples/force-plus/main.ts) and [examples/force-tilt](../../examples/force-tilt/index.html): every number of this chapter, from single runs in Chrome without a window.
+- Our pages, [examples/heap-simulation](../../examples/heap-simulation/main.ts) and [examples/tilted-box](../../examples/tilted-box/index.html): every number of this chapter, from single runs in Chrome without a window.
 
 ## Next step
 

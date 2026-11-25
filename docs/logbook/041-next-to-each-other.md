@@ -12,7 +12,7 @@ The user asked two things: has anyone written about the memory problem of [chapt
 
 So both sort the particles, and we did not. Our *address book*, the list of all the particles sorted by cell, holds only their numbers: particle 7 stays in row 7 of the buffer of positions wherever it is in space, and reading a neighbour's position is a jump to anywhere.
 
-**Moving the particles.** With `?sorted` in the address of our [live page](../../examples/force-plus/main.ts), each time the book is made again two more shaders run. [One](../../examples/force-plus/book-move.wgsl) copies, for every row of the book, what belongs to that particle into the same row of spare buffers: where it was, where it is predicted to be, its level in the pile. [The other](../../examples/force-plus/book-settle.wgsl) copies it all back. From then on particle number 7 is the one in row 7 of the book, and the particles of a cell are next to each other in memory. Its mass travels with its position, and the page draws from the positions, so nothing else had to change. At the first step the lists hold the same 115 546 neighbours as before.
+**Moving the particles.** With `?sorted` in the address of our [live page](../../examples/heap-simulation/main.ts), each time the book is made again two more shaders run. [One](../../examples/heap-simulation/book-move.wgsl) copies, for every row of the book, what belongs to that particle into the same row of spare buffers: where it was, where it is predicted to be, its level in the pile. [The other](../../examples/heap-simulation/book-settle.wgsl) copies it all back. From then on particle number 7 is the one in row 7 of the book, and the particles of a cell are next to each other in memory. Its mass travels with its position, and the page draws from the positions, so nothing else had to change. At the first step the lists hold the same 115 546 neighbours as before.
 
 In the box with a level floor, 100 000 particles, in ms per step of 1/60 s:
 
@@ -49,7 +49,7 @@ With 50 000 a step took 4.7 and 3.9 ms with the table in order, against 5.7, and
 
 - Simon Green, [Particle Simulation using CUDA](https://developer.download.nvidia.com/assets/cuda/files/particles.pdf), NVIDIA, 2010: the Z-order curve, the re-ordered arrays and the performance section.
 - Miles Macklin, Matthias Müller, Nuttapong Chentanez and Tae-Yong Kim, Unified Particle Physics for Real-Time Applications, 2014, from our local copy: the line on re-ordering particle data by hash-grid cell.
-- Our page, [examples/force-plus](../../examples/force-plus/main.ts), with `?profile`, `?sorted` and `?cells=book`: every number of this chapter, in Chrome without a window on a Mac M1.
+- Our page, [examples/heap-simulation](../../examples/heap-simulation/main.ts), with `?profile`, `?sorted` and `?cells=book`: every number of this chapter, in Chrome without a window on a Mac M1.
 
 ## Next step
 

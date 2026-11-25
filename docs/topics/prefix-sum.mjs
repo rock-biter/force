@@ -1,5 +1,5 @@
 // How long does FORCE's prefix sum take? Times its three shaders (book-blocks, book-scan and
-// book-ends of examples/force-plus) and clear-if, each one alone, on buffers as large as our pages
+// book-ends of examples/heap-simulation) and clear-if, each one alone, on buffers as large as our pages
 // use: the numbers of logbook chapter 037.
 //
 //   node docs/topics/prefix-sum.mjs
@@ -27,9 +27,9 @@ const examples = new URL('../../examples/', import.meta.url)
 const read = (path) => readFileSync(new URL(path, examples), 'utf8')
 const shared = read('contact-cost/common.wgsl') + read('contact-cost/rebuild.wgsl')
 const shaders = {
-  blocks: shared + read('force-plus/book-blocks.wgsl'),
-  scan: shared + read('force-plus/book-scan.wgsl'),
-  ends: shared + read('force-plus/book-ends.wgsl'),
+  blocks: shared + read('heap-simulation/book-blocks.wgsl'),
+  scan: shared + read('heap-simulation/book-scan.wgsl'),
+  ends: shared + read('heap-simulation/book-ends.wgsl'),
   clear: shared + read('contact-cost/clear-if.wgsl'),
 }
 

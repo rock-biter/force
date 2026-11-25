@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>FORCE: spheres, light and soft shadows</title>
+    <meta
+      name="description"
+      content="Up to 50 000 particles on the GPU, and the ways we draw them: spheres lit once per pixel with soft shadows, spheres lit one by one, or flat discs, with the time each takes."
+    />
+    <link rel="stylesheet" href="../site.css" />
+  </head>
+  <!-- The same page as heap-simulation, with a small box, 10 000 particles with friction, and a panel
+       about how they are drawn in place of the one about the simulation. -->
+  <body
+    class="stage"
+    data-render
+    data-particles="10000"
+    data-max-particles="50000"
+    data-half="4"
+    data-ball="1"
+    data-friction="0.3"
+  >
+    <nav class="crumb">
+      <a href="../">← FORCE</a> · Spheres, light and soft shadows
+      <p>Change how the particles are drawn from the panel. Move the pointer over them to push them.</p>
+      <p>Drag to turn the camera, two fingers on a phone.</p>
+    </nav>
+    <script type="module" src="../heap-simulation/main.ts"></script>
+  </body>
+</html>

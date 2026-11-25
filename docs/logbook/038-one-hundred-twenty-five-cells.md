@@ -8,7 +8,7 @@
 
 To find which particles touch, FORCE cuts space into cells and each particle looks into the cells around its own. We have three ways to store who is in a cell ([chapter 036](./036-the-address-book.md)): 4 places per cell; an *address book*, one list of all the particles sorted by cell, with a row of memory for every cell of the grid; and the same book with a *hashed table*, a few rows shared by all the cells. The user leans to the table, whose memory follows the particles and not the size of the world ([chapter 037](./037-the-lonely-thread.md)). But its steps were the slowest of the three, and we did not know why.
 
-**A clock for every shader.** A step of the simulation, 1/60 s of it, is about ten shaders, programs run on the GPU one after the other. Our [live page](../../examples/force-plus/main.ts) timed a step as a whole. With `?profile` in its address it now puts every shader in a compute pass of its own, between two readings of the GPU's clock ([guide](../guides/timestamp-queries.md)), for 120 steps after the first 600, and writes the averages. With 50 000 particles in a box with a level floor, in ms per step:
+**A clock for every shader.** A step of the simulation, 1/60 s of it, is about ten shaders, programs run on the GPU one after the other. Our [live page](../../examples/heap-simulation/main.ts) timed a step as a whole. With `?profile` in its address it now puts every shader in a compute pass of its own, between two readings of the GPU's clock ([guide](../guides/timestamp-queries.md)), for 120 steps after the first 600, and writes the averages. With 50 000 particles in a box with a level floor, in ms per step:
 
 | Shader | 4 places per cell | Address book, grid | Address book, table |
 | --- | --- | --- | --- |
@@ -56,7 +56,7 @@ Without a margin the step is the fastest, also because shorter lists make the pu
 
 ## Sources
 
-- Our page, [examples/force-plus](../../examples/force-plus/main.ts), with `?profile`, `?margin=0` and `?wide`: every number of this chapter, from runs in Chrome without a window on a Mac M1.
+- Our page, [examples/heap-simulation](../../examples/heap-simulation/main.ts), with `?profile`, `?margin=0` and `?wide`: every number of this chapter, from runs in Chrome without a window on a Mac M1.
 - Simon Green, [Particle Simulation using CUDA](https://developer.download.nvidia.com/assets/cuda/files/particles.pdf), NVIDIA, 2010: the 27 cells, read in chapter 024.
 
 ## Next step

@@ -2,7 +2,7 @@
 // FORCE+, and does Macklin's pre-stabilization stop it? Run it with:
 // node docs/topics/pre-stabilization.mjs (about 5 minutes)
 //
-// FORCE+ as the GPU runs it (examples/contact-cost, examples/force-plus): spheres of radius 0.1 m,
+// FORCE+ as the GPU runs it (examples/contact-cost, examples/heap-simulation): spheres of radius 0.1 m,
 // 60 steps per second, each step cut into `substeps`, each substep with 8 rounds of half and half,
 // masses seen as m^0.5, levels in the pile with c = 2 (decision 015). No bounce, no friction.
 //   pre   passes of pre-stabilization before the rounds (Macklin 2014, section 4.4): the same rule

@@ -3,7 +3,7 @@
 // window and keeps the numbers of our own machine.
 //
 // A scene is a set of particles at rest, 20 cm wide, on a lattice with a little noise, numbered
-// in random order. Nothing moves: the shaders of examples/force-plus that find the neighbours and
+// in random order. Nothing moves: the shaders of examples/heap-simulation that find the neighbours and
 // one round of pushes are timed on it. A step is making the book, making the lists and six rounds.
 //
 // `study` must stay self-contained, with no import and nothing from outside its own body: the
@@ -425,7 +425,7 @@ fn zorder(u: vec3u) -> u32 {
       device.queue.writeBuffer(predicted[0], 0, start)
       device.queue.writeBuffer(control, 0, new Uint32Array([1, 1, 0, 0, 0])) // always a new list
       device.queue.writeBuffer(planes, 0, new Float32Array([0, 1, 0, 0]))
-      // The Params struct of common.wgsl, as examples/force-plus/main.ts fills it; no levels.
+      // The Params struct of common.wgsl, as examples/heap-simulation/main.ts fills it; no levels.
       const data = new ArrayBuffer(80)
       const floats = new Float32Array(data)
       const words = new Uint32Array(data)

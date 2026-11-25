@@ -103,6 +103,17 @@ export interface ParticleViewOptions {
   massColors?: readonly [lightest: Color, heaviest: Color]
   /** How the particles are drawn: see Look. */
   look?: Look
+  /**
+   * For 'sphere': works out the lit color of a pixel in place of the view's own light, from the
+   * color with no light, the normal and the place of the sphere's surface, both in view space.
+   * With `ShadowStage.lightOn`, each sphere takes shadows in its own shader.
+   */
+  lighting?: (
+    color: Node<'vec3'>,
+    normal: Node<'vec3'>,
+    viewPosition: Node<'vec3'>,
+    shine: number,
+  ) => Node<'vec3'>
 }
 
 /**
@@ -193,6 +204,10 @@ export class ParticleView {
       // For the shadow map only the depth counts. For a later pass, the color with no light on it.
       if (look === 'caster' || look === 'caster-flat') return vec4(0, 0, 0, 1)
       if (look === 'surface') return vec4(tint, 1)
+      if (options.lighting) {
+        const surface = sphereCenter.add(normal.mul(radius))
+        return vec4(options.lighting(tint as Node<'vec3'>, normal, surface, 1), 1)
+      }
       const { diffuse, specular } = shade(normal)
       return vec4(tint.mul(diffuse).add(specular), 1)
     })()

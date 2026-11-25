@@ -6,7 +6,7 @@
 
 ## The story
 
-**A million.** The slider of the [live page](../../examples/force-plus/index.html) stopped at 100 000. A million do not fit in its box of 24 m: the block they start in is 39.7 m wide. So beyond about 230 000 particles the floor widens, to stay 1.25 times as wide as that block: 50 m for a million. It runs with no error and loses no particle, at 3 frames a second on our Mac M1: a step takes 135 ms, nearly all in the lists of neighbours and in the rounds. On the page that tilts, a grid around the tilted box would need 12 million cells, where the device takes 4.2 million: the page then switches to the hashed table by itself, and says so. The limit of [chapter 040](./040-the-table.md), met for real.
+**A million.** The slider of the [live page](../../examples/heap-simulation/index.html) stopped at 100 000. A million do not fit in its box of 24 m: the block they start in is 39.7 m wide. So beyond about 230 000 particles the floor widens, to stay 1.25 times as wide as that block: 50 m for a million. It runs with no error and loses no particle, at 3 frames a second on our Mac M1: a step takes 135 ms, nearly all in the lists of neighbours and in the rounds. On the page that tilts, a grid around the tilted box would need 12 million cells, where the device takes 4.2 million: the page then switches to the hashed table by itself, and says so. The limit of [chapter 040](./040-the-table.md), met for real.
 
 **Rounds or substeps.** A step pushed touching particles apart in 6 *rounds*, each a pass over every particle's neighbours ([decision 022](../decisions/022-six-rounds.md)). "What if we did 3, in 2 substeps?" the user asked: a *substep* is a step cut in shorter ones, each with its own rounds. That is the same 6 rounds, so it cannot be cheaper, and each substep also checks the lists and computes the levels of the pile again. But is it better? 100 000 particles after 30 s, one run each. "Deep" counts the pairs that overlap by more than 1 cm, on spheres 20 cm wide:
 
@@ -53,7 +53,7 @@ The third wins: friction one round late ([decision 025](../decisions/025-frictio
 
 ## Sources
 
-- The live page with `?rounds=`, `?substeps=` and `?profile=` in the address ([main.ts](../../examples/force-plus/main.ts)), and its round shader ([round-push.wgsl](../../examples/force-plus/round-push.wgsl)).
+- The live page with `?rounds=`, `?substeps=` and `?profile=` in the address ([main.ts](../../examples/heap-simulation/main.ts)), and its round shader ([round-push.wgsl](../../examples/heap-simulation/round-push.wgsl)).
 - [crashcat](https://github.com/isaac-mason/crashcat), an engine the user found the same evening: rigid bodies in plain JavaScript, on the CPU, with a README that says when to prefer it to engines compiled to WebAssembly such as Rapier. Only its README read, for the map; a reference for the web engines of stop 4 of the route.
 
 ## Next step
