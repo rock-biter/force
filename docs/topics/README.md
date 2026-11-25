@@ -5,7 +5,7 @@
 Everything we have met while building FORCE, concepts and sources, and how far we went with each
 one. Use it to look up a term, to find what to read, or to pick what to explore next.
 
-- **308 concepts:** ● 31 studied · ◐ 148 seen · ○ 129 mentioned
+- **309 concepts:** ● 31 studied · ◐ 149 seen · ○ 129 mentioned
 - **164 sources:** ● 15 studied · ◐ 17 seen · ○ 132 mentioned · read by Claude: 80 parts, 16 in full
 
 | | Status | What it means |
@@ -34,7 +34,8 @@ How things move, collide and stay together.
 | ◐ | Angular velocity | How fast a body spins and around which axis, as one vector in radians per second | Rigid body | [004](../logbook/004-the-detour.md) |
 | ◐ | Articulated bodies | Chains of bodies linked by joints, such as robots and ragdolls |  | [004](../logbook/004-the-detour.md) |
 | ◐ | Baumgarte stabilization | A classic way to remove overlap in a velocity solver: push back in proportion to the error |  | [Solver2D](https://box2d.org/posts/2024/02/solver2d/) |
-| ○ | Bend link | A link that resists the folding of a cloth along an edge, by distance or by the angle between two triangles | Cloth | [058](../logbook/058-how-engines-set-a-spring.md) |
+| ○ | Bend by the angle (dihedral) | A rule on the angle between two triangles that share an edge, four particles at once: it resists small folds too, where a distance between two particles hardly changes | Bend link | [066](../logbook/066-against-the-fold.md) |
+| ◐ | Bend link | A link that resists the folding of a cloth along an edge, by distance or by the angle between two triangles | Cloth | [058](../logbook/058-how-engines-set-a-spring.md) |
 | ○ | Block solver | Solving the two contact points of a pair of bodies together and exactly, for steadier stacks | Solver | [Solver2D](https://box2d.org/posts/2024/02/solver2d/) |
 | ◐ | Bounding box | An invisible box around an object: testing two boxes is much cheaper than testing two real shapes |  | [001](../logbook/001-the-flip-book.md) |
 | ○ | Bounding volume hierarchy (BVH) | Boxes nested inside boxes: a tree that skips whole groups of far-away objects at once | Broad phase | [Ten Minute Physics](https://matthias-research.github.io/pages/tenMinutePhysics/index.html) |

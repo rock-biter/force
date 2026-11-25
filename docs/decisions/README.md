@@ -52,6 +52,7 @@ The choices that shape FORCE, one per page: what we decided, why, what we left o
 | 038 | [A particle's name is its second property](./038-the-name-is-a-property.md) | Accepted | November 25, 2026 |
 | 039 | [A spring's softness is its compliance, with a running total](./039-a-running-total-for-each-spring.md) | Accepted | November 25, 2026 |
 | 040 | [Damping in each spring, drag on every particle](./040-damping-and-drag.md) | Accepted | November 25, 2026 |
+| 041 | [Bend links by distance, with a softness of their own](./041-bend-by-distance.md) | Proposed | November 25, 2026 |
 
 ## Rules
 

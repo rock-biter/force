@@ -443,7 +443,9 @@
         "docs/logbook/064-as-soft-as-asked.md",
         "docs/decisions/039-a-running-total-for-each-spring.md",
         "docs/logbook/065-two-kinds-of-brake.md",
-        "docs/decisions/040-damping-and-drag.md"
+        "docs/decisions/040-damping-and-drag.md",
+        "docs/logbook/066-against-the-fold.md",
+        "docs/decisions/041-bend-by-distance.md"
       ],
       "page": "docs/topics/spring.md",
       "code": ["examples/ropes/springs.wgsl"]
@@ -470,7 +472,9 @@
         "docs/logbook/060-one-by-one-or-all-at-once.md",
         "docs/logbook/061-a-dispatch-per-group.md",
         "docs/decisions/037-springs-one-by-one-in-groups.md",
-        "docs/logbook/063-a-cloth.md"
+        "docs/logbook/063-a-cloth.md",
+        "docs/logbook/066-against-the-fold.md",
+        "docs/decisions/041-bend-by-distance.md"
       ],
       "code": ["examples/cloth/index.html"]
     },
@@ -1822,7 +1826,9 @@
         "docs/logbook/061-a-dispatch-per-group.md",
         "docs/decisions/037-springs-one-by-one-in-groups.md",
         "docs/logbook/062-the-first-ropes.md",
-        "docs/logbook/063-a-cloth.md"
+        "docs/logbook/063-a-cloth.md",
+        "docs/logbook/066-against-the-fold.md",
+        "docs/decisions/041-bend-by-distance.md"
       ],
       "code": [
         "examples/turn-sorting/main.ts",
@@ -5182,7 +5188,9 @@
         "docs/logbook/060-one-by-one-or-all-at-once.md",
         "docs/logbook/062-the-first-ropes.md",
         "docs/logbook/064-as-soft-as-asked.md",
-        "docs/decisions/039-a-running-total-for-each-spring.md"
+        "docs/decisions/039-a-running-total-for-each-spring.md",
+        "docs/logbook/066-against-the-fold.md",
+        "docs/decisions/041-bend-by-distance.md"
       ],
       "page": "docs/topics/spring-simulation.md#way-3-move-the-ends-part-of-the-way",
       "code": ["docs/topics/spring-softness.mjs", "examples/ropes/springs.wgsl"]
@@ -8283,7 +8291,9 @@
         "docs/logbook/058-how-engines-set-a-spring.md",
         "docs/logbook/060-one-by-one-or-all-at-once.md",
         "docs/logbook/061-a-dispatch-per-group.md",
-        "docs/decisions/037-springs-one-by-one-in-groups.md"
+        "docs/decisions/037-springs-one-by-one-in-groups.md",
+        "docs/logbook/066-against-the-fold.md",
+        "docs/decisions/041-bend-by-distance.md"
       ],
       "url": "https://github.com/jrouwe/JoltPhysics/blob/master/Jolt/Physics/SoftBody/SoftBodySharedSettings.h",
       "claudeRead": "parts"
@@ -8373,16 +8383,19 @@
       "title": "Bend link",
       "summary": "A link that resists the folding of a cloth along an edge, by distance or by the angle between two triangles",
       "area": "physics",
-      "status": "mentioned",
+      "status": "seen",
       "since": {
-        "mentioned": "2026-11-25"
+        "seen": "2026-11-25"
       },
       "citedIn": [
         "docs/logbook/058-how-engines-set-a-spring.md",
         "jolt-soft-body-settings",
-        "docs/logbook/063-a-cloth.md"
+        "docs/logbook/063-a-cloth.md",
+        "docs/logbook/066-against-the-fold.md",
+        "docs/decisions/041-bend-by-distance.md"
       ],
-      "partOf": "cloth"
+      "partOf": "cloth",
+      "code": ["docs/topics/cloth-bend.mjs", "examples/heap-simulation/main.ts"]
     },
     {
       "id": "distance-joint",
@@ -8473,6 +8486,19 @@
         "docs/decisions/040-damping-and-drag.md",
         "flex-header"
       ]
+    },
+    {
+      "id": "dihedral-bend",
+      "kind": "concept",
+      "title": "Bend by the angle (dihedral)",
+      "summary": "A rule on the angle between two triangles that share an edge, four particles at once: it resists small folds too, where a distance between two particles hardly changes",
+      "area": "physics",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-25"
+      },
+      "partOf": "bend-constraint",
+      "citedIn": ["docs/logbook/066-against-the-fold.md", "jolt-soft-body-settings"]
     }
   ]
 }

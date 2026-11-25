@@ -123,8 +123,9 @@ const SPRINGS = MIXED ? document.body.dataset.springs : undefined
 const ROPES = SPRINGS === 'ropes'
 const CLOTH = SPRINGS === 'cloth'
 const ROPE = 30 // particles in a rope: 5.8 m
-// The most groups of springs that share no particle: 2 along a rope, 8 in a cloth with diagonals.
-const MAX_SPRING_GROUPS = 8
+// The most groups of springs that share no particle: 2 along a rope, 12 in a cloth with
+// diagonals and bend links.
+const MAX_SPRING_GROUPS = 12
 const SPRING_ROUNDS = 3 // passes over the springs in a substep, at the start: the panel changes it
 const MAX_SPRING_ROUNDS = 10
 const IN_ORDER = new URLSearchParams(location.search).get('sorted') !== 'off' || MIXED
@@ -233,8 +234,11 @@ function radiiOf(count: number, ratio: number): Float32Array {
   return Float32Array.from({ length: count }, () => RADIUS / (1 + (ratio - 1) * next()))
 }
 
-/** A spring: the names of its two ends, its group, and its rest length in meters. */
-type Link = [a: number, b: number, group: number, rest: number]
+/**
+ * A spring: the names of its two ends, its group, its rest length in meters, and whether it is a
+ * bend link, which has a softness of its own.
+ */
+type Link = [a: number, b: number, group: number, rest: number, bend?: boolean]
 const ROPE_GAP = 0.5 // meters between two ropes
 const ROPE_TOP = 8 // meters: the height the ropes hang from
 /** How many ropes on a side of the square they hang in. */
@@ -285,12 +289,15 @@ const clothFit = (count: number) => clothRows(count) * clothColumns(count)
  * A cloth of `count` particles, as clothFit gives, twice as wide as tall, one diameter between
  * neighbours, hanging by its top row, which is held. It starts flat
  * and leaning 20 degrees, so that it swings when let go. Each particle is joined to its
- * neighbours along the two sides and, with `diagonals`, along the two diagonals, which keep its
- * squares from leaning into diamonds (shear). The groups: links along a row that start at an
- * even column, at an odd one, the same down the columns, and the same for each diagonal. No two
- * of a group share a particle, so a group can run in one dispatch.
+ * neighbours along the two sides, 4 links per particle. With 8, also along the two diagonals,
+ * which keep its squares from leaning into diamonds (shear). With 12, also to the particle two
+ * places further along each side: when the cloth folds between them they come closer, and the link
+ * pushes them back (bend, chapter 066). The groups: links along a row that start at an even
+ * column, at an odd one, the same down the columns and for each diagonal; a bend link from column
+ * a is in one group when a / 2, rounded down, is even, in another when it is odd. No two of a
+ * group share a particle, so a group can run in one dispatch.
  */
-function cloth(count: number, diagonals: boolean) {
+function cloth(count: number, linksEach: number) {
   const columns = clothColumns(count)
   const at = new Float32Array(count * 3)
   const held: number[] = []
@@ -307,7 +314,13 @@ function cloth(count: number, diagonals: boolean) {
     const below = name(a, b + 1) < count
     if (right) links.push([i, i + 1, a % 2, DIAMETER])
     if (below) links.push([i, name(a, b + 1), 2 + (b % 2), DIAMETER])
-    if (!diagonals) continue
+    if (linksEach >= 12) {
+      if (a + 2 < columns && i + 2 < count)
+        links.push([i, i + 2, 8 + (Math.floor(a / 2) % 2), 2 * DIAMETER, true])
+      if (name(a, b + 2) < count)
+        links.push([i, name(a, b + 2), 10 + (Math.floor(b / 2) % 2), 2 * DIAMETER, true])
+    }
+    if (linksEach < 8) continue
     if (right && name(a + 1, b + 1) < count)
       links.push([i, name(a + 1, b + 1), 4 + (a % 2), DIAMETER * Math.SQRT2])
     if (right && below) links.push([i + 1, name(a, b + 1), 6 + (a % 2), DIAMETER * Math.SQRT2])
@@ -599,12 +612,12 @@ function makeSimulation(
   inOrder: boolean,
   half: number,
   ratio = 1,
-  diagonals = true,
+  linksEach = 8,
 ) {
   // The cube stands on the floor of the box, wherever the box is turned.
   const start = cube(count, masses)
   const two = TWO ? twoSizes(count, ratio, half) : undefined
-  const roped = ROPES ? ropes(count) : CLOTH ? cloth(count, diagonals) : undefined
+  const roped = ROPES ? ropes(count) : CLOTH ? cloth(count, linksEach) : undefined
   const placed = two?.at ?? roped?.at
   if (placed) for (let i = 0; i < count; i++) start.set(placed.subarray(i * 3, i * 3 + 3), i * 4)
   for (const i of roped?.held ?? []) start[i * 4 + 3] = 0 // 1 / mass of 0: it never moves
@@ -753,13 +766,13 @@ function makeSimulation(
   const springList = storage(Math.max(springs.length, 1) * 20) // the Spring struct: 5 numbers
   // what each spring has asked for so far in this substep: its running total (chapter 064)
   const springTotals = storage(Math.max(springs.length, 1) * 4)
-  const writeSprings = (compliance: number, damping = 0) => {
+  const writeSprings = (compliance: number, damping = 0, bendCompliance = 0) => {
     const data = new ArrayBuffer(springs.length * 20)
     const names = new Uint32Array(data)
     const floats = new Float32Array(data)
-    springs.forEach(([a, b, , rest], i) => {
+    springs.forEach(([a, b, , rest, bend], i) => {
       names.set([a, b], i * 5)
-      floats.set([rest, compliance, damping], i * 5 + 2)
+      floats.set([rest, bend ? bendCompliance : compliance, damping], i * 5 + 2)
     })
     if (springs.length) device.queue.writeBuffer(springList, 0, data)
   }
@@ -969,15 +982,18 @@ function makeSimulation(
       device.queue.writeBuffer(planes, 0, new Float32Array(data))
     },
 
-    /** The springs, as two names and a rest length: for who measures how far they stretch. */
-    springs: springs.map(([a, b, , rest]) => [a, b, rest] as const),
+    /**
+     * The springs, as two names and a rest length: for who measures how far they stretch. Without
+     * the bend links, which are meant to give.
+     */
+    springs: springs.filter((link) => !link[4]).map(([a, b, , rest]) => [a, b, rest] as const),
     /**
      * How many passes over the springs in a substep, their compliance, 1 / stiffness in meters
-     * per newton, 0 for a rod, and their damping ratio, 0 for none.
+     * per newton, 0 for a rod, their damping ratio, 0 for none, and the compliance of the bend links.
      */
-    setSprings(rounds: number, compliance: number, damping: number) {
+    setSprings(rounds: number, compliance: number, damping: number, bendCompliance = 0) {
       springRounds = rounds
-      writeSprings(compliance, damping)
+      writeSprings(compliance, damping, bendCompliance)
     },
 
     /** The drag on every particle, in 1 / s: 0 is none (finish-limit.wgsl). */
@@ -1360,9 +1376,12 @@ async function start() {
     // The drag on every particle, like air, in 1 / s: what stops a rope that swings. A page sets
     // its own with data-drag on its <body>; ?drag=0 in the address.
     drag: MathUtils.clamp(Number(query.get('drag') ?? document.body.dataset.drag ?? 0) || 0, 0, 5),
-    // A cloth's links: along its sides only, 4 per particle, or along its diagonals too, 8.
-    // ?links=4 in the address starts without the diagonals.
-    diagonals: query.get('links') !== '4',
+    // A cloth's links per particle: 4, along its sides; 8, along its diagonals too; 12, also the
+    // bend links, against folding. ?links=4 or ?links=8 in the address starts with fewer.
+    links: [4, 8].includes(Number(query.get('links'))) ? Number(query.get('links')) : 12,
+    // How much the bend links give, in millimeters per newton: the more, the sharper the cloth
+    // folds. ?bend=0.1 in the address.
+    bendGive: MathUtils.clamp(Number(query.get('bend') ?? 1) || 0, 0, 20),
     // How a cloth is drawn: its particles, a surface through them, or the wires of that surface.
     // ?cloth=surface or ?cloth=wires in the address starts with that one.
     cloth: ['surface', 'wires'].includes(query.get('cloth') ?? '')
@@ -1521,7 +1540,7 @@ async function start() {
       IN_ORDER,
       half,
       settings.sizes,
-      settings.diagonals,
+      settings.links,
     )
     simulation.setBox(world.quaternion)
     applySolver()
@@ -1548,7 +1567,12 @@ async function start() {
   const applySolver = () => {
     simulation?.setSolver(solverAlpha(), solverLevels(), settings.substeps, maxSpeed())
     simulation?.setFriction(settings.friction)
-    simulation?.setSprings(settings.springRounds, settings.give / 1000, settings.damping)
+    simulation?.setSprings(
+      settings.springRounds,
+      settings.give / 1000,
+      settings.damping,
+      settings.bendGive / 1000,
+    )
     simulation?.setDrag(settings.drag)
   }
 
@@ -1758,12 +1782,25 @@ async function start() {
     .addBinding(settings, 'drag', { label: 'drag, 1/s', min: 0, max: 5, step: 0.1 })
     .on('change', applySolver)
   springFolder
-    .addBinding(settings, 'diagonals', {
+    .addBinding(settings, 'links', {
       label: 'links',
-      options: { 'along the sides, 4': false, 'and the diagonals, 8': true },
+      options: {
+        'along the sides, 4': 4,
+        'and the diagonals, 8': 8,
+        'and against folding, 12': 12,
+      },
       hidden: !CLOTH,
     })
     .on('change', restart)
+  springFolder
+    .addBinding(settings, 'bendGive', {
+      label: 'fold give, mm/N',
+      min: 0,
+      max: 20,
+      step: 0.1,
+      hidden: !CLOTH,
+    })
+    .on('change', applySolver)
   springFolder
     .addBinding(settings, 'cloth', {
       label: 'drawn as',
