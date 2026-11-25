@@ -125,7 +125,8 @@ if (take.length) {
     }
     const old = kept.findIndex((d) => d.issue === number)
     if (old < 0) kept.push(entry)
-    else kept[old] = entry
+    // taken in again: what we wrote by hand next to it stays, who ran it and which model it is
+    else kept[old] = { ...entry, name: kept[old].name, model: kept[old].model }
   }
   kept.sort((a, b) => a.issue - b.issue)
   writeFileSync(OUT, `${JSON.stringify({ columns: COLUMNS, devices: kept }, null, 2)}\n`)

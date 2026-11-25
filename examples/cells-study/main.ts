@@ -552,10 +552,21 @@ say(
     /** Who ran it, when they sent it through someone else's account: a person's name, never a link. */
     name?: string
     device: string
+    /**
+     * The model, as we read it from `device`: written by hand in cells-devices.json for a model
+     * that came more than once, or that its owner did not name. Runs with the same one share a row.
+     */
+    model?: string
     gpu: string
     browser: string
     rows: Value[][]
     ours?: boolean
+  }
+  /** A row of the charts: one model, and every run of it people sent. */
+  interface Shown {
+    label: string
+    ours?: boolean
+    runs: Device[]
   }
   const study = JSON.parse(raw)
   const others: Device[] = JSON.parse(devicesRaw).devices
@@ -598,14 +609,36 @@ say(
     intel: 'Intel',
     qualcomm: 'Qualcomm',
     arm: 'ARM',
+    'img-tec': 'Imagination',
   }
   const groupOf = (d: Device) =>
     `${VENDOR[d.gpu.split(' ')[0].toLowerCase()] ?? 'other GPUs'}, ${
       /iOS|Android/.test(d.browser) ? 'phones' : 'computers'
     }`
-  const groups = by(devices as unknown as Row[], (d) =>
-    groupOf(d as unknown as Device),
-  ) as unknown as Map<string, Device[]>
+  // The same model sent twice is one row, not two: its runs are kept together.
+  const shown: Shown[] = []
+  for (const d of devices) {
+    const same = d.model ? shown.find((s) => s.label === d.model) : undefined
+    if (same) same.runs.push(d)
+    else shown.push({ label: d.model ?? d.device, ours: d.ours, runs: [d] })
+  }
+  const groups = new Map<string, Shown[]>()
+  for (const s of shown) {
+    const name = groupOf(s.runs[0])
+    groups.set(name, [...(groups.get(name) ?? []), s])
+  }
+  type Measure = (d: Device) => number | undefined
+  /** A measure over the runs of a row: their mean, the lowest and the highest. */
+  const spread = (s: Shown, value: Measure) => {
+    const values = s.runs.map(value).filter((v) => v !== undefined) as number[]
+    if (!values.length) return undefined
+    return {
+      mean: values.reduce((a, b) => a + b, 0) / values.length,
+      low: Math.min(...values),
+      high: Math.max(...values),
+    }
+  }
+  const meanOf = (value: Measure) => (s: Shown) => spread(s, value)?.mean
   const short = (text: string) => (text.length > 34 ? `${text.slice(0, 33)}…` : text)
   const INK = '#16161a'
 
@@ -613,12 +646,13 @@ say(
     name: string
     color: string
     ring?: boolean
-    value: (d: Device) => number | undefined
+    value: Measure
   }
   /**
-   * One row per device, grouped by the maker of its GPU and by phone or computer. Each dot is a
+   * One row per model, grouped by the maker of its GPU and by phone or computer. Each dot is a
    * ratio between two ways on that device, on a logarithmic axis where 1 is "the same", or, with
-   * `frame`, a time in ms against the 16.7 ms of a frame.
+   * `frame`, a time in ms against the 16.7 ms of a frame. For a model with several runs the dot is
+   * their mean, on a line from the lowest to the highest.
    */
   function compare(marks: Dot[], frame = false): HTMLElement {
     const W = 720
@@ -677,7 +711,7 @@ say(
       root.append(svg('text', { class: 'quiet', x: 0, y: y + ROW / 2 + 4 }, name))
       y += ROW
       // With five devices or more, the middle one of the group for the first dot.
-      const values = list.map(marks[0].value).filter((v) => v !== undefined) as number[]
+      const values = list.map(meanOf(marks[0].value)).filter((v) => v !== undefined) as number[]
       if (values.length >= 5) {
         const middle = values.sort((a, b) => a - b)[values.length >> 1]
         root.append(
@@ -693,12 +727,32 @@ say(
       }
       for (const d of list) {
         const at = y + ROW / 2
-        const label = svg('text', { x: 16, y: at + 4 }, short(d.device))
+        const many = d.runs.length > 1
+        const label = svg(
+          'text',
+          { x: 16, y: at + 4 },
+          many ? `${short(d.label)} ×${d.runs.length}` : short(d.label),
+        )
         if (d.ours) label.setAttribute('font-weight', '700')
         const group = svg('g')
-        const found = marks.map((m) => ({ m, v: m.value(d) }))
-        for (const { m, v } of found) {
-          if (v === undefined) continue
+        const found = marks.map((m) => {
+          const all = spread(d, m.value)
+          return { m, v: all?.mean, all }
+        })
+        for (const { m, v, all } of found) {
+          if (v === undefined || !all) continue
+          if (all.high > all.low)
+            group.append(
+              svg('line', {
+                x1: sx(all.low),
+                x2: sx(all.high),
+                y1: at,
+                y2: at,
+                stroke: m.color,
+                'stroke-width': 2,
+                'stroke-linecap': 'round',
+              }),
+            )
           group.append(
             svg('circle', {
               cx: sx(v),
@@ -712,10 +766,14 @@ say(
         }
         group.append(svg('rect', { x: 0, y, width: W, height: ROW, fill: 'transparent' }))
         const told = found
-          .map(({ m, v }) => `${(v === undefined ? 'not run' : show(v)).padStart(9)}  ${m.name}`)
+          .map(({ m, v, all }) => {
+            const range = all && all.high > all.low ? `, ${show(all.low)} to ${show(all.high)}` : ''
+            return `${(v === undefined ? 'not run' : show(v)).padStart(9)}  ${m.name}${range}`
+          })
           .join('\n')
+        const title = many ? `${d.label}, the mean of ${d.runs.length} runs` : d.label
         group.addEventListener('pointermove', (event) =>
-          showTip(event as PointerEvent, `${d.device}\n${told}`),
+          showTip(event as PointerEvent, `${title}\n${told}`),
         )
         group.addEventListener('pointerleave', () => {
           tip.hidden = true
@@ -732,8 +790,8 @@ say(
     return figure
   }
   /** "on 5 of 6 devices, from 1.4× to 4.3×": how many devices have this ratio clearly above 1. */
-  const verdict = (value: (d: Device) => number | undefined) => {
-    const values = devices.map(value).filter((v) => v !== undefined) as number[]
+  const verdict = (value: Measure) => {
+    const values = shown.map(meanOf(value)).filter((v) => v !== undefined) as number[]
     const above = values.filter((v) => v > 1.05)
     return `${above.length} of ${values.length} devices${
       above.length
@@ -749,7 +807,7 @@ say(
   say('h2', "7. Other people's devices")
   say(
     'p',
-    `The charts above are one Mac. People ran a short version of the same measure on their own devices, from the benchmark page, and sent it as issues on GitHub: ${others.length} devices so far. A fast device and a slow one cannot be compared in milliseconds, so each chart divides two times of the same device: a ratio of 2× means twice as long, and 1× the same. Every chart asks one question about a choice we made. With so few devices of each kind these are hints, and no average is drawn until a group has five.`,
+    `The charts above are one Mac. People ran a short version of the same measure on their own devices, from the benchmark page, and sent it as issues on GitHub: ${others.length} runs so far, of ${shown.length - 1} different devices. A model sent more than once has one row: its dot is the mean of the runs, on a line from the lowest to the highest. A fast device and a slow one cannot be compared in milliseconds, so each chart divides two times of the same device: a ratio of 2× means twice as long, and 1× the same. Every chart asks one question about a choice we made. With so few devices of each kind these are hints, and no average is drawn until a group has five.`,
   )
 
   const unsortedTable = (d: Device) =>
@@ -784,10 +842,12 @@ say(
       stepOf(d, 'world', 100000, 'grid', 1, world),
       stepOf(d, 'world', 100000, 'blocks', 1, world),
     )
-  const tooLarge = devices.filter((d) => stepOf(d, 'world', 100000, 'grid', 1, 320) === undefined)
+  const tooLarge = shown.filter(
+    (s) => spread(s, (d) => stepOf(d, 'world', 100000, 'grid', 1, 320)) === undefined,
+  )
   ask(
     'When the world grows, does the table take over?',
-    `The grid against the table, 100 heaps of particles in a world of 20 m and of 40 m. Our rule says a table as soon as the world is large. At 40 m the grid takes longer on ${verdict(gridOverTable(40))}. At 320 m the grid did not fit on ${tooLarge.length} of ${devices.length}.`,
+    `The grid against the table, 100 heaps of particles in a world of 20 m and of 40 m. Our rule says a table as soon as the world is large. At 40 m the grid takes longer on ${verdict(gridOverTable(40))}. At 320 m the grid did not fit on ${tooLarge.length} of ${shown.length}.`,
   )
   page.append(
     compare([
@@ -833,10 +893,10 @@ say(
   )
 
   const table = (d: Device) => stepOf(d, 'count', 100000, 'blocks', 1)
-  const fits = devices.filter((d) => (table(d) ?? 99) < 1000 / 60).length
+  const fits = shown.filter((s) => (meanOf(table)(s) ?? 99) < 1000 / 60).length
   ask(
     'Does a step with 100 000 particles fit in a frame?',
-    `The only chart in milliseconds: what finding the neighbours and six rounds of pushes cost, with the table, against the 16.7 ms of a frame at 60 per second. The rest of a frame is not counted here. It fits on ${fits} of ${devices.length} devices.`,
+    `The only chart in milliseconds: what finding the neighbours and six rounds of pushes cost, with the table, against the 16.7 ms of a frame at 60 per second. The rest of a frame is not counted here. It fits on ${fits} of ${shown.length} devices.`,
   )
   page.append(
     compare(
