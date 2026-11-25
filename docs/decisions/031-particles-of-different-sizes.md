@@ -1,6 +1,6 @@
 # 031 · Particles of different sizes, up to 2 to 1
 
-*Accepted · November 25, 2026 · The user, after a script in 3D that tried mixes up to 4 to 1 ([chapter 048](../logbook/048-big-and-small.md))*
+*Accepted, its limit of 2 to 1 superseded by [035](./035-sizes-up-to-four-to-one.md) · November 25, 2026 · The user, after a script in 3D that tried mixes up to 4 to 1 ([chapter 048](../logbook/048-big-and-small.md))*
 
 **Decision:** we will let every particle have its own radius, the largest at most twice the smallest, and keep one speed limit for all, worked out from the largest radius. A particle weighs its density times its volume.
 

@@ -61,6 +61,7 @@ This is where we tell how FORCE gets built, one step at a time. If you are new h
 | 052 | [What Follows a Particle](./logbook/052-what-follows-a-particle.md) | The properties move with the particles kept in order: sizes and order go together, and a step with sizes takes half the time |
 | 053 | [In Order by Default](./logbook/053-in-order-by-default.md) | Particles kept in the order of their cells on every page, and a step with no lists for particles of different sizes too |
 | 054 | [Without the Lists](./logbook/054-without-the-lists.md) | The lists of neighbours leave the live pages: every round reads the cells, two buffers are free, and a step takes about the same |
+| 055 | [Further Apart](./logbook/055-further-apart.md) | Sizes beyond 2 to 1 on the GPU: cheap and clean enough when spread evenly, slow and deep with two sizes only. The limit goes to 4 to 1 |
 
 ## For reference
 

@@ -42,10 +42,11 @@ The choices that shape FORCE, one per page: what we decided, why, what we left o
 | 028 | [A level strength of 1.5](./028-level-strength.md) | Accepted | November 23, 2026 |
 | 029 | [Three rounds, in each of two substeps](./029-three-rounds-two-substeps.md) | Accepted | November 23, 2026 |
 | 030 | [Shadows in the debug viewer, shaded once per pixel](./030-viewer-shadows-shaded-once-per-pixel.md) | Accepted | November 25, 2026 |
-| 031 | [Particles of different sizes, up to 2 to 1](./031-particles-of-different-sizes.md) | Accepted | November 25, 2026 |
+| 031 | [Particles of different sizes, up to 2 to 1](./031-particles-of-different-sizes.md) | Accepted, limit of 2 to 1 superseded by 035 | November 25, 2026 |
 | 032 | [One buffer for the properties of a particle](./032-a-buffer-of-particle-properties.md) | Accepted | November 25, 2026 |
 | 033 | [Particles in the order of their cells, by default](./033-particles-in-order-by-default.md) | Accepted | November 25, 2026 |
 | 034 | [No lists of neighbours: every round reads the cells](./034-no-lists-of-neighbours.md) | Accepted | November 25, 2026 |
+| 035 | [Sizes up to 4 to 1](./035-sizes-up-to-four-to-one.md) | Accepted | November 25, 2026 |
 
 ## Rules
 

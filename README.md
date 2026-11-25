@@ -62,7 +62,11 @@ same. So the particles are now always in order, and the lists are gone
 ([chapters 050](./docs/logbook/050-the-price-of-remembering.md) to
 [054](./docs/logbook/054-without-the-lists.md)).
 
-**Next:** particles joined by springs, or sizes further apart. Then our rules read again against the
+With the lists gone, sizes can be further apart, up to 4 to 1. It works well when the sizes are
+spread, and badly with only very large and very small ones together
+([chapter 055](./docs/logbook/055-further-apart.md)).
+
+**Next:** particles joined by springs. Then our rules read again against the
 devices.
 
 Every step, with what we learned and what went wrong, is in the [logbook](./docs/README.md).

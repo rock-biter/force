@@ -5097,7 +5097,8 @@
         "physx-rigid-body-dynamics",
         "docs/logbook/029-heavy-on-light.md",
         "docs/decisions/015-half-and-half-on-positions.md",
-        "docs/logbook/048-big-and-small.md"
+        "docs/logbook/048-big-and-small.md",
+        "docs/logbook/055-further-apart.md"
       ]
     },
     {
@@ -7586,7 +7587,7 @@
       "id": "mixed-particle-sizes",
       "kind": "concept",
       "title": "Particles of different sizes",
-      "summary": "A radius for each particle: the cell follows the largest, the margin and the safe speed the smallest, and the lists and the ratio of the masses set how far apart the sizes can be",
+      "summary": "A radius for each particle, the largest up to 4 times the smallest: the cell follows the largest, the margin the smallest, and how the sizes are mixed sets the cost and how deep small particles sink",
       "area": "physics",
       "status": "seen",
       "since": {
@@ -7603,7 +7604,9 @@
         "docs/logbook/048-big-and-small.md",
         "docs/logbook/049-a-radius-each.md",
         "docs/logbook/052-what-follows-a-particle.md",
-        "docs/logbook/053-in-order-by-default.md"
+        "docs/logbook/053-in-order-by-default.md",
+        "docs/logbook/055-further-apart.md",
+        "docs/decisions/035-sizes-up-to-four-to-one.md"
       ]
     },
     {
@@ -7617,7 +7620,12 @@
         "mentioned": "2026-11-25"
       },
       "related": ["uniform-grid"],
-      "citedIn": ["docs/logbook/048-big-and-small.md", "ogarko-luding-contact-detection"]
+      "citedIn": [
+        "docs/logbook/048-big-and-small.md",
+        "ogarko-luding-contact-detection",
+        "docs/logbook/055-further-apart.md",
+        "docs/decisions/035-sizes-up-to-four-to-one.md"
+      ]
     },
     {
       "id": "vellum-solver-docs",
@@ -7687,7 +7695,7 @@
       "since": {
         "mentioned": "2026-11-25"
       },
-      "citedIn": ["ogarko-luding-contact-detection"],
+      "citedIn": ["ogarko-luding-contact-detection", "docs/logbook/055-further-apart.md"],
       "related": ["mixed-particle-sizes"]
     },
     {

@@ -99,7 +99,11 @@ const ROOM = 1.25 // the floor is at least this many times as wide as the block 
 const MAX_PARTICLES = 1000000
 // What a page asks for on its <body>, in place of the numbers above: data-half="4" for a smaller
 // box, data-max-particles="50000" for a shorter slider.
-const SMALLEST_HALF = Number(document.body.dataset.half) || HALF
+// ?half=2 in the address, to measure: half the side of the floor, in meters.
+const SMALLEST_HALF =
+  Number(new URLSearchParams(location.search).get('half')) ||
+  Number(document.body.dataset.half) ||
+  HALF
 const MOST_PARTICLES = Number(document.body.dataset.maxParticles) || MAX_PARTICLES
 // data-sizes="2" on a page's <body>: particles of different sizes, the largest this many times as
 // wide as the smallest at the start. 0, on the other pages: one size for all, and shaders that
@@ -108,8 +112,9 @@ const SIZES = Number(document.body.dataset.sizes) || 0
 const MIXED = SIZES > 0
 // The particles are kept in the order of the address book (chapter 041, decision 033), unless
 // ?sorted=off in the address. With sizes, always: see ../mixed-sizes/round-cells-sized.wgsl.
+const TWO = MIXED && new URLSearchParams(location.search).has('two')
 const IN_ORDER = new URLSearchParams(location.search).get('sorted') !== 'off' || MIXED
-const MAX_SIZES = 2 // the largest over the smallest, at most (decision 031)
+const MAX_SIZES = 4 // the largest radius over the smallest, at most (decision 035)
 const MAX_TILT = 30 // degrees, around X and around Z, on the page that tilts the box
 const TILT_SPEED = 20 // degrees per second: the floor's far corner, 17 m away, then moves 9.9 cm per step, just under a radius. A wider box turns slower, to keep that
 const GAP = 0.01 // between particles at the start, in meters
@@ -152,7 +157,9 @@ const blockSide = (count: number) =>
  * box grows to stay ROOM times as wide as the block. A million start 39.7 m wide, in a box of 50 m.
  */
 const halfFor = (count: number) =>
-  Math.max(SMALLEST_HALF, Math.ceil(((blockSide(count) * (DIAMETER + GAP)) / 2) * ROOM))
+  TWO
+    ? SMALLEST_HALF // the mix of two sizes starts as a column: see twoSizes
+    : Math.max(SMALLEST_HALF, Math.ceil(((blockSide(count) * (DIAMETER + GAP)) / 2) * ROOM))
 
 /** Repeats the same numbers at every run, so every restart starts from the same cube. */
 function random(seed: number): () => number {
@@ -203,6 +210,49 @@ function cube(count: number, masses: readonly [number, number]): Float32Array {
 function radiiOf(count: number, ratio: number): Float32Array {
   const next = random(2)
   return Float32Array.from({ length: count }, () => RADIUS / (1 + (ratio - 1) * next()))
+}
+
+/**
+ * ?two in the address, to measure: only the largest and the smallest size, about half of the
+ * volume each, the hardest mix, where every large sphere sits on small ones. The particles start as
+ * a column of places as wide as a large sphere, 80% of the floor wide: each place holds one large
+ * sphere or a block of k × k × k small ones, as many as fit. Where each particle starts, and its
+ * radius.
+ */
+function twoSizes(count: number, ratio: number, half: number) {
+  const next = random(2)
+  const place = DIAMETER + GAP
+  const side = Math.max(Math.floor((1.6 * half) / place), 1)
+  const k = Math.floor(ratio + 1e-9)
+  const pitch = DIAMETER / k
+  const at = new Float32Array(count * 3)
+  const radii = new Float32Array(count)
+  let n = 0
+  for (let slot = 0; n < count; slot++) {
+    const corner = [
+      ((slot % side) - side / 2) * place,
+      GAP + Math.floor(slot / (side * side)) * place,
+      ((Math.floor(slot / side) % side) - side / 2) * place,
+    ]
+    const jitter = () => (next() - 0.5) * 0.002
+    if (next() < 0.5) {
+      at.set(
+        corner.map((c) => c + RADIUS + jitter()),
+        n * 3,
+      )
+      radii[n++] = RADIUS
+      continue
+    }
+    for (let i = 0; i < k ** 3 && n < count; i++) {
+      const cell = [i % k, Math.floor(i / (k * k)), Math.floor(i / k) % k]
+      at.set(
+        cell.map((m, axis) => corner[axis] + (m + 0.5) * pitch + jitter()),
+        n * 3,
+      )
+      radii[n++] = RADIUS / ratio
+    }
+  }
+  return { at, radii }
 }
 
 // ?hash= in the address, to measure: the hash of cells-table.wgsl, which keeps the cells of a row
@@ -438,6 +488,8 @@ function makeSimulation(
 ) {
   // The cube stands on the floor of the box, wherever the box is turned.
   const start = cube(count, masses)
+  const two = TWO ? twoSizes(count, ratio, half) : undefined
+  if (two) for (let i = 0; i < count; i++) start.set(two.at.subarray(i * 3, i * 3 + 3), i * 4)
   const point = new Vector3()
   for (let i = 0; i < count; i++) {
     point.fromArray(start, i * 4).applyMatrix4(box)
@@ -446,7 +498,7 @@ function makeSimulation(
   // On a page with sizes, `masses` are the densities, lightest and heaviest: a particle weighs its
   // density times its volume, the largest sphere of density 1 being 1 kg. One material is one
   // density for all, and the weight then follows the size alone.
-  const sizes = MIXED ? radiiOf(count, ratio) : undefined
+  const sizes = MIXED ? (two?.radii ?? radiiOf(count, ratio)) : undefined
   if (sizes) for (let i = 0; i < count; i++) start[i * 4 + 3] /= (sizes[i] / RADIUS) ** 3
   const bytes = start.byteLength
   // The slots that count particles: one per cell of the grid, or those of the table, the first
@@ -1045,8 +1097,9 @@ async function start() {
     // On a page with sizes these are the densities: one material, where the weight follows the
     // size alone, or materials from 1 to 10 times as dense.
     masses: MIXED ? '1 kg' : '1 to 100 kg',
-    // The largest radius over the smallest, on a page with sizes: from 1, all the same, to 2.
-    sizes: MathUtils.clamp(SIZES, 1, MAX_SIZES),
+    // The largest radius over the smallest, on a page with sizes: 1 is all the same.
+    // ?sizes=3 in the address starts with that ratio.
+    sizes: MathUtils.clamp(Number(query.get('sizes')) || SIZES, 1, MAX_SIZES),
     // How the particles are drawn. 'spheres': each sphere lit in its own shader. 'deferred':
     // spheres that write only their depth, color and normal, lit in a later pass once per pixel
     // (decision 030), where the debug-viewer page starts. Flat discs, or nothing at all, to see
@@ -1572,6 +1625,8 @@ async function start() {
     let touching = 0
     let deep = 0
     let deepest = 0
+    let half = 0 // pairs deeper than half the smaller radius
+    let share = 0 // the deepest, as a share of the smaller radius
     for (let i = 0; i < sim.particleCount; i++)
       for (let dx = -1; dx <= 1; dx++)
         for (let dy = -1; dy <= 1; dy++)
@@ -1591,12 +1646,15 @@ async function start() {
               if (depth <= 0) continue
               touching++
               // deep: by more than a tenth of the smaller radius, 1 cm with one size
-              if (depth > 0.1 * Math.min(radiusOf(i), radiusOf(j))) deep++
+              const smaller = Math.min(radiusOf(i), radiusOf(j))
+              if (depth > 0.1 * smaller) deep++
+              if (depth > 0.5 * smaller) half++
+              share = Math.max(share, depth / smaller)
               deepest = Math.max(deepest, depth)
             }
     return (
       `overlaps: ${touching} pairs closer than ${sized ? 'their two radii' : 'a diameter'}, ${deep} of them by more than ` +
-      `${sized ? 'a tenth of the smaller radius' : `${RADIUS * 10} cm`}, the deepest by ${(deepest * 100).toFixed(1)} cm`
+      `${sized ? 'a tenth of the smaller radius' : `${RADIUS * 10} cm`}, the deepest by ${(deepest * 100).toFixed(1)} cm${sized ? `, ${half} by more than half of it, at most ${(share * 100).toFixed(0)}% of it` : ''}`
     )
   }
 
