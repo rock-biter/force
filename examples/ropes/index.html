@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>FORCE: ropes</title>
+    <meta
+      name="description"
+      content="Ropes of 30 particles joined by springs, hanging on the GPU: let go at an angle, they swing, hit each other and can be pushed with the pointer."
+    />
+    <link rel="stylesheet" href="../site.css" />
+  </head>
+  <!-- The same page as heap-simulation, with the particles joined into ropes by springs
+       (data-springs), each rope held by its first particle. -->
+  <body
+    class="stage"
+    data-springs="ropes"
+    data-sizes="1"
+    data-particles="3000"
+    data-max-particles="30000"
+    data-half="6"
+    data-ball="1.2"
+    data-ball-height="4"
+    data-friction="0.3"
+  >
+    <nav class="crumb">
+      <a href="../">← FORCE</a> · Ropes
+      <p>Each rope is 30 particles joined by springs, held by the first one. Move the pointer over them to push them.</p>
+      <p>Drag to turn the camera, two fingers on a phone.</p>
+    </nav>
+    <script type="module" src="../heap-simulation/main.ts"></script>
+  </body>
+</html>

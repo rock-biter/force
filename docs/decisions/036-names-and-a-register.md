@@ -23,7 +23,7 @@ The particles are kept in the order of their cells ([decision 033](./033-particl
 
 ## Still open
 
-- Where the name lives: one of the three free numbers of the properties is the first candidate.
+- Where the name lives: settled by [decision 038](./038-the-name-is-a-property.md), the second of the properties.
 - Where the springs live, and how several springs on one particle are combined: the next two choices.
 
 ## Revisit if

@@ -49,6 +49,7 @@ The choices that shape FORCE, one per page: what we decided, why, what we left o
 | 035 | [Sizes up to 4 to 1](./035-sizes-up-to-four-to-one.md) | Accepted | November 25, 2026 |
 | 036 | [A spring names its particles, and a register says where they are](./036-names-and-a-register.md) | Accepted | November 25, 2026 |
 | 037 | [Springs in one list, solved one by one in groups](./037-springs-one-by-one-in-groups.md) | Accepted | November 25, 2026 |
+| 038 | [A particle's name is its second property](./038-the-name-is-a-property.md) | Accepted | November 25, 2026 |
 
 ## Rules
 

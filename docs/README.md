@@ -68,6 +68,7 @@ This is where we tell how FORCE gets built, one step at a time. If you are new h
 | 059 | [A Name, or a Corrected List](./logbook/059-a-name-or-a-corrected-list.md) | Particles change row at every substep: two ways for a spring to find its ends, timed. Neither wins everywhere |
 | 060 | [One by One, or All at Once](./logbook/060-one-by-one-or-all-at-once.md) | How several springs on a particle combine, by script in 3D: half and half blows up on a cloth, the average is soft, one by one is far tighter |
 | 061 | [A Dispatch per Group](./logbook/061-a-dispatch-per-group.md) | Springs solved one by one on the GPU, a dispatch per group that shares no particle: a round costs the same, the same tightness ten times less |
+| 062 | [The First Ropes](./logbook/062-the-first-ropes.md) | Springs on a live page: 100 ropes of 30 particles hang and swing while their particles change row, with the stretch the script foretold |
 
 ## For reference
 

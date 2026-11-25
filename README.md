@@ -86,7 +86,11 @@ cloth ([chapter 060](./docs/logbook/060-one-by-one-or-all-at-once.md)).
 Solving them one after the other, in groups that share no particle, is as cheap on the GPU and
 ten times tighter ([chapter 061](./docs/logbook/061-a-dispatch-per-group.md)).
 
-**Next:** the first springs on a live page. Then our rules read again against the
+And the first springs run on a live page: ropes that hang and swing
+([try it](https://rock-biter.github.io/force/ropes/),
+[chapter 062](./docs/logbook/062-the-first-ropes.md)).
+
+**Next:** a cloth. Then our rules read again against the
 devices.
 
 Every step, with what we learned and what went wrong, is in the [logbook](./docs/README.md).

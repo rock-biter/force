@@ -64,6 +64,8 @@ import levelsCellsSizedCode from '../mixed-sizes/levels-cells-sized.wgsl?raw'
 import propertiesMoveCode from '../mixed-sizes/properties-move.wgsl?raw'
 import propertiesSettleCode from '../mixed-sizes/properties-settle.wgsl?raw'
 import roundCellsSizedCode from '../mixed-sizes/round-cells-sized.wgsl?raw'
+import registerCode from '../ropes/register.wgsl?raw'
+import springsCode from '../ropes/springs.wgsl?raw'
 import bookBlocksCode from './book-blocks.wgsl?raw'
 import bookCountCode from './book-count.wgsl?raw'
 import bookEndsCode from './book-ends.wgsl?raw'
@@ -113,6 +115,12 @@ const MIXED = SIZES > 0
 // The particles are kept in the order of the address book (chapter 041, decision 033), unless
 // ?sorted=off in the address. With sizes, always: see ../mixed-sizes/round-cells-sized.wgsl.
 const TWO = MIXED && new URLSearchParams(location.search).has('two')
+// data-springs="ropes" on a page's <body>, with data-sizes: the particles are joined into ropes of
+// ROPE particles by springs (decisions 036 and 037), each rope held by its first particle.
+const ROPES = MIXED && document.body.dataset.springs === 'ropes'
+const ROPE = 30 // particles in a rope: 5.8 m
+const SPRING_ROUNDS = 3 // passes over the springs in a substep, at the start: the panel changes it
+const MAX_SPRING_ROUNDS = 10
 const IN_ORDER = new URLSearchParams(location.search).get('sorted') !== 'off' || MIXED
 const MAX_SIZES = 4 // the largest radius over the smallest, at most (decision 035)
 const MAX_TILT = 30 // degrees, around X and around Z, on the page that tilts the box
@@ -120,6 +128,9 @@ const TILT_SPEED = 20 // degrees per second: the floor's far corner, 17 m away, 
 const GAP = 0.01 // between particles at the start, in meters
 const LAYERS = 28 // at most, at the start: about 5.9 m, well inside the grid's 9 m
 const BALL_RADIUS = 2 // meters, at the start: the panel changes it
+// data-ball-height="4" on a page's <body>: the ball's center is that many meters above the floor,
+// and the whole ball is drawn. 0, on the other pages: its center is on the floor.
+const BALL_HEIGHT = Number(document.body.dataset.ballHeight) || 0
 const BALL_FOLLOW = 0.2 // the share of the way to the pointer the ball covers at each step
 const BALL_SPEED = 30 // m/s: the fastest the ball moves, however far the pointer jumps
 const BALL_GROWTH = 8 // m/s: how fast its radius grows or shrinks
@@ -159,7 +170,9 @@ const blockSide = (count: number) =>
 const halfFor = (count: number) =>
   TWO
     ? SMALLEST_HALF // the mix of two sizes starts as a column: see twoSizes
-    : Math.max(SMALLEST_HALF, Math.ceil(((blockSide(count) * (DIAMETER + GAP)) / 2) * ROOM))
+    : ROPES
+      ? Math.max(SMALLEST_HALF, Math.ceil((ropeSide(count) * ROPE_GAP) / 2 + 4))
+      : Math.max(SMALLEST_HALF, Math.ceil(((blockSide(count) * (DIAMETER + GAP)) / 2) * ROOM))
 
 /** Repeats the same numbers at every run, so every restart starts from the same cube. */
 function random(seed: number): () => number {
@@ -210,6 +223,39 @@ function cube(count: number, masses: readonly [number, number]): Float32Array {
 function radiiOf(count: number, ratio: number): Float32Array {
   const next = random(2)
   return Float32Array.from({ length: count }, () => RADIUS / (1 + (ratio - 1) * next()))
+}
+
+const ROPE_GAP = 0.5 // meters between two ropes
+const ROPE_TOP = 8 // meters: the height the ropes hang from
+/** How many ropes on a side of the square they hang in. */
+const ropeSide = (count: number) => Math.ceil(Math.sqrt(Math.ceil(count / ROPE)))
+/**
+ * Ropes of ROPE particles, one diameter apart, hanging from a square of points ROPE_TOP high. They
+ * start straight and leaning 30 degrees, so that they swing when let go. Where each particle
+ * starts, which ones are held, the first of each rope, and the springs: the names of the two ends
+ * and the group, 0 or 1. Along a rope the links alternate, so no two of a group share a particle.
+ */
+function ropes(count: number) {
+  const side = ropeSide(count)
+  const at = new Float32Array(count * 3)
+  const held: number[] = []
+  const links: [a: number, b: number, group: number][] = []
+  const lean = [Math.sin(Math.PI / 6) * DIAMETER, -Math.cos(Math.PI / 6) * DIAMETER]
+  for (let i = 0; i < count; i++) {
+    const rope = Math.floor(i / ROPE)
+    const along = i % ROPE
+    at.set(
+      [
+        ((rope % side) - (side - 1) / 2) * ROPE_GAP + along * lean[0],
+        ROPE_TOP + along * lean[1],
+        (Math.floor(rope / side) - (side - 1) / 2) * ROPE_GAP,
+      ],
+      i * 3,
+    )
+    if (along === 0) held.push(i)
+    else links.push([i - 1, i, along % 2])
+  }
+  return { at, held, links }
 }
 
 /**
@@ -361,6 +407,14 @@ fn repeated(home: vec3i, offset: vec3i, slots: u32) -> bool {
 }
 `
   // With sizes and the particles kept in order: the two shaders that move the properties along.
+  // With springs: the register of names, and a group of springs.
+  // The register needs nothing of common.wgsl, whose functions want `params`: it stands alone.
+  const alone = (code: string) =>
+    device.createComputePipelineAsync({
+      layout: 'auto',
+      compute: { module: device.createShaderModule({ code }) },
+    })
+  const springKit = ROPES ? await Promise.all([alone(registerCode), make(springsCode)]) : undefined
   const moveProperties = MIXED
     ? await Promise.all(
         [propertiesMoveCode, propertiesSettleCode].map((code) => make(rebuildCode + code)),
@@ -407,6 +461,7 @@ fn repeated(home: vec3i, offset: vec3i, slots: u32) -> bool {
     byGrid: filing(0),
     byTable: filing(1),
     moveProperties,
+    springKit,
   }
 }
 type Pipelines = Awaited<ReturnType<typeof makePipelines>>
@@ -489,7 +544,10 @@ function makeSimulation(
   // The cube stands on the floor of the box, wherever the box is turned.
   const start = cube(count, masses)
   const two = TWO ? twoSizes(count, ratio, half) : undefined
-  if (two) for (let i = 0; i < count; i++) start.set(two.at.subarray(i * 3, i * 3 + 3), i * 4)
+  const roped = ROPES ? ropes(count) : undefined
+  const placed = two?.at ?? roped?.at
+  if (placed) for (let i = 0; i < count; i++) start.set(placed.subarray(i * 3, i * 3 + 3), i * 4)
+  for (const i of roped?.held ?? []) start[i * 4 + 3] = 0 // 1 / mass of 0: it never moves
   const point = new Vector3()
   for (let i = 0; i < count; i++) {
     point.fromArray(start, i * 4).applyMatrix4(box)
@@ -543,12 +601,14 @@ function makeSimulation(
 
   // What a particle is, and does not change during a step: four numbers each, in one buffer, so
   // that a shader spends one of its 8 storage buffers on all of them (decision 032). The radius
-  // first; the other three are free, for what comes next.
+  // first, then the particle's name; the other two are free, for what comes next.
   const properties = storage(sizes ? count * 16 : 16, GPUBufferUsage.COPY_SRC) // read back by ?profile
   if (sizes) {
     const data = new Float32Array(count * 4)
+    // the radius, then the name: the number a particle keeps while its row changes (decision 036)
     sizes.forEach((radius, i) => {
       data[i * 4] = radius
+      data[i * 4 + 1] = i
     })
     device.queue.writeBuffer(properties, 0, data)
   }
@@ -625,6 +685,44 @@ function makeSimulation(
           group(kit.moveProperties[1], [params, control, spareProperties, properties]),
         ]
       : undefined
+  // The springs (decision 037): one list, each spring once, sorted into groups that share no
+  // particle. A register says in which row each name is. One dispatch per group, in place on the
+  // predicted positions, before the levels and the rounds of the contacts.
+  const springs = roped && kit.springKit ? [...roped.links].sort((p, q) => p[2] - q[2]) : []
+  const rowOf = storage(springs.length ? count * 4 : 4)
+  const springList = storage(Math.max(springs.length, 1) * 16)
+  const writeSprings = (compliance: number) => {
+    const data = new ArrayBuffer(springs.length * 16)
+    const names = new Uint32Array(data)
+    const floats = new Float32Array(data)
+    springs.forEach(([a, b], i) => {
+      names.set([a, b], i * 4)
+      floats.set([DIAMETER, compliance], i * 4 + 2)
+    })
+    if (springs.length) device.queue.writeBuffer(springList, 0, data)
+  }
+  writeSprings(0)
+  const registerGroup =
+    springs.length && kit.springKit ? group(kit.springKit[0], [properties, rowOf]) : undefined
+  // each group: where it begins in the list and how many springs, then its bind group
+  const springGroups = [0, 1].flatMap((g) => {
+    const first = springs.findIndex((link) => link[2] === g)
+    const n = springs.filter((link) => link[2] === g).length
+    if (!n || !kit.springKit) return []
+    const part = device.createBuffer({
+      size: 16,
+      usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
+    })
+    buffers.push(part)
+    device.queue.writeBuffer(part, 0, new Uint32Array([first, n]))
+    return [
+      {
+        workgroups: Math.ceil(n / 64),
+        group: group(kit.springKit[1], [params, part, springList, rowOf, predicted[0]]),
+      },
+    ]
+  })
+  let springRounds = SPRING_ROUNDS
   // Levels alternate between two buffers, a step each; positions between two, a round each.
   // The levels and the rounds read the cells of the book: the counts and the starts, then, after
   // their other buffers, the properties, with sizes, and the book, unless in order.
@@ -757,6 +855,12 @@ function makeSimulation(
             dispatch('move', kit.moveProperties[1], propertyGroups[1])
           }
         }
+        if (registerGroup && kit.springKit) {
+          dispatch('names', kit.springKit[0], registerGroup)
+          for (let r = 0; r < springRounds; r++)
+            for (const g of springGroups)
+              dispatch('springs', kit.springKit[1], g.group, g.workgroups)
+        }
         if (levelsOn) dispatch('levels', levelsKit, levelGroups[parity])
         for (let r = 0; r < ROUNDS; r++) dispatch('rounds', roundKit, roundGroups[parity][r % 2])
         dispatch('finish', kit.finish, finishGroup)
@@ -790,6 +894,17 @@ function makeSimulation(
       device.queue.writeBuffer(planes, 0, new Float32Array(data))
     },
 
+    /** The springs, as [name, name] pairs: for who measures how far they stretch. */
+    springs: springs.map(([a, b]) => [a, b] as const),
+    /**
+     * How many passes over the springs in a substep, and their compliance, 1 / stiffness in meters
+     * per newton: 0 is a rod.
+     */
+    setSprings(rounds: number, compliance: number) {
+      springRounds = rounds
+      writeSprings(compliance)
+    },
+
     /** µ, how much of their slide two touching particles take back: 0 is none (decision 020). */
     setFriction(mu: number) {
       device.queue.writeBuffer(rub, 0, new Float32Array([mu]))
@@ -803,8 +918,9 @@ function makeSimulation(
 type Simulation = ReturnType<typeof makeSimulation>
 /** A clock with two entries per shader of a step, and the names of the shaders that wrote them. */
 type Profile = { clock: GPUQuerySet; names: string[] }
-// The most shaders a step runs: fifteen and the rounds, in every substep.
-const MAX_PASSES = (15 + ROUNDS) * MAX_SUBSTEPS
+// The most shaders a step runs: sixteen, the rounds, and the two groups of springs in each of
+// their rounds, in every substep.
+const MAX_PASSES = (16 + ROUNDS + 2 * MAX_SPRING_ROUNDS) * MAX_SUBSTEPS
 
 async function start() {
   const adapter = await navigator.gpu?.requestAdapter()
@@ -983,21 +1099,30 @@ async function start() {
   // covers BALL_FOLLOW of the way there, a lerp, at BALL_SPEED at most, and it grows from nothing at
   // BALL_GROWTH, so it pushes particles instead of throwing them. Only a ball that has shrunk to
   // nothing comes back straight under the pointer. Only its upper half is drawn: the floor is made
-  // of lines, and the lower half would show through it.
+  // of lines, and the lower half would show through it. A page can lift the ball (BALL_HEIGHT), to
+  // reach what hangs: its center then follows the pointer on a plane at that height, and the whole
+  // ball is drawn.
   const ball = { x: 0, z: 0, radius: 0 }
   // Two materials: three.js's own, lit by the lights of the scene, and one that takes its light
   // and its shadows from the last pass of the stage. The ball casts a shadow too.
-  const ballLit = new MeshStandardMaterial({ color: 0xf2c200, roughness: 1, metalness: 0 }) // matte yellow
+  // matte yellow, or tomato red among the yellow ropes
+  const ballLit = new MeshStandardMaterial({
+    color: ROPES ? 0xc8402a : 0xf2c200,
+    roughness: 1,
+    metalness: 0,
+  })
   const ballShadowed = stage.matte(ballLit.color)
   const ballForward = stage.lit(ballLit.color)
   const ballMesh: Mesh = new Mesh(
-    new SphereGeometry(1, 48, 12, 0, 2 * Math.PI, 0, Math.PI / 2),
+    BALL_HEIGHT > 0
+      ? new SphereGeometry(1, 48, 24)
+      : new SphereGeometry(1, 48, 12, 0, 2 * Math.PI, 0, Math.PI / 2),
     ballLit,
   )
   stage.cast(ballMesh)
   world.add(ballMesh)
   const raycaster = new Raycaster()
-  const surface = new Plane(new Vector3(0, 1, 0), 0) // the floor, y = 0
+  const surface = new Plane(new Vector3(0, 1, 0), -BALL_HEIGHT) // the floor, or the ball's height
   const hit = new Vector3()
   const inside = new Matrix4()
   const center = new Vector3()
@@ -1035,13 +1160,13 @@ async function start() {
       const change = (on ? radius : 0) - ball.radius
       ball.radius += Math.min(Math.max(change, -BALL_GROWTH * h), BALL_GROWTH * h)
       // the simulation wants the ball in the world, not in the box
-      center.set(ball.x, 0, ball.z).applyMatrix4(world.matrixWorld)
+      center.set(ball.x, BALL_HEIGHT, ball.z).applyMatrix4(world.matrixWorld)
       pathData.set([center.x, center.y, center.z, ball.radius], k * 4)
     }
     if (steps) device.queue.writeBuffer(ballPath, 0, pathData, 0, steps * substeps * 4)
     ballMesh.visible = ball.radius > 0
     ballMesh.scale.setScalar(ball.radius)
-    ballMesh.position.set(ball.x, 0, ball.z)
+    ballMesh.position.set(ball.x, BALL_HEIGHT, ball.z)
   }
 
   // ---- the simulation and the panel ----------------------------------------------------------------
@@ -1122,7 +1247,8 @@ async function start() {
         : 'off',
     // The color of the lightest particle and of the heaviest: the others are in between, by the
     // logarithm of their mass. With one mass for all, only the first is used.
-    light: '#4ea3ff',
+    // On the page with ropes, the yellow of spaghetti.
+    light: ROPES ? '#f2d16b' : '#4ea3ff',
     heavy: '#d1495b',
     // The side of the shadow map, in texels: as ?shadowmap=4096 in the address asks, or 2048.
     shadowMap: stage.mapSize,
@@ -1134,6 +1260,15 @@ async function start() {
     // a slot per cell of the grid, with ?cells=book in the address.
     cells: (query.get('cells') === 'book' ? 'book' : 'table') as Cells,
     ball: Number(document.body.dataset.ball) || BALL_RADIUS, // data-ball on the page's <body>
+    // The springs of a page with ropes: passes over them in a substep, and how much they give,
+    // in millimeters per newton (the compliance, 1 / stiffness): 0 is a rod.
+    // ?springrounds=6 and ?give=0.1 in the address start with those.
+    springRounds: MathUtils.clamp(
+      Math.round(Number(query.get('springrounds'))) || SPRING_ROUNDS,
+      1,
+      MAX_SPRING_ROUNDS,
+    ),
+    give: MathUtils.clamp(Number(query.get('give')) || 0, 0, 2),
   }
   // How much wider than the largest particle a cell is, in meters. The cells are filed when a
   // substep begins and read at every round, while the particles move a little: the margin is the
@@ -1145,6 +1280,8 @@ async function start() {
   const stats = {
     gpu: Number.NaN,
     draw: Number.NaN,
+    stretch: Number.NaN, // how much longer than at rest the springs are, on average, in %
+    worst: Number.NaN, // and the most stretched of them
   }
   /** α and c as the solver sees them: FORCE uses the real masses and no levels. */
   const solverAlpha = () => (settings.method === 'plus' ? settings.alpha : 1)
@@ -1292,6 +1429,7 @@ async function start() {
   const applySolver = () => {
     simulation?.setSolver(solverAlpha(), solverLevels(), settings.substeps, maxSpeed())
     simulation?.setFriction(settings.friction)
+    simulation?.setSprings(settings.springRounds, settings.give / 1000)
   }
 
   const pane = new Pane({ title: 'FORCE on the GPU', expanded: window.innerWidth >= 600 })
@@ -1480,6 +1618,19 @@ async function start() {
         stage.mapSize = settings.shadowMap
       })
   }
+  // The springs: only on a page with ropes.
+  const springFolder = pane.addFolder({ title: 'Springs', hidden: !ROPES })
+  springFolder
+    .addBinding(settings, 'springRounds', {
+      label: 'rounds',
+      min: 1,
+      max: MAX_SPRING_ROUNDS,
+      step: 1,
+    })
+    .on('change', applySolver)
+  springFolder
+    .addBinding(settings, 'give', { label: 'give, mm/N', min: 0, max: 2, step: 0.01 })
+    .on('change', applySolver)
   const ballFolder = pane.addFolder({ title: 'Ball' })
   ballFolder.addBinding(settings, 'ball', { label: 'radius', min: 0.3, max: 3, step: 0.1 })
   const numbers = pane.addFolder({ title: 'Numbers' })
@@ -1495,6 +1646,19 @@ async function start() {
     readonly: true,
     format: (v) => (Number.isNaN(v) ? 'n/a' : `${v.toFixed(2)} ms`),
   })
+  // How much longer than at rest the springs are: all of them on average, and the worst one.
+  numbers.addBinding(stats, 'stretch', {
+    label: 'stretch',
+    readonly: true,
+    hidden: !ROPES,
+    format: (v) => (Number.isNaN(v) ? '…' : `${v.toFixed(2)}%`),
+  })
+  numbers.addBinding(stats, 'worst', {
+    label: 'worst',
+    readonly: true,
+    hidden: !ROPES,
+    format: (v) => (Number.isNaN(v) ? '…' : `${v.toFixed(2)}%`),
+  })
   // ---- the GPU's numbers ---------------------------------------------------------------------------
   // Every SAMPLE_EVERY frames one step, all its substeps, is timed on the GPU clock, into a buffer
   // JavaScript can read when the GPU is done.
@@ -1508,6 +1672,47 @@ async function start() {
     usage: GPUBufferUsage.MAP_READ | GPUBufferUsage.COPY_DST,
   })
   let reading = false
+  // The stretch of the springs: the positions and the properties, where the names are, copied at
+  // the same moment, since the rows change from one substep to the next. A particle is found by
+  // its name, and each spring's length measured against its rest length, a diameter.
+  let stretching = false
+  async function readStretch(sim: Simulation) {
+    if (stretching || !sim.propertiesBuffer || !sim.springs.length) return
+    stretching = true
+    const size = sim.particleCount * 16
+    const back = device.createBuffer({
+      size: 2 * size,
+      usage: GPUBufferUsage.MAP_READ | GPUBufferUsage.COPY_DST,
+    })
+    const encoder = device.createCommandEncoder()
+    encoder.copyBufferToBuffer(sim.positionBuffer, 0, back, 0, size)
+    encoder.copyBufferToBuffer(sim.propertiesBuffer, 0, back, size, size)
+    device.queue.submit([encoder.finish()])
+    await back.mapAsync(GPUMapMode.READ)
+    const both = new Float32Array(back.getMappedRange().slice(0))
+    back.destroy()
+    stretching = false
+    if (sim !== simulation) return // restarted meanwhile
+    const rowOf = new Uint32Array(sim.particleCount)
+    for (let row = 0; row < sim.particleCount; row++)
+      rowOf[both[(sim.particleCount + row) * 4 + 1]] = row
+    let sum = 0
+    let worst = 0
+    for (const [a, b] of sim.springs) {
+      const i = rowOf[a] * 4
+      const j = rowOf[b] * 4
+      const far = Math.hypot(
+        both[i] - both[j],
+        both[i + 1] - both[j + 1],
+        both[i + 2] - both[j + 2],
+      )
+      const longer = (far / DIAMETER - 1) * 100
+      sum += longer
+      worst = Math.max(worst, longer)
+    }
+    stats.stretch = sum / sim.springs.length
+    stats.worst = worst
+  }
   function read() {
     reading = true
     readback.mapAsync(GPUMapMode.READ).then(() => {
@@ -1763,6 +1968,7 @@ async function start() {
       }
       device.queue.submit([encoder.finish()])
       if (sample && stamps) read()
+      if (sample) readStretch(sim).catch(showError)
       if (profile && profileBack) readProfile(profileBack, profile.names).catch(showError)
     }
     // Same queue, same order: the steps sent above run before this drawing reads the positions.

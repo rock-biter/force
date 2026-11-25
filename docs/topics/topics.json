@@ -437,9 +437,11 @@
         "docs/logbook/059-a-name-or-a-corrected-list.md",
         "docs/logbook/060-one-by-one-or-all-at-once.md",
         "docs/logbook/061-a-dispatch-per-group.md",
-        "docs/decisions/037-springs-one-by-one-in-groups.md"
+        "docs/decisions/037-springs-one-by-one-in-groups.md",
+        "docs/logbook/062-the-first-ropes.md"
       ],
-      "page": "docs/topics/spring.md"
+      "page": "docs/topics/spring.md",
+      "code": ["examples/ropes/springs.wgsl"]
     },
     {
       "id": "cloth",
@@ -1621,7 +1623,8 @@
         "docs/logbook/014-the-mirror.md",
         "docs/logbook/060-one-by-one-or-all-at-once.md",
         "docs/logbook/061-a-dispatch-per-group.md",
-        "docs/decisions/037-springs-one-by-one-in-groups.md"
+        "docs/decisions/037-springs-one-by-one-in-groups.md",
+        "docs/logbook/062-the-first-ropes.md"
       ],
       "code": ["docs/topics/spring-rounds.mjs"]
     },
@@ -1774,9 +1777,11 @@
         "docs/logbook/013-the-hidden-brake.md",
         "docs/topics/spring-simulation.md",
         "docs/logbook/057-three-ways-around.md",
-        "docs/logbook/060-one-by-one-or-all-at-once.md"
+        "docs/logbook/060-one-by-one-or-all-at-once.md",
+        "docs/logbook/062-the-first-ropes.md"
       ],
-      "page": "docs/topics/spring-simulation.md#way-2-move-the-ends"
+      "page": "docs/topics/spring-simulation.md#way-2-move-the-ends",
+      "code": ["examples/ropes/springs.wgsl"]
     },
     {
       "id": "graph-coloring",
@@ -1805,9 +1810,14 @@
         "docs/logbook/023-the-first-free-turn.md",
         "docs/logbook/060-one-by-one-or-all-at-once.md",
         "docs/logbook/061-a-dispatch-per-group.md",
-        "docs/decisions/037-springs-one-by-one-in-groups.md"
+        "docs/decisions/037-springs-one-by-one-in-groups.md",
+        "docs/logbook/062-the-first-ropes.md"
       ],
-      "code": ["examples/turn-sorting/main.ts", "examples/spring-lookup/main.ts"]
+      "code": [
+        "examples/turn-sorting/main.ts",
+        "examples/spring-lookup/main.ts",
+        "examples/heap-simulation/main.ts"
+      ]
     },
     {
       "id": "xpbd",
@@ -1890,7 +1900,8 @@
         "docs/topics/spring-simulation.md",
         "docs/logbook/057-three-ways-around.md",
         "docs/logbook/058-how-engines-set-a-spring.md",
-        "docs/logbook/059-a-name-or-a-corrected-list.md"
+        "docs/logbook/059-a-name-or-a-corrected-list.md",
+        "docs/logbook/062-the-first-ropes.md"
       ]
     },
     {
@@ -5148,7 +5159,8 @@
         "docs/topics/spring-simulation.md",
         "docs/logbook/057-three-ways-around.md",
         "docs/logbook/058-how-engines-set-a-spring.md",
-        "docs/logbook/060-one-by-one-or-all-at-once.md"
+        "docs/logbook/060-one-by-one-or-all-at-once.md",
+        "docs/logbook/062-the-first-ropes.md"
       ],
       "page": "docs/topics/spring-simulation.md#way-3-move-the-ends-part-of-the-way"
     },
@@ -8105,7 +8117,9 @@
         "docs/logbook/050-the-price-of-remembering.md",
         "docs/logbook/052-what-follows-a-particle.md",
         "docs/logbook/053-in-order-by-default.md",
-        "docs/decisions/036-names-and-a-register.md"
+        "docs/decisions/036-names-and-a-register.md",
+        "docs/logbook/062-the-first-ropes.md",
+        "docs/decisions/038-the-name-is-a-property.md"
       ]
     },
     {
@@ -8360,13 +8374,19 @@
         "seen": "2026-11-25"
       },
       "related": ["particle-reordering", "spring"],
-      "code": ["examples/spring-lookup/main.ts"],
+      "code": [
+        "examples/spring-lookup/main.ts",
+        "examples/ropes/register.wgsl",
+        "examples/heap-simulation/main.ts"
+      ],
       "citedIn": [
         "docs/logbook/059-a-name-or-a-corrected-list.md",
         "flex-header",
         "docs/decisions/036-names-and-a-register.md",
         "docs/logbook/061-a-dispatch-per-group.md",
-        "docs/decisions/037-springs-one-by-one-in-groups.md"
+        "docs/decisions/037-springs-one-by-one-in-groups.md",
+        "docs/logbook/062-the-first-ropes.md",
+        "docs/decisions/038-the-name-is-a-property.md"
       ]
     }
   ]
