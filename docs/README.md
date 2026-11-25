@@ -66,6 +66,8 @@ This is where we tell how FORCE gets built, one step at a time. If you are new h
 | 057 | [Three Ways Around](./logbook/057-three-ways-around.md) | The second stop on springs: why a stiff one blows up, and the three ways around it, on one hanging chain simulated in four ways |
 | 058 | [How Engines Set a Spring](./logbook/058-how-engines-set-a-spring.md) | The third stop on springs: six engines read in their code. Joints and links, four ways to say how stiff, and the same four numbers in memory |
 | 059 | [A Name, or a Corrected List](./logbook/059-a-name-or-a-corrected-list.md) | Particles change row at every substep: two ways for a spring to find its ends, timed. Neither wins everywhere |
+| 060 | [One by One, or All at Once](./logbook/060-one-by-one-or-all-at-once.md) | How several springs on a particle combine, by script in 3D: half and half blows up on a cloth, the average is soft, one by one is far tighter |
+| 061 | [A Dispatch per Group](./logbook/061-a-dispatch-per-group.md) | Springs solved one by one on the GPU, a dispatch per group that shares no particle: a round costs the same, the same tightness ten times less |
 
 ## For reference
 

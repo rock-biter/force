@@ -434,7 +434,10 @@
         "docs/topics/spring-simulation.md",
         "docs/logbook/057-three-ways-around.md",
         "docs/logbook/058-how-engines-set-a-spring.md",
-        "docs/logbook/059-a-name-or-a-corrected-list.md"
+        "docs/logbook/059-a-name-or-a-corrected-list.md",
+        "docs/logbook/060-one-by-one-or-all-at-once.md",
+        "docs/logbook/061-a-dispatch-per-group.md",
+        "docs/decisions/037-springs-one-by-one-in-groups.md"
       ],
       "page": "docs/topics/spring.md"
     },
@@ -456,7 +459,10 @@
         "docs/logbook/004-the-detour.md",
         "advanced-character-physics",
         "docs/logbook/013-the-hidden-brake.md",
-        "docs/logbook/058-how-engines-set-a-spring.md"
+        "docs/logbook/058-how-engines-set-a-spring.md",
+        "docs/logbook/060-one-by-one-or-all-at-once.md",
+        "docs/logbook/061-a-dispatch-per-group.md",
+        "docs/decisions/037-springs-one-by-one-in-groups.md"
       ]
     },
     {
@@ -1070,7 +1076,8 @@
         "docs/logbook/031-the-yellow-ball.md",
         "docs/logbook/032-two-kinds-of-bounce.md",
         "docs/logbook/033-the-speed-limit.md",
-        "docs/logbook/045-a-million-and-one-pass.md"
+        "docs/logbook/045-a-million-and-one-pass.md",
+        "docs/logbook/060-one-by-one-or-all-at-once.md"
       ],
       "page": "docs/topics/integration.md#substeps",
       "code": ["src/world.ts"]
@@ -1611,8 +1618,12 @@
         "docs/logbook/012-the-family-tree.md",
         "advanced-character-physics",
         "iterative-dynamics-paper",
-        "docs/logbook/014-the-mirror.md"
-      ]
+        "docs/logbook/014-the-mirror.md",
+        "docs/logbook/060-one-by-one-or-all-at-once.md",
+        "docs/logbook/061-a-dispatch-per-group.md",
+        "docs/decisions/037-springs-one-by-one-in-groups.md"
+      ],
+      "code": ["docs/topics/spring-rounds.mjs"]
     },
     {
       "id": "jacobi",
@@ -1633,8 +1644,12 @@
         "advanced-character-physics",
         "solver2d-post",
         "docs/logbook/017-taking-turns.md",
-        "docs/logbook/026-the-marble-in-the-pocket.md"
-      ]
+        "docs/logbook/026-the-marble-in-the-pocket.md",
+        "docs/logbook/060-one-by-one-or-all-at-once.md",
+        "docs/logbook/061-a-dispatch-per-group.md",
+        "docs/decisions/037-springs-one-by-one-in-groups.md"
+      ],
+      "code": ["docs/topics/spring-rounds.mjs"]
     },
     {
       "id": "tgs-solver",
@@ -1758,7 +1773,8 @@
         "advanced-character-physics",
         "docs/logbook/013-the-hidden-brake.md",
         "docs/topics/spring-simulation.md",
-        "docs/logbook/057-three-ways-around.md"
+        "docs/logbook/057-three-ways-around.md",
+        "docs/logbook/060-one-by-one-or-all-at-once.md"
       ],
       "page": "docs/topics/spring-simulation.md#way-2-move-the-ends"
     },
@@ -1786,9 +1802,12 @@
         "docs/logbook/020-a-cheap-launch.md",
         "docs/logbook/021-a-short-trip.md",
         "docs/logbook/022-the-bell-that-rang-early.md",
-        "docs/logbook/023-the-first-free-turn.md"
+        "docs/logbook/023-the-first-free-turn.md",
+        "docs/logbook/060-one-by-one-or-all-at-once.md",
+        "docs/logbook/061-a-dispatch-per-group.md",
+        "docs/decisions/037-springs-one-by-one-in-groups.md"
       ],
-      "code": ["examples/turn-sorting/main.ts"]
+      "code": ["examples/turn-sorting/main.ts", "examples/spring-lookup/main.ts"]
     },
     {
       "id": "xpbd",
@@ -1808,7 +1827,8 @@
         "docs/logbook/012-the-family-tree.md",
         "docs/logbook/016-the-same-road.md",
         "docs/topics/spring-simulation.md",
-        "docs/logbook/057-three-ways-around.md"
+        "docs/logbook/057-three-ways-around.md",
+        "docs/logbook/060-one-by-one-or-all-at-once.md"
       ],
       "page": "docs/topics/spring-simulation.md#way-3-move-the-ends-part-of-the-way"
     },
@@ -2880,7 +2900,11 @@
         "mentioned": "2026-11-05"
       },
       "about": ["substepping", "xpbd", "iterative-solver", "float-precision"],
-      "citedIn": ["docs/logbook/004-the-detour.md", "docs/logbook/012-the-family-tree.md"],
+      "citedIn": [
+        "docs/logbook/004-the-detour.md",
+        "docs/logbook/012-the-family-tree.md",
+        "docs/logbook/060-one-by-one-or-all-at-once.md"
+      ],
       "url": "https://mmacklin.com/smallsteps.pdf",
       "authors": "Miles Macklin, Kier Storey, Michelle Lu, Pierre Terdiman, Nuttapong Chentanez, Stefan Jeschke, Matthias Müller",
       "year": 2019,
@@ -5123,7 +5147,8 @@
         "xpbd-paper",
         "docs/topics/spring-simulation.md",
         "docs/logbook/057-three-ways-around.md",
-        "docs/logbook/058-how-engines-set-a-spring.md"
+        "docs/logbook/058-how-engines-set-a-spring.md",
+        "docs/logbook/060-one-by-one-or-all-at-once.md"
       ],
       "page": "docs/topics/spring-simulation.md#way-3-move-the-ends-part-of-the-way"
     },
@@ -5144,7 +5169,8 @@
         "unified-particle-physics-paper",
         "docs/logbook/017-taking-turns.md",
         "docs/logbook/026-the-marble-in-the-pocket.md",
-        "docs/decisions/015-half-and-half-on-positions.md"
+        "docs/decisions/015-half-and-half-on-positions.md",
+        "docs/logbook/060-one-by-one-or-all-at-once.md"
       ]
     },
     {
@@ -8196,7 +8222,12 @@
       },
       "partOf": "jolt",
       "about": ["soft-body", "compliance", "distance-constraint", "cloth"],
-      "citedIn": ["docs/logbook/058-how-engines-set-a-spring.md"],
+      "citedIn": [
+        "docs/logbook/058-how-engines-set-a-spring.md",
+        "docs/logbook/060-one-by-one-or-all-at-once.md",
+        "docs/logbook/061-a-dispatch-per-group.md",
+        "docs/decisions/037-springs-one-by-one-in-groups.md"
+      ],
       "url": "https://github.com/jrouwe/JoltPhysics/blob/master/Jolt/Physics/SoftBody/SoftBodySharedSettings.h",
       "claudeRead": "parts"
     },
@@ -8333,7 +8364,9 @@
       "citedIn": [
         "docs/logbook/059-a-name-or-a-corrected-list.md",
         "flex-header",
-        "docs/decisions/036-names-and-a-register.md"
+        "docs/decisions/036-names-and-a-register.md",
+        "docs/logbook/061-a-dispatch-per-group.md",
+        "docs/decisions/037-springs-one-by-one-in-groups.md"
       ]
     }
   ]
