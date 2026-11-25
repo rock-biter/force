@@ -1358,7 +1358,8 @@
         "unified-particle-physics-paper",
         "docs/logbook/041-next-to-each-other.md",
         "docs/logbook/042-no-best-way.md",
-        "docs/logbook/044-the-first-devices.md"
+        "docs/logbook/044-the-first-devices.md",
+        "docs/logbook/050-the-price-of-remembering.md"
       ],
       "code": [
         "examples/heap-simulation/book-move.wgsl",
@@ -1901,9 +1902,14 @@
         "docs/logbook/038-one-hundred-twenty-five-cells.md",
         "docs/logbook/039-far-apart-in-memory.md",
         "docs/decisions/024-cells-in-a-hashed-table.md",
-        "docs/logbook/042-no-best-way.md"
+        "docs/logbook/042-no-best-way.md",
+        "docs/logbook/050-the-price-of-remembering.md"
       ],
-      "code": ["examples/contact-cost/list.wgsl"]
+      "code": [
+        "examples/contact-cost/list.wgsl",
+        "examples/heap-simulation/round-cells.wgsl",
+        "examples/heap-simulation/levels-cells.wgsl"
+      ]
     },
     {
       "id": "granular-material",
@@ -4267,7 +4273,8 @@
         "wgsl-spec-var-declarations",
         "docs/guides/compute-shader.md",
         "docs/logbook/030-the-lazy-list.md",
-        "docs/logbook/049-a-radius-each.md"
+        "docs/logbook/049-a-radius-each.md",
+        "docs/logbook/050-the-price-of-remembering.md"
       ]
     },
     {
@@ -7196,7 +7203,8 @@
         "docs/logbook/038-one-hundred-twenty-five-cells.md",
         "docs/decisions/023-cells-as-wide-as-the-reach.md",
         "docs/logbook/048-big-and-small.md",
-        "docs/logbook/049-a-radius-each.md"
+        "docs/logbook/049-a-radius-each.md",
+        "docs/logbook/050-the-price-of-remembering.md"
       ],
       "code": ["examples/contact-cost/list.wgsl", "examples/contact-cost/watch.wgsl"]
     },
@@ -7946,7 +7954,8 @@
       "code": ["examples/heap-simulation/main.ts", "examples/mixed-sizes/list-sized.wgsl"],
       "citedIn": [
         "docs/logbook/049-a-radius-each.md",
-        "docs/decisions/032-a-buffer-of-particle-properties.md"
+        "docs/decisions/032-a-buffer-of-particle-properties.md",
+        "docs/logbook/050-the-price-of-remembering.md"
       ]
     }
   ]

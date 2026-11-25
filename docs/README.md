@@ -56,6 +56,7 @@ This is where we tell how FORCE gets built, one step at a time. If you are new h
 | 047 | [Once per Pixel](./logbook/047-once-per-pixel.md) | The shadows built and every way of drawing timed, up to a million particles: with shadows, light worked out once per pixel always wins |
 | 048 | [Big and Small](./logbook/048-big-and-small.md) | Particles of different sizes, tried by script in 3D: fine up to 2 to 1, then the lists of neighbours overflow and a heavy sphere on light ones is too much |
 | 049 | [A Radius Each](./logbook/049-a-radius-each.md) | A page with particles of different sizes, of one material or several: one more buffer on the GPU, and the limit of 8 storage buffers per shader |
+| 050 | [The Price of Remembering](./logbook/050-the-price-of-remembering.md) | Are the lists of neighbours still worth their buffers? In random order yes; with the particles in the order of their cells, a step without lists takes about the same |
 
 ## For reference
 

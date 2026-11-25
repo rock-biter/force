@@ -76,6 +76,8 @@ import bookSettleCode from './book-settle.wgsl?raw'
 import cellsGridCode from './cells-grid.wgsl?raw'
 import cellsTableCode from './cells-table.wgsl?raw'
 import finishLimitCode from './finish-limit.wgsl?raw'
+import levelsCellsCode from './levels-cells.wgsl?raw'
+import roundCellsCode from './round-cells.wgsl?raw'
 import roundPushCode from './round-push.wgsl?raw'
 
 type Vec3 = [number, number, number]
@@ -109,6 +111,10 @@ const MOST_PARTICLES = Number(document.body.dataset.maxParticles) || MAX_PARTICL
 // know nothing of sizes. The largest keeps the radius of the other pages, RADIUS.
 const SIZES = Number(document.body.dataset.sizes) || 0
 const MIXED = SIZES > 0
+// ?lists=off in the address, a study (chapter 050): no lists of neighbours. The levels and every
+// round read the cells of the address book themselves (round-cells.wgsl), and the book is made
+// again at every substep. Only with the book on a grid, and with one size.
+const DIRECT = !MIXED && new URLSearchParams(location.search).get('lists') === 'off'
 const MAX_SIZES = 2 // the largest over the smallest, at most (decision 031)
 const MAX_TILT = 30 // degrees, around X and around Z, on the page that tilts the box
 const TILT_SPEED = 20 // degrees per second: the floor's far corner, 17 m away, then moves 9.9 cm per step, just under a radius. A wider box turns slower, to keep that
@@ -238,7 +244,7 @@ const HASHES: Record<string, string> = {
 // of neighbours needs no book to read.
 const listInOrder = (code: string) =>
   code
-    .replace('@group(0) @binding(8) var<storage, read> book: array<u32>;', '')
+    .replace(/@group\(0\) @binding\(\d+\) var<storage, read> book: array<u32>;/, '')
     .replace('let j = book[first + s];', 'let j = first + s;')
 
 // A radius for each particle (decisions 031 and 032). The shaders of this folder are written for
@@ -284,6 +290,18 @@ async function makePipelines(device: GPUDevice, hash: string) {
     ].map(make),
   )
   const [bookBlocks, bookScan, bookEnds, bookMove, bookSettle, ...filed] = book
+  // With no lists: the levels and the rounds that read the book, and the same with the particles
+  // kept in its order.
+  const direct = DIRECT
+    ? await Promise.all(
+        [
+          levelsCellsCode,
+          listInOrder(levelsCellsCode),
+          roundCellsCode,
+          listInOrder(roundCellsCode),
+        ].map((code) => make(cellsGridCode + code)),
+      )
+    : undefined
   const filing = (k: number) => ({
     bookCount: filed[4 * k],
     bookFill: filed[4 * k + 1],
@@ -306,6 +324,7 @@ async function makePipelines(device: GPUDevice, hash: string) {
     bookSettle,
     byGrid: filing(0),
     byTable: filing(1),
+    direct,
   }
 }
 type Pipelines = Awaited<ReturnType<typeof makePipelines>>
@@ -551,22 +570,36 @@ function makeSimulation(
   })
   buffers.push(rub)
   // Levels alternate between two buffers, a step each; positions between two, a round each.
+  // With no lists (DIRECT), the levels and the rounds read the book in their place.
+  const [levelsCells, levelsCellsInOrder, roundCells, roundCellsInOrder] = kit.direct ?? []
+  const levelsKit = kit.direct ? (sorted ? levelsCellsInOrder : levelsCells) : kit.levels
+  const roundKit = kit.direct ? (sorted ? roundCellsInOrder : roundCells) : kit.round
+  const cellBuffers = kit.direct ? [counts, starts] : undefined
+  const bookLast = kit.direct && !sorted ? [book] : []
   const levelGroups = [0, 1].map((k) =>
-    group(kit.levels, [params, predicted[0], neighbours, tally, planes, levels[k], levels[1 - k]]),
+    group(levelsKit, [
+      params,
+      predicted[0],
+      ...(cellBuffers ?? [neighbours, tally]),
+      planes,
+      levels[k],
+      levels[1 - k],
+      ...bookLast,
+    ]),
   )
   const roundGroups = [0, 1].map((k) =>
     [0, 1].map((from) =>
-      group(kit.round, [
+      group(roundKit, [
         params,
         predicted[from],
         predicted[1 - from],
-        neighbours,
-        tally,
+        ...(cellBuffers ?? [neighbours, tally]),
         planes,
         levels[1 - k],
         pointer,
         positions, // where each particle was when the substep began: friction measures from there
         rub,
+        ...bookLast,
       ]),
     ),
   )
@@ -655,7 +688,7 @@ function makeSimulation(
           if (!whole) pass.end()
         }
         dispatch('predict', kit.predict, predictGroup)
-        dispatch('watch', kit.watch, watchGroup)
+        if (!kit.direct) dispatch('watch', kit.watch, watchGroup)
         dispatch('clear', kit.clearIf, clearGroup, cellWorkgroups)
         if (cells === 'places') {
           dispatch('fill', kit.gridIf, gridGroup)
@@ -670,15 +703,17 @@ function makeSimulation(
             dispatch('move', kit.bookMove, bookGroups.move[parity])
             dispatch('move', kit.bookSettle, bookGroups.settle[parity])
           }
-          dispatch('list', sorted ? file.bookListInOrder : file.bookList, bookGroups.list)
+          if (!kit.direct)
+            dispatch('list', sorted ? file.bookListInOrder : file.bookList, bookGroups.list)
         }
-        if (levelsOn) dispatch('levels', kit.levels, levelGroups[parity])
-        for (let r = 0; r < ROUNDS; r++) dispatch('rounds', kit.round, roundGroups[parity][r % 2])
+        if (levelsOn) dispatch('levels', levelsKit, levelGroups[parity])
+        for (let r = 0; r < ROUNDS; r++) dispatch('rounds', roundKit, roundGroups[parity][r % 2])
         dispatch('finish', kit.finish, finishGroup)
         whole?.end()
         // Only the first substep asks for a list. With no margin every substep does: a list that
         // looks no further than touching is right only where it was made.
-        if (margin > 0) encoder.clearBuffer(control, 0, 4)
+        // With no lists the book is made again at every substep too: nothing says when to.
+        if (margin > 0 && !kit.direct) encoder.clearBuffer(control, 0, 4)
         parity = 1 - parity
         this.substepCount++
       }
@@ -1050,9 +1085,11 @@ async function start() {
     // How the cells keep their particles: the address book with a table (decision 024), the
     // address book with a slot per cell of the grid, or 4 places per cell. ?cells=book or
     // ?cells=places
-    cells: ((MIXED ? ['book'] : ['book', 'places']).includes(query.get('cells') ?? '')
-      ? query.get('cells')
-      : 'table') as Cells,
+    cells: (DIRECT
+      ? 'book'
+      : (MIXED ? ['book'] : ['book', 'places']).includes(query.get('cells') ?? '')
+        ? query.get('cells')
+        : 'table') as Cells,
     ball: Number(document.body.dataset.ball) || BALL_RADIUS, // data-ball on the page's <body>
   }
   // ?margin=0 in the address: how far beyond touching the lists look, in meters. With 0 a

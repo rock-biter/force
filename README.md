@@ -56,8 +56,11 @@ there is a page to try it, with grains of one material or of several
 ([try it](https://rock-biter.github.io/force/mixed-sizes/),
 [chapter 049](./docs/logbook/049-a-radius-each.md)). 31 runs of the benchmark are in.
 
-**Next:** the lists of neighbours each particle keeps: what they cost in memory, and what they save.
-Then our rules read again against the devices.
+Each particle keeps a list of its neighbours, which costs memory. We timed a step without the lists:
+much slower, unless the particles are kept in the order of the cells they are in, and then about
+the same ([chapter 050](./docs/logbook/050-the-price-of-remembering.md)).
+
+**Next:** choose between the two ways. Then our rules read again against the devices.
 
 Every step, with what we learned and what went wrong, is in the [logbook](./docs/README.md).
 
