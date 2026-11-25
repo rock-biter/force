@@ -5,8 +5,8 @@
 Everything we have met while building FORCE, concepts and sources, and how far we went with each
 one. Use it to look up a term, to find what to read, or to pick what to explore next.
 
-- **297 concepts:** ● 24 studied · ◐ 147 seen · ○ 126 mentioned
-- **157 sources:** ● 15 studied · ◐ 17 seen · ○ 125 mentioned · read by Claude: 73 parts, 16 in full
+- **298 concepts:** ● 28 studied · ◐ 145 seen · ○ 125 mentioned
+- **159 sources:** ● 15 studied · ◐ 17 seen · ○ 127 mentioned · read by Claude: 75 parts, 16 in full
 
 | | Status | What it means |
 | --- | --- | --- |
@@ -62,8 +62,9 @@ How things move, collide and stay together.
 | ○ | Continuous collision detection | Checking the whole path between two steps, so fast objects cannot tunnel through walls | Collision detection | [004](../logbook/004-the-detour.md) |
 | ○ | Convexity | A shape with no dents: the segment between any two of its points stays inside. Many collision shortcuts only work for these | Collision detection | [Advanced Character Physics](https://edelkas.github.io/n/files/bib/jakobsen.pdf) |
 | ◐ | Coulomb friction | The classic law of friction: it can resist sliding up to a limit in proportion to how hard the surfaces press together | Friction | [010](../logbook/010-the-ground.md) |
+| ◐ | Critical damping | Just enough brake for a spring to come to rest as fast as it can without ever going past: a damping ratio of 1 | Damping ratio | [spring](spring.md) |
 | ◐ | Damping | Taking away a little speed at every step, like air drag, so that motion dies out |  | [Advanced Character Physics](https://edelkas.github.io/n/files/bib/jakobsen.pdf) |
-| ◐ | Damping ratio | How fast a spring's swing dies: 0 swings forever, 1 comes back without overshooting | Soft constraint | [Solver2D](https://box2d.org/posts/2024/02/solver2d/) |
+| ● | **[Damping ratio](spring.md#how-it-works)** | How much a spring is braked, measured against itself: below 1 it bounces before resting, at 1 it rests as fast as it can without bouncing, above 1 it is slow | Soft constraint | [Solver2D](https://box2d.org/posts/2024/02/solver2d/) |
 | ○ | Dashpot | A damper between two touching particles that resists the speed at which they meet, so a contact spring stops bouncing | Discrete element method (DEM) | [Particle Simulation using CUDA](https://developer.download.nvidia.com/assets/cuda/files/particles.pdf) |
 | ○ | Degrees of freedom | How many independent numbers describe where a thing is: 6 for a rigid body, 3 to place it and 3 to turn it | Rigid body | [Advanced Character Physics](https://edelkas.github.io/n/files/bib/jakobsen.pdf) |
 | ○ | Destruction | Breaking objects into pieces while the game runs |  | [004](../logbook/004-the-detour.md) |
@@ -87,9 +88,9 @@ How things move, collide and stay together.
 | ◐ | Gravity | The force that pulls everything down: on Earth it adds 9.81 m/s of downward speed every second | Forces | [001](../logbook/001-the-flip-book.md) |
 | ○ | Grid fluid (Eulerian) | A fluid simulated on a fixed grid, tracking what flows through each cell | Fluid | [Ten Minute Physics](https://matthias-research.github.io/pages/tenMinutePhysics/index.html) |
 | ○ | Gyroscopic torque | The term that makes a spinning body wobble when its mass is uneven: often dropped in games, because it can blow up |  | [Iterative Dynamics with Temporal Coherence](https://box2d.org/files/ErinCatto_IterativeDynamics_GDC2005.pdf) |
-| ○ | Harmonic oscillator | A mass on a spring with a brake: the model behind soft constraints |  | [Solver2D](https://box2d.org/posts/2024/02/solver2d/) |
+| ● | **[Harmonic oscillator](spring.md#how-it-works)** | A weight on a spring: it swings back and forth at a pace set by stiffness and mass, √(k / m) / 2π times a second, forever unless something brakes it |  | [Solver2D](https://box2d.org/posts/2024/02/solver2d/) |
 | ○ | Hierarchical grid | Several grids with cells of different widths, one for each class of sizes, each one hashed, so that small objects are not searched through cells made for large ones |  | [048](../logbook/048-big-and-small.md) |
-| ◐ | Hooke's law | A spring pulls back in proportion to how far it is stretched (F = −kx) | Spring | [004](../logbook/004-the-detour.md) |
+| ● | **[Hooke's law](spring.md#the-idea)** | A spring pulls back in proportion to how far it is stretched (F = −kx) | Spring | [004](../logbook/004-the-detour.md) |
 | ● | **[Implicit integration](integration.md#implicit-euler)** | Uses the force at the end of the step: stable with stiff springs, but it must solve equations and it drains energy | Integration | [Physically Based Modeling: Principles and Practice](https://www.cs.cmu.edu/~baraff/sigcourse/) |
 | ◐ | Impulse-based dynamics | Resolving collisions by changing velocities at once, with an instant kick called an impulse |  | [004](../logbook/004-the-detour.md) |
 | ◐ | Inequality constraint | A rule that only works one way, such as "at least this far apart": it acts only when broken | Constraint | [Advanced Character Physics](https://edelkas.github.io/n/files/bib/jakobsen.pdf) |
@@ -174,7 +175,7 @@ How things move, collide and stay together.
 | ○ | SPH | Smoothed particle hydrodynamics: a fluid's density and pressure at each particle, estimated from its neighbours | Fluid | [004](../logbook/004-the-detour.md) |
 | ● | **[Spiral of death](fixed-timestep.md#the-spiral-of-death)** | When catching up on physics takes so long that every frame falls further behind | Fixed timestep | [004](../logbook/004-the-detour.md) |
 | ○ | Split impulse | PhysX's name for solving the position error and the velocity error in separate rounds, so the correction does not stay in the final velocity | Solver | [PhysX, Rigid Body Dynamics](https://nvidia-omniverse.github.io/PhysX/physx/5.6.1/docs/RigidBodyDynamics.html) |
-| ◐ | Spring | A link that keeps two points near a rest distance, pulling when stretched and pushing when squeezed |  | [docs index](../README.md) |
+| ● | **[Spring](spring.md)** | A link that keeps two points near a rest distance, pulling when stretched and pushing when squeezed |  | [docs index](../README.md) |
 | ◐ | Stacking | Boxes resting on boxes: a classic stress test for a solver |  | [Advanced Character Physics](https://edelkas.github.io/n/files/bib/jakobsen.pdf) |
 | ◐ | Static and kinetic friction | Below its limit friction keeps two surfaces from sliding at all (static); above it they slide, braked by the limit (kinetic) | Friction | [034](../logbook/034-the-box-on-the-ramp.md) |
 | ◐ | Stiff stacks (mass scaling) | During contacts only, making lower particles look heavier, e^(-k × height), so a pile settles in fewer rounds: Macklin's trick, which biases hits in the air | Stacking | [Unified Particle Physics for Real-Time Applications](https://doi.org/10.1145/2601097.2601152) |
@@ -506,7 +507,9 @@ How an engine is organized, measured and scaled across devices.
 
 | | Source | Kind | What it gives us | About | First cited in | Claude read |
 | --- | --- | --- | --- | --- | --- | --- |
+| ○ | [Box2D, types.h](https://github.com/erincatto/box2d/blob/main/include/box2d/types.h) | Source code | The settings of Box2D's world, bodies and joints: springs are given in hertz and damping ratio | Spring, Damping ratio | [spring](spring.md) | Parts |
 | ○ | [Houdini Vellum Solver](https://www.sidefx.com/docs/houdini/nodes/dop/vellumsolver.html)<br>*SideFX* | Documentation | Grains with a radius per particle, and a switch for when all are the same, which allows a faster search of neighbours | Particles of different sizes | [048](../logbook/048-big-and-small.md) | Parts |
+| ○ | [Jolt Physics, SpringSettings.h](https://github.com/jrouwe/JoltPhysics/blob/master/Jolt/Physics/Constraints/SpringSettings.h) | Source code | How Jolt lets a spring be set: by frequency and damping, by stiffness and damping, or by stiffness divided by mass | Spring, Damping ratio, Soft constraint | [spring](spring.md) | Parts |
 
 ## Method
 

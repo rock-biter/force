@@ -66,7 +66,11 @@ With the lists gone, sizes can be further apart, up to 4 to 1. It works well whe
 spread, and badly with only very large and very small ones together
 ([chapter 055](./docs/logbook/055-further-apart.md)).
 
-**Next:** particles joined by springs. Then our rules read again against the
+Next come particles joined by springs, and we started from the physics: what a spring is, in four
+ideas ([chapter 056](./docs/logbook/056-what-a-spring-is.md), and the page
+[Springs](./docs/topics/spring.md)).
+
+**Next:** why a stiff spring is hard to simulate, and how engines set theirs. Then our rules read again against the
 devices.
 
 Every step, with what we learned and what went wrong, is in the [logbook](./docs/README.md).

@@ -418,13 +418,20 @@
       "title": "Spring",
       "summary": "A link that keeps two points near a rest distance, pulling when stretched and pushing when squeezed",
       "area": "physics",
-      "status": "seen",
+      "status": "studied",
       "since": {
         "mentioned": "2026-11-05",
-        "seen": "2026-11-08"
+        "seen": "2026-11-08",
+        "studied": "2026-11-25"
       },
-      "related": ["cloth"],
-      "citedIn": ["docs/README.md", "docs/logbook/004-the-detour.md", "advanced-character-physics"]
+      "related": ["cloth", "harmonic-oscillator", "damping-ratio", "stiffness"],
+      "citedIn": [
+        "docs/README.md",
+        "docs/logbook/004-the-detour.md",
+        "advanced-character-physics",
+        "docs/logbook/056-what-a-spring-is.md"
+      ],
+      "page": "docs/topics/spring.md"
     },
     {
       "id": "cloth",
@@ -1002,7 +1009,8 @@
         "docs/logbook/004-the-detour.md",
         "advanced-character-physics",
         "docs/logbook/025-the-pillow.md",
-        "docs/logbook/029-heavy-on-light.md"
+        "docs/logbook/029-heavy-on-light.md",
+        "docs/logbook/056-what-a-spring-is.md"
       ],
       "page": "docs/topics/integration.md#the-step-limit"
     },
@@ -1111,12 +1119,14 @@
       "title": "Hooke's law",
       "summary": "A spring pulls back in proportion to how far it is stretched (F = −kx)",
       "area": "physics",
-      "status": "seen",
+      "status": "studied",
       "since": {
-        "seen": "2026-11-08"
+        "seen": "2026-11-08",
+        "studied": "2026-11-25"
       },
       "partOf": "spring",
-      "citedIn": ["docs/logbook/004-the-detour.md"]
+      "citedIn": ["docs/logbook/004-the-detour.md", "docs/logbook/056-what-a-spring-is.md"],
+      "page": "docs/topics/spring.md#the-idea"
     },
     {
       "id": "energy-conservation",
@@ -1819,7 +1829,11 @@
         "seen": "2026-11-17"
       },
       "related": ["spring", "cloth"],
-      "citedIn": ["docs/logbook/004-the-detour.md", "advanced-character-physics"]
+      "citedIn": [
+        "docs/logbook/004-the-detour.md",
+        "advanced-character-physics",
+        "docs/logbook/056-what-a-spring-is.md"
+      ]
     },
     {
       "id": "finite-element-method",
@@ -5741,7 +5755,8 @@
         "docs/logbook/027-the-stored-nudge.md",
         "docs/logbook/028-the-ranking.md",
         "docs/decisions/014-damping-off-by-default.md",
-        "docs/logbook/032-two-kinds-of-bounce.md"
+        "docs/logbook/032-two-kinds-of-bounce.md",
+        "docs/logbook/056-what-a-spring-is.md"
       ]
     },
     {
@@ -6278,28 +6293,36 @@
       "id": "damping-ratio",
       "kind": "concept",
       "title": "Damping ratio",
-      "summary": "How fast a spring's swing dies: 0 swings forever, 1 comes back without overshooting",
+      "summary": "How much a spring is braked, measured against itself: below 1 it bounces before resting, at 1 it rests as fast as it can without bouncing, above 1 it is slow",
       "area": "physics",
-      "status": "seen",
+      "status": "studied",
       "since": {
-        "seen": "2026-11-17"
+        "seen": "2026-11-17",
+        "studied": "2026-11-25"
       },
       "partOf": "soft-constraint",
       "related": ["damping", "spring"],
-      "citedIn": ["solver2d-post", "docs/logbook/015-the-stiff-spring.md"]
+      "citedIn": [
+        "solver2d-post",
+        "docs/logbook/015-the-stiff-spring.md",
+        "docs/logbook/056-what-a-spring-is.md"
+      ],
+      "page": "docs/topics/spring.md#how-it-works"
     },
     {
       "id": "harmonic-oscillator",
       "kind": "concept",
       "title": "Harmonic oscillator",
-      "summary": "A mass on a spring with a brake: the model behind soft constraints",
+      "summary": "A weight on a spring: it swings back and forth at a pace set by stiffness and mass, √(k / m) / 2π times a second, forever unless something brakes it",
       "area": "physics",
-      "status": "mentioned",
+      "status": "studied",
       "since": {
-        "mentioned": "2026-11-17"
+        "mentioned": "2026-11-17",
+        "studied": "2026-11-25"
       },
       "related": ["spring", "soft-constraint"],
-      "citedIn": ["solver2d-post"]
+      "citedIn": ["solver2d-post", "docs/logbook/056-what-a-spring-is.md"],
+      "page": "docs/topics/spring.md#how-it-works"
     },
     {
       "id": "contact-point-update",
@@ -7991,6 +8014,51 @@
         "docs/logbook/052-what-follows-a-particle.md",
         "docs/logbook/053-in-order-by-default.md"
       ]
+    },
+    {
+      "id": "jolt-spring-settings",
+      "kind": "code",
+      "title": "Jolt Physics, SpringSettings.h",
+      "summary": "How Jolt lets a spring be set: by frequency and damping, by stiffness and damping, or by stiffness divided by mass",
+      "area": "engine",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-25"
+      },
+      "partOf": "jolt",
+      "about": ["spring", "damping-ratio", "soft-constraint"],
+      "citedIn": ["docs/topics/spring.md", "docs/logbook/056-what-a-spring-is.md"],
+      "url": "https://github.com/jrouwe/JoltPhysics/blob/master/Jolt/Physics/Constraints/SpringSettings.h",
+      "claudeRead": "parts"
+    },
+    {
+      "id": "box2d-types",
+      "kind": "code",
+      "title": "Box2D, types.h",
+      "summary": "The settings of Box2D's world, bodies and joints: springs are given in hertz and damping ratio",
+      "area": "engine",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-25"
+      },
+      "partOf": "box2d",
+      "about": ["spring", "damping-ratio"],
+      "citedIn": ["docs/topics/spring.md", "docs/logbook/056-what-a-spring-is.md"],
+      "url": "https://github.com/erincatto/box2d/blob/main/include/box2d/types.h",
+      "claudeRead": "parts"
+    },
+    {
+      "id": "critical-damping",
+      "kind": "concept",
+      "title": "Critical damping",
+      "summary": "Just enough brake for a spring to come to rest as fast as it can without ever going past: a damping ratio of 1",
+      "area": "physics",
+      "status": "seen",
+      "since": {
+        "seen": "2026-11-25"
+      },
+      "partOf": "damping-ratio",
+      "citedIn": ["docs/topics/spring.md", "docs/logbook/056-what-a-spring-is.md"]
     }
   ]
 }
