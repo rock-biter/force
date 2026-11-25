@@ -57,6 +57,7 @@ This is where we tell how FORCE gets built, one step at a time. If you are new h
 | 048 | [Big and Small](./logbook/048-big-and-small.md) | Particles of different sizes, tried by script in 3D: fine up to 2 to 1, then the lists of neighbours overflow and a heavy sphere on light ones is too much |
 | 049 | [A Radius Each](./logbook/049-a-radius-each.md) | A page with particles of different sizes, of one material or several: one more buffer on the GPU, and the limit of 8 storage buffers per shader |
 | 050 | [The Price of Remembering](./logbook/050-the-price-of-remembering.md) | Are the lists of neighbours still worth their buffers? In random order yes; with the particles in the order of their cells, a step without lists takes about the same |
+| 051 | [Read Once](./logbook/051-read-once.md) | A step with no lists in the hashed table too: read each shared slot once, and check the rare case first. In order, faster than with the lists |
 
 ## For reference
 

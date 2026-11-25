@@ -1315,7 +1315,8 @@
         "docs/logbook/042-no-best-way.md",
         "docs/logbook/045-a-million-and-one-pass.md",
         "docs/logbook/048-big-and-small.md",
-        "ogarko-luding-contact-detection"
+        "ogarko-luding-contact-detection",
+        "docs/logbook/051-read-once.md"
       ],
       "code": ["examples/heap-simulation/cells-table.wgsl"]
     },
@@ -1359,7 +1360,8 @@
         "docs/logbook/041-next-to-each-other.md",
         "docs/logbook/042-no-best-way.md",
         "docs/logbook/044-the-first-devices.md",
-        "docs/logbook/050-the-price-of-remembering.md"
+        "docs/logbook/050-the-price-of-remembering.md",
+        "docs/logbook/051-read-once.md"
       ],
       "code": [
         "examples/heap-simulation/book-move.wgsl",
@@ -1903,7 +1905,8 @@
         "docs/logbook/039-far-apart-in-memory.md",
         "docs/decisions/024-cells-in-a-hashed-table.md",
         "docs/logbook/042-no-best-way.md",
-        "docs/logbook/050-the-price-of-remembering.md"
+        "docs/logbook/050-the-price-of-remembering.md",
+        "docs/logbook/051-read-once.md"
       ],
       "code": [
         "examples/contact-cost/list.wgsl",
@@ -7204,7 +7207,8 @@
         "docs/decisions/023-cells-as-wide-as-the-reach.md",
         "docs/logbook/048-big-and-small.md",
         "docs/logbook/049-a-radius-each.md",
-        "docs/logbook/050-the-price-of-remembering.md"
+        "docs/logbook/050-the-price-of-remembering.md",
+        "docs/logbook/051-read-once.md"
       ],
       "code": ["examples/contact-cost/list.wgsl", "examples/contact-cost/watch.wgsl"]
     },
@@ -7702,12 +7706,13 @@
       "title": "Hash collision",
       "summary": "Two different cells that get the same slot of a hash table, so their particles must be told apart",
       "area": "gpu",
-      "status": "mentioned",
+      "status": "seen",
       "since": {
-        "mentioned": "2026-11-25"
+        "seen": "2026-11-25"
       },
-      "citedIn": ["ogarko-luding-contact-detection"],
-      "related": ["spatial-hashing"]
+      "citedIn": ["ogarko-luding-contact-detection", "docs/logbook/051-read-once.md"],
+      "related": ["spatial-hashing"],
+      "code": ["examples/heap-simulation/main.ts"]
     },
     {
       "id": "delaunay-triangulation",

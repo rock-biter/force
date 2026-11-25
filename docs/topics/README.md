@@ -5,7 +5,7 @@
 Everything we have met while building FORCE, concepts and sources, and how far we went with each
 one. Use it to look up a term, to find what to read, or to pick what to explore next.
 
-- **297 concepts:** ● 24 studied · ◐ 145 seen · ○ 128 mentioned
+- **297 concepts:** ● 24 studied · ◐ 146 seen · ○ 127 mentioned
 - **157 sources:** ● 15 studied · ◐ 17 seen · ○ 125 mentioned · read by Claude: 73 parts, 16 in full
 
 | | Status | What it means |
@@ -359,7 +359,7 @@ WebGPU, WGSL and how to make thousands of threads work.
 | ○ | GPU-resident simulation | Keeping the simulation's data on the GPU, and not reading it back every frame |  | [004](../logbook/004-the-detour.md) |
 | ◐ | Grid built by counting | A uniform grid as an array with a few places per cell and an atomic counter per cell: each particle takes the next place of its cell, and a particle that finds the cell full stays out | Uniform grid | [Particle Simulation using CUDA](https://developer.download.nvidia.com/assets/cuda/files/particles.pdf) |
 | ◐ | Grid built by sorting | A uniform grid as a list of particles sorted by cell, plus where each cell starts: no limit of particles per cell and no empty places, at the price of a sort on the GPU | Uniform grid | [Particle Simulation using CUDA](https://developer.download.nvidia.com/assets/cuda/files/particles.pdf) |
-| ○ | Hash collision | Two different cells that get the same slot of a hash table, so their particles must be told apart |  | [Data structures and algorithms for contact detection in numerical simulation of discrete particle systems](https://www2.msm.ctw.utwente.nl/sluding/PAPERS/OgarkoWCPT2010.pdf) |
+| ◐ | Hash collision | Two different cells that get the same slot of a hash table, so their particles must be told apart |  | [Data structures and algorithms for contact detection in numerical simulation of discrete particle systems](https://www2.msm.ctw.utwente.nl/sluding/PAPERS/OgarkoWCPT2010.pdf) |
 | ◐ | Hillis and Steele scan | A prefix sum in few rounds: every element adds the one 1 place to its left, then 2 places, then 4. Fast to finish, but it makes more additions than a plain walk | Prefix sum (scan) | [Parallel Prefix Sum (Scan) with CUDA](https://developer.nvidia.com/gpugems/gpugems3/part-vi-gpu-computing/chapter-39-parallel-prefix-sum-scan-cuda) |
 | ○ | Host-shareable type | A type with a fixed layout in bytes, so JavaScript and the shader agree on it: the only kind allowed in a buffer | WGSL | [WGSL specification, §7.3 var Declarations](https://www.w3.org/TR/WGSL/#var-decls) |
 | ○ | Immediate data | A var<immediate>: a few values set straight from the command encoder with setImmediates, with no buffer to create | Address space | [WGSL specification, §7.3 var Declarations](https://www.w3.org/TR/WGSL/#var-decls) |

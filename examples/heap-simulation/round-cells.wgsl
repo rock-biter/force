@@ -6,6 +6,13 @@
 // The book was filed at the start of the substep and the particles have moved since, a little at
 // each round: a particle is looked for in the cell where it was, not where it is. The cells must
 // be a little wider than a particle for that, as the margin of the lists made them.
+//
+// In a table a slot can hold particles of several cells. The shader of the lists tells them apart
+// by the cell each particle is in, which here would be wrong: the particle has moved. No need to:
+// a particle of a far cell is too far to touch, and the distance says so. Only a slot shared by
+// two of the 27 cells read would count its particles twice, so it is read once. That is rare, one
+// particle in a thousand: `clashing` finds out with 27 slots worked out once, and only then
+// `repeated` checks cell by cell (both written in main.ts, for a grid and for a table).
 
 struct Pointer {
   center: vec3f, // meters
@@ -68,11 +75,13 @@ fn main(@builtin(global_invocation_id) id: vec3u) {
 
   let slots = arrayLength(&counts);
   let home = cellOf(p);
+  let clash = clashing(home, slots); // in a table: do two of the 27 cells share a slot?
   for (var dz = -1; dz <= 1; dz++) {
     for (var dy = -1; dy <= 1; dy++) {
       for (var dx = -1; dx <= 1; dx++) {
         let c = home + vec3i(dx, dy, dz);
-        if (!known(c)) {
+        // In a table two of these 27 cells can share a slot: it is read once, for the first.
+        if (!known(c) || (clash && repeated(home, vec3i(dx, dy, dz), slots))) {
           continue;
         }
         let cell = slot(c, slots);

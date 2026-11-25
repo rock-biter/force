@@ -29,11 +29,13 @@ fn main(@builtin(global_invocation_id) id: vec3u) {
   }
   let slots = arrayLength(&counts);
   let home = cellOf(p);
+  let clash = clashing(home, slots); // in a table: do two of the 27 cells share a slot?
   for (var dz = -1; dz <= 1; dz++) {
     for (var dy = -1; dy <= 1; dy++) {
       for (var dx = -1; dx <= 1; dx++) {
         let c = home + vec3i(dx, dy, dz);
-        if (!known(c)) {
+        // In a table two of these 27 cells can share a slot: it is read once, for the first.
+        if (!known(c) || (clash && repeated(home, vec3i(dx, dy, dz), slots))) {
           continue;
         }
         let cell = slot(c, slots);

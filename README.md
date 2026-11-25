@@ -58,7 +58,9 @@ there is a page to try it, with grains of one material or of several
 
 Each particle keeps a list of its neighbours, which costs memory. We timed a step without the lists:
 much slower, unless the particles are kept in the order of the cells they are in, and then about
-the same ([chapter 050](./docs/logbook/050-the-price-of-remembering.md)).
+the same ([chapter 050](./docs/logbook/050-the-price-of-remembering.md)). In the table that
+holds a world with no border, it is even a little faster
+([chapter 051](./docs/logbook/051-read-once.md)).
 
 **Next:** choose between the two ways. Then our rules read again against the devices.
 

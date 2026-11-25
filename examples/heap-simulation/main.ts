@@ -113,7 +113,7 @@ const SIZES = Number(document.body.dataset.sizes) || 0
 const MIXED = SIZES > 0
 // ?lists=off in the address, a study (chapter 050): no lists of neighbours. The levels and every
 // round read the cells of the address book themselves (round-cells.wgsl), and the book is made
-// again at every substep. Only with the book on a grid, and with one size.
+// again at every substep. With the book on a grid or in a table, and with one size.
 const DIRECT = !MIXED && new URLSearchParams(location.search).get('lists') === 'off'
 const MAX_SIZES = 2 // the largest over the smallest, at most (decision 031)
 const MAX_TILT = 30 // degrees, around X and around Z, on the page that tilts the box
@@ -253,6 +253,10 @@ const listInOrder = (code: string) =>
 // levels and the rounds. They read `properties`, four numbers per particle, the radius first.
 /** The compute pipelines, made once: every restart uses them again. */
 async function makePipelines(device: GPUDevice, hash: string) {
+  // The table, with the hash ?hash= asks for.
+  const tableCode = HASHES[hash]
+    ? SPREAD + cellsTableCode.replace(HASH, HASHES[hash])
+    : cellsTableCode
   const make = (code: string) =>
     device.createComputePipelineAsync({
       layout: 'auto',
@@ -276,10 +280,7 @@ async function makePipelines(device: GPUDevice, hash: string) {
       rebuildCode + bookSettleCode,
       // its three shaders that file a particle under its cell, once with a slot per cell of the
       // grid and once with the slots of a table
-      ...[
-        cellsGridCode,
-        HASHES[hash] ? SPREAD + cellsTableCode.replace(HASH, HASHES[hash]) : cellsTableCode,
-      ].flatMap((cellsCode) =>
+      ...[cellsGridCode, tableCode].flatMap((cellsCode) =>
         [
           bookCountCode,
           bookFillCode,
@@ -292,14 +293,50 @@ async function makePipelines(device: GPUDevice, hash: string) {
   const [bookBlocks, bookScan, bookEnds, bookMove, bookSettle, ...filed] = book
   // With no lists: the levels and the rounds that read the book, and the same with the particles
   // kept in its order.
+  // In a table, two of the 27 cells a particle reads can share a slot, and its particles would
+  // count twice: `repeated` says whether the cell at `offset` from `home` has the slot of one read
+  // before it, in the order of the loops, x fastest. `clashing` says first whether any two of the
+  // 27 do, which is rare. On a grid every cell has its own slot.
+  const NEVER = `
+fn clashing(home: vec3i, slots: u32) -> bool { return false; }
+fn repeated(home: vec3i, offset: vec3i, slots: u32) -> bool { return false; }
+`
+  // `clashing`: the 27 slots worked out once, s0 to s26, and every pair of them compared. Written
+  // out by this loop, since a shader's own array would be slow to fill and read (chapter 045).
+  const cells27 = Array.from({ length: 27 }, (_, m) => m)
+  const FIRST = `
+fn clashing(home: vec3i, slots: u32) -> bool {
+${cells27
+  .map(
+    (m) =>
+      `  let s${m} = slot(home + vec3i(${(m % 3) - 1}, ${(Math.floor(m / 3) % 3) - 1}, ${Math.floor(m / 9) - 1}), slots);`,
+  )
+  .join('\n')}
+  return ${cells27
+    .flatMap((m) => cells27.slice(0, m).map((k) => `s${k} == s${m}`))
+    .join(' ||\n    ')};
+}
+fn repeated(home: vec3i, offset: vec3i, slots: u32) -> bool {
+  let mine = slot(home + offset, slots);
+  let k = (offset.z + 1) * 9 + (offset.y + 1) * 3 + offset.x + 1;
+  for (var m = 0; m < k; m++) {
+    if (slot(home + vec3i(m % 3 - 1, (m / 3) % 3 - 1, m / 9 - 1), slots) == mine) {
+      return true;
+    }
+  }
+  return false;
+}
+`
   const direct = DIRECT
     ? await Promise.all(
-        [
-          levelsCellsCode,
-          listInOrder(levelsCellsCode),
-          roundCellsCode,
-          listInOrder(roundCellsCode),
-        ].map((code) => make(cellsGridCode + code)),
+        [cellsGridCode + NEVER, tableCode + FIRST].flatMap((cellsCode) =>
+          [
+            levelsCellsCode,
+            listInOrder(levelsCellsCode),
+            roundCellsCode,
+            listInOrder(roundCellsCode),
+          ].map((code) => make(cellsCode + code)),
+        ),
       )
     : undefined
   const filing = (k: number) => ({
@@ -571,7 +608,9 @@ function makeSimulation(
   buffers.push(rub)
   // Levels alternate between two buffers, a step each; positions between two, a round each.
   // With no lists (DIRECT), the levels and the rounds read the book in their place.
-  const [levelsCells, levelsCellsInOrder, roundCells, roundCellsInOrder] = kit.direct ?? []
+  const [levelsCells, levelsCellsInOrder, roundCells, roundCellsInOrder] = (kit.direct ?? []).slice(
+    cells === 'table' ? 4 : 0,
+  )
   const levelsKit = kit.direct ? (sorted ? levelsCellsInOrder : levelsCells) : kit.levels
   const roundKit = kit.direct ? (sorted ? roundCellsInOrder : roundCells) : kit.round
   const cellBuffers = kit.direct ? [counts, starts] : undefined
@@ -1085,11 +1124,9 @@ async function start() {
     // How the cells keep their particles: the address book with a table (decision 024), the
     // address book with a slot per cell of the grid, or 4 places per cell. ?cells=book or
     // ?cells=places
-    cells: (DIRECT
-      ? 'book'
-      : (MIXED ? ['book'] : ['book', 'places']).includes(query.get('cells') ?? '')
-        ? query.get('cells')
-        : 'table') as Cells,
+    cells: ((MIXED || DIRECT ? ['book'] : ['book', 'places']).includes(query.get('cells') ?? '')
+      ? query.get('cells')
+      : 'table') as Cells,
     ball: Number(document.body.dataset.ball) || BALL_RADIUS, // data-ball on the page's <body>
   }
   // ?margin=0 in the address: how far beyond touching the lists look, in meters. With 0 a
