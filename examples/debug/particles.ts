@@ -88,6 +88,11 @@ export interface ParticleSource {
   readonly particleCount: number
   readonly positionBuffer: GPUBuffer
   readonly radius: number
+  /**
+   * For particles of different sizes: one vec4f per particle, its radius in meters in x. The rest
+   * belongs to the engine.
+   */
+  readonly propertiesBuffer?: GPUBuffer
 }
 
 export interface ParticleViewOptions {
@@ -140,8 +145,19 @@ export class ParticleView {
     const positions = new StorageInstancedBufferAttribute(world.particleCount, 4)
     useExternalBuffer(renderer, positions, world.positionBuffer)
     const centers = storage(positions, 'vec4', world.particleCount).toReadOnly()
-    const radius = uniform(world.radius) // the engine's own, so spheres rest on the ground
     const particle = centers.element(instanceIndex)
+    // The radius: the engine's own, so spheres rest on the ground. One for all, or one each, read
+    // from the world's buffer in the vertex shader and handed to the fragment shader.
+    let cornerRadius = uniform(world.radius) as unknown as Node<'float'>
+    let radius = cornerRadius
+    if (world.propertiesBuffer) {
+      const properties = new StorageInstancedBufferAttribute(world.particleCount, 4)
+      useExternalBuffer(renderer, properties, world.propertiesBuffer)
+      cornerRadius = storage(properties, 'vec4', world.particleCount)
+        .toReadOnly()
+        .element(instanceIndex).x as unknown as Node<'float'>
+      radius = varying(cornerRadius) as unknown as Node<'float'>
+    }
 
     // The color: one for all, or from the mass m = 1 / w. log(m / lightest) / log(heaviest /
     // lightest) is 0 at the lightest and 1 at the heaviest; it is worked out in the vertex shader,
@@ -171,7 +187,7 @@ export class ParticleView {
     // opens around it in the XY plane, so the triangle always faces the camera (a billboard).
     const corner = positionGeometry.xy
     const viewCenter = modelViewMatrix.mul(vec4(particle.xyz, 1)).xyz
-    const viewCorner = viewCenter.add(vec3(corner.mul(radius), 0))
+    const viewCorner = viewCenter.add(vec3(corner.mul(cornerRadius), 0))
 
     // What the fragment shader receives, like GLSL varyings.
     const disc = varying(corner) // the point on the triangle, in radii from the center

@@ -62,6 +62,9 @@ import watchCode from '../contact-cost/watch.wgsl?raw'
 import { ParticleView, SUN } from '../debug/particles.js'
 import { CASTERS, ShadowStage, SURFACES } from '../debug/shadows.js'
 import { showError } from '../debug/viewer.js'
+import levelsSizedCode from '../mixed-sizes/levels-sized.wgsl?raw'
+import listSizedCode from '../mixed-sizes/list-sized.wgsl?raw'
+import roundSizedCode from '../mixed-sizes/round-sized.wgsl?raw'
 import bookBlocksCode from './book-blocks.wgsl?raw'
 import bookCountCode from './book-count.wgsl?raw'
 import bookEndsCode from './book-ends.wgsl?raw'
@@ -101,6 +104,12 @@ const MAX_PARTICLES = 1000000
 // box, data-max-particles="50000" for a shorter slider.
 const SMALLEST_HALF = Number(document.body.dataset.half) || HALF
 const MOST_PARTICLES = Number(document.body.dataset.maxParticles) || MAX_PARTICLES
+// data-sizes="2" on a page's <body>: particles of different sizes, the largest this many times as
+// wide as the smallest at the start. 0, on the other pages: one size for all, and shaders that
+// know nothing of sizes. The largest keeps the radius of the other pages, RADIUS.
+const SIZES = Number(document.body.dataset.sizes) || 0
+const MIXED = SIZES > 0
+const MAX_SIZES = 2 // the largest over the smallest, at most (decision 031)
 const MAX_TILT = 30 // degrees, around X and around Z, on the page that tilts the box
 const TILT_SPEED = 20 // degrees per second: the floor's far corner, 17 m away, then moves 9.9 cm per step, just under a radius. A wider box turns slower, to keep that
 const GAP = 0.01 // between particles at the start, in meters
@@ -187,6 +196,15 @@ function cube(count: number, masses: readonly [number, number]): Float32Array {
   return data
 }
 
+/**
+ * A radius for each particle, in meters: any between the largest, RADIUS, and RADIUS / ratio, all
+ * as likely. The same at every run.
+ */
+function radiiOf(count: number, ratio: number): Float32Array {
+  const next = random(2)
+  return Float32Array.from({ length: count }, () => RADIUS / (1 + (ratio - 1) * next()))
+}
+
 // ?hash= in the address, to measure: the hash of cells-table.wgsl, which keeps the cells of a row
 // along x together, is replaced by another. ?hash=scattered: the one of Teschner and others, which
 // scrambles all three coordinates (chapter 039).
@@ -223,6 +241,10 @@ const listInOrder = (code: string) =>
     .replace('@group(0) @binding(8) var<storage, read> book: array<u32>;', '')
     .replace('let j = book[first + s];', 'let j = first + s;')
 
+// A radius for each particle (decisions 031 and 032). The shaders of this folder are written for
+// one radius, and the benchmark page times them as they are: they must not change. So a page with
+// sizes has its own copies of the three that need the radius, in ../mixed-sizes: the lists, the
+// levels and the rounds. They read `properties`, four numbers per particle, the radius first.
 /** The compute pipelines, made once: every restart uses them again. */
 async function makePipelines(device: GPUDevice, hash: string) {
   const make = (code: string) =>
@@ -237,8 +259,8 @@ async function makePipelines(device: GPUDevice, hash: string) {
       rebuildCode + clearIfCode,
       rebuildCode + gridIfCode,
       rebuildCode + listCode,
-      levelsListCode,
-      roundPushCode,
+      MIXED ? levelsSizedCode : levelsListCode,
+      MIXED ? roundSizedCode : roundPushCode,
       finishLimitCode,
       // the address book: the particles sorted by cell, instead of 4 places per cell
       rebuildCode + bookBlocksCode,
@@ -252,9 +274,12 @@ async function makePipelines(device: GPUDevice, hash: string) {
         cellsGridCode,
         HASHES[hash] ? SPREAD + cellsTableCode.replace(HASH, HASHES[hash]) : cellsTableCode,
       ].flatMap((cellsCode) =>
-        [bookCountCode, bookFillCode, bookListCode, listInOrder(bookListCode)].map(
-          (code) => rebuildCode + cellsCode + code,
-        ),
+        [
+          bookCountCode,
+          bookFillCode,
+          MIXED ? listSizedCode : bookListCode,
+          listInOrder(bookListCode),
+        ].map((code) => rebuildCode + cellsCode + code),
       ),
     ].map(make),
   )
@@ -360,6 +385,7 @@ function makeSimulation(
   slotsEach: number,
   inOrder: boolean,
   half: number,
+  ratio = 1,
 ) {
   // The cube stands on the floor of the box, wherever the box is turned.
   const start = cube(count, masses)
@@ -368,6 +394,11 @@ function makeSimulation(
     point.fromArray(start, i * 4).applyMatrix4(box)
     start.set(point.toArray(), i * 4)
   }
+  // On a page with sizes, `masses` are the densities, lightest and heaviest: a particle weighs its
+  // density times its volume, the largest sphere of density 1 being 1 kg. One material is one
+  // density for all, and the weight then follows the size alone.
+  const sizes = MIXED ? radiiOf(count, ratio) : undefined
+  if (sizes) for (let i = 0; i < count; i++) start[i * 4 + 3] /= (sizes[i] / RADIUS) ** 3
   const bytes = start.byteLength
   // The slots that count particles: one per cell of the grid, or those of the table, the first
   // power of two that gives at least `slotsEach` per particle.
@@ -393,8 +424,9 @@ function makeSimulation(
   const blockCount = Math.ceil(cellCount / BLOCK)
   const places = storage(cells === 'places' ? cellCount * PLACES * 4 : 4)
   const booked = cells !== 'places'
-  // The particles kept in the order of the book (book-move.wgsl): only with a book.
-  const sorted = booked && inOrder
+  // The particles kept in the order of the book (book-move.wgsl): only with a book. Not with
+  // sizes: the radii would have to move with them, and do not yet.
+  const sorted = booked && inOrder && !sizes
   const spare = storage(sorted ? bytes : 16)
   const book = storage(booked ? count * 4 : 4)
   const starts = storage(booked ? cellCount * 4 : 4)
@@ -403,7 +435,12 @@ function makeSimulation(
   const levels = [storage(count * 4), storage(count * 4)]
   const walls = planesOf(half)
   const planes = storage(walls.length * 16)
-  const neighbours = storage(count * MAX_NEIGHBOURS * 4, GPUBufferUsage.COPY_SRC)
+  // With sizes a row of the lists begins with its count, 33 numbers, and the shaders read the
+  // properties where the others read the counts (../mixed-sizes/list-sized.wgsl).
+  const neighbours = storage(
+    count * (MAX_NEIGHBOURS + (sizes ? 1 : 0)) * 4,
+    GPUBufferUsage.COPY_SRC,
+  )
   const neighbourCounts = storage(count * 4, GPUBufferUsage.COPY_SRC)
   const anchors = storage(bytes)
   const control = storage(32, GPUBufferUsage.COPY_SRC) // see rebuild.wgsl
@@ -413,6 +450,17 @@ function makeSimulation(
   })
   buffers.push(params)
 
+  // What a particle is, and does not change during a step: four numbers each, in one buffer, so
+  // that a shader spends one of its 8 storage buffers on all of them (decision 032). The radius
+  // first; the other three are free, for what comes next.
+  const properties = storage(sizes ? count * 16 : 16)
+  if (sizes) {
+    const data = new Float32Array(count * 4)
+    sizes.forEach((radius, i) => {
+      data[i * 4] = radius
+    })
+    device.queue.writeBuffer(properties, 0, data)
+  }
   device.queue.writeBuffer(positions, 0, start)
   for (const b of levels) device.queue.writeBuffer(b, 0, new Uint32Array(count).fill(NO_LEVEL))
   device.queue.writeBuffer(planes, 0, new Float32Array(walls.flat()))
@@ -429,6 +477,8 @@ function makeSimulation(
   floats[19] = margin // 16 to 18 belong to the spring, not used here
   device.queue.writeBuffer(params, 0, data)
 
+  // Where the shaders of one size read the counts of the lists, those with sizes read the properties.
+  const tally = sizes ? properties : neighbourCounts
   const group = (p: GPUComputePipeline, entries: GPUBuffer[]) =>
     device.createBindGroup({
       layout: p.getBindGroupLayout(0),
@@ -461,7 +511,7 @@ function makeSimulation(
       starts,
       control,
       neighbours,
-      neighbourCounts,
+      tally,
       anchors,
       ...(sorted ? [] : [book]),
     ]),
@@ -502,15 +552,7 @@ function makeSimulation(
   buffers.push(rub)
   // Levels alternate between two buffers, a step each; positions between two, a round each.
   const levelGroups = [0, 1].map((k) =>
-    group(kit.levels, [
-      params,
-      predicted[0],
-      neighbours,
-      neighbourCounts,
-      planes,
-      levels[k],
-      levels[1 - k],
-    ]),
+    group(kit.levels, [params, predicted[0], neighbours, tally, planes, levels[k], levels[1 - k]]),
   )
   const roundGroups = [0, 1].map((k) =>
     [0, 1].map((from) =>
@@ -519,7 +561,7 @@ function makeSimulation(
         predicted[from],
         predicted[1 - from],
         neighbours,
-        neighbourCounts,
+        tally,
         planes,
         levels[1 - k],
         pointer,
@@ -551,6 +593,8 @@ function makeSimulation(
   return {
     particleCount: count,
     radius: RADIUS,
+    // four numbers per particle, the radius first: for who draws them
+    propertiesBuffer: sizes ? properties : undefined,
     positionBuffer: positions,
     control,
     neighbours,
@@ -968,7 +1012,11 @@ async function start() {
       asked >= 1 && asked <= MOST_PARTICLES / 1000
         ? asked * 1000
         : Number(document.body.dataset.particles) || 20000,
-    masses: '1 to 100 kg',
+    // On a page with sizes these are the densities: one material, where the weight follows the
+    // size alone, or materials from 1 to 10 times as dense.
+    masses: MIXED ? '1 kg' : '1 to 100 kg',
+    // The largest radius over the smallest, on a page with sizes: from 1, all the same, to 2.
+    sizes: MathUtils.clamp(SIZES, 1, MAX_SIZES),
     // How the particles are drawn. 'spheres': each sphere lit in its own shader. 'deferred':
     // spheres that write only their depth, color and normal, lit in a later pass once per pixel
     // (decision 030), where the debug-viewer page starts. Flat discs, or nothing at all, to see
@@ -1002,7 +1050,7 @@ async function start() {
     // How the cells keep their particles: the address book with a table (decision 024), the
     // address book with a slot per cell of the grid, or 4 places per cell. ?cells=book or
     // ?cells=places
-    cells: (['book', 'places'].includes(query.get('cells') ?? '')
+    cells: ((MIXED ? ['book'] : ['book', 'places']).includes(query.get('cells') ?? '')
       ? query.get('cells')
       : 'table') as Cells,
     ball: Number(document.body.dataset.ball) || BALL_RADIUS, // data-ball on the page's <body>
@@ -1036,8 +1084,12 @@ async function start() {
   // enough (decision 023). With ?narrow in the address, cells as wide as a particle, as before.
   // The 4 places per cell keep cells as wide as a particle: a wider cell holds more than 4, and
   // particles are left out (chapter 039).
+  // The margin of the lists follows the smallest particle: half its radius, as on the other pages.
+  // With the 5 cm of the largest, small particles fill the lists with neighbours they never touch
+  // (chapter 048).
+  const listMargin = () => (MIXED ? margin / settings.sizes : margin)
   const cellWidth = () =>
-    !query.has('narrow') && settings.cells !== 'places' ? DIAMETER + margin : CELL
+    !query.has('narrow') && settings.cells !== 'places' ? DIAMETER + listMargin() : CELL
   const gridOf = (cell: number) =>
     document.body.dataset.tilt !== undefined
       ? gridAround(MAX_TILT, cell, half)
@@ -1064,6 +1116,11 @@ async function start() {
   let owed = 0 // simulated time the steps still owe to real time
   let lastReading: { lists: number; steps: number; crowded: number; leftOut: number } | undefined
 
+  /** The lightest and the heaviest particle, in kg: with sizes, a small one of the lightest stuff. */
+  const massRange = (): readonly [number, number] => {
+    const [lightest, heaviest] = MASSES[settings.masses]
+    return MIXED ? [lightest / settings.sizes ** 3, heaviest] : [lightest, heaviest]
+  }
   /** Draws the same simulation again, in the way the panel asks. */
   function redraw() {
     for (const each of [view, caster]) {
@@ -1083,7 +1140,7 @@ async function start() {
     lines[0].visible = !floorLines
     if (!simulation || settings.draw === 'none') return
     view = new ParticleView(renderer, simulation, {
-      massRange: MASSES[settings.masses],
+      massRange: massRange(),
       massColors,
       look: settings.draw === 'flat' ? 'flat' : deferred() ? 'surface' : 'sphere',
       lighting: forward() ? (...surface) => stage.lightOn(...surface) : undefined,
@@ -1130,12 +1187,13 @@ async function start() {
       gridOf(cellWidth()),
       world.matrixWorld,
       settings.cells,
-      margin,
+      listMargin(),
       cellWidth(),
       slotsEach,
       // ?sorted in the address: the particles kept in the order of the address book
       query.has('sorted'),
       half,
+      settings.sizes,
     )
     simulation.setBox(world.quaternion)
     applySolver()
@@ -1236,16 +1294,30 @@ async function start() {
     })
   particles
     .addBinding(settings, 'masses', {
-      options: Object.fromEntries(Object.keys(MASSES).map((label) => [label, label])),
+      label: MIXED ? 'made of' : 'masses',
+      options: MIXED
+        ? { 'one material': '1 kg', 'materials, 1 to 10 times as dense': '1 to 10 kg' }
+        : Object.fromEntries(Object.keys(MASSES).map((label) => [label, label])),
       hidden: renderPage,
+    })
+    .on('change', restart)
+  particles
+    .addBinding(settings, 'sizes', {
+      label: 'large / small',
+      min: 1,
+      max: MAX_SIZES,
+      step: 0.1,
+      hidden: !MIXED,
     })
     .on('change', restart)
   // A new way to keep the grid builds everything again.
   const cellsMenu = particles
     .addBinding(settings, 'cells', {
       label: 'grid',
+      // With sizes there is no shader for the 4 places per cell: a cell made for the largest
+      // holds more than 4 small ones anyway.
       options: {
-        '4 places per cell': 'places',
+        ...(MIXED ? {} : { '4 places per cell': 'places' }),
         'address book': 'book',
         'address book, table': 'table',
       },
