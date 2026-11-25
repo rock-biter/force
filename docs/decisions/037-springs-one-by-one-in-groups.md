@@ -24,7 +24,7 @@ How several springs on one particle are combined decides everything else. With 2
 ## Still open
 
 - How to group any net, and how many groups it takes.
-- A spring softer than asked with few rounds (chapter 060): more substeps, or rounds for the springs only.
+- How soft a spring is: chapter 060 said softer than asked with few rounds, by a wrong sum. [Chapter 064](../logbook/064-as-soft-as-asked.md) measures it again.
 - Damping, and the rest of what a link can be: tethers, limits.
 
 ## Revisit if

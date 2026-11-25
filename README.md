@@ -94,7 +94,10 @@ Then a cloth, the same springs joined into a net
 ([try it](https://rock-biter.github.io/force/cloth/),
 [chapter 063](./docs/logbook/063-a-cloth.md)).
 
-**Next:** springs for any net, and how soft and how damped a spring is. Then our rules read again against the
+A spring is now as soft as asked, whatever the passes over it
+([chapter 064](./docs/logbook/064-as-soft-as-asked.md)).
+
+**Next:** damping, so that a swing dies as fast as asked. Then our rules read again against the
 devices.
 
 Every step, with what we learned and what went wrong, is in the [logbook](./docs/README.md).

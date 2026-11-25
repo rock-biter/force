@@ -751,6 +751,8 @@ function makeSimulation(
   const springs = roped && kit.springKit ? [...roped.links].sort((p, q) => p[2] - q[2]) : []
   const rowOf = storage(springs.length ? count * 4 : 4)
   const springList = storage(Math.max(springs.length, 1) * 16)
+  // what each spring has asked for so far in this substep: its running total (chapter 064)
+  const springTotals = storage(Math.max(springs.length, 1) * 4)
   const writeSprings = (compliance: number) => {
     const data = new ArrayBuffer(springs.length * 16)
     const names = new Uint32Array(data)
@@ -769,18 +771,19 @@ function makeSimulation(
     const first = springs.findIndex((link) => link[2] === g)
     const n = springs.filter((link) => link[2] === g).length
     if (!n || !kit.springKit) return []
-    const part = device.createBuffer({
-      size: 16,
-      usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
+    // two bind groups: for the first pass of a substep, where the running totals start from zero,
+    // and for the others
+    const pipeline = kit.springKit[1]
+    const [fresh, later] = [1, 0].map((flag) => {
+      const part = device.createBuffer({
+        size: 16,
+        usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
+      })
+      buffers.push(part)
+      device.queue.writeBuffer(part, 0, new Uint32Array([first, n, flag]))
+      return group(pipeline, [params, part, springList, rowOf, predicted[0], springTotals])
     })
-    buffers.push(part)
-    device.queue.writeBuffer(part, 0, new Uint32Array([first, n]))
-    return [
-      {
-        workgroups: Math.ceil(n / 64),
-        group: group(kit.springKit[1], [params, part, springList, rowOf, predicted[0]]),
-      },
-    ]
+    return [{ workgroups: Math.ceil(n / 64), fresh, later }]
   })
   let springRounds = SPRING_ROUNDS
   // Levels alternate between two buffers, a step each; positions between two, a round each.
@@ -923,7 +926,7 @@ function makeSimulation(
           dispatch('names', kit.springKit[0], registerGroup)
           for (let r = 0; r < springRounds; r++)
             for (const g of springGroups)
-              dispatch('springs', kit.springKit[1], g.group, g.workgroups)
+              dispatch('springs', kit.springKit[1], r === 0 ? g.fresh : g.later, g.workgroups)
         }
         if (levelsOn) dispatch('levels', levelsKit, levelGroups[parity])
         for (let r = 0; r < ROUNDS; r++) dispatch('rounds', roundKit, roundGroups[parity][r % 2])

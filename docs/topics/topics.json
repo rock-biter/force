@@ -439,7 +439,9 @@
         "docs/logbook/061-a-dispatch-per-group.md",
         "docs/decisions/037-springs-one-by-one-in-groups.md",
         "docs/logbook/062-the-first-ropes.md",
-        "docs/logbook/063-a-cloth.md"
+        "docs/logbook/063-a-cloth.md",
+        "docs/logbook/064-as-soft-as-asked.md",
+        "docs/decisions/039-a-running-total-for-each-spring.md"
       ],
       "page": "docs/topics/spring.md",
       "code": ["examples/ropes/springs.wgsl"]
@@ -1782,7 +1784,9 @@
         "docs/logbook/057-three-ways-around.md",
         "docs/logbook/060-one-by-one-or-all-at-once.md",
         "docs/logbook/062-the-first-ropes.md",
-        "docs/logbook/063-a-cloth.md"
+        "docs/logbook/063-a-cloth.md",
+        "docs/logbook/064-as-soft-as-asked.md",
+        "docs/decisions/039-a-running-total-for-each-spring.md"
       ],
       "page": "docs/topics/spring-simulation.md#way-2-move-the-ends",
       "code": ["examples/ropes/springs.wgsl"]
@@ -1843,7 +1847,9 @@
         "docs/logbook/016-the-same-road.md",
         "docs/topics/spring-simulation.md",
         "docs/logbook/057-three-ways-around.md",
-        "docs/logbook/060-one-by-one-or-all-at-once.md"
+        "docs/logbook/060-one-by-one-or-all-at-once.md",
+        "docs/logbook/064-as-soft-as-asked.md",
+        "docs/decisions/039-a-running-total-for-each-spring.md"
       ],
       "page": "docs/topics/spring-simulation.md#way-3-move-the-ends-part-of-the-way"
     },
@@ -2805,7 +2811,9 @@
         "docs/logbook/012-the-family-tree.md",
         "docs/topics/spring-simulation.md",
         "docs/logbook/057-three-ways-around.md",
-        "docs/logbook/058-how-engines-set-a-spring.md"
+        "docs/logbook/058-how-engines-set-a-spring.md",
+        "docs/logbook/064-as-soft-as-asked.md",
+        "docs/decisions/039-a-running-total-for-each-spring.md"
       ],
       "url": "https://matthias-research.github.io/pages/publications/XPBD.pdf",
       "authors": "Miles Macklin, Matthias Müller, Nuttapong Chentanez",
@@ -5166,9 +5174,12 @@
         "docs/logbook/057-three-ways-around.md",
         "docs/logbook/058-how-engines-set-a-spring.md",
         "docs/logbook/060-one-by-one-or-all-at-once.md",
-        "docs/logbook/062-the-first-ropes.md"
+        "docs/logbook/062-the-first-ropes.md",
+        "docs/logbook/064-as-soft-as-asked.md",
+        "docs/decisions/039-a-running-total-for-each-spring.md"
       ],
-      "page": "docs/topics/spring-simulation.md#way-3-move-the-ends-part-of-the-way"
+      "page": "docs/topics/spring-simulation.md#way-3-move-the-ends-part-of-the-way",
+      "code": ["docs/topics/spring-softness.mjs", "examples/ropes/springs.wgsl"]
     },
     {
       "id": "constraint-averaging",
@@ -5256,7 +5267,13 @@
         "seen": "2026-11-17"
       },
       "related": ["constraint", "compliance"],
-      "citedIn": ["xpbd-paper", "iterative-dynamics-paper", "docs/logbook/014-the-mirror.md"]
+      "citedIn": [
+        "xpbd-paper",
+        "iterative-dynamics-paper",
+        "docs/logbook/014-the-mirror.md",
+        "docs/logbook/064-as-soft-as-asked.md",
+        "docs/decisions/039-a-running-total-for-each-spring.md"
+      ]
     },
     {
       "id": "soft-constraint",

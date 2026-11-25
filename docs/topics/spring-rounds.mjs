@@ -240,7 +240,7 @@ const pad = (text, width) => String(text).padEnd(width)
 const num = (value, digits = 2) => value.toFixed(digits).padStart(7)
 
 console.log('Part 1. A chain of 30 weights of 1 kg, hanging for 10 s. Mean stretch of its links.')
-console.log('A rod should not stretch. With compliance 1 / 10 000 the mean should be 0.76%:')
+console.log('A rod should not stretch. With compliance 1 / 10 000 the mean should be 7.6%:')
 console.log('a link carries the weights below it, 15.5 on average, × 9.81 / 10 000 / 0.2 m.\n')
 console.log(`${pad('', 40)}  rod: mean   worst | compliance 1/10 000: mean   worst`)
 for (const [name, options] of WAYS) {

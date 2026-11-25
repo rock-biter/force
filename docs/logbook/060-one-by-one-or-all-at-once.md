@@ -38,7 +38,7 @@ Three times tighter for the same rounds, both ways. And the average needs about 
 
 ### What surprised us
 
-**A soft spring is softer than asked.** With compliance 1 / 10 000 the chain should stretch 0.76%. With 3 rounds: 8% one by one, 15% with the average. [Chapter 057](./057-three-ways-around.md) said that with too few rounds XPBD is softer, on a chain of 10 with 10 rounds. On 30 links with 3, it is ten times softer. A spring's running total does not fix that.
+**Corrected in [chapter 064](./064-as-soft-as-asked.md): a wrong sum.** This paragraph said that a chain with compliance 1 / 10 000 should stretch 0.76%, found 8% one by one, and concluded that a soft spring comes out ten times softer than asked and that its running total does not help. The sum was wrong by a factor of ten: 15.5 weights × 9.81 / 10 000 / 0.2 m is 7.6%, not 0.76%. One by one, with its running total, the chain stretched 8.1% where 7.6% was asked: right, within a few rounds. The average gave 15%: twice too soft.
 
 ## What we take away
 

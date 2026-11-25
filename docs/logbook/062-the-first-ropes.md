@@ -43,7 +43,7 @@ The script of [chapter 060](./060-one-by-one-or-all-at-once.md) said 1.6% for a 
 
 ## Open questions
 
-- How much a spring gives, the compliance, is in the panel but without the running total XPBD asks for: a soft spring is softer than asked (chapter 060). Not settled.
+- How much a spring gives, the compliance, is in the panel but without the running total XPBD asks for: settled in [chapter 064](./064-as-soft-as-asked.md).
 - Left alone the ropes all swing together and never touch. Pushed by the ball they bend and hit each other, and hold: seen by eye, not measured. A rope lying on a pile was not looked at.
 - Nothing draws the springs: a rope is a row of spheres.
 
