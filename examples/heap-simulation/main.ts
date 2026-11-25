@@ -750,16 +750,16 @@ function makeSimulation(
   // predicted positions, before the levels and the rounds of the contacts.
   const springs = roped && kit.springKit ? [...roped.links].sort((p, q) => p[2] - q[2]) : []
   const rowOf = storage(springs.length ? count * 4 : 4)
-  const springList = storage(Math.max(springs.length, 1) * 16)
+  const springList = storage(Math.max(springs.length, 1) * 20) // the Spring struct: 5 numbers
   // what each spring has asked for so far in this substep: its running total (chapter 064)
   const springTotals = storage(Math.max(springs.length, 1) * 4)
-  const writeSprings = (compliance: number) => {
-    const data = new ArrayBuffer(springs.length * 16)
+  const writeSprings = (compliance: number, damping = 0) => {
+    const data = new ArrayBuffer(springs.length * 20)
     const names = new Uint32Array(data)
     const floats = new Float32Array(data)
     springs.forEach(([a, b, , rest], i) => {
-      names.set([a, b], i * 4)
-      floats.set([rest, compliance], i * 4 + 2)
+      names.set([a, b], i * 5)
+      floats.set([rest, compliance, damping], i * 5 + 2)
     })
     if (springs.length) device.queue.writeBuffer(springList, 0, data)
   }
@@ -781,7 +781,15 @@ function makeSimulation(
       })
       buffers.push(part)
       device.queue.writeBuffer(part, 0, new Uint32Array([first, n, flag]))
-      return group(pipeline, [params, part, springList, rowOf, predicted[0], springTotals])
+      return group(pipeline, [
+        params,
+        part,
+        springList,
+        rowOf,
+        predicted[0],
+        springTotals,
+        positions, // where each particle began the substep: the damping measures from there
+      ])
     })
     return [{ workgroups: Math.ceil(n / 64), fresh, later }]
   })
@@ -964,12 +972,17 @@ function makeSimulation(
     /** The springs, as two names and a rest length: for who measures how far they stretch. */
     springs: springs.map(([a, b, , rest]) => [a, b, rest] as const),
     /**
-     * How many passes over the springs in a substep, and their compliance, 1 / stiffness in meters
-     * per newton: 0 is a rod.
+     * How many passes over the springs in a substep, their compliance, 1 / stiffness in meters
+     * per newton, 0 for a rod, and their damping ratio, 0 for none.
      */
-    setSprings(rounds: number, compliance: number) {
+    setSprings(rounds: number, compliance: number, damping: number) {
       springRounds = rounds
-      writeSprings(compliance)
+      writeSprings(compliance, damping)
+    },
+
+    /** The drag on every particle, in 1 / s: 0 is none (finish-limit.wgsl). */
+    setDrag(drag: number) {
+      device.queue.writeBuffer(limit, 4, new Float32Array([drag]))
     },
 
     /** µ, how much of their slide two touching particles take back: 0 is none (decision 020). */
@@ -1341,6 +1354,12 @@ async function start() {
       MAX_SPRING_ROUNDS,
     ),
     give: MathUtils.clamp(Number(query.get('give')) || 0, 0, 2),
+    // How fast a spring's own swing dies, a damping ratio: 0 never, 1 without a bounce. It does
+    // nothing to a rod. ?damping=0.3 in the address.
+    damping: MathUtils.clamp(Number(query.get('damping')) || 0, 0, 1),
+    // The drag on every particle, like air, in 1 / s: what stops a rope that swings. A page sets
+    // its own with data-drag on its <body>; ?drag=0 in the address.
+    drag: MathUtils.clamp(Number(query.get('drag') ?? document.body.dataset.drag ?? 0) || 0, 0, 5),
     // A cloth's links: along its sides only, 4 per particle, or along its diagonals too, 8.
     // ?links=4 in the address starts without the diagonals.
     diagonals: query.get('links') !== '4',
@@ -1529,7 +1548,8 @@ async function start() {
   const applySolver = () => {
     simulation?.setSolver(solverAlpha(), solverLevels(), settings.substeps, maxSpeed())
     simulation?.setFriction(settings.friction)
-    simulation?.setSprings(settings.springRounds, settings.give / 1000)
+    simulation?.setSprings(settings.springRounds, settings.give / 1000, settings.damping)
+    simulation?.setDrag(settings.drag)
   }
 
   const pane = new Pane({ title: 'FORCE on the GPU', expanded: window.innerWidth >= 600 })
@@ -1730,6 +1750,12 @@ async function start() {
     .on('change', applySolver)
   springFolder
     .addBinding(settings, 'give', { label: 'give, mm/N', min: 0, max: 2, step: 0.01 })
+    .on('change', applySolver)
+  springFolder
+    .addBinding(settings, 'damping', { label: 'damping ζ', min: 0, max: 1, step: 0.05 })
+    .on('change', applySolver)
+  springFolder
+    .addBinding(settings, 'drag', { label: 'drag, 1/s', min: 0, max: 5, step: 0.1 })
     .on('change', applySolver)
   springFolder
     .addBinding(settings, 'diagonals', {

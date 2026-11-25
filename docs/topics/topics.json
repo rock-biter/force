@@ -441,7 +441,9 @@
         "docs/logbook/062-the-first-ropes.md",
         "docs/logbook/063-a-cloth.md",
         "docs/logbook/064-as-soft-as-asked.md",
-        "docs/decisions/039-a-running-total-for-each-spring.md"
+        "docs/decisions/039-a-running-total-for-each-spring.md",
+        "docs/logbook/065-two-kinds-of-brake.md",
+        "docs/decisions/040-damping-and-drag.md"
       ],
       "page": "docs/topics/spring.md",
       "code": ["examples/ropes/springs.wgsl"]
@@ -1849,7 +1851,9 @@
         "docs/logbook/057-three-ways-around.md",
         "docs/logbook/060-one-by-one-or-all-at-once.md",
         "docs/logbook/064-as-soft-as-asked.md",
-        "docs/decisions/039-a-running-total-for-each-spring.md"
+        "docs/decisions/039-a-running-total-for-each-spring.md",
+        "docs/logbook/065-two-kinds-of-brake.md",
+        "docs/decisions/040-damping-and-drag.md"
       ],
       "page": "docs/topics/spring-simulation.md#way-3-move-the-ends-part-of-the-way"
     },
@@ -2813,7 +2817,9 @@
         "docs/logbook/057-three-ways-around.md",
         "docs/logbook/058-how-engines-set-a-spring.md",
         "docs/logbook/064-as-soft-as-asked.md",
-        "docs/decisions/039-a-running-total-for-each-spring.md"
+        "docs/decisions/039-a-running-total-for-each-spring.md",
+        "docs/logbook/065-two-kinds-of-brake.md",
+        "docs/decisions/040-damping-and-drag.md"
       ],
       "url": "https://matthias-research.github.io/pages/publications/XPBD.pdf",
       "authors": "Miles Macklin, Matthias Müller, Nuttapong Chentanez",
@@ -5855,7 +5861,9 @@
         "docs/logbook/013-the-hidden-brake.md",
         "docs/logbook/014-the-mirror.md",
         "docs/topics/spring-simulation.md",
-        "docs/logbook/057-three-ways-around.md"
+        "docs/logbook/057-three-ways-around.md",
+        "docs/logbook/065-two-kinds-of-brake.md",
+        "docs/decisions/040-damping-and-drag.md"
       ]
     },
     {
@@ -5878,7 +5886,9 @@
         "docs/logbook/028-the-ranking.md",
         "docs/decisions/014-damping-off-by-default.md",
         "docs/logbook/032-two-kinds-of-bounce.md",
-        "docs/logbook/056-what-a-spring-is.md"
+        "docs/logbook/056-what-a-spring-is.md",
+        "docs/logbook/065-two-kinds-of-brake.md",
+        "docs/decisions/040-damping-and-drag.md"
       ]
     },
     {
@@ -6430,9 +6440,12 @@
         "solver2d-post",
         "docs/logbook/015-the-stiff-spring.md",
         "docs/logbook/056-what-a-spring-is.md",
-        "docs/logbook/058-how-engines-set-a-spring.md"
+        "docs/logbook/058-how-engines-set-a-spring.md",
+        "docs/logbook/065-two-kinds-of-brake.md",
+        "docs/decisions/040-damping-and-drag.md"
       ],
-      "page": "docs/topics/spring.md#how-it-works"
+      "page": "docs/topics/spring.md#how-it-works",
+      "code": ["docs/topics/spring-damping.mjs", "examples/ropes/springs.wgsl"]
     },
     {
       "id": "harmonic-oscillator",
@@ -7455,7 +7468,9 @@
         "docs/logbook/034-the-box-on-the-ramp.md",
         "docs/logbook/048-big-and-small.md",
         "docs/logbook/058-how-engines-set-a-spring.md",
-        "docs/logbook/059-a-name-or-a-corrected-list.md"
+        "docs/logbook/059-a-name-or-a-corrected-list.md",
+        "docs/logbook/065-two-kinds-of-brake.md",
+        "docs/decisions/040-damping-and-drag.md"
       ],
       "url": "https://github.com/NVIDIAGameWorks/FleX/blob/master/include/NvFlex.h",
       "authors": "NVIDIA",
@@ -8196,7 +8211,12 @@
         "seen": "2026-11-25"
       },
       "partOf": "damping-ratio",
-      "citedIn": ["docs/topics/spring.md", "docs/logbook/056-what-a-spring-is.md"]
+      "citedIn": [
+        "docs/topics/spring.md",
+        "docs/logbook/056-what-a-spring-is.md",
+        "docs/logbook/065-two-kinds-of-brake.md",
+        "docs/decisions/040-damping-and-drag.md"
+      ]
     },
     {
       "id": "equality-constraint",
@@ -8435,6 +8455,24 @@
       "related": ["stable-particle-ids", "cloth"],
       "code": ["examples/debug/cloth.ts"],
       "citedIn": ["docs/logbook/063-a-cloth.md"]
+    },
+    {
+      "id": "drag",
+      "kind": "concept",
+      "title": "Drag",
+      "summary": "A brake on the speed of every particle, whatever it is doing, as air gives: what stops a rope that swings, which no damping of its springs can",
+      "area": "physics",
+      "status": "seen",
+      "since": {
+        "seen": "2026-11-25"
+      },
+      "related": ["damping"],
+      "code": ["examples/heap-simulation/finish-limit.wgsl"],
+      "citedIn": [
+        "docs/logbook/065-two-kinds-of-brake.md",
+        "docs/decisions/040-damping-and-drag.md",
+        "flex-header"
+      ]
     }
   ]
 }

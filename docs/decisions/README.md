@@ -51,6 +51,7 @@ The choices that shape FORCE, one per page: what we decided, why, what we left o
 | 037 | [Springs in one list, solved one by one in groups](./037-springs-one-by-one-in-groups.md) | Accepted | November 25, 2026 |
 | 038 | [A particle's name is its second property](./038-the-name-is-a-property.md) | Accepted | November 25, 2026 |
 | 039 | [A spring's softness is its compliance, with a running total](./039-a-running-total-for-each-spring.md) | Accepted | November 25, 2026 |
+| 040 | [Damping in each spring, drag on every particle](./040-damping-and-drag.md) | Accepted | November 25, 2026 |
 
 ## Rules
 

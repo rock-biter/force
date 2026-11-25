@@ -5,7 +5,7 @@
 Everything we have met while building FORCE, concepts and sources, and how far we went with each
 one. Use it to look up a term, to find what to read, or to pick what to explore next.
 
-- **307 concepts:** ● 31 studied · ◐ 147 seen · ○ 129 mentioned
+- **308 concepts:** ● 31 studied · ◐ 148 seen · ○ 129 mentioned
 - **164 sources:** ● 15 studied · ◐ 17 seen · ○ 132 mentioned · read by Claude: 80 parts, 16 in full
 
 | | Status | What it means |
@@ -72,6 +72,7 @@ How things move, collide and stay together.
 | ◐ | Discrete element method (DEM) | Particles that push each other apart when they overlap, like small springs, with dampers to absorb the bounce |  | [Real-Time Rigid Body Simulation on GPUs](https://developer.nvidia.com/gpugems/gpugems3/part-v-physics-simulation/chapter-29-real-time-rigid-body-simulation-gpus) |
 | ● | **[Distance constraint](spring-simulation.md#way-2-move-the-ends)** | A rule that keeps two points at a fixed distance: the building block of chains, ropes and cloth | Constraint | [004](../logbook/004-the-detour.md) |
 | ○ | Distance joint | A joint that keeps two points on two rigid bodies at a distance, rigid or with a spring, often with a shortest and a longest length | Joint | [058](../logbook/058-how-engines-set-a-spring.md) |
+| ◐ | Drag | A brake on the speed of every particle, whatever it is doing, as air gives: what stops a rope that swings, which no damping of its springs can |  | [065](../logbook/065-two-kinds-of-brake.md) |
 | ○ | EPA | Run after GJK when two shapes overlap, to find how deep and in which direction | Narrow phase | [004](../logbook/004-the-detour.md) |
 | ◐ | Equality constraint | A rule that must hold exactly, such as two points at one distance: it acts both ways, pushing and pulling, where a contact only pushes | Constraint | [spring-simulation](spring-simulation.md) |
 | ● | **[Explicit Euler](integration.md#explicit-euler)** | Move with the old velocity, then update the velocity: simple, but it makes oscillations gain energy | Integration | [004](../logbook/004-the-detour.md) |

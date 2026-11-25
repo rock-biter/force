@@ -71,6 +71,7 @@ This is where we tell how FORCE gets built, one step at a time. If you are new h
 | 062 | [The First Ropes](./logbook/062-the-first-ropes.md) | Springs on a live page: 100 ropes of 30 particles hang and swing while their particles change row, with the stretch the script foretold |
 | 063 | [A Cloth](./logbook/063-a-cloth.md) | The ropes' springs joined into a net: a cloth hangs, swings and gives way to the ball, with eight groups of springs made by hand |
 | 064 | [As Soft as Asked](./logbook/064-as-soft-as-asked.md) | A soft spring got stiffer with every pass: a running total for each spring fixes it. And a wrong sum of ours, found and told |
+| 065 | [Two Kinds of Brake](./logbook/065-two-kinds-of-brake.md) | What stops a spring's bounce does not stop a rope's swing: a damping ratio inside each spring, and a drag on every particle |
 
 ## For reference
 
