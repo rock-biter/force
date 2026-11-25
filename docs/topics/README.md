@@ -5,8 +5,8 @@
 Everything we have met while building FORCE, concepts and sources, and how far we went with each
 one. Use it to look up a term, to find what to read, or to pick what to explore next.
 
-- **300 concepts:** ● 31 studied · ◐ 144 seen · ○ 125 mentioned
-- **159 sources:** ● 15 studied · ◐ 17 seen · ○ 127 mentioned · read by Claude: 75 parts, 16 in full
+- **305 concepts:** ● 31 studied · ◐ 144 seen · ○ 130 mentioned
+- **164 sources:** ● 15 studied · ◐ 17 seen · ○ 132 mentioned · read by Claude: 80 parts, 16 in full
 
 | | Status | What it means |
 | --- | --- | --- |
@@ -34,6 +34,7 @@ How things move, collide and stay together.
 | ◐ | Angular velocity | How fast a body spins and around which axis, as one vector in radians per second | Rigid body | [004](../logbook/004-the-detour.md) |
 | ◐ | Articulated bodies | Chains of bodies linked by joints, such as robots and ragdolls |  | [004](../logbook/004-the-detour.md) |
 | ◐ | Baumgarte stabilization | A classic way to remove overlap in a velocity solver: push back in proportion to the error |  | [Solver2D](https://box2d.org/posts/2024/02/solver2d/) |
+| ○ | Bend link | A link that resists the folding of a cloth along an edge, by distance or by the angle between two triangles | Cloth | [058](../logbook/058-how-engines-set-a-spring.md) |
 | ○ | Block solver | Solving the two contact points of a pair of bodies together and exactly, for steadier stacks | Solver | [Solver2D](https://box2d.org/posts/2024/02/solver2d/) |
 | ◐ | Bounding box | An invisible box around an object: testing two boxes is much cheaper than testing two real shapes |  | [001](../logbook/001-the-flip-book.md) |
 | ○ | Bounding volume hierarchy (BVH) | Boxes nested inside boxes: a tree that skips whole groups of far-away objects at once | Broad phase | [Ten Minute Physics](https://matthias-research.github.io/pages/tenMinutePhysics/index.html) |
@@ -70,6 +71,7 @@ How things move, collide and stay together.
 | ○ | Destruction | Breaking objects into pieces while the game runs |  | [004](../logbook/004-the-detour.md) |
 | ◐ | Discrete element method (DEM) | Particles that push each other apart when they overlap, like small springs, with dampers to absorb the bounce |  | [Real-Time Rigid Body Simulation on GPUs](https://developer.nvidia.com/gpugems/gpugems3/part-v-physics-simulation/chapter-29-real-time-rigid-body-simulation-gpus) |
 | ● | **[Distance constraint](spring-simulation.md#way-2-move-the-ends)** | A rule that keeps two points at a fixed distance: the building block of chains, ropes and cloth | Constraint | [004](../logbook/004-the-detour.md) |
+| ○ | Distance joint | A joint that keeps two points on two rigid bodies at a distance, rigid or with a spring, often with a shortest and a longest length | Joint | [058](../logbook/058-how-engines-set-a-spring.md) |
 | ○ | EPA | Run after GJK when two shapes overlap, to find how deep and in which direction | Narrow phase | [004](../logbook/004-the-detour.md) |
 | ◐ | Equality constraint | A rule that must hold exactly, such as two points at one distance: it acts both ways, pushing and pulling, where a contact only pushes | Constraint | [spring-simulation](spring-simulation.md) |
 | ● | **[Explicit Euler](integration.md#explicit-euler)** | Move with the old velocity, then update the velocity: simple, but it makes oscillations gain energy | Integration | [004](../logbook/004-the-detour.md) |
@@ -161,6 +163,7 @@ How things move, collide and stay together.
 | ● | **[Semi-implicit Euler](integration.md#semi-implicit-euler)** | Update the velocity first, then move with the new one: a small swap that keeps a spring's energy bounded when the step is small enough | Integration | [004](../logbook/004-the-detour.md) |
 | ◐ | Sequential impulses (PGS) | Applying impulses to one contact or joint at a time, over several rounds: the classic rigid body solver | Iterative solver | [004](../logbook/004-the-detour.md) |
 | ○ | Shape matching | Pulling a group of particles back toward the best rigid fit of their original shape |  | [004](../logbook/004-the-detour.md) |
+| ○ | Shear link | A link along the diagonal of a square of cloth, which keeps the square from leaning into a diamond | Cloth | [058](../logbook/058-how-engines-set-a-spring.md) |
 | ○ | Shock propagation | A solver variation for stacks that Catto lists as still to try: only the name so far | Solver | [Solver2D](https://box2d.org/posts/2024/02/solver2d/) |
 | ○ | Signed distance field collision | Describing a shape by the distance from it at every point of space, so a contact test becomes a lookup | Narrow phase | [004](../logbook/004-the-detour.md) |
 | ◐ | Simulation step | What an engine repeats over and over: apply forces, find contacts, fix them, move everything | Physics engine | [001](../logbook/001-the-flip-book.md) |
@@ -177,6 +180,7 @@ How things move, collide and stay together.
 | ● | **[Spiral of death](fixed-timestep.md#the-spiral-of-death)** | When catching up on physics takes so long that every frame falls further behind | Fixed timestep | [004](../logbook/004-the-detour.md) |
 | ○ | Split impulse | PhysX's name for solving the position error and the velocity error in separate rounds, so the correction does not stay in the final velocity | Solver | [PhysX, Rigid Body Dynamics](https://nvidia-omniverse.github.io/PhysX/physx/5.6.1/docs/RigidBodyDynamics.html) |
 | ● | **[Spring](spring.md)** | A link that keeps two points near a rest distance, pulling when stretched and pushing when squeezed |  | [docs index](../README.md) |
+| ○ | Spring that ignores the mass | A spring whose settings are divided by the mass it carries, so that light and heavy bodies swing alike: acceleration mode in Jolt and Rapier | Spring | [058](../logbook/058-how-engines-set-a-spring.md) |
 | ◐ | Stability limit | The longest step a spring can be stepped with plain forces before it blows up: step × ω < 2, so stiffer springs and lighter weights need shorter steps | Stiffness | [integration](integration.md) |
 | ◐ | Stacking | Boxes resting on boxes: a classic stress test for a solver |  | [Advanced Character Physics](https://edelkas.github.io/n/files/bib/jakobsen.pdf) |
 | ◐ | Static and kinetic friction | Below its limit friction keeps two surfaces from sliding at all (static); above it they slide, braked by the limit (kinetic) | Friction | [034](../logbook/034-the-box-on-the-ramp.md) |
@@ -186,6 +190,7 @@ How things move, collide and stay together.
 | ○ | Sweep and prune | A broad phase that sorts objects along an axis, so only neighbours in the list need checking | Broad phase | [Ten Minute Physics](https://matthias-research.github.io/pages/tenMinutePhysics/index.html) |
 | ◐ | Symplectic integrator | An integrator that keeps energy steady on average over long runs, such as semi-implicit Euler or Verlet | Integration | [Integration Basics](https://gafferongames.com/post/integration_basics/) |
 | ◐ | Temporal coherence | A scene changes little from one step to the next, so the last answer is a good first guess |  | [Iterative Dynamics with Temporal Coherence](https://box2d.org/files/ErinCatto_IterativeDynamics_GDC2005.pdf) |
+| ○ | Tether | A link that only resists being pulled, like a thread, and does nothing when its ends come closer | Distance constraint | [058](../logbook/058-how-engines-set-a-spring.md) |
 | ◐ | TGS solver | PhysX's solver with substeps: one round over the rules in each, and the rounds without correction at the end of the step | Solver | [004](../logbook/004-the-detour.md) |
 | ● | **[Time accumulator](fixed-timestep.md#the-accumulator)** | Keeps the real time not simulated yet, and spends it in fixed steps | Fixed timestep | [004](../logbook/004-the-detour.md) |
 | ○ | Time of impact | Rewinding the step to the exact moment two things touch and handling the hit there: precise, but slow when hits are many | Collision response | [Advanced Character Physics](https://edelkas.github.io/n/files/bib/jakobsen.pdf) |
@@ -510,8 +515,13 @@ How an engine is organized, measured and scaled across devices.
 | | Source | Kind | What it gives us | About | First cited in | Claude read |
 | --- | --- | --- | --- | --- | --- | --- |
 | ○ | [Box2D, types.h](https://github.com/erincatto/box2d/blob/main/include/box2d/types.h) | Source code | The settings of Box2D's world, bodies and joints: springs are given in hertz and damping ratio | Spring, Damping ratio | [spring](spring.md) | Parts |
+| ○ | [cannon-es, Spring.ts](https://github.com/pmndrs/cannon-es/blob/master/src/objects/Spring.ts) | Source code | A spring between two bodies set by rest length, stiffness and damping, applied as a force | Spring | [058](../logbook/058-how-engines-set-a-spring.md) | Parts |
 | ○ | [Houdini Vellum Solver](https://www.sidefx.com/docs/houdini/nodes/dop/vellumsolver.html)<br>*SideFX* | Documentation | Grains with a radius per particle, and a switch for when all are the same, which allows a faster search of neighbours | Particles of different sizes | [048](../logbook/048-big-and-small.md) | Parts |
+| ○ | [Jolt Physics, DistanceConstraint.h](https://github.com/jrouwe/JoltPhysics/blob/master/Jolt/Physics/Constraints/DistanceConstraint.h) | Source code | Two points on two bodies kept between a shortest and a longest distance, with limits that can be springs | Joint, Distance constraint, Spring | [058](../logbook/058-how-engines-set-a-spring.md) | Parts |
+| ○ | [Jolt Physics, SoftBodySharedSettings.h](https://github.com/jrouwe/JoltPhysics/blob/master/Jolt/Physics/SoftBody/SoftBodySharedSettings.h) | Source code | A soft body as vertices joined by edges, each with two vertex numbers, a rest length and a compliance, and the same for shear and bend | Soft body, Compliance, Distance constraint, Cloth | [058](../logbook/058-how-engines-set-a-spring.md) | Parts |
 | ○ | [Jolt Physics, SpringSettings.h](https://github.com/jrouwe/JoltPhysics/blob/master/Jolt/Physics/Constraints/SpringSettings.h) | Source code | How Jolt lets a spring be set: by frequency and damping, by stiffness and damping, or by stiffness divided by mass | Spring, Damping ratio, Soft constraint | [spring](spring.md) | Parts |
+| ○ | [PhysX, PxDistanceJoint.h](https://github.com/NVIDIA-Omniverse/PhysX/blob/main/physx/include/extensions/PxDistanceJoint.h) | Source code | A distance joint with a shortest and a longest distance, and a spring set by stiffness and damping | Joint, Spring | [058](../logbook/058-how-engines-set-a-spring.md) | Parts |
+| ○ | [Rapier, spring_joint.rs](https://github.com/dimforge/rapier/blob/master/src/dynamics/joint/spring_joint.rs) | Source code | A spring joint set by rest length, stiffness and damping, stepped implicitly, with a switch to make it ignore the masses | Spring, Joint, Implicit integration | [058](../logbook/058-how-engines-set-a-spring.md) | Parts |
 
 ## Method
 

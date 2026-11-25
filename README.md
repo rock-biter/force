@@ -73,7 +73,9 @@ ideas ([chapter 056](./docs/logbook/056-what-a-spring-is.md), and the page
 Then why a stiff spring blows up in a simulation, and the three ways around it
 ([chapter 057](./docs/logbook/057-three-ways-around.md)).
 
-**Next:** how engines set their springs. Then our rules read again against the
+And how six engines set theirs ([chapter 058](./docs/logbook/058-how-engines-set-a-spring.md)).
+
+**Next:** springs in FORCE, on the GPU. Then our rules read again against the
 devices.
 
 Every step, with what we learned and what went wrong, is in the [logbook](./docs/README.md).

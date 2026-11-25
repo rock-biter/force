@@ -409,7 +409,8 @@
         "docs/logbook/012-the-family-tree.md",
         "advanced-character-physics",
         "iterative-dynamics-paper",
-        "docs/logbook/023-the-first-free-turn.md"
+        "docs/logbook/023-the-first-free-turn.md",
+        "docs/logbook/058-how-engines-set-a-spring.md"
       ]
     },
     {
@@ -431,7 +432,8 @@
         "advanced-character-physics",
         "docs/logbook/056-what-a-spring-is.md",
         "docs/topics/spring-simulation.md",
-        "docs/logbook/057-three-ways-around.md"
+        "docs/logbook/057-three-ways-around.md",
+        "docs/logbook/058-how-engines-set-a-spring.md"
       ],
       "page": "docs/topics/spring.md"
     },
@@ -452,7 +454,8 @@
         "ten-minute-physics",
         "docs/logbook/004-the-detour.md",
         "advanced-character-physics",
-        "docs/logbook/013-the-hidden-brake.md"
+        "docs/logbook/013-the-hidden-brake.md",
+        "docs/logbook/058-how-engines-set-a-spring.md"
       ]
     },
     {
@@ -752,7 +755,8 @@
         "docs/logbook/026-the-marble-in-the-pocket.md",
         "docs/decisions/015-half-and-half-on-positions.md",
         "docs/topics/spring-simulation.md",
-        "docs/logbook/057-three-ways-around.md"
+        "docs/logbook/057-three-ways-around.md",
+        "docs/logbook/058-how-engines-set-a-spring.md"
       ]
     },
     {
@@ -765,7 +769,11 @@
       "since": {
         "mentioned": "2026-11-05"
       },
-      "citedIn": ["ten-minute-physics", "docs/logbook/004-the-detour.md"]
+      "citedIn": [
+        "ten-minute-physics",
+        "docs/logbook/004-the-detour.md",
+        "docs/logbook/058-how-engines-set-a-spring.md"
+      ]
     },
     {
       "id": "sweep-and-prune",
@@ -819,7 +827,8 @@
         "ten-minute-physics",
         "docs/logbook/004-the-detour.md",
         "advanced-character-physics",
-        "iterative-dynamics-paper"
+        "iterative-dynamics-paper",
+        "docs/logbook/058-how-engines-set-a-spring.md"
       ]
     },
     {
@@ -1391,7 +1400,8 @@
         "docs/logbook/052-what-follows-a-particle.md",
         "docs/logbook/053-in-order-by-default.md",
         "docs/logbook/054-without-the-lists.md",
-        "docs/decisions/034-no-lists-of-neighbours.md"
+        "docs/decisions/034-no-lists-of-neighbours.md",
+        "docs/logbook/058-how-engines-set-a-spring.md"
       ],
       "code": [
         "examples/heap-simulation/book-move.wgsl",
@@ -1855,7 +1865,8 @@
         "advanced-character-physics",
         "docs/logbook/056-what-a-spring-is.md",
         "docs/topics/spring-simulation.md",
-        "docs/logbook/057-three-ways-around.md"
+        "docs/logbook/057-three-ways-around.md",
+        "docs/logbook/058-how-engines-set-a-spring.md"
       ]
     },
     {
@@ -2752,7 +2763,8 @@
         "docs/logbook/004-the-detour.md",
         "docs/logbook/012-the-family-tree.md",
         "docs/topics/spring-simulation.md",
-        "docs/logbook/057-three-ways-around.md"
+        "docs/logbook/057-three-ways-around.md",
+        "docs/logbook/058-how-engines-set-a-spring.md"
       ],
       "url": "https://matthias-research.github.io/pages/publications/XPBD.pdf",
       "authors": "Miles Macklin, Matthias Müller, Nuttapong Chentanez",
@@ -2794,7 +2806,11 @@
         "gauss-seidel",
         "verlet-integration"
       ],
-      "citedIn": ["docs/logbook/004-the-detour.md", "docs/logbook/012-the-family-tree.md"],
+      "citedIn": [
+        "docs/logbook/004-the-detour.md",
+        "docs/logbook/012-the-family-tree.md",
+        "docs/logbook/058-how-engines-set-a-spring.md"
+      ],
       "url": "https://doi.org/10.1016/j.jvcir.2007.01.005",
       "authors": "Matthias Müller, Bruno Heidelberger, Marcus Hennix, John Ratcliff",
       "year": 2007,
@@ -5101,7 +5117,8 @@
         "docs/logbook/012-the-family-tree.md",
         "xpbd-paper",
         "docs/topics/spring-simulation.md",
-        "docs/logbook/057-three-ways-around.md"
+        "docs/logbook/057-three-ways-around.md",
+        "docs/logbook/058-how-engines-set-a-spring.md"
       ],
       "page": "docs/topics/spring-simulation.md#way-3-move-the-ends-part-of-the-way"
     },
@@ -6346,7 +6363,8 @@
       "citedIn": [
         "solver2d-post",
         "docs/logbook/015-the-stiff-spring.md",
-        "docs/logbook/056-what-a-spring-is.md"
+        "docs/logbook/056-what-a-spring-is.md",
+        "docs/logbook/058-how-engines-set-a-spring.md"
       ],
       "page": "docs/topics/spring.md#how-it-works"
     },
@@ -7369,7 +7387,8 @@
         "docs/logbook/032-two-kinds-of-bounce.md",
         "docs/logbook/033-the-speed-limit.md",
         "docs/logbook/034-the-box-on-the-ramp.md",
-        "docs/logbook/048-big-and-small.md"
+        "docs/logbook/048-big-and-small.md",
+        "docs/logbook/058-how-engines-set-a-spring.md"
       ],
       "url": "https://github.com/NVIDIAGameWorks/FleX/blob/master/include/NvFlex.h",
       "authors": "NVIDIA",
@@ -8068,7 +8087,11 @@
       },
       "partOf": "jolt",
       "about": ["spring", "damping-ratio", "soft-constraint"],
-      "citedIn": ["docs/topics/spring.md", "docs/logbook/056-what-a-spring-is.md"],
+      "citedIn": [
+        "docs/topics/spring.md",
+        "docs/logbook/056-what-a-spring-is.md",
+        "docs/logbook/058-how-engines-set-a-spring.md"
+      ],
       "url": "https://github.com/jrouwe/JoltPhysics/blob/master/Jolt/Physics/Constraints/SpringSettings.h",
       "claudeRead": "parts"
     },
@@ -8084,7 +8107,11 @@
       },
       "partOf": "box2d",
       "about": ["spring", "damping-ratio"],
-      "citedIn": ["docs/topics/spring.md", "docs/logbook/056-what-a-spring-is.md"],
+      "citedIn": [
+        "docs/topics/spring.md",
+        "docs/logbook/056-what-a-spring-is.md",
+        "docs/logbook/058-how-engines-set-a-spring.md"
+      ],
       "url": "https://github.com/erincatto/box2d/blob/main/include/box2d/types.h",
       "claudeRead": "parts"
     },
@@ -8133,6 +8160,156 @@
         "docs/topics/spring-simulation.md",
         "docs/logbook/057-three-ways-around.md"
       ]
+    },
+    {
+      "id": "rapier-spring-joint",
+      "kind": "code",
+      "title": "Rapier, spring_joint.rs",
+      "summary": "A spring joint set by rest length, stiffness and damping, stepped implicitly, with a switch to make it ignore the masses",
+      "area": "engine",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-25"
+      },
+      "partOf": "rapier",
+      "about": ["spring", "joint", "implicit-integration"],
+      "citedIn": ["docs/logbook/058-how-engines-set-a-spring.md"],
+      "url": "https://github.com/dimforge/rapier/blob/master/src/dynamics/joint/spring_joint.rs",
+      "claudeRead": "parts"
+    },
+    {
+      "id": "jolt-soft-body-settings",
+      "kind": "code",
+      "title": "Jolt Physics, SoftBodySharedSettings.h",
+      "summary": "A soft body as vertices joined by edges, each with two vertex numbers, a rest length and a compliance, and the same for shear and bend",
+      "area": "engine",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-25"
+      },
+      "partOf": "jolt",
+      "about": ["soft-body", "compliance", "distance-constraint", "cloth"],
+      "citedIn": ["docs/logbook/058-how-engines-set-a-spring.md"],
+      "url": "https://github.com/jrouwe/JoltPhysics/blob/master/Jolt/Physics/SoftBody/SoftBodySharedSettings.h",
+      "claudeRead": "parts"
+    },
+    {
+      "id": "jolt-distance-constraint",
+      "kind": "code",
+      "title": "Jolt Physics, DistanceConstraint.h",
+      "summary": "Two points on two bodies kept between a shortest and a longest distance, with limits that can be springs",
+      "area": "engine",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-25"
+      },
+      "partOf": "jolt",
+      "about": ["joint", "distance-constraint", "spring"],
+      "citedIn": ["docs/logbook/058-how-engines-set-a-spring.md"],
+      "url": "https://github.com/jrouwe/JoltPhysics/blob/master/Jolt/Physics/Constraints/DistanceConstraint.h",
+      "claudeRead": "parts"
+    },
+    {
+      "id": "physx-distance-joint",
+      "kind": "code",
+      "title": "PhysX, PxDistanceJoint.h",
+      "summary": "A distance joint with a shortest and a longest distance, and a spring set by stiffness and damping",
+      "area": "engine",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-25"
+      },
+      "partOf": "physx",
+      "about": ["joint", "spring"],
+      "citedIn": ["docs/logbook/058-how-engines-set-a-spring.md"],
+      "url": "https://github.com/NVIDIA-Omniverse/PhysX/blob/main/physx/include/extensions/PxDistanceJoint.h",
+      "claudeRead": "parts"
+    },
+    {
+      "id": "cannon-es-spring",
+      "kind": "code",
+      "title": "cannon-es, Spring.ts",
+      "summary": "A spring between two bodies set by rest length, stiffness and damping, applied as a force",
+      "area": "engine",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-25"
+      },
+      "partOf": "cannon-es",
+      "about": ["spring"],
+      "citedIn": ["docs/logbook/058-how-engines-set-a-spring.md"],
+      "url": "https://github.com/pmndrs/cannon-es/blob/master/src/objects/Spring.ts",
+      "claudeRead": "parts"
+    },
+    {
+      "id": "tether-constraint",
+      "kind": "concept",
+      "title": "Tether",
+      "summary": "A link that only resists being pulled, like a thread, and does nothing when its ends come closer",
+      "area": "physics",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-25"
+      },
+      "citedIn": ["docs/logbook/058-how-engines-set-a-spring.md", "flex-header"],
+      "partOf": "distance-constraint"
+    },
+    {
+      "id": "shear-constraint",
+      "kind": "concept",
+      "title": "Shear link",
+      "summary": "A link along the diagonal of a square of cloth, which keeps the square from leaning into a diamond",
+      "area": "physics",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-25"
+      },
+      "citedIn": ["docs/logbook/058-how-engines-set-a-spring.md", "jolt-soft-body-settings"],
+      "partOf": "cloth"
+    },
+    {
+      "id": "bend-constraint",
+      "kind": "concept",
+      "title": "Bend link",
+      "summary": "A link that resists the folding of a cloth along an edge, by distance or by the angle between two triangles",
+      "area": "physics",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-25"
+      },
+      "citedIn": ["docs/logbook/058-how-engines-set-a-spring.md", "jolt-soft-body-settings"],
+      "partOf": "cloth"
+    },
+    {
+      "id": "distance-joint",
+      "kind": "concept",
+      "title": "Distance joint",
+      "summary": "A joint that keeps two points on two rigid bodies at a distance, rigid or with a spring, often with a shortest and a longest length",
+      "area": "physics",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-25"
+      },
+      "citedIn": ["docs/logbook/058-how-engines-set-a-spring.md", "box2d-types"],
+      "partOf": "joint",
+      "related": ["distance-constraint", "spring"]
+    },
+    {
+      "id": "mass-independent-spring",
+      "kind": "concept",
+      "title": "Spring that ignores the mass",
+      "summary": "A spring whose settings are divided by the mass it carries, so that light and heavy bodies swing alike: acceleration mode in Jolt and Rapier",
+      "area": "physics",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-25"
+      },
+      "citedIn": [
+        "docs/logbook/058-how-engines-set-a-spring.md",
+        "jolt-spring-settings",
+        "rapier-spring-joint"
+      ],
+      "partOf": "spring"
     }
   ]
 }

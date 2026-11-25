@@ -64,6 +64,7 @@ This is where we tell how FORCE gets built, one step at a time. If you are new h
 | 055 | [Further Apart](./logbook/055-further-apart.md) | Sizes beyond 2 to 1 on the GPU: cheap and clean enough when spread evenly, slow and deep with two sizes only. The limit goes to 4 to 1 |
 | 056 | [What a Spring Is](./logbook/056-what-a-spring-is.md) | The first stop of a study on springs: force and stretch, the pace of a swing, the damper, and the damping ratio |
 | 057 | [Three Ways Around](./logbook/057-three-ways-around.md) | The second stop on springs: why a stiff one blows up, and the three ways around it, on one hanging chain simulated in four ways |
+| 058 | [How Engines Set a Spring](./logbook/058-how-engines-set-a-spring.md) | The third stop on springs: six engines read in their code. Joints and links, four ways to say how stiff, and the same four numbers in memory |
 
 ## For reference
 
