@@ -429,7 +429,9 @@
         "docs/README.md",
         "docs/logbook/004-the-detour.md",
         "advanced-character-physics",
-        "docs/logbook/056-what-a-spring-is.md"
+        "docs/logbook/056-what-a-spring-is.md",
+        "docs/topics/spring-simulation.md",
+        "docs/logbook/057-three-ways-around.md"
       ],
       "page": "docs/topics/spring.md"
     },
@@ -748,7 +750,9 @@
         "docs/logbook/013-the-hidden-brake.md",
         "docs/logbook/016-the-same-road.md",
         "docs/logbook/026-the-marble-in-the-pocket.md",
-        "docs/decisions/015-half-and-half-on-positions.md"
+        "docs/decisions/015-half-and-half-on-positions.md",
+        "docs/topics/spring-simulation.md",
+        "docs/logbook/057-three-ways-around.md"
       ]
     },
     {
@@ -831,7 +835,12 @@
       },
       "partOf": "integration",
       "related": ["spring"],
-      "citedIn": ["physically-based-modeling", "integration-basics"],
+      "citedIn": [
+        "physically-based-modeling",
+        "integration-basics",
+        "docs/topics/spring-simulation.md",
+        "docs/logbook/057-three-ways-around.md"
+      ],
       "page": "docs/topics/integration.md#implicit-euler"
     },
     {
@@ -955,7 +964,9 @@
         "docs/logbook/008-the-first-loop.md",
         "docs/logbook/013-the-hidden-brake.md",
         "iterative-dynamics-paper",
-        "docs/logbook/014-the-mirror.md"
+        "docs/logbook/014-the-mirror.md",
+        "docs/topics/spring-simulation.md",
+        "docs/logbook/057-three-ways-around.md"
       ],
       "page": "docs/topics/integration.md#semi-implicit-euler",
       "code": ["src/shaders/integrate.wgsl"]
@@ -1010,7 +1021,9 @@
         "advanced-character-physics",
         "docs/logbook/025-the-pillow.md",
         "docs/logbook/029-heavy-on-light.md",
-        "docs/logbook/056-what-a-spring-is.md"
+        "docs/logbook/056-what-a-spring-is.md",
+        "docs/topics/spring-simulation.md",
+        "docs/logbook/057-three-ways-around.md"
       ],
       "page": "docs/topics/integration.md#the-step-limit"
     },
@@ -1719,18 +1732,22 @@
       "title": "Distance constraint",
       "summary": "A rule that keeps two points at a fixed distance: the building block of chains, ropes and cloth",
       "area": "physics",
-      "status": "seen",
+      "status": "studied",
       "since": {
         "mentioned": "2026-11-05",
-        "seen": "2026-11-16"
+        "seen": "2026-11-16",
+        "studied": "2026-11-25"
       },
       "partOf": "constraint",
       "citedIn": [
         "docs/logbook/004-the-detour.md",
         "docs/logbook/012-the-family-tree.md",
         "advanced-character-physics",
-        "docs/logbook/013-the-hidden-brake.md"
-      ]
+        "docs/logbook/013-the-hidden-brake.md",
+        "docs/topics/spring-simulation.md",
+        "docs/logbook/057-three-ways-around.md"
+      ],
+      "page": "docs/topics/spring-simulation.md#way-2-move-the-ends"
     },
     {
       "id": "graph-coloring",
@@ -1766,17 +1783,21 @@
       "title": "XPBD",
       "summary": "Extended PBD: each constraint gets a softness, called compliance, so stiffness no longer depends on step size or rounds",
       "area": "physics",
-      "status": "seen",
+      "status": "studied",
       "since": {
         "mentioned": "2026-11-05",
-        "seen": "2026-11-16"
+        "seen": "2026-11-16",
+        "studied": "2026-11-25"
       },
       "partOf": "position-based-dynamics",
       "citedIn": [
         "docs/logbook/004-the-detour.md",
         "docs/logbook/012-the-family-tree.md",
-        "docs/logbook/016-the-same-road.md"
-      ]
+        "docs/logbook/016-the-same-road.md",
+        "docs/topics/spring-simulation.md",
+        "docs/logbook/057-three-ways-around.md"
+      ],
+      "page": "docs/topics/spring-simulation.md#way-3-move-the-ends-part-of-the-way"
     },
     {
       "id": "shape-matching",
@@ -1832,7 +1853,9 @@
       "citedIn": [
         "docs/logbook/004-the-detour.md",
         "advanced-character-physics",
-        "docs/logbook/056-what-a-spring-is.md"
+        "docs/logbook/056-what-a-spring-is.md",
+        "docs/topics/spring-simulation.md",
+        "docs/logbook/057-three-ways-around.md"
       ]
     },
     {
@@ -2725,7 +2748,12 @@
         "mentioned": "2026-11-05"
       },
       "about": ["xpbd", "compliance", "lagrange-multiplier"],
-      "citedIn": ["docs/logbook/004-the-detour.md", "docs/logbook/012-the-family-tree.md"],
+      "citedIn": [
+        "docs/logbook/004-the-detour.md",
+        "docs/logbook/012-the-family-tree.md",
+        "docs/topics/spring-simulation.md",
+        "docs/logbook/057-three-ways-around.md"
+      ],
       "url": "https://matthias-research.github.io/pages/publications/XPBD.pdf",
       "authors": "Miles Macklin, Matthias Müller, Nuttapong Chentanez",
       "year": 2016,
@@ -5062,13 +5090,20 @@
       "title": "Compliance",
       "summary": "The softness XPBD gives each constraint, the inverse of stiffness: zero means perfectly rigid",
       "area": "physics",
-      "status": "seen",
+      "status": "studied",
       "since": {
-        "seen": "2026-11-16"
+        "seen": "2026-11-16",
+        "studied": "2026-11-25"
       },
       "partOf": "xpbd",
       "related": ["stiffness"],
-      "citedIn": ["docs/logbook/012-the-family-tree.md", "xpbd-paper"]
+      "citedIn": [
+        "docs/logbook/012-the-family-tree.md",
+        "xpbd-paper",
+        "docs/topics/spring-simulation.md",
+        "docs/logbook/057-three-ways-around.md"
+      ],
+      "page": "docs/topics/spring-simulation.md#way-3-move-the-ends-part-of-the-way"
     },
     {
       "id": "constraint-averaging",
@@ -5178,7 +5213,9 @@
         "docs/logbook/015-the-stiff-spring.md",
         "rapier-integration-parameters",
         "jolt-architecture",
-        "docs/logbook/029-heavy-on-light.md"
+        "docs/logbook/029-heavy-on-light.md",
+        "docs/topics/spring-simulation.md",
+        "docs/logbook/057-three-ways-around.md"
       ]
     },
     {
@@ -5733,7 +5770,9 @@
       "citedIn": [
         "advanced-character-physics",
         "docs/logbook/013-the-hidden-brake.md",
-        "docs/logbook/014-the-mirror.md"
+        "docs/logbook/014-the-mirror.md",
+        "docs/topics/spring-simulation.md",
+        "docs/logbook/057-three-ways-around.md"
       ]
     },
     {
@@ -6075,7 +6114,9 @@
       "citedIn": [
         "advanced-character-physics",
         "iterative-dynamics-paper",
-        "docs/logbook/014-the-mirror.md"
+        "docs/logbook/014-the-mirror.md",
+        "docs/topics/spring-simulation.md",
+        "docs/logbook/057-three-ways-around.md"
       ]
     },
     {
@@ -8059,6 +8100,39 @@
       },
       "partOf": "damping-ratio",
       "citedIn": ["docs/topics/spring.md", "docs/logbook/056-what-a-spring-is.md"]
+    },
+    {
+      "id": "equality-constraint",
+      "kind": "concept",
+      "title": "Equality constraint",
+      "summary": "A rule that must hold exactly, such as two points at one distance: it acts both ways, pushing and pulling, where a contact only pushes",
+      "area": "physics",
+      "status": "seen",
+      "since": {
+        "seen": "2026-11-25"
+      },
+      "partOf": "constraint",
+      "related": ["inequality-constraint", "distance-constraint"],
+      "citedIn": ["docs/topics/spring-simulation.md", "docs/logbook/057-three-ways-around.md"]
+    },
+    {
+      "id": "stability-limit",
+      "kind": "concept",
+      "title": "Stability limit",
+      "summary": "The longest step a spring can be stepped with plain forces before it blows up: step × ω < 2, so stiffer springs and lighter weights need shorter steps",
+      "area": "physics",
+      "status": "seen",
+      "since": {
+        "seen": "2026-11-25"
+      },
+      "partOf": "stiffness",
+      "related": ["semi-implicit-euler"],
+      "code": ["docs/topics/spring-simulation.mjs"],
+      "citedIn": [
+        "docs/topics/integration.md",
+        "docs/topics/spring-simulation.md",
+        "docs/logbook/057-three-ways-around.md"
+      ]
     }
   ]
 }

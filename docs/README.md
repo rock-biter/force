@@ -63,6 +63,7 @@ This is where we tell how FORCE gets built, one step at a time. If you are new h
 | 054 | [Without the Lists](./logbook/054-without-the-lists.md) | The lists of neighbours leave the live pages: every round reads the cells, two buffers are free, and a step takes about the same |
 | 055 | [Further Apart](./logbook/055-further-apart.md) | Sizes beyond 2 to 1 on the GPU: cheap and clean enough when spread evenly, slow and deep with two sizes only. The limit goes to 4 to 1 |
 | 056 | [What a Spring Is](./logbook/056-what-a-spring-is.md) | The first stop of a study on springs: force and stretch, the pace of a swing, the damper, and the damping ratio |
+| 057 | [Three Ways Around](./logbook/057-three-ways-around.md) | The second stop on springs: why a stiff one blows up, and the three ways around it, on one hanging chain simulated in four ways |
 
 ## For reference
 

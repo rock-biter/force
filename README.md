@@ -70,7 +70,10 @@ Next come particles joined by springs, and we started from the physics: what a s
 ideas ([chapter 056](./docs/logbook/056-what-a-spring-is.md), and the page
 [Springs](./docs/topics/spring.md)).
 
-**Next:** why a stiff spring is hard to simulate, and how engines set theirs. Then our rules read again against the
+Then why a stiff spring blows up in a simulation, and the three ways around it
+([chapter 057](./docs/logbook/057-three-ways-around.md)).
+
+**Next:** how engines set their springs. Then our rules read again against the
 devices.
 
 Every step, with what we learned and what went wrong, is in the [logbook](./docs/README.md).

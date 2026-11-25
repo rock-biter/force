@@ -5,7 +5,7 @@
 Everything we have met while building FORCE, concepts and sources, and how far we went with each
 one. Use it to look up a term, to find what to read, or to pick what to explore next.
 
-- **298 concepts:** ● 28 studied · ◐ 145 seen · ○ 125 mentioned
+- **300 concepts:** ● 31 studied · ◐ 144 seen · ○ 125 mentioned
 - **159 sources:** ● 15 studied · ◐ 17 seen · ○ 127 mentioned · read by Claude: 75 parts, 16 in full
 
 | | Status | What it means |
@@ -44,7 +44,7 @@ How things move, collide and stay together.
 | ○ | Clustering of grains | Grains that lose energy at each hit and gather into dense groups |  | [Data structures and algorithms for contact detection in numerical simulation of discrete particle systems](https://www2.msm.ctw.utwente.nl/sluding/PAPERS/OgarkoWCPT2010.pdf) |
 | ◐ | Collision detection | Finding out which objects touch: first a rough pass, then a precise one | Simulation step | [001](../logbook/001-the-flip-book.md) |
 | ◐ | Collision response | What to do once a contact is found: push the objects apart and change their velocities | Simulation step | [010](../logbook/010-the-ground.md) |
-| ◐ | Compliance | The softness XPBD gives each constraint, the inverse of stiffness: zero means perfectly rigid | XPBD | [012](../logbook/012-the-family-tree.md) |
+| ● | **[Compliance](spring-simulation.md#way-3-move-the-ends-part-of-the-way)** | The softness XPBD gives each constraint, the inverse of stiffness: zero means perfectly rigid | XPBD | [012](../logbook/012-the-family-tree.md) |
 | ◐ | Compressed masses | Letting the solver see m^α instead of the real mass, so large ratios shrink: α = 0.5 turns 100 into 10. Gravity keeps the real mass; heavy bodies push through light ones less | Mass ratio | [029](../logbook/029-heavy-on-light.md) |
 | ◐ | Conservation of energy | Without friction, the energy of motion plus the stored energy stays constant: a simple test for an integrator |  | [004](../logbook/004-the-detour.md) |
 | ◐ | Constraint | A rule objects must obey, such as "do not pass through each other" |  | [001](../logbook/001-the-flip-book.md) |
@@ -69,8 +69,9 @@ How things move, collide and stay together.
 | ○ | Degrees of freedom | How many independent numbers describe where a thing is: 6 for a rigid body, 3 to place it and 3 to turn it | Rigid body | [Advanced Character Physics](https://edelkas.github.io/n/files/bib/jakobsen.pdf) |
 | ○ | Destruction | Breaking objects into pieces while the game runs |  | [004](../logbook/004-the-detour.md) |
 | ◐ | Discrete element method (DEM) | Particles that push each other apart when they overlap, like small springs, with dampers to absorb the bounce |  | [Real-Time Rigid Body Simulation on GPUs](https://developer.nvidia.com/gpugems/gpugems3/part-v-physics-simulation/chapter-29-real-time-rigid-body-simulation-gpus) |
-| ◐ | Distance constraint | A rule that keeps two points at a fixed distance: the building block of chains, ropes and cloth | Constraint | [004](../logbook/004-the-detour.md) |
+| ● | **[Distance constraint](spring-simulation.md#way-2-move-the-ends)** | A rule that keeps two points at a fixed distance: the building block of chains, ropes and cloth | Constraint | [004](../logbook/004-the-detour.md) |
 | ○ | EPA | Run after GJK when two shapes overlap, to find how deep and in which direction | Narrow phase | [004](../logbook/004-the-detour.md) |
+| ◐ | Equality constraint | A rule that must hold exactly, such as two points at one distance: it acts both ways, pushing and pulling, where a contact only pushes | Constraint | [spring-simulation](spring-simulation.md) |
 | ● | **[Explicit Euler](integration.md#explicit-euler)** | Move with the old velocity, then update the velocity: simple, but it makes oscillations gain energy | Integration | [004](../logbook/004-the-detour.md) |
 | ○ | Face clipping | Finding where two boxes touch by cutting the face of one against the face of the other | Narrow phase | [Iterative Dynamics with Temporal Coherence](https://box2d.org/files/ErinCatto_IterativeDynamics_GDC2005.pdf) |
 | ○ | Finite element method (FEM) | Splitting a solid into small pieces, such as tetrahedra, and working out how each one deforms |  | [004](../logbook/004-the-detour.md) |
@@ -176,6 +177,7 @@ How things move, collide and stay together.
 | ● | **[Spiral of death](fixed-timestep.md#the-spiral-of-death)** | When catching up on physics takes so long that every frame falls further behind | Fixed timestep | [004](../logbook/004-the-detour.md) |
 | ○ | Split impulse | PhysX's name for solving the position error and the velocity error in separate rounds, so the correction does not stay in the final velocity | Solver | [PhysX, Rigid Body Dynamics](https://nvidia-omniverse.github.io/PhysX/physx/5.6.1/docs/RigidBodyDynamics.html) |
 | ● | **[Spring](spring.md)** | A link that keeps two points near a rest distance, pulling when stretched and pushing when squeezed |  | [docs index](../README.md) |
+| ◐ | Stability limit | The longest step a spring can be stepped with plain forces before it blows up: step × ω < 2, so stiffer springs and lighter weights need shorter steps | Stiffness | [integration](integration.md) |
 | ◐ | Stacking | Boxes resting on boxes: a classic stress test for a solver |  | [Advanced Character Physics](https://edelkas.github.io/n/files/bib/jakobsen.pdf) |
 | ◐ | Static and kinetic friction | Below its limit friction keeps two surfaces from sliding at all (static); above it they slide, braked by the limit (kinetic) | Friction | [034](../logbook/034-the-box-on-the-ramp.md) |
 | ◐ | Stiff stacks (mass scaling) | During contacts only, making lower particles look heavier, e^(-k × height), so a pile settles in fewer rounds: Macklin's trick, which biases hits in the air | Stacking | [Unified Particle Physics for Real-Time Applications](https://doi.org/10.1145/2601097.2601152) |
@@ -201,7 +203,7 @@ How things move, collide and stay together.
 | ○ | Vertex block descent (VBD) | A solver that moves one body or vertex at a time toward the place where all its forces balance, instead of repairing one constraint at a time | Solver | [Augmented Vertex Block Descent](https://graphics.cs.utah.edu/research/projects/avbd/) |
 | ○ | Volume fraction | The share of space the particles fill: about 0.6 for spheres poured in a box, less for a dilute system |  | [Data structures and algorithms for contact detection in numerical simulation of discrete particle systems](https://www2.msm.ctw.utwente.nl/sluding/PAPERS/OgarkoWCPT2010.pdf) |
 | ◐ | Warm starting | Starting the solver from the previous step's answer, so fewer rounds are needed | Solver | [004](../logbook/004-the-detour.md) |
-| ◐ | XPBD | Extended PBD: each constraint gets a softness, called compliance, so stiffness no longer depends on step size or rounds | Position based dynamics (PBD) | [004](../logbook/004-the-detour.md) |
+| ● | **[XPBD](spring-simulation.md#way-3-move-the-ends-part-of-the-way)** | Extended PBD: each constraint gets a softness, called compliance, so stiffness no longer depends on step size or rounds | Position based dynamics (PBD) | [004](../logbook/004-the-detour.md) |
 
 | | Source | Kind | What it gives us | About | First cited in | Claude read |
 | --- | --- | --- | --- | --- | --- | --- |
