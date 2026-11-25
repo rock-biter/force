@@ -42,6 +42,7 @@ import {
   Mesh,
   MeshBasicNodeMaterial,
   type Node,
+  type StorageBufferAttribute,
   StorageInstancedBufferAttribute,
   Vector3,
   type WebGPURenderer,
@@ -258,9 +259,9 @@ export class ParticleView {
  * has none. So we fill the map first. Checked in three/src/renderers/webgpu/utils/
  * WebGPUAttributeUtils.js, createAttribute(): it may break in a later version of three.js.
  */
-function useExternalBuffer(
+export function useExternalBuffer(
   renderer: WebGPURenderer,
-  attribute: StorageInstancedBufferAttribute,
+  attribute: StorageBufferAttribute | StorageInstancedBufferAttribute,
   buffer: GPUBuffer,
 ): void {
   const backend = renderer.backend as unknown as { get(object: object): { buffer?: GPUBuffer } }

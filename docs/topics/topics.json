@@ -438,7 +438,8 @@
         "docs/logbook/060-one-by-one-or-all-at-once.md",
         "docs/logbook/061-a-dispatch-per-group.md",
         "docs/decisions/037-springs-one-by-one-in-groups.md",
-        "docs/logbook/062-the-first-ropes.md"
+        "docs/logbook/062-the-first-ropes.md",
+        "docs/logbook/063-a-cloth.md"
       ],
       "page": "docs/topics/spring.md",
       "code": ["examples/ropes/springs.wgsl"]
@@ -464,8 +465,10 @@
         "docs/logbook/058-how-engines-set-a-spring.md",
         "docs/logbook/060-one-by-one-or-all-at-once.md",
         "docs/logbook/061-a-dispatch-per-group.md",
-        "docs/decisions/037-springs-one-by-one-in-groups.md"
-      ]
+        "docs/decisions/037-springs-one-by-one-in-groups.md",
+        "docs/logbook/063-a-cloth.md"
+      ],
+      "code": ["examples/cloth/index.html"]
     },
     {
       "id": "fluid",
@@ -1778,7 +1781,8 @@
         "docs/topics/spring-simulation.md",
         "docs/logbook/057-three-ways-around.md",
         "docs/logbook/060-one-by-one-or-all-at-once.md",
-        "docs/logbook/062-the-first-ropes.md"
+        "docs/logbook/062-the-first-ropes.md",
+        "docs/logbook/063-a-cloth.md"
       ],
       "page": "docs/topics/spring-simulation.md#way-2-move-the-ends",
       "code": ["examples/ropes/springs.wgsl"]
@@ -1811,7 +1815,8 @@
         "docs/logbook/060-one-by-one-or-all-at-once.md",
         "docs/logbook/061-a-dispatch-per-group.md",
         "docs/decisions/037-springs-one-by-one-in-groups.md",
-        "docs/logbook/062-the-first-ropes.md"
+        "docs/logbook/062-the-first-ropes.md",
+        "docs/logbook/063-a-cloth.md"
       ],
       "code": [
         "examples/turn-sorting/main.ts",
@@ -1901,7 +1906,8 @@
         "docs/logbook/057-three-ways-around.md",
         "docs/logbook/058-how-engines-set-a-spring.md",
         "docs/logbook/059-a-name-or-a-corrected-list.md",
-        "docs/logbook/062-the-first-ropes.md"
+        "docs/logbook/062-the-first-ropes.md",
+        "docs/logbook/063-a-cloth.md"
       ]
     },
     {
@@ -8312,12 +8318,17 @@
       "title": "Shear link",
       "summary": "A link along the diagonal of a square of cloth, which keeps the square from leaning into a diamond",
       "area": "physics",
-      "status": "mentioned",
+      "status": "seen",
       "since": {
-        "mentioned": "2026-11-25"
+        "seen": "2026-11-25"
       },
-      "citedIn": ["docs/logbook/058-how-engines-set-a-spring.md", "jolt-soft-body-settings"],
-      "partOf": "cloth"
+      "citedIn": [
+        "docs/logbook/058-how-engines-set-a-spring.md",
+        "jolt-soft-body-settings",
+        "docs/logbook/063-a-cloth.md"
+      ],
+      "partOf": "cloth",
+      "code": ["examples/heap-simulation/main.ts"]
     },
     {
       "id": "bend-constraint",
@@ -8329,7 +8340,11 @@
       "since": {
         "mentioned": "2026-11-25"
       },
-      "citedIn": ["docs/logbook/058-how-engines-set-a-spring.md", "jolt-soft-body-settings"],
+      "citedIn": [
+        "docs/logbook/058-how-engines-set-a-spring.md",
+        "jolt-soft-body-settings",
+        "docs/logbook/063-a-cloth.md"
+      ],
       "partOf": "cloth"
     },
     {
@@ -8377,7 +8392,8 @@
       "code": [
         "examples/spring-lookup/main.ts",
         "examples/ropes/register.wgsl",
-        "examples/heap-simulation/main.ts"
+        "examples/heap-simulation/main.ts",
+        "examples/debug/cloth.ts"
       ],
       "citedIn": [
         "docs/logbook/059-a-name-or-a-corrected-list.md",
@@ -8388,6 +8404,20 @@
         "docs/logbook/062-the-first-ropes.md",
         "docs/decisions/038-the-name-is-a-property.md"
       ]
+    },
+    {
+      "id": "vertex-pulling",
+      "kind": "concept",
+      "title": "Vertex pulling",
+      "summary": "A mesh whose vertices have no positions of their own: the vertex shader takes the number of its vertex and reads the position from a buffer, here the simulation's",
+      "area": "gpu",
+      "status": "seen",
+      "since": {
+        "seen": "2026-11-25"
+      },
+      "related": ["stable-particle-ids", "cloth"],
+      "code": ["examples/debug/cloth.ts"],
+      "citedIn": ["docs/logbook/063-a-cloth.md"]
     }
   ]
 }

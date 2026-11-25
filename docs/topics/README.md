@@ -5,7 +5,7 @@
 Everything we have met while building FORCE, concepts and sources, and how far we went with each
 one. Use it to look up a term, to find what to read, or to pick what to explore next.
 
-- **306 concepts:** ● 31 studied · ◐ 145 seen · ○ 130 mentioned
+- **307 concepts:** ● 31 studied · ◐ 147 seen · ○ 129 mentioned
 - **164 sources:** ● 15 studied · ◐ 17 seen · ○ 132 mentioned · read by Claude: 80 parts, 16 in full
 
 | | Status | What it means |
@@ -163,7 +163,7 @@ How things move, collide and stay together.
 | ● | **[Semi-implicit Euler](integration.md#semi-implicit-euler)** | Update the velocity first, then move with the new one: a small swap that keeps a spring's energy bounded when the step is small enough | Integration | [004](../logbook/004-the-detour.md) |
 | ◐ | Sequential impulses (PGS) | Applying impulses to one contact or joint at a time, over several rounds: the classic rigid body solver | Iterative solver | [004](../logbook/004-the-detour.md) |
 | ○ | Shape matching | Pulling a group of particles back toward the best rigid fit of their original shape |  | [004](../logbook/004-the-detour.md) |
-| ○ | Shear link | A link along the diagonal of a square of cloth, which keeps the square from leaning into a diamond | Cloth | [058](../logbook/058-how-engines-set-a-spring.md) |
+| ◐ | Shear link | A link along the diagonal of a square of cloth, which keeps the square from leaning into a diamond | Cloth | [058](../logbook/058-how-engines-set-a-spring.md) |
 | ○ | Shock propagation | A solver variation for stacks that Catto lists as still to try: only the name so far | Solver | [Solver2D](https://box2d.org/posts/2024/02/solver2d/) |
 | ○ | Signed distance field collision | Describing a shape by the distance from it at every point of space, so a contact test becomes a lookup | Narrow phase | [004](../logbook/004-the-detour.md) |
 | ◐ | Simulation step | What an engine repeats over and over: apply forces, find contacts, fix them, move everything | Physics engine | [001](../logbook/001-the-flip-book.md) |
@@ -420,6 +420,7 @@ WebGPU, WGSL and how to make thousands of threads work.
 | ○ | Value declaration | A name for a value that can never change and has no memory behind it: const, override, let and function parameters | WGSL | [WGSL specification, §7.2 Value Declarations](https://www.w3.org/TR/WGSL/#value-decls) |
 | ○ | var declaration | The only thing that can change in WGSL: a name for a piece of memory holding a value of one type (the store type) | WGSL | [WGSL specification, §7.3 var Declarations](https://www.w3.org/TR/WGSL/#var-decls) |
 | ○ | Variable lifetime | How long a variable keeps its memory: the whole run of the shader for globals, its block for locals. Two live variables never share memory, apart from resources | var declaration | [WGSL specification, §7.3 var Declarations](https://www.w3.org/TR/WGSL/#var-decls) |
+| ◐ | Vertex pulling | A mesh whose vertices have no positions of their own: the vertex shader takes the number of its vertex and reads the position from a buffer, here the simulation's |  | [063](../logbook/063-a-cloth.md) |
 | ○ | WebGPU | The browser API that lets a page use the GPU, both to draw and to calculate |  | [README](../../README.md) |
 | ◐ | WebGPU errors | Most mistakes do not throw: the call returns, the work is skipped, and the browser prints a warning in the console | WebGPU | [buffers](../guides/buffers.md) |
 | ◐ | WGSL | The shader language of WebGPU, the counterpart of GLSL | WebGPU | [guides index](../guides/README.md) |

@@ -90,7 +90,11 @@ And the first springs run on a live page: ropes that hang and swing
 ([try it](https://rock-biter.github.io/force/ropes/),
 [chapter 062](./docs/logbook/062-the-first-ropes.md)).
 
-**Next:** a cloth. Then our rules read again against the
+Then a cloth, the same springs joined into a net
+([try it](https://rock-biter.github.io/force/cloth/),
+[chapter 063](./docs/logbook/063-a-cloth.md)).
+
+**Next:** springs for any net, and how soft and how damped a spring is. Then our rules read again against the
 devices.
 
 Every step, with what we learned and what went wrong, is in the [logbook](./docs/README.md).

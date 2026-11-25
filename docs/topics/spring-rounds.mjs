@@ -261,7 +261,7 @@ console.log(
 )
 for (const [name, options] of WAYS) {
   const cells = [false, true].map((diagonals) => {
-    const { points, links } = cloth(20, 0, (a, b) => b === 0, diagonals)
+    const { points, links } = cloth(20, 0, (_a, b) => b === 0, diagonals)
     // hanging: turn the cloth so that it starts in the plane of its held side
     for (const p of points) p.at = [p.at[0], -(p.at[2] + (19 * SPACING) / 2), 0]
     const s = run(world(points, links, 0), 10, options)
@@ -324,7 +324,7 @@ for (const [name, options] of [
     return s ? `${num(s.mean)}% ${num(s.worst)}%` : '        blows up'
   })()
   const b = (() => {
-    const { points, links } = cloth(20, 0, (a, b) => b === 0, true)
+    const { points, links } = cloth(20, 0, (_a, b) => b === 0, true)
     for (const p of points) p.at = [p.at[0], -(p.at[2] + (19 * SPACING) / 2), 0]
     const s = run(world(points, links, 0), 10, options)
     return s ? `${num(s.mean)}% ${num(s.worst)}% ${String(moving(s)).padStart(7)}` : 'blows up'

@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>FORCE: a cloth</title>
+    <meta
+      name="description"
+      content="A cloth of particles joined by springs, hanging by its top edge on the GPU: it swings, folds around a ball and can be pushed with the pointer."
+    />
+    <link rel="stylesheet" href="../site.css" />
+  </head>
+  <!-- The same page as heap-simulation, with the particles joined into one cloth by springs
+       (data-springs), held by its top row. -->
+  <body
+    class="stage"
+    data-springs="cloth"
+    data-sizes="1"
+    data-particles="10000"
+    data-max-particles="30000"
+    data-half="8"
+    data-ball="3"
+    data-ball-height="4"
+    data-friction="0.3"
+  >
+    <nav class="crumb">
+      <a href="../">← FORCE</a> · A cloth
+      <p>Particles joined to their neighbours by springs, held by the top row. Move the pointer over the cloth to push it.</p>
+      <p>Drag to turn the camera, two fingers on a phone.</p>
+    </nav>
+    <script type="module" src="../heap-simulation/main.ts"></script>
+  </body>
+</html>

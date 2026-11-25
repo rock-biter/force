@@ -57,6 +57,7 @@ import clearIfCode from '../contact-cost/clear-if.wgsl?raw'
 import commonCode from '../contact-cost/common.wgsl?raw'
 import predictCode from '../contact-cost/predict.wgsl?raw'
 import rebuildCode from '../contact-cost/rebuild.wgsl?raw'
+import { ClothView } from '../debug/cloth.js'
 import { ParticleView, SUN } from '../debug/particles.js'
 import { CASTERS, ShadowStage, SURFACES } from '../debug/shadows.js'
 import { showError } from '../debug/viewer.js'
@@ -115,10 +116,15 @@ const MIXED = SIZES > 0
 // The particles are kept in the order of the address book (chapter 041, decision 033), unless
 // ?sorted=off in the address. With sizes, always: see ../mixed-sizes/round-cells-sized.wgsl.
 const TWO = MIXED && new URLSearchParams(location.search).has('two')
-// data-springs="ropes" on a page's <body>, with data-sizes: the particles are joined into ropes of
-// ROPE particles by springs (decisions 036 and 037), each rope held by its first particle.
-const ROPES = MIXED && document.body.dataset.springs === 'ropes'
+// data-springs on a page's <body>, with data-sizes: the particles are joined by springs (decisions
+// 036 and 037). "ropes": into ropes of ROPE particles, each held by its first particle. "cloth":
+// into one cloth twice as wide as it is tall, held by its top row.
+const SPRINGS = MIXED ? document.body.dataset.springs : undefined
+const ROPES = SPRINGS === 'ropes'
+const CLOTH = SPRINGS === 'cloth'
 const ROPE = 30 // particles in a rope: 5.8 m
+// The most groups of springs that share no particle: 2 along a rope, 8 in a cloth with diagonals.
+const MAX_SPRING_GROUPS = 8
 const SPRING_ROUNDS = 3 // passes over the springs in a substep, at the start: the panel changes it
 const MAX_SPRING_ROUNDS = 10
 const IN_ORDER = new URLSearchParams(location.search).get('sorted') !== 'off' || MIXED
@@ -172,7 +178,9 @@ const halfFor = (count: number) =>
     ? SMALLEST_HALF // the mix of two sizes starts as a column: see twoSizes
     : ROPES
       ? Math.max(SMALLEST_HALF, Math.ceil((ropeSide(count) * ROPE_GAP) / 2 + 4))
-      : Math.max(SMALLEST_HALF, Math.ceil(((blockSide(count) * (DIAMETER + GAP)) / 2) * ROOM))
+      : CLOTH
+        ? Math.max(SMALLEST_HALF, Math.ceil((clothColumns(count) * DIAMETER) / 2 + 2))
+        : Math.max(SMALLEST_HALF, Math.ceil(((blockSide(count) * (DIAMETER + GAP)) / 2) * ROOM))
 
 /** Repeats the same numbers at every run, so every restart starts from the same cube. */
 function random(seed: number): () => number {
@@ -225,6 +233,8 @@ function radiiOf(count: number, ratio: number): Float32Array {
   return Float32Array.from({ length: count }, () => RADIUS / (1 + (ratio - 1) * next()))
 }
 
+/** A spring: the names of its two ends, its group, and its rest length in meters. */
+type Link = [a: number, b: number, group: number, rest: number]
 const ROPE_GAP = 0.5 // meters between two ropes
 const ROPE_TOP = 8 // meters: the height the ropes hang from
 /** How many ropes on a side of the square they hang in. */
@@ -239,7 +249,7 @@ function ropes(count: number) {
   const side = ropeSide(count)
   const at = new Float32Array(count * 3)
   const held: number[] = []
-  const links: [a: number, b: number, group: number][] = []
+  const links: Link[] = []
   const lean = [Math.sin(Math.PI / 6) * DIAMETER, -Math.cos(Math.PI / 6) * DIAMETER]
   for (let i = 0; i < count; i++) {
     const rope = Math.floor(i / ROPE)
@@ -253,7 +263,54 @@ function ropes(count: number) {
       i * 3,
     )
     if (along === 0) held.push(i)
-    else links.push([i - 1, i, along % 2])
+    else links.push([i - 1, i, along % 2, DIAMETER])
+  }
+  return { at, held, links }
+}
+
+/**
+ * A cloth is twice as wide as it is tall, whatever its size: with r rows it has 2 r columns. How
+ * many rows the largest such cloth of at most `count` particles has.
+ */
+const clothRows = (count: number) => Math.max(Math.floor(Math.sqrt(count / 2)), 1)
+/** How high a cloth hangs from, in meters: its bottom edge 1.5 m above the floor, where the ball reaches it. */
+const clothTop = (count: number) => 1.5 + clothRows(count) * DIAMETER
+/** How tall the box is for this many particles, in meters: taller than HEIGHT only for a large cloth. */
+const heightFor = (count: number) =>
+  CLOTH ? Math.max(HEIGHT, Math.ceil(clothTop(count) + 1)) : HEIGHT
+const clothColumns = (count: number) => 2 * clothRows(count)
+/** How many particles that cloth has: a little fewer than asked, so that its last row is whole. */
+const clothFit = (count: number) => clothRows(count) * clothColumns(count)
+/**
+ * A cloth of `count` particles, as clothFit gives, twice as wide as tall, one diameter between
+ * neighbours, hanging by its top row, which is held. It starts flat
+ * and leaning 20 degrees, so that it swings when let go. Each particle is joined to its
+ * neighbours along the two sides and, with `diagonals`, along the two diagonals, which keep its
+ * squares from leaning into diamonds (shear). The groups: links along a row that start at an
+ * even column, at an odd one, the same down the columns, and the same for each diagonal. No two
+ * of a group share a particle, so a group can run in one dispatch.
+ */
+function cloth(count: number, diagonals: boolean) {
+  const columns = clothColumns(count)
+  const at = new Float32Array(count * 3)
+  const held: number[] = []
+  const links: Link[] = []
+  const lean = [-Math.cos(Math.PI / 9) * DIAMETER, Math.sin(Math.PI / 9) * DIAMETER]
+  const top = clothTop(count)
+  const name = (a: number, b: number) => a + b * columns
+  for (let i = 0; i < count; i++) {
+    const a = i % columns
+    const b = Math.floor(i / columns)
+    at.set([(a - (columns - 1) / 2) * DIAMETER, top + b * lean[0], b * lean[1]], i * 3)
+    if (b === 0) held.push(i)
+    const right = a + 1 < columns && i + 1 < count
+    const below = name(a, b + 1) < count
+    if (right) links.push([i, i + 1, a % 2, DIAMETER])
+    if (below) links.push([i, name(a, b + 1), 2 + (b % 2), DIAMETER])
+    if (!diagonals) continue
+    if (right && name(a + 1, b + 1) < count)
+      links.push([i, name(a + 1, b + 1), 4 + (a % 2), DIAMETER * Math.SQRT2])
+    if (right && below) links.push([i + 1, name(a, b + 1), 6 + (a % 2), DIAMETER * Math.SQRT2])
   }
   return { at, held, links }
 }
@@ -414,7 +471,9 @@ fn repeated(home: vec3i, offset: vec3i, slots: u32) -> bool {
       layout: 'auto',
       compute: { module: device.createShaderModule({ code }) },
     })
-  const springKit = ROPES ? await Promise.all([alone(registerCode), make(springsCode)]) : undefined
+  const springKit = SPRINGS
+    ? await Promise.all([alone(registerCode), make(springsCode)])
+    : undefined
   const moveProperties = MIXED
     ? await Promise.all(
         [propertiesMoveCode, propertiesSettleCode].map((code) => make(rebuildCode + code)),
@@ -487,9 +546,9 @@ type Cells = 'book' | 'table'
  * The grid of the level box, with cells of this width: 120 by 45 by 120 of them at 20 cm, in the
  * box of 24 m.
  */
-const levelGrid = (cell: number, half: number): Grid => ({
+const levelGrid = (cell: number, half: number, height = HEIGHT): Grid => ({
   origin: [-half, 0, -half],
-  size: [2 * half, HEIGHT, 2 * half].map((m) => Math.ceil(m / cell - 1e-6)) as Vec3,
+  size: [2 * half, height, 2 * half].map((m) => Math.ceil(m / cell - 1e-6)) as Vec3,
 })
 
 /**
@@ -540,11 +599,12 @@ function makeSimulation(
   inOrder: boolean,
   half: number,
   ratio = 1,
+  diagonals = true,
 ) {
   // The cube stands on the floor of the box, wherever the box is turned.
   const start = cube(count, masses)
   const two = TWO ? twoSizes(count, ratio, half) : undefined
-  const roped = ROPES ? ropes(count) : undefined
+  const roped = ROPES ? ropes(count) : CLOTH ? cloth(count, diagonals) : undefined
   const placed = two?.at ?? roped?.at
   if (placed) for (let i = 0; i < count; i++) start.set(placed.subarray(i * 3, i * 3 + 3), i * 4)
   for (const i of roped?.held ?? []) start[i * 4 + 3] = 0 // 1 / mass of 0: it never moves
@@ -695,9 +755,9 @@ function makeSimulation(
     const data = new ArrayBuffer(springs.length * 16)
     const names = new Uint32Array(data)
     const floats = new Float32Array(data)
-    springs.forEach(([a, b], i) => {
+    springs.forEach(([a, b, , rest], i) => {
       names.set([a, b], i * 4)
-      floats.set([DIAMETER, compliance], i * 4 + 2)
+      floats.set([rest, compliance], i * 4 + 2)
     })
     if (springs.length) device.queue.writeBuffer(springList, 0, data)
   }
@@ -705,7 +765,7 @@ function makeSimulation(
   const registerGroup =
     springs.length && kit.springKit ? group(kit.springKit[0], [properties, rowOf]) : undefined
   // each group: where it begins in the list and how many springs, then its bind group
-  const springGroups = [0, 1].flatMap((g) => {
+  const springGroups = Array.from({ length: MAX_SPRING_GROUPS }, (_, g) => g).flatMap((g) => {
     const first = springs.findIndex((link) => link[2] === g)
     const n = springs.filter((link) => link[2] === g).length
     if (!n || !kit.springKit) return []
@@ -783,6 +843,10 @@ function makeSimulation(
     radius: RADIUS,
     // four numbers per particle, the radius first: for who draws them
     propertiesBuffer: sizes ? properties : undefined,
+    // the register: for each name, the row of that particle now (decision 036)
+    registerBuffer: springs.length ? rowOf : undefined,
+    // a cloth's shape, in particles: for who draws it as a surface
+    cloth: CLOTH ? { columns: clothColumns(count), rows: clothRows(count) } : undefined,
     positionBuffer: positions,
     substepCount: 0,
 
@@ -894,8 +958,8 @@ function makeSimulation(
       device.queue.writeBuffer(planes, 0, new Float32Array(data))
     },
 
-    /** The springs, as [name, name] pairs: for who measures how far they stretch. */
-    springs: springs.map(([a, b]) => [a, b] as const),
+    /** The springs, as two names and a rest length: for who measures how far they stretch. */
+    springs: springs.map(([a, b, , rest]) => [a, b, rest] as const),
     /**
      * How many passes over the springs in a substep, and their compliance, 1 / stiffness in meters
      * per newton: 0 is a rod.
@@ -918,9 +982,9 @@ function makeSimulation(
 type Simulation = ReturnType<typeof makeSimulation>
 /** A clock with two entries per shader of a step, and the names of the shaders that wrote them. */
 type Profile = { clock: GPUQuerySet; names: string[] }
-// The most shaders a step runs: sixteen, the rounds, and the two groups of springs in each of
-// their rounds, in every substep.
-const MAX_PASSES = (16 + ROUNDS + 2 * MAX_SPRING_ROUNDS) * MAX_SUBSTEPS
+// The most shaders a step runs: sixteen, the rounds, and the groups of springs in each of their
+// rounds, in every substep.
+const MAX_PASSES = (16 + ROUNDS + MAX_SPRING_GROUPS * MAX_SPRING_ROUNDS) * MAX_SUBSTEPS
 
 async function start() {
   const adapter = await navigator.gpu?.requestAdapter()
@@ -978,6 +1042,7 @@ async function start() {
   // The box is as wide as the particles need (halfFor): its lines are drawn again when it changes,
   // and the camera moves back or forth by as much, to keep the whole box in view.
   let half = 0
+  let height = HEIGHT // of the box, in meters: taller for a large cloth
   const lines: (GridHelper | LineSegments)[] = []
   // A floor to take the shadows, of the color of the background. Only the stage draws it: without
   // it the floor is the grid's lines alone, as before. Lines drawn the usual way come after the
@@ -1006,21 +1071,22 @@ async function start() {
   floor.position.y = -0.005
   floor.layers.set(SURFACES)
   world.add(floor)
-  function fitBox(next: number) {
-    if (next === half) return
+  function fitBox(next: number, tall = HEIGHT) {
+    if (next === half && tall === height) return
+    height = tall
     floor.scale.set(2 * next, 2 * next, 1)
     floorSide.value = 2 * next
     // The light covers a ball around the box, at any tilt: the box turns around its floor's center.
-    stage.fit(new Vector3(), Math.hypot(next, next, HEIGHT))
+    stage.fit(new Vector3(), Math.hypot(next, next, height))
     for (const line of lines.splice(0)) {
       world.remove(line)
       line.geometry.dispose()
     }
     const box = new LineSegments(
-      new EdgesGeometry(new BoxGeometry(2 * next, HEIGHT, 2 * next)),
+      new EdgesGeometry(new BoxGeometry(2 * next, height, 2 * next)),
       new LineBasicMaterial({ color: 0x9a9a9a }),
     )
-    box.position.y = HEIGHT / 2
+    box.position.y = height / 2
     lines.push(new GridHelper(2 * next, 2 * next, 0xbcbcbc, 0xd4d4d4), box)
     lines[0].visible = !floorLines
     world.add(...lines)
@@ -1131,6 +1197,9 @@ async function start() {
    * toward `radius`, and writes where it is at every substep into `ballPath`.
    */
   function moveBall(steps: number, substeps: number, radius: number) {
+    // a lifted ball stays clear of the floor, however large the panel makes it
+    const lift = BALL_HEIGHT > 0 ? Math.max(BALL_HEIGHT, radius + 0.3) : 0
+    surface.constant = -lift
     raycaster.setFromCamera(screen, camera)
     // the ray as the box sees it, since the plane and the ball are the box's own
     raycaster.ray.applyMatrix4(inside.copy(world.matrixWorld).invert())
@@ -1160,13 +1229,13 @@ async function start() {
       const change = (on ? radius : 0) - ball.radius
       ball.radius += Math.min(Math.max(change, -BALL_GROWTH * h), BALL_GROWTH * h)
       // the simulation wants the ball in the world, not in the box
-      center.set(ball.x, BALL_HEIGHT, ball.z).applyMatrix4(world.matrixWorld)
+      center.set(ball.x, lift, ball.z).applyMatrix4(world.matrixWorld)
       pathData.set([center.x, center.y, center.z, ball.radius], k * 4)
     }
     if (steps) device.queue.writeBuffer(ballPath, 0, pathData, 0, steps * substeps * 4)
     ballMesh.visible = ball.radius > 0
     ballMesh.scale.setScalar(ball.radius)
-    ballMesh.position.set(ball.x, BALL_HEIGHT, ball.z)
+    ballMesh.position.set(ball.x, lift, ball.z)
   }
 
   // ---- the simulation and the panel ----------------------------------------------------------------
@@ -1269,6 +1338,14 @@ async function start() {
       MAX_SPRING_ROUNDS,
     ),
     give: MathUtils.clamp(Number(query.get('give')) || 0, 0, 2),
+    // A cloth's links: along its sides only, 4 per particle, or along its diagonals too, 8.
+    // ?links=4 in the address starts without the diagonals.
+    diagonals: query.get('links') !== '4',
+    // How a cloth is drawn: its particles, a surface through them, or the wires of that surface.
+    // ?cloth=surface or ?cloth=wires in the address starts with that one.
+    cloth: ['surface', 'wires'].includes(query.get('cloth') ?? '')
+      ? (query.get('cloth') as string)
+      : 'particles',
   }
   // How much wider than the largest particle a cell is, in meters. The cells are filed when a
   // substep begins and read at every round, while the particles move a little: the margin is the
@@ -1304,10 +1381,11 @@ async function start() {
   const gridOf = (cell: number) =>
     document.body.dataset.tilt !== undefined
       ? gridAround(MAX_TILT, cell, half)
-      : levelGrid(cell, half)
+      : levelGrid(cell, half, height)
   // ?slots=8 in the address: slots of the table per particle, at least; 2 without it.
   const slotsEach = Math.max(Number(query.get('slots')) || 2, 1)
   let switching = false
+  let fitBallSlider = () => {} // set when the panel is made
   const note = document.createElement('p')
   note.style.cssText = 'position:fixed;left:16px;bottom:16px;margin:0;max-width:60ch'
   document.body.append(note)
@@ -1316,6 +1394,7 @@ async function start() {
   const massColors = [new Color(settings.light), new Color(settings.heavy)] as const
   let view: ParticleView | undefined
   let caster: ParticleView | undefined // the same particles as the light sees them
+  let clothView: ClothView | undefined // a cloth drawn as a surface, or as its wires
   /**
    * Whether this frame is drawn in the stage's passes, whether with shadows, and whether with
    * shadows but straight to the screen, each sphere reading the shadow map itself.
@@ -1339,6 +1418,11 @@ async function start() {
       each.dispose()
     }
     view = caster = undefined
+    if (clothView) {
+      scene.remove(clothView.mesh)
+      clothView.dispose()
+      clothView = undefined
+    }
     // With shadows the ball takes its light from the stage, like the spheres: from its last pass,
     // or in its own shader. So does the floor, which without the stage is not drawn at all.
     ballMesh.material = deferred() ? ballShadowed : forward() ? ballForward : ballLit
@@ -1349,6 +1433,17 @@ async function start() {
     floorLines = deferred() || forward()
     lines[0].visible = !floorLines
     if (!simulation || settings.draw === 'none') return
+    // A cloth as a surface or as its wires, in place of its particles.
+    if (settings.cloth !== 'particles' && simulation.cloth && simulation.registerBuffer) {
+      clothView = new ClothView(
+        renderer,
+        { ...simulation, ...simulation.cloth, registerBuffer: simulation.registerBuffer },
+        massColors[0],
+        settings.cloth === 'wires',
+      )
+      scene.add(clothView.mesh)
+      return
+    }
     view = new ParticleView(renderer, simulation, {
       massRange: massRange(),
       massColors,
@@ -1368,7 +1463,8 @@ async function start() {
   function restart() {
     if (switching) return // the menu was only told of the change below
     simulation?.destroy()
-    fitBox(halfFor(settings.particles))
+    fitBox(halfFor(settings.particles), heightFor(settings.particles))
+    fitBallSlider()
     // A grid has a slot per cell, and a shader with a thread per cell: beyond what the device
     // can dispatch or bind, the cells go into the table, which has no such limit (decision 024).
     note.textContent = ''
@@ -1392,7 +1488,7 @@ async function start() {
       device,
       kit,
       pointerBuffer,
-      settings.particles,
+      CLOTH ? clothFit(settings.particles) : settings.particles,
       masses,
       gridOf(cellWidth()),
       world.matrixWorld,
@@ -1403,6 +1499,7 @@ async function start() {
       IN_ORDER,
       half,
       settings.sizes,
+      settings.diagonals,
     )
     simulation.setBox(world.quaternion)
     applySolver()
@@ -1619,7 +1716,7 @@ async function start() {
       })
   }
   // The springs: only on a page with ropes.
-  const springFolder = pane.addFolder({ title: 'Springs', hidden: !ROPES })
+  const springFolder = pane.addFolder({ title: 'Springs', hidden: !SPRINGS })
   springFolder
     .addBinding(settings, 'springRounds', {
       label: 'rounds',
@@ -1631,8 +1728,38 @@ async function start() {
   springFolder
     .addBinding(settings, 'give', { label: 'give, mm/N', min: 0, max: 2, step: 0.01 })
     .on('change', applySolver)
+  springFolder
+    .addBinding(settings, 'diagonals', {
+      label: 'links',
+      options: { 'along the sides, 4': false, 'and the diagonals, 8': true },
+      hidden: !CLOTH,
+    })
+    .on('change', restart)
+  springFolder
+    .addBinding(settings, 'cloth', {
+      label: 'drawn as',
+      options: { particles: 'particles', 'a surface': 'surface', wires: 'wires' },
+      hidden: !CLOTH,
+    })
+    .on('change', redraw)
   const ballFolder = pane.addFolder({ title: 'Ball' })
-  ballFolder.addBinding(settings, 'ball', { label: 'radius', min: 0.3, max: 3, step: 0.1 })
+  const ballSlider = ballFolder.addBinding(settings, 'ball', {
+    label: 'radius',
+    min: 0.3,
+    max: 3,
+    step: 0.1,
+  })
+  // A large cloth wants a large ball: the slider goes up to a third of the cloth's height, 3 m at
+  // least. Called at every restart, since the cloth changes size with the count of particles.
+  fitBallSlider = () => {
+    const most = CLOTH ? Math.max(3, Math.round((clothRows(settings.particles) * DIAMETER) / 3)) : 3
+    ;(ballSlider as unknown as { max: number }).max = most
+    if (settings.ball > most) {
+      settings.ball = most
+      ballSlider.refresh()
+    }
+  }
+  fitBallSlider()
   const numbers = pane.addFolder({ title: 'Numbers' })
   const fps = numbers.addBlade({ view: 'fpsgraph', label: 'fps', rows: 2 }) as FpsGraphBladeApi
   numbers.addBinding(stats, 'gpu', {
@@ -1650,13 +1777,13 @@ async function start() {
   numbers.addBinding(stats, 'stretch', {
     label: 'stretch',
     readonly: true,
-    hidden: !ROPES,
+    hidden: !SPRINGS,
     format: (v) => (Number.isNaN(v) ? '…' : `${v.toFixed(2)}%`),
   })
   numbers.addBinding(stats, 'worst', {
     label: 'worst',
     readonly: true,
-    hidden: !ROPES,
+    hidden: !SPRINGS,
     format: (v) => (Number.isNaN(v) ? '…' : `${v.toFixed(2)}%`),
   })
   // ---- the GPU's numbers ---------------------------------------------------------------------------
@@ -1674,7 +1801,7 @@ async function start() {
   let reading = false
   // The stretch of the springs: the positions and the properties, where the names are, copied at
   // the same moment, since the rows change from one substep to the next. A particle is found by
-  // its name, and each spring's length measured against its rest length, a diameter.
+  // its name, and each spring's length measured against its rest length.
   let stretching = false
   async function readStretch(sim: Simulation) {
     if (stretching || !sim.propertiesBuffer || !sim.springs.length) return
@@ -1698,7 +1825,7 @@ async function start() {
       rowOf[both[(sim.particleCount + row) * 4 + 1]] = row
     let sum = 0
     let worst = 0
-    for (const [a, b] of sim.springs) {
+    for (const [a, b, rest] of sim.springs) {
       const i = rowOf[a] * 4
       const j = rowOf[b] * 4
       const far = Math.hypot(
@@ -1706,7 +1833,7 @@ async function start() {
         both[i + 1] - both[j + 1],
         both[i + 2] - both[j + 2],
       )
-      const longer = (far / DIAMETER - 1) * 100
+      const longer = (far / rest - 1) * 100
       sum += longer
       worst = Math.max(worst, longer)
     }
