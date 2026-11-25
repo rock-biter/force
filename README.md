@@ -75,7 +75,12 @@ Then why a stiff spring blows up in a simulation, and the three ways around it
 
 And how six engines set theirs ([chapter 058](./docs/logbook/058-how-engines-set-a-spring.md)).
 
-**Next:** springs in FORCE, on the GPU. Then our rules read again against the
+Now the design: since particles are moved in memory at every substep, how does a spring find its
+two ends? Two ways, timed ([chapter 059](./docs/logbook/059-a-name-or-a-corrected-list.md)).
+
+We chose names: a spring says who its two particles are, and a register says where they are now.
+
+**Next:** where springs live in memory, and how several springs on one particle combine. Then our rules read again against the
 devices.
 
 Every step, with what we learned and what went wrong, is in the [logbook](./docs/README.md).

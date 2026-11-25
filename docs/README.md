@@ -65,6 +65,7 @@ This is where we tell how FORCE gets built, one step at a time. If you are new h
 | 056 | [What a Spring Is](./logbook/056-what-a-spring-is.md) | The first stop of a study on springs: force and stretch, the pace of a swing, the damper, and the damping ratio |
 | 057 | [Three Ways Around](./logbook/057-three-ways-around.md) | The second stop on springs: why a stiff one blows up, and the three ways around it, on one hanging chain simulated in four ways |
 | 058 | [How Engines Set a Spring](./logbook/058-how-engines-set-a-spring.md) | The third stop on springs: six engines read in their code. Joints and links, four ways to say how stiff, and the same four numbers in memory |
+| 059 | [A Name, or a Corrected List](./logbook/059-a-name-or-a-corrected-list.md) | Particles change row at every substep: two ways for a spring to find its ends, timed. Neither wins everywhere |
 
 ## For reference
 

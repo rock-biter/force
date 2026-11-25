@@ -433,7 +433,8 @@
         "docs/logbook/056-what-a-spring-is.md",
         "docs/topics/spring-simulation.md",
         "docs/logbook/057-three-ways-around.md",
-        "docs/logbook/058-how-engines-set-a-spring.md"
+        "docs/logbook/058-how-engines-set-a-spring.md",
+        "docs/logbook/059-a-name-or-a-corrected-list.md"
       ],
       "page": "docs/topics/spring.md"
     },
@@ -1401,7 +1402,9 @@
         "docs/logbook/053-in-order-by-default.md",
         "docs/logbook/054-without-the-lists.md",
         "docs/decisions/034-no-lists-of-neighbours.md",
-        "docs/logbook/058-how-engines-set-a-spring.md"
+        "docs/logbook/058-how-engines-set-a-spring.md",
+        "docs/logbook/059-a-name-or-a-corrected-list.md",
+        "docs/decisions/036-names-and-a-register.md"
       ],
       "code": [
         "examples/heap-simulation/book-move.wgsl",
@@ -1866,7 +1869,8 @@
         "docs/logbook/056-what-a-spring-is.md",
         "docs/topics/spring-simulation.md",
         "docs/logbook/057-three-ways-around.md",
-        "docs/logbook/058-how-engines-set-a-spring.md"
+        "docs/logbook/058-how-engines-set-a-spring.md",
+        "docs/logbook/059-a-name-or-a-corrected-list.md"
       ]
     },
     {
@@ -4344,7 +4348,8 @@
         "docs/guides/compute-shader.md",
         "docs/logbook/030-the-lazy-list.md",
         "docs/logbook/049-a-radius-each.md",
-        "docs/logbook/050-the-price-of-remembering.md"
+        "docs/logbook/050-the-price-of-remembering.md",
+        "docs/logbook/059-a-name-or-a-corrected-list.md"
       ]
     },
     {
@@ -7388,7 +7393,8 @@
         "docs/logbook/033-the-speed-limit.md",
         "docs/logbook/034-the-box-on-the-ramp.md",
         "docs/logbook/048-big-and-small.md",
-        "docs/logbook/058-how-engines-set-a-spring.md"
+        "docs/logbook/058-how-engines-set-a-spring.md",
+        "docs/logbook/059-a-name-or-a-corrected-list.md"
       ],
       "url": "https://github.com/NVIDIAGameWorks/FleX/blob/master/include/NvFlex.h",
       "authors": "NVIDIA",
@@ -8072,7 +8078,8 @@
         "docs/decisions/032-a-buffer-of-particle-properties.md",
         "docs/logbook/050-the-price-of-remembering.md",
         "docs/logbook/052-what-follows-a-particle.md",
-        "docs/logbook/053-in-order-by-default.md"
+        "docs/logbook/053-in-order-by-default.md",
+        "docs/decisions/036-names-and-a-register.md"
       ]
     },
     {
@@ -8310,6 +8317,24 @@
         "rapier-spring-joint"
       ],
       "partOf": "spring"
+    },
+    {
+      "id": "stable-particle-ids",
+      "kind": "concept",
+      "title": "Names for particles that change rows",
+      "summary": "When particles are moved in memory, a spring can name them by a number that never changes, looked up in a register of where each one is now, or keep rows that are rewritten at every move",
+      "area": "engine",
+      "status": "seen",
+      "since": {
+        "seen": "2026-11-25"
+      },
+      "related": ["particle-reordering", "spring"],
+      "code": ["examples/spring-lookup/main.ts"],
+      "citedIn": [
+        "docs/logbook/059-a-name-or-a-corrected-list.md",
+        "flex-header",
+        "docs/decisions/036-names-and-a-register.md"
+      ]
     }
   ]
 }

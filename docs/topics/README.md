@@ -5,7 +5,7 @@
 Everything we have met while building FORCE, concepts and sources, and how far we went with each
 one. Use it to look up a term, to find what to read, or to pick what to explore next.
 
-- **305 concepts:** ● 31 studied · ◐ 144 seen · ○ 130 mentioned
+- **306 concepts:** ● 31 studied · ◐ 145 seen · ○ 130 mentioned
 - **164 sources:** ● 15 studied · ◐ 17 seen · ○ 132 mentioned · read by Claude: 80 parts, 16 in full
 
 | | Status | What it means |
@@ -507,6 +507,7 @@ How an engine is organized, measured and scaled across devices.
 | ○ | Entity component system (ECS) | Organizing a game as plain data components processed by systems, instead of objects with methods |  | [004](../logbook/004-the-detour.md) |
 | ○ | Frame budget | The slice of each frame the physics may use, for example 2 to 4 ms of the 16.7 ms available at 60 FPS |  | [004](../logbook/004-the-detour.md) |
 | ○ | Job system | Splitting the work of a step into small jobs spread over the CPU cores |  | [004](../logbook/004-the-detour.md) |
+| ◐ | Names for particles that change rows | When particles are moved in memory, a spring can name them by a number that never changes, looked up in a register of where each one is now, or keep rows that are rewritten at every move |  | [059](../logbook/059-a-name-or-a-corrected-list.md) |
 | ◐ | Particle properties in one buffer | What a particle is and does not change in a step, four numbers each in one buffer, the radius first: one of a shader's 8 storage buffers for all of them |  | [049](../logbook/049-a-radius-each.md) |
 | ◐ | Quality tiers | The same simulation at different costs: fewer particles, substeps and solver rounds on weaker devices |  | [004](../logbook/004-the-detour.md) |
 | ◐ | The precision of a page's clock | Browsers round the clocks a page can read, so they cannot be used to spy: performance.now() moved in steps of 0.1 ms in Chrome on our Mac and of 1 ms on an iPhone. Averaging many runs still measures below the step |  | [020](../logbook/020-a-cheap-launch.md) |
