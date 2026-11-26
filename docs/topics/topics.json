@@ -280,7 +280,8 @@
         "docs/logbook/032-two-kinds-of-bounce.md",
         "docs/logbook/033-the-speed-limit.md",
         "docs/logbook/048-big-and-small.md",
-        "docs/logbook/071-the-gate.md"
+        "docs/logbook/071-the-gate.md",
+        "docs/logbook/072-read-to-the-end.md"
       ]
     },
     {
@@ -1490,7 +1491,8 @@
         "docs/logbook/004-the-detour.md",
         "advanced-character-physics",
         "iterative-dynamics-paper",
-        "docs/logbook/071-the-gate.md"
+        "docs/logbook/071-the-gate.md",
+        "docs/logbook/072-read-to-the-end.md"
       ]
     },
     {
@@ -1960,7 +1962,8 @@
         "ten-minute-physics",
         "advanced-character-physics",
         "docs/logbook/071-the-gate.md",
-        "docs/topics/self-collision.md"
+        "docs/topics/self-collision.md",
+        "docs/logbook/072-read-to-the-end.md"
       ],
       "related": [
         "tunneling",
@@ -2819,12 +2822,13 @@
         "docs/logbook/034-the-box-on-the-ramp.md",
         "docs/logbook/041-next-to-each-other.md",
         "docs/logbook/048-big-and-small.md",
-        "docs/logbook/071-the-gate.md"
+        "docs/logbook/071-the-gate.md",
+        "docs/logbook/072-read-to-the-end.md"
       ],
       "url": "https://doi.org/10.1145/2601097.2601152",
       "authors": "Miles Macklin, Matthias Müller, Nuttapong Chentanez, Tae-Yong Kim",
       "year": 2014,
-      "claudeRead": "parts",
+      "claudeRead": "full",
       "file": "library/unified-particle-physics.pdf"
     },
     {
@@ -2894,12 +2898,13 @@
         "docs/logbook/004-the-detour.md",
         "docs/logbook/012-the-family-tree.md",
         "docs/logbook/058-how-engines-set-a-spring.md",
-        "docs/logbook/071-the-gate.md"
+        "docs/logbook/071-the-gate.md",
+        "docs/logbook/072-read-to-the-end.md"
       ],
       "url": "https://doi.org/10.1016/j.jvcir.2007.01.005",
       "authors": "Matthias Müller, Bruno Heidelberger, Marcus Hennix, John Ratcliff",
       "year": 2007,
-      "claudeRead": "parts",
+      "claudeRead": "full",
       "file": "library/position-based-dynamics.pdf"
     },
     {
@@ -2913,10 +2918,12 @@
         "mentioned": "2026-11-05"
       },
       "about": ["position-based-dynamics"],
-      "citedIn": ["docs/logbook/004-the-detour.md"],
+      "citedIn": ["docs/logbook/004-the-detour.md", "docs/logbook/072-read-to-the-end.md"],
       "url": "https://doi.org/10.1111/cgf.12346",
       "authors": "Jan Bender, Matthias Müller, Miguel A. Otaduy, Matthias Teschner, Miles Macklin",
-      "year": 2014
+      "year": 2014,
+      "claudeRead": "full",
+      "file": "library/pbd-survey.pdf"
     },
     {
       "id": "strain-based-dynamics-paper",
@@ -2928,11 +2935,13 @@
       "since": {
         "mentioned": "2026-11-05"
       },
-      "about": ["position-based-dynamics", "cloth", "soft-body"],
-      "citedIn": ["docs/logbook/004-the-detour.md"],
+      "about": ["position-based-dynamics", "cloth", "soft-body", "strain-limiting"],
+      "citedIn": ["docs/logbook/004-the-detour.md", "docs/logbook/072-read-to-the-end.md"],
       "url": "https://matthias-research.github.io/pages/publications/strainBasedDynamics.pdf",
       "authors": "Matthias Müller, Nuttapong Chentanez, Tae-Yong Kim, Miles Macklin",
-      "year": 2014
+      "year": 2014,
+      "claudeRead": "full",
+      "file": "library/strain-based-dynamics.pdf"
     },
     {
       "id": "shape-matching-paper",
@@ -2965,12 +2974,13 @@
         "docs/logbook/004-the-detour.md",
         "docs/logbook/012-the-family-tree.md",
         "docs/logbook/060-one-by-one-or-all-at-once.md",
-        "docs/logbook/071-the-gate.md"
+        "docs/logbook/071-the-gate.md",
+        "docs/logbook/072-read-to-the-end.md"
       ],
       "url": "https://mmacklin.com/smallsteps.pdf",
       "authors": "Miles Macklin, Kier Storey, Michelle Lu, Pierre Terdiman, Nuttapong Chentanez, Stefan Jeschke, Matthias Müller",
       "year": 2019,
-      "claudeRead": "parts",
+      "claudeRead": "full",
       "file": "library/small-steps-in-physics-simulation.pdf"
     },
     {
@@ -3253,9 +3263,13 @@
       },
       "partOf": "flex",
       "about": ["unified-particle-physics", "shape-matching", "self-collision", "rest-pose-filter"],
-      "citedIn": ["docs/logbook/004-the-detour.md", "docs/logbook/071-the-gate.md"],
-      "url": "https://gameworksdocs.nvidia.com/FleX/1.2/lib_docs/manual.html",
-      "claudeRead": "parts"
+      "citedIn": [
+        "docs/logbook/004-the-detour.md",
+        "docs/logbook/071-the-gate.md",
+        "docs/logbook/072-read-to-the-end.md"
+      ],
+      "url": "https://github.com/NVIDIAGameWorks/FleX/blob/master/doc/_sources/manual.txt",
+      "claudeRead": "full"
     },
     {
       "id": "flex-ext-api",
@@ -3394,7 +3408,11 @@
         "position-based-dynamics",
         "xpbd"
       ],
-      "citedIn": ["docs/logbook/004-the-detour.md", "docs/logbook/016-the-same-road.md"],
+      "citedIn": [
+        "docs/logbook/004-the-detour.md",
+        "docs/logbook/016-the-same-road.md",
+        "docs/logbook/072-read-to-the-end.md"
+      ],
       "url": "https://dev.epicgames.com/documentation/unreal-engine/physics-in-unreal-engine"
     },
     {
@@ -3408,7 +3426,7 @@
         "mentioned": "2026-11-05"
       },
       "about": ["physics-engine"],
-      "citedIn": ["docs/logbook/004-the-detour.md"],
+      "citedIn": ["docs/logbook/004-the-detour.md", "docs/logbook/072-read-to-the-end.md"],
       "url": "https://godotengine.org/"
     },
     {
@@ -3491,7 +3509,7 @@
         "mentioned": "2026-11-05"
       },
       "about": ["rigid-body", "collision-detection", "soft-body"],
-      "citedIn": ["docs/logbook/004-the-detour.md"],
+      "citedIn": ["docs/logbook/004-the-detour.md", "docs/logbook/072-read-to-the-end.md"],
       "url": "https://github.com/bulletphysics/bullet3"
     },
     {
@@ -3511,7 +3529,11 @@
         "job-system",
         "ngs-solver"
       ],
-      "citedIn": ["docs/logbook/004-the-detour.md", "docs/logbook/016-the-same-road.md"],
+      "citedIn": [
+        "docs/logbook/004-the-detour.md",
+        "docs/logbook/016-the-same-road.md",
+        "docs/logbook/072-read-to-the-end.md"
+      ],
       "url": "https://github.com/jrouwe/JoltPhysics"
     },
     {
@@ -3610,7 +3632,7 @@
         "mentioned": "2026-11-05"
       },
       "about": ["physics-engine"],
-      "citedIn": ["docs/logbook/004-the-detour.md"],
+      "citedIn": ["docs/logbook/004-the-detour.md", "docs/logbook/072-read-to-the-end.md"],
       "url": "https://www.havok.com/"
     },
     {
@@ -5167,7 +5189,11 @@
       },
       "partOf": "workgroup",
       "related": ["workgroup-variable", "atomic-operations"],
-      "citedIn": ["docs/guides/dispatch-and-workgroups.md", "wgsl-spec-synchronization-functions"]
+      "citedIn": [
+        "docs/guides/dispatch-and-workgroups.md",
+        "wgsl-spec-synchronization-functions",
+        "docs/logbook/072-read-to-the-end.md"
+      ]
     },
     {
       "id": "uniform-control-flow",
@@ -6378,11 +6404,17 @@
       "since": {
         "mentioned": "2026-11-16"
       },
-      "about": ["vertex-block-descent", "soft-body", "graph-coloring"],
-      "citedIn": ["avbd-paper", "docs/logbook/012-the-family-tree.md"],
+      "about": ["vertex-block-descent", "soft-body", "graph-coloring", "self-collision"],
+      "citedIn": [
+        "avbd-paper",
+        "docs/logbook/012-the-family-tree.md",
+        "docs/logbook/072-read-to-the-end.md"
+      ],
       "url": "https://graphics.cs.utah.edu/research/projects/vbd/",
       "authors": "Anka He Chen, Ziheng Liu, Yin Yang, Cem Yuksel",
-      "year": 2024
+      "year": 2024,
+      "claudeRead": "full",
+      "file": "library/vertex-block-descent.pdf"
     },
     {
       "id": "particle-simulation-cuda",
@@ -6534,7 +6566,8 @@
         "box2d-contact-solver",
         "jolt-physics-settings",
         "docs/logbook/027-the-stored-nudge.md",
-        "docs/logbook/071-the-gate.md"
+        "docs/logbook/071-the-gate.md",
+        "docs/logbook/072-read-to-the-end.md"
       ]
     },
     {
@@ -6776,8 +6809,8 @@
         "mentioned": "2026-11-17"
       },
       "partOf": "rapier",
-      "about": ["soft-step", "tgs-solver", "block-solver", "warm-starting"],
-      "citedIn": ["docs/logbook/016-the-same-road.md"],
+      "about": ["soft-step", "tgs-solver", "block-solver", "warm-starting", "self-collision"],
+      "citedIn": ["docs/logbook/016-the-same-road.md", "docs/logbook/072-read-to-the-end.md"],
       "url": "https://github.com/dimforge/rapier/blob/master/CHANGELOG.md",
       "claudeRead": "parts"
     },
@@ -7514,11 +7547,12 @@
         "docs/logbook/059-a-name-or-a-corrected-list.md",
         "docs/logbook/065-two-kinds-of-brake.md",
         "docs/decisions/040-damping-and-drag.md",
-        "docs/logbook/071-the-gate.md"
+        "docs/logbook/071-the-gate.md",
+        "docs/logbook/072-read-to-the-end.md"
       ],
       "url": "https://github.com/NVIDIAGameWorks/FleX/blob/master/include/NvFlex.h",
       "authors": "NVIDIA",
-      "claudeRead": "parts"
+      "claudeRead": "full"
     },
     {
       "id": "speed-limit",
@@ -7539,7 +7573,8 @@
         "docs/decisions/018-max-speed-in-meters-per-second.md",
         "docs/decisions/019-default-speed-limit.md",
         "docs/logbook/048-big-and-small.md",
-        "docs/logbook/071-the-gate.md"
+        "docs/logbook/071-the-gate.md",
+        "docs/logbook/072-read-to-the-end.md"
       ],
       "code": ["examples/heap-simulation/finish-limit.wgsl"]
     },
@@ -7847,8 +7882,8 @@
       "since": {
         "mentioned": "2026-11-25"
       },
-      "about": ["mixed-particle-sizes"],
-      "citedIn": ["docs/logbook/048-big-and-small.md"],
+      "about": ["mixed-particle-sizes", "self-collision"],
+      "citedIn": ["docs/logbook/048-big-and-small.md", "docs/logbook/072-read-to-the-end.md"],
       "url": "https://www.sidefx.com/docs/houdini/nodes/dop/vellumsolver.html",
       "authors": "SideFX",
       "claudeRead": "parts"
@@ -8396,7 +8431,8 @@
       "citedIn": [
         "docs/logbook/058-how-engines-set-a-spring.md",
         "flex-header",
-        "docs/logbook/071-the-gate.md"
+        "docs/logbook/071-the-gate.md",
+        "docs/logbook/072-read-to-the-end.md"
       ],
       "partOf": "distance-constraint"
     },
@@ -8723,7 +8759,11 @@
       "since": {
         "seen": "2026-11-26"
       },
-      "citedIn": ["docs/logbook/071-the-gate.md", "docs/topics/self-collision.md"],
+      "citedIn": [
+        "docs/logbook/071-the-gate.md",
+        "docs/topics/self-collision.md",
+        "docs/logbook/072-read-to-the-end.md"
+      ],
       "partOf": "cloth",
       "related": ["tether-constraint"]
     },
@@ -8737,7 +8777,11 @@
       "since": {
         "mentioned": "2026-11-26"
       },
-      "citedIn": ["docs/logbook/071-the-gate.md", "docs/topics/self-collision.md"],
+      "citedIn": [
+        "docs/logbook/071-the-gate.md",
+        "docs/topics/self-collision.md",
+        "docs/logbook/072-read-to-the-end.md"
+      ],
       "partOf": "tether-constraint"
     },
     {
@@ -8750,7 +8794,11 @@
       "since": {
         "seen": "2026-11-26"
       },
-      "citedIn": ["docs/logbook/071-the-gate.md", "docs/topics/self-collision.md"],
+      "citedIn": [
+        "docs/logbook/071-the-gate.md",
+        "docs/topics/self-collision.md",
+        "docs/logbook/072-read-to-the-end.md"
+      ],
       "partOf": "self-collision"
     },
     {
@@ -8763,7 +8811,11 @@
       "since": {
         "seen": "2026-11-26"
       },
-      "citedIn": ["docs/logbook/071-the-gate.md", "docs/topics/self-collision.md"],
+      "citedIn": [
+        "docs/logbook/071-the-gate.md",
+        "docs/topics/self-collision.md",
+        "docs/logbook/072-read-to-the-end.md"
+      ],
       "partOf": "self-collision",
       "related": ["speculative-contact", "continuous-collision-detection"]
     },
@@ -8777,7 +8829,11 @@
       "since": {
         "mentioned": "2026-11-26"
       },
-      "citedIn": ["docs/logbook/071-the-gate.md", "docs/topics/self-collision.md"],
+      "citedIn": [
+        "docs/logbook/071-the-gate.md",
+        "docs/topics/self-collision.md",
+        "docs/logbook/072-read-to-the-end.md"
+      ],
       "partOf": "self-collision"
     },
     {
@@ -8790,7 +8846,11 @@
       "since": {
         "mentioned": "2026-11-26"
       },
-      "citedIn": ["docs/logbook/071-the-gate.md", "docs/topics/self-collision.md"],
+      "citedIn": [
+        "docs/logbook/071-the-gate.md",
+        "docs/topics/self-collision.md",
+        "docs/logbook/072-read-to-the-end.md"
+      ],
       "partOf": "self-collision"
     },
     {
@@ -8803,7 +8863,11 @@
       "since": {
         "mentioned": "2026-11-26"
       },
-      "citedIn": ["docs/logbook/071-the-gate.md", "docs/topics/self-collision.md"],
+      "citedIn": [
+        "docs/logbook/071-the-gate.md",
+        "docs/topics/self-collision.md",
+        "docs/logbook/072-read-to-the-end.md"
+      ],
       "partOf": "self-collision"
     },
     {
@@ -8816,7 +8880,11 @@
       "since": {
         "mentioned": "2026-11-26"
       },
-      "citedIn": ["docs/logbook/071-the-gate.md", "docs/topics/self-collision.md"],
+      "citedIn": [
+        "docs/logbook/071-the-gate.md",
+        "docs/topics/self-collision.md",
+        "docs/logbook/072-read-to-the-end.md"
+      ],
       "related": ["speed-limit", "tunneling"]
     },
     {
@@ -8830,7 +8898,11 @@
         "mentioned": "2026-11-26"
       },
       "about": ["self-collision", "speed-limit", "substepping"],
-      "citedIn": ["docs/logbook/071-the-gate.md", "docs/topics/self-collision.md"],
+      "citedIn": [
+        "docs/logbook/071-the-gate.md",
+        "docs/topics/self-collision.md",
+        "docs/logbook/072-read-to-the-end.md"
+      ],
       "claudeRead": "parts",
       "partOf": "ten-minute-physics",
       "url": "https://github.com/matthias-research/pages/blob/master/tenMinutePhysics/15-selfCollision.html",
@@ -8847,8 +8919,13 @@
         "mentioned": "2026-11-26"
       },
       "about": ["self-collision", "displacement-limit", "strain-limiting"],
-      "citedIn": ["docs/logbook/071-the-gate.md", "docs/topics/self-collision.md"],
-      "claudeRead": "parts",
+      "citedIn": [
+        "docs/logbook/071-the-gate.md",
+        "docs/topics/self-collision.md",
+        "docs/logbook/072-read-to-the-end.md",
+        "docs/topics/safe-fast-repulsion-paper.md"
+      ],
+      "claudeRead": "full",
       "url": "https://wanghmin.github.io/publication/wu-2020-sfr/",
       "file": "library/safe-fast-repulsion-gpu-cloth.pdf",
       "authors": "Longhua Wu, Botao Wu, Yin Yang, Huamin Wang",
@@ -8858,14 +8935,19 @@
       "id": "predictive-contacts-talk",
       "kind": "talk",
       "title": "Cloth Self Collision with Predictive Contacts",
-      "summary": "How a game studio keeps cloth from crossing itself in a fraction of a millisecond: contacts found once per step that remember the side",
+      "summary": "How a game studio keeps cloth from crossing itself: contacts found once per step that remember the side, in a fraction of a millisecond with layers set by hand",
       "area": "physics",
       "status": "mentioned",
       "since": {
         "mentioned": "2026-11-26"
       },
       "about": ["predictive-contact", "self-collision", "point-triangle-contact"],
-      "citedIn": ["docs/logbook/071-the-gate.md", "docs/topics/self-collision.md"],
+      "citedIn": [
+        "docs/logbook/071-the-gate.md",
+        "docs/topics/self-collision.md",
+        "docs/logbook/072-read-to-the-end.md",
+        "docs/topics/predictive-contacts-talk.md"
+      ],
       "claudeRead": "full",
       "url": "https://media.contentapi.ea.com/content/dam/eacom/frostbite/files/gdc2018-chrislewin-clothselfcollisionwithpredictivecontacts.pdf",
       "file": "library/cloth-self-collision-predictive-contacts-gdc2018.pdf",
@@ -8888,8 +8970,12 @@
         "impact-zone",
         "strain-limiting"
       ],
-      "citedIn": ["docs/logbook/071-the-gate.md", "docs/topics/self-collision.md"],
-      "claudeRead": "parts",
+      "citedIn": [
+        "docs/logbook/071-the-gate.md",
+        "docs/topics/self-collision.md",
+        "docs/logbook/072-read-to-the-end.md"
+      ],
+      "claudeRead": "full",
       "url": "https://www.cs.ubc.ca/~rbridson/docs/cloth2002.pdf",
       "file": "library/robust-treatment-of-collisions-cloth.pdf",
       "authors": "Robert Bridson, Ronald Fedkiw, John Anderson",
@@ -8906,8 +8992,12 @@
         "mentioned": "2026-11-26"
       },
       "about": ["strain-limiting"],
-      "citedIn": ["docs/logbook/071-the-gate.md", "docs/topics/self-collision.md"],
-      "claudeRead": "parts",
+      "citedIn": [
+        "docs/logbook/071-the-gate.md",
+        "docs/topics/self-collision.md",
+        "docs/logbook/072-read-to-the-end.md"
+      ],
+      "claudeRead": "full",
       "url": "https://graphicsinterface.org/wp-content/uploads/gi1995-17.pdf",
       "file": "library/provot-deformation-constraints-mass-spring.pdf",
       "authors": "Xavier Provot",
@@ -8924,8 +9014,12 @@
         "mentioned": "2026-11-26"
       },
       "about": ["long-range-attachment", "strain-limiting"],
-      "citedIn": ["docs/logbook/071-the-gate.md", "docs/topics/self-collision.md"],
-      "claudeRead": "parts",
+      "citedIn": [
+        "docs/logbook/071-the-gate.md",
+        "docs/topics/self-collision.md",
+        "docs/logbook/072-read-to-the-end.md"
+      ],
+      "claudeRead": "full",
       "url": "https://matthias-research.github.io/pages/publications/sca2012cloth.pdf",
       "file": "library/long-range-attachments.pdf",
       "authors": "Tae-Yong Kim, Nuttapong Chentanez, Matthias Müller",
@@ -8941,9 +9035,13 @@
       "since": {
         "mentioned": "2026-11-26"
       },
-      "about": ["cloth-untangling"],
-      "citedIn": ["docs/logbook/071-the-gate.md", "docs/topics/self-collision.md"],
-      "claudeRead": "parts",
+      "about": ["cloth-untangling", "global-intersection-analysis"],
+      "citedIn": [
+        "docs/logbook/071-the-gate.md",
+        "docs/topics/self-collision.md",
+        "docs/logbook/072-read-to-the-end.md"
+      ],
+      "claudeRead": "full",
       "url": "https://doi.org/10.1145/882262.882357",
       "file": "library/untangling-cloth.pdf",
       "authors": "David Baraff, Andrew Witkin, Michael Kass",
@@ -8953,15 +9051,19 @@
       "id": "i-cloth-paper",
       "kind": "paper",
       "title": "I-Cloth",
-      "summary": "Cloth with the whole path checked, on a GPU: hundreds of thousands of vertices at 2 to 8 frames per second",
+      "summary": "Cloth with the whole path checked, on a GPU: hundreds of thousands of vertices at 2 to 8 steps per second, 12 to 160 times slower than real time",
       "area": "physics",
       "status": "mentioned",
       "since": {
         "mentioned": "2026-11-26"
       },
       "about": ["continuous-collision-detection", "impact-zone"],
-      "citedIn": ["docs/logbook/071-the-gate.md", "docs/topics/self-collision.md"],
-      "claudeRead": "parts",
+      "citedIn": [
+        "docs/logbook/071-the-gate.md",
+        "docs/topics/self-collision.md",
+        "docs/logbook/072-read-to-the-end.md"
+      ],
+      "claudeRead": "full",
       "url": "https://min-tang.github.io/ICloth/files/icloth.pdf",
       "file": "library/i-cloth.pdf",
       "authors": "Min Tang, Tongtong Wang, Zhongyuan Liu, Ruofeng Tong, Dinesh Manocha",
@@ -8978,9 +9080,13 @@
         "mentioned": "2026-11-26"
       },
       "about": ["self-collision", "rest-pose-filter", "long-range-attachment"],
-      "citedIn": ["docs/logbook/071-the-gate.md", "docs/topics/self-collision.md"],
+      "citedIn": [
+        "docs/logbook/071-the-gate.md",
+        "docs/topics/self-collision.md",
+        "docs/logbook/072-read-to-the-end.md"
+      ],
       "claudeRead": "parts",
-      "url": "https://github.com/NVIDIAGameWorks/NvCloth"
+      "url": "https://github.com/NVIDIAGameWorks/NvCloth/blob/master/NvCloth/src/SwSelfCollision.cpp"
     },
     {
       "id": "physx-pbd-cloth-snippet",
@@ -8993,8 +9099,12 @@
         "mentioned": "2026-11-26"
       },
       "about": ["self-collision", "rest-pose-filter"],
-      "citedIn": ["docs/logbook/071-the-gate.md", "docs/topics/self-collision.md"],
-      "claudeRead": "parts",
+      "citedIn": [
+        "docs/logbook/071-the-gate.md",
+        "docs/topics/self-collision.md",
+        "docs/logbook/072-read-to-the-end.md"
+      ],
+      "claudeRead": "full",
       "partOf": "physx",
       "url": "https://github.com/NVIDIA-Omniverse/PhysX/blob/106.0-physx-5.4.1/physx/snippets/snippetpbdcloth/SnippetPBDCloth.cpp"
     },
@@ -9009,9 +9119,295 @@
         "mentioned": "2026-11-26"
       },
       "about": ["self-collision", "point-triangle-contact", "speculative-contact"],
-      "citedIn": ["docs/logbook/071-the-gate.md", "docs/topics/self-collision.md"],
-      "claudeRead": "parts",
+      "citedIn": [
+        "docs/logbook/071-the-gate.md",
+        "docs/topics/self-collision.md",
+        "docs/logbook/072-read-to-the-end.md"
+      ],
+      "claudeRead": "full",
       "url": "https://obi.virtualmethodstudio.com/manual/7.0/surfacecollisions.html"
+    },
+    {
+      "id": "global-intersection-analysis",
+      "kind": "concept",
+      "title": "Global intersection analysis",
+      "summary": "Finding the closed lines where a cloth crosses itself, and coloring the smaller side of each, so that side is pulled back through instead of pushed further",
+      "area": "physics",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-27"
+      },
+      "citedIn": ["docs/logbook/072-read-to-the-end.md"],
+      "partOf": "cloth-untangling"
+    },
+    {
+      "id": "intersection-contour-minimization",
+      "kind": "concept",
+      "title": "Intersection contour minimization",
+      "summary": "Undoing a crossing by moving the vertices so that the line where two surfaces cross gets shorter, until it vanishes: no inside or outside needed",
+      "area": "physics",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-27"
+      },
+      "citedIn": ["docs/logbook/072-read-to-the-end.md"],
+      "partOf": "cloth-untangling"
+    },
+    {
+      "id": "air-mesh",
+      "kind": "concept",
+      "title": "Air mesh",
+      "summary": "The air between layers of cloth filled once with triangles or tetrahedra that may never turn inside out: a side kept for good, and a way to untangle",
+      "area": "physics",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-27"
+      },
+      "citedIn": ["docs/logbook/072-read-to-the-end.md"],
+      "partOf": "self-collision"
+    },
+    {
+      "id": "layer-order",
+      "kind": "concept",
+      "title": "Layer order",
+      "summary": "Which layer of a garment lies on top of which, set by hand, so contacts between layers keep their side and can undo a crossing",
+      "area": "physics",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-27"
+      },
+      "citedIn": ["docs/logbook/072-read-to-the-end.md"],
+      "partOf": "self-collision"
+    },
+    {
+      "id": "offset-geometric-contact-paper",
+      "kind": "paper",
+      "title": "Offset Geometric Contact",
+      "summary": "A skin around cloth that pushes only straight off the surface, and a cap per vertex of 0.45 of its distance to the nearest thing, which keeps it from ever crossing without solving for the moment of touch",
+      "area": "physics",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-27"
+      },
+      "about": [
+        "displacement-limit",
+        "self-collision",
+        "point-triangle-contact",
+        "vertex-block-descent"
+      ],
+      "citedIn": ["docs/logbook/072-read-to-the-end.md", "docs/topics/self-collision.md"],
+      "url": "https://graphics.cs.utah.edu/research/projects/ogc/",
+      "file": "library/offset-geometric-contact.pdf",
+      "authors": "Anka He Chen, Jerry Hsu, Ziheng Liu, Miles Macklin, Yin Yang, Cem Yuksel",
+      "year": 2025,
+      "claudeRead": "full"
+    },
+    {
+      "id": "codimensional-ipc-paper",
+      "kind": "paper",
+      "title": "Codimensional Incremental Potential Contact",
+      "summary": "Cloth, rods and grains that never cross, with a barrier, a thickness, and a barrier on stretch: on a CPU, minutes per step",
+      "area": "physics",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-27"
+      },
+      "about": ["barrier", "continuous-collision-detection", "strain-limiting"],
+      "citedIn": ["docs/logbook/072-read-to-the-end.md", "docs/topics/self-collision.md"],
+      "url": "https://arxiv.org/abs/2012.04457",
+      "file": "library/codimensional-ipc.pdf",
+      "authors": "Minchen Li, Danny M. Kaufman, Chenfanfu Jiang",
+      "year": 2021,
+      "claudeRead": "full"
+    },
+    {
+      "id": "penetration-free-pd-paper",
+      "kind": "paper",
+      "title": "Penetration-free Projective Dynamics on the GPU",
+      "summary": "The barrier and the whole-path check of IPC on a GPU solver: no crossing, 3 to 8 times slower than real time for a skirt",
+      "area": "physics",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-27"
+      },
+      "about": ["barrier", "continuous-collision-detection"],
+      "citedIn": ["docs/logbook/072-read-to-the-end.md", "docs/topics/self-collision.md"],
+      "url": "https://www.math.ucla.edu/multiples/publication/lan2022pdipc.pdf",
+      "file": "library/penetration-free-pd-gpu.pdf",
+      "authors": "Lei Lan, Guanqun Ma, Yin Yang, Changxi Zheng, Minchen Li, Chenfanfu Jiang",
+      "year": 2022,
+      "claudeRead": "full"
+    },
+    {
+      "id": "non-distance-barriers-paper",
+      "kind": "paper",
+      "title": "Efficient GPU Cloth Simulation with Non-distance Barriers and Subspace Reuse",
+      "summary": "A contact whose weight grows with how long it lasts, not with how close: cloth with no crossing on a GPU, 8 to 42 times slower than real time",
+      "area": "physics",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-27"
+      },
+      "about": ["barrier", "self-collision"],
+      "citedIn": ["docs/logbook/072-read-to-the-end.md", "docs/topics/self-collision.md"],
+      "url": "https://arxiv.org/abs/2403.19272",
+      "file": "library/gpu-cloth-non-distance-barriers.pdf",
+      "authors": "Lei Lan, Zixuan Lu, Jingyi Long, Chun Yuan, Xuan Li, Xiaowei He, Huamin Wang, Chenfanfu Jiang, Yin Yang",
+      "year": 2024,
+      "claudeRead": "full"
+    },
+    {
+      "id": "inextensible-cloth-paper",
+      "kind": "paper",
+      "title": "Efficient Simulation of Inextensible Cloth",
+      "summary": "Cloth that stretches under 1%, with one global solve per pass over a mesh of squares: why passes spring by spring converge so slowly",
+      "area": "physics",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-27"
+      },
+      "about": ["strain-limiting"],
+      "citedIn": ["docs/logbook/072-read-to-the-end.md", "docs/topics/self-collision.md"],
+      "url": "https://www.cs.columbia.edu/cg/pdfs/131-ESIC.pdf",
+      "file": "library/efficient-simulation-of-inextensible-cloth.pdf",
+      "authors": "Rony Goldenthal, David Harmon, Raanan Fattal, Michel Bercovier, Eitan Grinspun",
+      "year": 2007,
+      "claudeRead": "full"
+    },
+    {
+      "id": "isotropic-strain-limiting-paper",
+      "kind": "paper",
+      "title": "Multi-Resolution Isotropic Strain Limiting",
+      "summary": "A cap on stretch per triangle, solved from coarse to fine meshes, because passes on the fine mesh alone leave 3% after 512",
+      "area": "physics",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-27"
+      },
+      "about": ["strain-limiting"],
+      "citedIn": ["docs/logbook/072-read-to-the-end.md", "docs/topics/self-collision.md"],
+      "url": "https://doi.org/10.1145/1882261.1866182",
+      "file": "library/multi-resolution-isotropic-strain-limiting.pdf",
+      "authors": "Huamin Wang, James F. O'Brien, Ravi Ramamoorthi",
+      "year": 2010,
+      "claudeRead": "full"
+    },
+    {
+      "id": "air-meshes-paper",
+      "kind": "paper",
+      "title": "Air Meshes for Robust Collision Handling",
+      "summary": "The air between layers meshed once, each piece kept from turning inside out: it prevents crossings and undoes them, for layers that move little",
+      "area": "physics",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-27"
+      },
+      "about": ["air-mesh", "cloth-untangling"],
+      "citedIn": ["docs/logbook/072-read-to-the-end.md", "docs/topics/self-collision.md"],
+      "url": "https://matthias-research.github.io/pages/publications/airMeshesPreprint.pdf",
+      "file": "library/air-meshes.pdf",
+      "authors": "Matthias Müller, Nuttapong Chentanez, Tae-Yong Kim, Miles Macklin",
+      "year": 2015,
+      "claudeRead": "full"
+    },
+    {
+      "id": "provot-collision-paper",
+      "kind": "paper",
+      "title": "Collision and Self-Collision Handling in Cloth Model Dedicated to Design Garments",
+      "summary": "Checking the whole path of every point and edge, skipping flat patches, and moving tangled points together as one rigid zone",
+      "area": "physics",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-27"
+      },
+      "about": ["continuous-collision-detection", "impact-zone", "self-collision"],
+      "citedIn": ["docs/logbook/072-read-to-the-end.md", "docs/topics/self-collision.md"],
+      "url": "https://graphics.stanford.edu/courses/cs468-02-winter/Papers/Collisions_vetements.pdf",
+      "file": "library/provot-collision-self-collision-cloth.pdf",
+      "authors": "Xavier Provot",
+      "year": 1997,
+      "claudeRead": "full"
+    },
+    {
+      "id": "predictive-contacts-patent",
+      "kind": "docs",
+      "title": "Collision detection and resolution in virtual environments (US 10,692,266)",
+      "summary": "The patent behind the predictive contacts talk: the formulas the talk leaves out",
+      "area": "physics",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-27"
+      },
+      "about": ["predictive-contact"],
+      "citedIn": ["docs/logbook/072-read-to-the-end.md", "docs/topics/self-collision.md"],
+      "partOf": "predictive-contacts-talk",
+      "url": "https://patents.google.com/patent/US10692266B2/en",
+      "authors": "Christopher Charles Lewin",
+      "year": 2020,
+      "claudeRead": "parts"
+    },
+    {
+      "id": "blender-cloth-collision-code",
+      "kind": "code",
+      "title": "Blender, collision.cc",
+      "summary": "Cloth that collides as triangles against triangles, with Bridson's pushes, a thickness of its own and no memory of the side",
+      "area": "physics",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-27"
+      },
+      "about": ["self-collision", "point-triangle-contact"],
+      "citedIn": ["docs/logbook/072-read-to-the-end.md", "docs/topics/self-collision.md"],
+      "url": "https://github.com/blender/blender/blob/main/source/blender/blenkernel/intern/collision.cc",
+      "claudeRead": "parts"
+    },
+    {
+      "id": "bullet-deformable-self-collision",
+      "kind": "code",
+      "title": "Bullet, deformable bodies",
+      "summary": "Bullet's newer soft bodies do hit themselves: a point against a triangle, with the side taken at the start of the step",
+      "area": "physics",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-27"
+      },
+      "about": ["self-collision", "point-triangle-contact"],
+      "citedIn": ["docs/logbook/072-read-to-the-end.md", "docs/topics/self-collision.md"],
+      "partOf": "bullet",
+      "url": "https://github.com/bulletphysics/bullet3/blob/master/src/BulletSoftBody/btDeformableMultiBodyDynamicsWorld.cpp",
+      "claudeRead": "parts"
+    },
+    {
+      "id": "contour-minimization-paper",
+      "kind": "paper",
+      "title": "Resolving Surface Collisions through Intersection Contour Minimization",
+      "summary": "Undoing a crossing by shortening the line where two surfaces cross",
+      "area": "physics",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-27"
+      },
+      "about": ["intersection-contour-minimization"],
+      "citedIn": ["docs/logbook/072-read-to-the-end.md", "docs/topics/self-collision.md"],
+      "url": "https://doi.org/10.1145/1141911.1142007",
+      "authors": "Pascal Volino, Nadia Magnenat-Thalmann",
+      "year": 2006
+    },
+    {
+      "id": "continuum-strain-limiting-paper",
+      "kind": "paper",
+      "title": "Continuum-based Strain Limiting",
+      "summary": "A cap on stretch measured in the cloth as a material, not spring by spring",
+      "area": "physics",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-27"
+      },
+      "about": ["strain-limiting"],
+      "citedIn": ["docs/logbook/072-read-to-the-end.md", "docs/topics/self-collision.md"],
+      "url": "https://doi.org/10.1111/j.1467-8659.2009.01397.x",
+      "authors": "Bernhard Thomaszewski, Simon Pabst, Wolfgang Straßer",
+      "year": 2009
     }
   ]
 }

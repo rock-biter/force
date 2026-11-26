@@ -15,7 +15,7 @@ documentation of the library will live there too.
 
 ## Where we are
 
-*Updated November 26, 2026*
+*Updated November 27, 2026*
 
 **Latest steps:** chapters [038](./docs/logbook/038-one-hundred-twenty-five-cells.md),
 [039](./docs/logbook/039-far-apart-in-memory.md) and [040](./docs/logbook/040-the-table.md). To find
@@ -121,6 +121,10 @@ it bends ([chapter 070](./docs/logbook/070-a-shape-around-a-rope.md)).
 Our cloths sometimes pass through each other. We looked at why, and at what other engines do about
 it: a cloth made of spheres is thin between its particles, and does not know which side a thing was
 on ([chapter 071](./docs/logbook/071-the-gate.md)).
+
+Then we read every source of that study from start to end, before trying anything: four things we
+had wrong, and two ideas to try, above all keeping track of which side of a cloth a particle came
+from ([chapter 072](./docs/logbook/072-read-to-the-end.md)).
 
 **Next:** four cheap ways to keep a cloth shut, tried by script. Then springs for any net, and lighter particles. Then our rules read again against the
 devices.

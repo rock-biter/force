@@ -27,7 +27,7 @@ console.log(
   '\nOver a particle of the cloth the gate is 2 r: the middle of a cell at rest is 1.41 r.',
 )
 console.log(
-  `A cell stretched both ways lets a particle through untouched from ${pct(Math.SQRT2 - 1)},`,
+  `A cell stretched both ways lets a particle through untouched from ${((Math.SQRT2 - 1) * 100).toFixed(1)}%,`,
 )
 console.log(`stretched one way only from ${pct(Math.sqrt(3) - 1)}.`)
 
@@ -36,13 +36,13 @@ console.log(
   'The limit of decision 027 is one radius per substep for each particle, so two that meet',
 )
 console.log('head on close 2 r in a substep, whatever the number of substeps:\n')
-console.log('where it hits     | gate   | closed in a substep | crosses the plane before a push?')
+console.log('where it hits     | gate   | closed in a substep | more than the gate?')
 for (const [name, g] of [
   ['over a particle  ', d],
   ['middle of a cell ', gate(d, d)],
   ['same, 12% longer ', gate(d * 1.12, d * 1.12)],
 ]) {
-  console.log(`${name} | ${radii(g)} | ${radii(2 * r)}            | ${2 * r >= g ? 'yes' : 'no'}`)
+  console.log(`${name} | ${radii(g)} | ${radii(2 * r)}            | ${2 * r > g ? 'yes' : 'no'}`)
 }
 console.log('\nAgainst a cloth that does not move the particle closes 1 r, and the gate holds.')
 
@@ -58,3 +58,55 @@ for (const h of [1.4, 1.0, 0.5, 0.2, 0]) {
   const along = Math.sqrt(1 - ((h * r) / dist) ** 2)
   console.log(`${h.toFixed(1)} r  | ${radii(d - dist)} | ${pct((h * r) / dist)}  | ${pct(along)}`)
 }
+
+console.log('\n4. Fatter spheres: a contact distance c larger than the spacing\n')
+console.log(
+  'Two particles push each other when their centers are closer than c. At rest our neighbours',
+)
+console.log(
+  'are one diameter apart and c is one diameter. Engines that make c larger must skip the pairs',
+)
+console.log(
+  'that are closer than c at rest, or the cloth pushes itself apart (a rest-pose filter).\n',
+)
+console.log('c / spacing | gate at rest | gate / c | open from | skipped at rest')
+for (const [k, who] of [
+  [1, 'ours, most FleX demos'],
+  [1.3, 'NvCloth sample, self'],
+  [2, 'PhysX sample, NvCloth between cloths'],
+]) {
+  const c = k * d
+  const g = Math.sqrt(c * c - (d * d) / 2)
+  const open = (c * Math.SQRT2) / d - 1
+  // neighbours of a particle on the grid closer than c at rest, counted up to two places away
+  let skipped = 0
+  for (let i = -2; i <= 2; i++)
+    for (let j = -2; j <= 2; j++) if ((i || j) && Math.hypot(i, j) * d < c - 1e-9) skipped++
+  console.log(
+    `${k.toFixed(1).padStart(11)} | ${radii(g).padStart(12)} | ${pct(g / c).padStart(8)} | ${pct(open).padStart(9)} | ${String(skipped).padStart(15)}   ${who}`,
+  )
+}
+
+console.log('\n5. A side that is kept: each contact holds the plane it had at the start\n')
+console.log(
+  'A particle comes straight down on the middle of a cell, starting 2 r above it. A contact',
+)
+console.log('with each of the four takes the direction between the two centers at the start of the')
+console.log(
+  'substep, and keeps it: the particle must stay 2 r away from that corner along it. How low',
+)
+console.log('can the four let it go, and how far away must a contact be made for this to work?\n')
+console.log('stretch | lowest center | distance to the corners at the start')
+const h0 = 2 * r
+for (const stretch of [0, 0.12, 0.3, 0.41, 1]) {
+  const a = (d * (1 + stretch)) / 2 // half the spacing
+  const far = Math.sqrt(2 * a * a + h0 * h0)
+  const lowest = (d * far - 2 * a * a) / h0
+  console.log(`${pct(stretch)}   | ${radii(lowest).padStart(13)} | ${radii(far)}`)
+}
+console.log(
+  '\nBelow 0 the center is under the plane of the cloth, but stopped. Today a contact is made',
+)
+console.log(
+  'only when two spheres already overlap, closer than 2 r: none of these four would be made.',
+)

@@ -78,6 +78,7 @@ This is where we tell how FORCE gets built, one step at a time. If you are new h
 | 069 | [Three Walls](./logbook/069-three-walls.md) | Why Safari stopped our shader: a bug in WebKit that doubled the work at every `||`, fixed nine days ago; Metal's limit of 256; and https. None is about the device |
 | 070 | [A Shape Around a Rope](./logbook/070-a-shape-around-a-rope.md) | Ropes drawn as boxes, cylinders or ribbons: a ring of vertices per particle, and a sideways direction carried down the rope so the shape never twists on its own |
 | 071 | [The Gate](./logbook/071-the-gate.md) | Why cloths pass through each other: a cloth of spheres is thin between its particles and has no side. What engines and papers do about it besides more substeps |
+| 072 | [Read to the End](./logbook/072-read-to-the-end.md) | The sources of the last study read in full: four things we had wrong, steps per second that are not frames, and two ideas to try, a side kept for a substep and a cap per particle |
 
 ## For reference
 

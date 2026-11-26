@@ -1,24 +1,22 @@
 # Self-collision
 
-*Theory · 5 min read · Updated November 26, 2026 · [Topic map](./README.md)*
+*Theory · 6 min read · Updated November 27, 2026 · [Topic map](./README.md)*
 
-**In short:** A cloth made of spheres is a wall with thin spots, and no memory of which side a thing was on. Engines keep it shut in four ways: fatter spheres, a cap on how far things move in a step, a cap on stretch, and contacts that remember the side.
+**In short:** A cloth made of spheres is a wall with thin spots, and no memory of which side a thing was on. Engines for games keep it shut with fatter spheres, a cap on the move, a cap on stretch, or contacts that keep their side for a step. Nothing that promises no crossing at all runs at 60 Hz yet.
 
 ## The idea
 
-Lay marbles on a table in a square net, each touching its neighbours. From above it looks closed. Now press a marble down on the middle of four: it does not rest on top, it sits in the dimple between them, and pushing it down spreads the four apart. Our cloth is that net, and its springs are all that holds the four together.
+Lay marbles on a table in a square net, each touching its neighbours. From above it looks closed. Now press a marble down on the middle of four: it sits in the dimple between them, and pushing it down spreads the four apart. Our cloth is that net, and its springs are all that holds the four together.
 
-In three.js terms: we collide the vertices of the mesh, as spheres, and never its triangles. A triangle is drawn but nothing can hit it.
-
-Self-collision is a cloth hitting itself. Two cloths hitting each other is the same problem, and here it is solved by the same code.
+In three.js terms: we collide the vertices of the mesh, as spheres, and never its triangles. A triangle is drawn but nothing can hit it. Self-collision is a cloth hitting itself; two cloths hitting each other is the same problem, solved here by the same code.
 
 ## How it works
 
-Three things let a particle through. The numbers are from [our script](./self-collision.mjs), for spheres of radius r one diameter apart. Heights are from the plane through the cloth's centers to the center of the other particle.
+Two particles push each other apart when their centers are closer than the *contact distance*: one diameter, 2 r, on our pages, the same as the *spacing* between neighbours at rest. Three things let a particle through. The numbers are from [our script](./self-collision.mjs). Heights are from the plane through the cloth's centers to the center of the other particle.
 
-**1. The cloth is thin between particles.** Coming straight down on a particle of the cloth, another one touches it 2 r above the cloth. Coming down on the middle of four, it first touches 1.41 r above. We call that height the *gate*: it is all the cloth there is to stop it.
+**1. The cloth is thin between particles.** Coming straight down on a particle of the cloth, another one touches it 2 r above the cloth. Coming down on the middle of four, it first touches 1.41 r above. We call that height the *gate*.
 
-**2. A push has no side.** A push goes along the line between two centers. Once the center of the falling particle is below the plane of the cloth, that line points down, and the four push it out of the other side. And near the plane the push is almost all along the cloth: at 0.5 r above, only a third of it is across.
+**2. A push has no side.** A push goes along the line between two centers. Once the center of the falling particle is below the plane of the cloth, that line points down, and the four push it out of the other side. Near the plane the push is almost all along the cloth: at 0.5 r above, only a third of it is across.
 
 **3. Stretch opens the gate.** The further apart the four, along both sides of the square, the lower the gate:
 
@@ -26,49 +24,53 @@ Three things let a particle through. The numbers are from [our script](./self-co
 | --- | --- | --- | --- | --- | --- |
 | Gate | 1.41 r | 1.22 r | 1.06 r | 0.79 r | 0.15 r |
 
-Just past 41%, at 41.4%, a particle passes without touching anything. A paper proves the same number in general: if no edge is longer than L, a mesh cannot be crossed as long as vertices that are not neighbours stay L/√2 apart (Wu and others, 2020). With our diameter as that distance, L is 1.41 diameters: a spring 41% longer than at rest.
+At 41.4% a particle passes without touching anything. A paper proves when a mesh collided only at its vertices cannot be crossed: no edge longer than L, and any two vertices not joined by an edge at least L/√2 apart (Wu and others, 2020, [our notes](./safe-fast-repulsion-paper.md)). Our reading of it, not the paper's: on our cloth the longest edge is the diagonal of a square, 1.41 diameters at rest, so L/√2 is one diameter, exactly our contact distance. At rest there is no margin left, and any stretch takes it away. The 41% of the table is only the case of a particle through the middle of a square, not of an edge sliding through an edge.
 
-**Why more substeps help less than hoped.** A *substep* is one of the smaller steps a frame is cut into: 2 on our pages. Our speed limit is one radius per substep for each particle ([decision 027](../decisions/027-the-safe-speed-limit-by-default.md)): with more substeps the limit in meters per second rises, and the distance per substep stays one radius. Two cloths meeting head on close 2 r in a substep. That is more than the gate between particles: a center can go from not touching to past the plane with no push in between, at any number of substeps. Against a cloth that stands still it is 1 r, and the gate holds. And the limit cuts the speed only: the springs, and the pointer that drags a cloth, move particles after it, as far as they like.
+**Why more substeps help less than hoped.** Our engine moves the world in *steps* of 1/60 s, and each step is cut into *substeps*: 2 on our pages. A *pass* is one run over all the springs, or all the contacts. Our speed limit is one radius per substep for each particle ([decision 027](../decisions/027-the-safe-speed-limit-by-default.md)): more substeps raise the limit in meters per second, and the distance per substep stays one radius. Two cloths meeting head on close 2 r in a substep, more than the gate between particles: a center can go from not touching yet to past the plane in one substep, with no push in between, at any number of substeps. And the limit cuts the speed only: the springs, and the hand that drags a cloth with the pointer, move particles after it.
 
 ## Choices and trade-offs
 
-What engines and papers do, from the cheapest change for us to the largest. "Prevents" means it cannot be crossed if the rule holds; "repairs" means it fixes a crossing afterwards.
-
-| Way | Who | What it costs |
+| Way | Who, as read in their code or text | What it costs |
 | --- | --- | --- |
-| **Fatter spheres.** The collision distance is larger than the spacing, and two particles that are close in the cloth at rest do not collide (a *rest-pose filter*) | FleX, NvCloth, PhysX: its sample collides at twice the spacing | More neighbours per particle, a thicker-looking cloth, and the rest positions kept in memory. The gate is higher and opens later: at twice the spacing, past 180% of stretch |
-| **A cap on the move, tied to the thickness.** | Ten Minute Physics: 0.2 of the thickness per substep, with 10 substeps. Wu 2020: a cap on the *displacement*, how far a vertex moves in a step whatever moves it | Slow falls, or more substeps |
-| **A cap on stretch.** A spring is never left longer than, say, 10% over its length (*strain limiting*); or a *tether* from each particle to where the cloth is held (*long range attachments*) | Provot 1995; NvCloth and Unreal's Chaos use tethers | One more run over the particles. Tethers do nothing for a cloth held by nothing |
-| **Contacts that remember the side.** Once per step, for pairs about to meet, keep a plane between them: they must stay on the side they started on (*predictive contacts*) | Lewin at EA, 2018; Obi calls its own speculative | A list of contacts to build and keep for the step |
-| **Triangles, not only vertices.** A point against a triangle, an edge against an edge | Unreal's Chaos, Obi's surface collisions, Bullet between two bodies, the paper that introduced position based dynamics | Another search, and contacts on three or four particles. No holes at all |
-| **The whole path.** Solve for the moment of touch (*continuous collision detection*), with a last resort for what is left | Bridson 2002; I-Cloth on a GPU at 2 to 8 frames per second | Not for games |
-| **Repair.** Find what is tangled and pull it apart, or fix the order of the layers by hand | Baraff 2003; Lewin's layer order | Works after the fact |
+| **Fatter spheres.** The contact distance is larger than the spacing, and pairs closer than it at rest do not collide (a *rest-pose filter*) | NvCloth's sample at 1.3 times the spacing, PhysX's at 2. FleX's demos mostly keep 1, as we do | Thicker layers, more neighbours. At 2 times, the gate is 94% of the contact distance and opens only past 183% of stretch |
+| **A cap on the move**, tied to the thickness | Ten Minute Physics: 0.4 r per substep, with 10 substeps. Some FleX demos 0.5 r. Small Steps, for fluids: 0.3 r, "no particle crossings". OGC 2025: each vertex may move 0.45 of its distance to the nearest thing | Slow falls, or more substeps. The cap has to count the springs too, not only the speed |
+| **A cap on stretch.** No spring left longer than 10% over its length (*strain limiting*), or a *tether* from each particle to where the cloth hangs (*long range attachment*) | Provot 1995, one pass; NvCloth and Unreal's Chaos use tethers | Tethers do nothing for a free cloth, and leave neighbours free to stretch. Passes spring by spring converge slowly: on a fine mesh, 512 still leave 3% of stretch on average (Wang 2010) |
+| **A side kept for a step.** For pairs about to meet, keep a plane between them, taken at the start of the step (*predictive contacts*) | Lewin at EA ([our notes](./predictive-contacts-talk.md)); Unreal's Chaos keeps a side bit per point and triangle; Bullet's newer soft bodies; Houdini's Vellum | Contacts made before the spheres touch. A crossing that lasts to the end of a step is kept |
+| **Triangles, not only vertices.** A point against a triangle, an edge against an edge | Chaos (point against triangle only), Blender, Bullet's newer soft bodies, Obi's surface collisions, PhysX's newer cloth, Rapier since September 2026 | Another search, and contacts on four particles. No holes at all |
+| **The whole path checked**, so nothing ever crosses | Bridson 2002, the I-Cloth and C-IPC papers, Wu 2020, Lan 2022 and 2024, OGC 2025 | See below |
+| **Repair**: find the line where two layers cross and pull them apart, or fix the order of layers by hand | Baraff 2003, Chaos; layers in Lewin, Chaos, Vellum | Works after the fact |
 
-Jolt has no collision between soft bodies at all, and Bullet's cloth hits itself only through clusters, groups of its vertices treated as small bodies.
+Jolt and Havok have no collision between two cloths, and Godot says nothing of one.
 
-Most engines for games stay with spheres, and combine the first three rows. Lewin's contacts work between two points too, but he put them on triangles, because a game's cloth has few points; ours has many.
+**Fast on paper, slow in real time.** These papers count *steps* per second, with steps of 1/100 to 1/1200 s, not frames. Turned into time, on the GPU: Wu 2020 runs a shirt of 56 000 vertices at about half real time on an RTX 2080 Ti; I-Cloth 12 to 160 times slower than real time; Lan 2022 3 to 8 times for a skirt; Lan 2024 8 to 42 times. C-IPC, on a CPU, 150 times or more. Only OGC runs its small scenes, around 15 000 vertices, faster than real time, on an RTX 4090.
 
 ## On the GPU
 
-Fatter spheres, the caps and the side read from the start of the substep fit the pass we have: each particle reads its neighbours and writes itself. The rest-pose filter needs no list for a cloth of ours: a particle's name, the number it keeps while it changes row in memory, gives its row and column in the cloth. Triangles need a second search and a write to three particles at once, which our pushes never do. Tethers are one more run over the particles.
+Fatter spheres, the caps and a side read from the start of the substep fit the pass we have: each particle reads its neighbours and writes itself. The rest-pose filter needs no list for a cloth of ours: the number that names a particle, which it keeps while it changes place in memory, gives its row and column in the cloth. OGC's cap is one number per particle, from the distances the search for neighbours through the grid already measures. Triangles need a second search and a write to four particles at once, which our pushes never do. Tethers are one more run over the particles.
 
 ## In FORCE
 
-Not yet. The pages collide spheres one diameter apart, with the speed limit of decision 027. Which of the four cheap ways to take is not decided: the next step tries them by script on fixed scenes.
+Not yet. The pages collide spheres one diameter apart, with the speed limit of decision 027. The candidates to try by script, none decided:
 
-A guess of ours, that no source makes: the side could be read from where two particles were at the start of the substep, positions we already keep for friction, with no list of contacts.
+- a contact distance larger than the spacing, with the rest-pose filter;
+- a tighter cap, or OGC's cap per particle, counting every move in a substep;
+- a cap on stretch as the last pass over the springs;
+- the side kept: the push along the direction the two had at the start of the substep, with contacts made from a little further away. Part 5 of the script: a particle that starts 2 r above the middle of four is held 1.45 r above the cloth, above the gate, because each contact keeps the direction it had at the start, which pointed more upward. That needs contacts made from 2.45 r away.
 
 ## Check yourself
 
 1. Why does a particle on the middle of four meet less cloth than one on top of a particle?
 2. Two cloths fly at each other at the speed limit. Why do 8 substeps not save them?
-3. A cloth is pulled 30% longer both ways. How high is the gate, and what would keep it higher?
+3. A push taken from where the two were at the start of the substep: what does it fix, and what can it not fix?
 
 ## Sources
 
+Read in full, except where said. The notes of each reading stay in `library/notes/self-collision/`, out of git.
+
 - Our own numbers: [self-collision.mjs](./self-collision.mjs), geometry only.
-- [15-selfCollision.html](https://github.com/matthias-research/pages/blob/master/tenMinutePhysics/15-selfCollision.html) and its slides, Ten Minute Physics: the code of the simulation read in full. Thickness equal to spacing, the cap, and no side.
-- FleX's [manual](https://github.com/NVIDIAGameWorks/FleX/blob/master/doc/_sources/manual.txt) and `NvFlex.h`; NvCloth's pages on self-collision and tethers; PhysX 5.4's `SnippetPBDCloth.cpp`; an unofficial copy of Unreal 4.26's cloth code; Bullet's `btSoftBody`; Jolt's `Architecture.md`; Obi's manual. Read in parts, for what the table says.
-- [A Safe and Fast Repulsion Method for GPU-based Cloth Self Collisions](https://wanghmin.github.io/publication/wu-2020-sfr/), Wu, Wu, Yang, Wang: sections 1, 3, 4.1 and 6.2.
-- [Cloth Self Collision with Predictive Contacts](https://media.contentapi.ea.com/content/dam/eacom/frostbite/files/gdc2018-chrislewin-clothselfcollisionwithpredictivecontacts.pdf), Chris Lewin, 2018: all five pages.
-- [Robust Treatment of Collisions, Contact and Friction for Cloth Animation](https://www.cs.ubc.ca/~rbridson/docs/cloth2002.pdf), Bridson, Fedkiw, Anderson, 2002; Provot 1995; Long Range Attachments, 2012; Untangling Cloth, 2003; I-Cloth, 2018: read in parts.
+- Engines, one line each: Jolt's `Architecture.md`, Godot's `SoftBody3D` docs, Havok's cloth docs, Rapier's changelog and soft-body contacts.
+- Engines in their code: FleX's manual, header and demos (its solver is closed); NvCloth's docs and self-collision code; PhysX 5.6's particle cloth and its newer cloth; Blender's `collision.cc`; Bullet's soft bodies, old and new; Unreal's Chaos 4.26 and 5.8, from unofficial copies of Epic's code. In their manuals: Obi, Houdini's Vellum. Ten Minute Physics 15: the code of the simulation.
+- Papers on our case: Wu 2020 and Lewin 2018 (with his patent, US 10,692,266), see their notes; Unified Particle Physics 2014; Position Based Dynamics 2007; Small Steps 2019; the survey of position based methods, 2014.
+- Stretch: Provot 1995; Long Range Attachments 2012; Goldenthal 2007; Wang 2010; Strain Based Dynamics 2014.
+- The whole path and repair: Bridson 2002; Provot 1997; Baraff 2003; Air Meshes 2015; I-Cloth 2018; C-IPC 2021; Lan 2022 and 2024; Vertex Block Descent 2024; OGC 2025.
+- Not opened, no free copy: Volino 2006 (contour minimization), Thomaszewski 2009 (strain limiting).
