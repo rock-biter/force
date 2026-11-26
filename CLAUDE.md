@@ -9,8 +9,8 @@ Knows JavaScript, three.js and GLSL well. Starts from zero on WebGPU and physics
 
 ## How we work
 
-- **Start with a recap.** At the start of every session, before anything else, briefly recall the last things we did together (`recap` skill).
-- **One branch to work on, one that is online.** All work is on `dev`: study, demos, docs, the engine. `main` is what is online: the website is built from it, and every version on npm is a commit of it with a tag. `main` only moves forward to `dev`, with `npm run publish:site` (the website) or `npm run release -- patch|minor` (the website and a version of the package, then `npm publish` by hand). Claude commits on `dev`, and never pushes to `main`, runs those two commands or publishes on npm: the user does. No other branch, but a short one for an experiment that may be thrown away, if the user asks.
+- **A recap when we take up the work again.** When the user comes back to the engine ("let's pick up where we left off", "let's get back to work"), briefly recall the last things we did together, at most once a day unless the user asks (`recap` skill).
+- **One branch to work on, one that is online.** All work is on `dev`: study, demos, docs, the engine. `main` is what is online: the website is built from it, and every version on npm is a commit of it with a tag. `main` only moves forward to `dev`, with `npm run publish:site` (the website) or `npm run release -- patch|minor` (the website and a version of the package, then `npm publish` by hand). Commits go on `dev`, and Claude commits or pushes only when the user asks or says yes, each time: at the end of a step it proposes the commit message and waits, and a yes to a commit is not a yes to push. Claude never pushes to `main`, runs those two commands or publishes on npm: the user does. No other branch, but a short one for an experiment that may be thrown away, if the user asks.
 - **One step at a time.** When a step is done, stop and wait. Do not run ahead to the next one.
 - **Explain from zero.** The idea with a concrete example first, the technical name after.
 - **Start from what is already known.** Connect new concepts to three.js and GLSL.

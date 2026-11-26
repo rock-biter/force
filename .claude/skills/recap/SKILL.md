@@ -1,10 +1,11 @@
 ---
 name: recap
 description: >-
-  Gives a short recap of the last things done together in the previous sessions, so the user can
-  refresh them and fix them in memory before going on. Use it at the start of every session, before
-  any other work, whenever the user comes back to the project (in any language: "let's continue",
-  "let's go on", "where were we"), and whenever they ask for a recap or a refresher.
+  Gives a short recap of the last things done together, so the user can refresh them and fix them in
+  memory before going on. Use it when the user takes up the work on the engine again (in any
+  language: "let's pick up where we left off", "let's get back to work", "let's go on", "where were
+  we"), at most once a day, and whenever they ask for a recap or a refresher. Not for any other
+  request, and not just because a session is new.
 ---
 
 # Recap
@@ -15,8 +16,16 @@ what makes it stick. It is a warm-up, not a summary of the project.
 
 ## When
 
-Once per session, as the first thing, before the work the user asked for. Then go on with that work
-in the same reply: the recap does not count as a step, and does not wait for an answer.
+When the user takes up the work on the engine again: study, demos, the engine itself, in words like
+"let's pick up where we left off" or "let's get back to work". Not for other requests (a setting, a
+skill, an issue, a post), and not just because a session is new.
+
+At most once a day. Before giving it, read `.claude/recap-last` (git ignores it): if it holds today's
+date, skip the recap. After giving it, write today's date there, as `YYYY-MM-DD`. When the user asks
+for a recap, give it anyway, and write the date.
+
+Give it first, then go on with the work the user asked for in the same reply: the recap does not
+count as a step, and does not wait for an answer.
 
 ## Where to look
 

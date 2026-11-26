@@ -14,3 +14,6 @@ posts/
 
 # The certificate of `npm run dev:phone`: made on each computer, never committed.
 .cert/
+
+# The day of the last recap (`recap` skill): local, at most one a day.
+.claude/recap-last
