@@ -5,7 +5,7 @@
 Everything we have met while building FORCE, concepts and sources, and how far we went with each
 one. Use it to look up a term, to find what to read, or to pick what to explore next.
 
-- **309 concepts:** ● 31 studied · ◐ 149 seen · ○ 129 mentioned
+- **312 concepts:** ● 31 studied · ◐ 152 seen · ○ 129 mentioned
 - **164 sources:** ● 15 studied · ◐ 17 seen · ○ 132 mentioned · read by Claude: 80 parts, 16 in full
 
 | | Status | What it means |
@@ -28,6 +28,7 @@ How things move, collide and stay together.
 
 | | Concept | In short | Part of | First cited in |
 | --- | --- | --- | --- | --- |
+| ◐ | A push that changes in space | An acceleration that depends on where a particle is and on time, like wind or currents: here a drift made of sine waves, where gravity was |  | [067](../logbook/067-a-hand-on-the-cloth.md) |
 | ◐ | Accumulated impulse | Keeping the total push of a rule and clamping that, not each round alone, so a later round can take part of it back | Sequential impulses (PGS) | [Iterative Dynamics with Temporal Coherence](https://box2d.org/files/ErinCatto_IterativeDynamics_GDC2005.pdf) |
 | ○ | Angle of repose | The steepest slope a pile of grains holds before it slides: the more friction, the steeper |  | [034](../logbook/034-the-box-on-the-ramp.md) |
 | ◐ | Angular momentum | Inertia times angular velocity: the quantity a torque changes over time | Rigid body | [004](../logbook/004-the-detour.md) |
@@ -89,6 +90,7 @@ How things move, collide and stay together.
 | ◐ | Friction on positions | After two particles are pushed apart, their sliding in the step is taken away: all of it when small (static), a share tied to how deep they overlapped otherwise (kinetic) | Friction | [Unified Particle Physics for Real-Time Applications](https://doi.org/10.1145/2601097.2601152) |
 | ◐ | Gauss-Seidel | Fixing constraints one after another, each using the latest results: converges fast, but it is sequential | Iterative solver | [004](../logbook/004-the-detour.md) |
 | ○ | GJK | A test that tells whether two convex shapes overlap, using only their farthest points in each direction | Narrow phase | [004](../logbook/004-the-detour.md) |
+| ◐ | Grabbing with the pointer | A hand on a cloth: a weight per particle, 1 where the pointer picked and 0 a reach away along the cloth, and a handle that moves on a plane facing the camera |  | [067](../logbook/067-a-hand-on-the-cloth.md) |
 | ○ | Granular materials | Sand, snow and grains: solid up close, flowing in bulk |  | [004](../logbook/004-the-detour.md) |
 | ◐ | Gravity | The force that pulls everything down: on Earth it adds 9.81 m/s of downward speed every second | Forces | [001](../logbook/001-the-flip-book.md) |
 | ○ | Grid fluid (Eulerian) | A fluid simulated on a fixed grid, tracking what flows through each cell | Fluid | [Ten Minute Physics](https://matthias-research.github.io/pages/tenMinutePhysics/index.html) |
@@ -393,6 +395,7 @@ WebGPU, WGSL and how to make thousands of threads work.
 | ○ | Parallel sorting | Sorting many keys at once on the GPU, for example objects by grid cell |  | [004](../logbook/004-the-detour.md) |
 | ◐ | Parallel work on the GPU | The GPU runs the same code on thousands of items at once, and is fastest when each one can go its own way |  | [001](../logbook/001-the-flip-book.md) |
 | ○ | Percentage-closer filtering (PCF) | Reading the shadow map at a few points nearby and averaging the answers, for a soft edge | Shadow map | [046](../logbook/046-a-promise-not-yet-kept.md) |
+| ◐ | Picking | Finding which particle is under the pointer: the nearest to the eye of those close to the pointer's ray, here in a copy of the positions read back from the GPU |  | [067](../logbook/067-a-hand-on-the-cloth.md) |
 | ◐ | Ping-pong buffers | Two buffers that take turns: each pass reads one and writes the other, so no thread reads a value while another changes it, like two render targets swapped every frame |  | [030](../logbook/030-the-lazy-list.md) |
 | ○ | Pipeline constant ID | The @id(n) attribute gives an override a number, and JavaScript then sets it by that number and not by its name | Override constant | [WGSL specification, §7.2 Value Declarations](https://www.w3.org/TR/WGSL/#value-decls) |
 | ◐ | Pipeline layout | Which buffers a pipeline expects and in which slots. 'auto' works it out from the shader, but its bind groups then work with that pipeline only; one made by hand with createPipelineLayout() can be given to several pipelines, which then share bind groups | Compute pipeline | [pipelines](../guides/pipelines.md) |

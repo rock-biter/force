@@ -14,7 +14,7 @@ documentation of the library will live there too.
 
 ## Where we are
 
-*Updated November 25, 2026*
+*Updated November 26, 2026*
 
 **Latest steps:** chapters [038](./docs/logbook/038-one-hundred-twenty-five-cells.md),
 [039](./docs/logbook/039-far-apart-in-memory.md) and [040](./docs/logbook/040-the-table.md). To find
@@ -102,6 +102,10 @@ And it has two brakes: one for its own bounce, one, like air, for whatever it is
 
 The cloth also resists folding now, with springs that skip a particle
 ([chapter 066](./docs/logbook/066-against-the-fold.md)).
+
+And cloths can be grabbed: curtains, a pile of cloths and a cloth with no gravity, dragged with the
+pointer ([try it](https://rock-biter.github.io/force/cloth-pile/),
+[chapter 067](./docs/logbook/067-a-hand-on-the-cloth.md)).
 
 **Next:** springs for any net, and lighter particles. Then our rules read again against the
 devices.

@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>FORCE: a pile of cloths</title>
+    <meta
+      name="description"
+      content="Square cloths of particles joined by springs, dropped in a heap on the floor on the GPU: grab one with the pointer and drag it out from under the others."
+    />
+    <link rel="stylesheet" href="../site.css" />
+  </head>
+  <!-- The same page as heap-simulation, with the particles joined into cloths by springs
+       (data-springs), and a pointer that grabs a cloth and drags it (data-pointer). -->
+  <body
+    class="stage"
+    data-springs="pile"
+    data-sizes="1"
+    data-max-particles="30000"
+    data-friction="0.3"
+    data-drag="0.5"
+    data-pointer="grab"
+    data-particles="7000" data-half="8" data-cloth="slab"
+  >
+    <nav class="crumb">
+      <a href="../">← FORCE</a> · A pile of cloths
+      <p>Square cloths dropped on each other, held by nothing.</p>
+      <p>Drag a cloth to pull it. Drag the empty space to turn the camera, two fingers on a phone.</p>
+    </nav>
+    <script type="module" src="../heap-simulation/main.ts"></script>
+  </body>
+</html>

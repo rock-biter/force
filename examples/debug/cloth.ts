@@ -59,9 +59,13 @@ export interface ClothSource {
   readonly positionBuffer: GPUBuffer
   /** One u32 per name: the row of that particle in `positionBuffer`, now. */
   readonly registerBuffer: GPUBuffer
-  /** The cloth is `columns` by `rows` particles, named row after row: name = column + row × columns. */
+  /**
+   * The cloth is `columns` by `rows` particles, named row after row from `first` on:
+   * name = first + column + row × columns. A world can hold several cloths, drawn one view each.
+   */
   readonly columns: number
   readonly rows: number
+  readonly first?: number
 }
 
 /**
@@ -127,11 +131,12 @@ export class ClothView {
     const registerData = new StorageBufferAttribute(new Uint32Array(particleCount), 1)
     useExternalBuffer(renderer, registerData, world.registerBuffer)
     const register = storage(registerData, 'uint', particleCount).toReadOnly()
-    /** Where the particle with this name is, in the world. */
+    const first = world.first ?? 0
+    /** Where the particle with this number in the cloth is, in the world. */
     const at = (name: Node<'int'>) =>
-      positions.element(register.element(name)).xyz as unknown as Node<'vec3'>
+      positions.element(register.element(name.add(first))).xyz as unknown as Node<'vec3'>
 
-    // The particle of this vertex. In a slab the second half of the vertices are the same
+    // The particle of this vertex, counted from the cloth's first. In a slab the second half of the vertices are the same
     // particles again, on the other face.
     const vertex = int(vertexIndex) as unknown as Node<'int'>
     const name = (slab ? vertex.mod(count) : vertex) as Node<'int'>

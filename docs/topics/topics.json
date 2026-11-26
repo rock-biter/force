@@ -8499,6 +8499,42 @@
       },
       "partOf": "bend-constraint",
       "citedIn": ["docs/logbook/066-against-the-fold.md", "jolt-soft-body-settings"]
+    },
+    {
+      "id": "grab",
+      "kind": "concept",
+      "title": "Grabbing with the pointer",
+      "summary": "A hand on a cloth: a weight per particle, 1 where the pointer picked and 0 a reach away along the cloth, and a handle that moves on a plane facing the camera",
+      "area": "physics",
+      "status": "seen",
+      "since": {
+        "seen": "2026-11-26"
+      },
+      "citedIn": ["docs/logbook/067-a-hand-on-the-cloth.md"]
+    },
+    {
+      "id": "picking",
+      "kind": "concept",
+      "title": "Picking",
+      "summary": "Finding which particle is under the pointer: the nearest to the eye of those close to the pointer's ray, here in a copy of the positions read back from the GPU",
+      "area": "gpu",
+      "status": "seen",
+      "since": {
+        "seen": "2026-11-26"
+      },
+      "citedIn": ["docs/logbook/067-a-hand-on-the-cloth.md"]
+    },
+    {
+      "id": "force-field",
+      "kind": "concept",
+      "title": "A push that changes in space",
+      "summary": "An acceleration that depends on where a particle is and on time, like wind or currents: here a drift made of sine waves, where gravity was",
+      "area": "physics",
+      "status": "seen",
+      "since": {
+        "seen": "2026-11-26"
+      },
+      "citedIn": ["docs/logbook/067-a-hand-on-the-cloth.md"]
     }
   ]
 }

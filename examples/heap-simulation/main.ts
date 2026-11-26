@@ -53,6 +53,8 @@ import {
   WebGPURenderer,
 } from 'three/webgpu'
 import { Pane } from 'tweakpane'
+import grabCode from '../cloth/grab.wgsl?raw'
+import predictDriftCode from '../cloth-float/predict-drift.wgsl?raw'
 import clearIfCode from '../contact-cost/clear-if.wgsl?raw'
 import commonCode from '../contact-cost/common.wgsl?raw'
 import predictCode from '../contact-cost/predict.wgsl?raw'
@@ -86,7 +88,8 @@ const RADIUS = 0.1 // meters, as in every scene since chapter 025
 const DIAMETER = 2 * RADIUS
 const CELL = DIAMETER // a cell as wide as a particle (chapter 024)
 const STEP = 1 / 60 // seconds
-const GRAVITY = 9.81
+// data-gravity="0" on a page's <body>: no gravity, or any other, in m/s² downward.
+const GRAVITY = Number(document.body.dataset.gravity ?? 9.81)
 // decision 029. ?rounds=6 in the address, to measure: this many rounds per substep, from 1 to 12.
 const ROUNDS =
   Math.min(
@@ -118,10 +121,36 @@ const MIXED = SIZES > 0
 const TWO = MIXED && new URLSearchParams(location.search).has('two')
 // data-springs on a page's <body>, with data-sizes: the particles are joined by springs (decisions
 // 036 and 037). "ropes": into ropes of ROPE particles, each held by its first particle. "cloth":
-// into one cloth twice as wide as it is tall, held by its top row.
+// into one cloth twice as wide as it is tall, held by its top row. "curtains": into several tall,
+// narrow cloths, each held by its top row. "pile": into square cloths dropped on each other, held
+// by nothing. "float": into square cloths that hang in the air, for a page with no gravity.
 const SPRINGS = MIXED ? document.body.dataset.springs : undefined
 const ROPES = SPRINGS === 'ropes'
-const CLOTH = SPRINGS === 'cloth'
+const CLOTH = SPRINGS !== undefined && !ROPES
+// How many particles wide and tall each cloth of those three pages is: data-patch="20x70" on the
+// page's <body>, or these.
+const PATCHES: Record<string, string> = { curtains: '20x70', pile: '24x24', float: '60x60' }
+// On the page with the pile the panel changes them: see `side`.
+let [PATCH_COLUMNS, PATCH_ROWS] = (document.body.dataset.patch ?? PATCHES[SPRINGS ?? ''] ?? '')
+  .split('x')
+  .map(Number)
+const PILE = SPRINGS === 'pile'
+const MAX_CLOTHS = 30 // in a pile
+const MAX_SIDE = 60 // particles on a side of a cloth of the pile: 12 m
+// data-drift="0.5" on a page's <body>: slow currents that push the particles around, this many m/s²
+// at most (../cloth-float/predict-drift.wgsl). The panel changes it.
+const DRIFT = document.body.dataset.drift !== undefined
+// A hand on a cloth (../cloth/grab.wgsl): how far from the pointer's ray a particle is still under
+// it, in meters, a little more than a radius so that the gaps between four particles count too;
+// the share of the way to the pointer the hand covers at each step, and its top speed, in m/s,
+// under the speed limit of the particles.
+const PICK = 1.5 * RADIUS
+const HAND_FOLLOW = 0.35
+const HAND_SPEED = 10
+// One color per cloth, where there are several.
+const CLOTH_COLORS = [
+  0x4ea3ff, 0xf2a93b, 0xd1495b, 0x3fb68b, 0x9b6bd6, 0xe8d44d, 0xe5739a, 0x5fc4d6,
+].map((hex) => new Color(hex))
 const ROPE = 30 // particles in a rope: 5.8 m
 // The most groups of springs that share no particle: 2 along a rope, 12 in a cloth with
 // diagonals and bend links.
@@ -155,13 +184,15 @@ const MASSES: Record<string, readonly [number, number]> = {
 }
 
 // The floor and four walls, as in contact-cost: the normal in xyz, the offset in w. `half` is half
-// the side of the floor, in meters.
-const planesOf = (half: number) => [
+// the side of the floor, in meters. With no gravity nothing keeps the particles down, and the box
+// has a ceiling too, `height` meters up.
+const planesOf = (half: number, height: number) => [
   [0, 1, 0, 0],
   [1, 0, 0, -half],
   [-1, 0, 0, -half],
   [0, 0, 1, -half],
   [0, 0, -1, -half],
+  ...(GRAVITY === 0 ? [[0, -1, 0, -height]] : []),
 ]
 
 /** How many particles on a side of the block they start in: see `cube`. */
@@ -180,7 +211,7 @@ const halfFor = (count: number) =>
     : ROPES
       ? Math.max(SMALLEST_HALF, Math.ceil((ropeSide(count) * ROPE_GAP) / 2 + 4))
       : CLOTH
-        ? Math.max(SMALLEST_HALF, Math.ceil((clothColumns(count) * DIAMETER) / 2 + 2))
+        ? Math.max(SMALLEST_HALF, Math.ceil(clothReach(count)[0] + 2))
         : Math.max(SMALLEST_HALF, Math.ceil(((blockSide(count) * (DIAMETER + GAP)) / 2) * ROOM))
 
 /** Repeats the same numbers at every run, so every restart starts from the same cube. */
@@ -278,54 +309,164 @@ function ropes(count: number) {
  */
 const clothRows = (count: number) => Math.max(Math.floor(Math.sqrt(count / 2)), 1)
 /** How high a cloth hangs from, in meters: its bottom edge 1.5 m above the floor, where the ball reaches it. */
-const clothTop = (count: number) => 1.5 + clothRows(count) * DIAMETER
-/** How tall the box is for this many particles, in meters: taller than HEIGHT only for a large cloth. */
-const heightFor = (count: number) =>
-  CLOTH ? Math.max(HEIGHT, Math.ceil(clothTop(count) + 1)) : HEIGHT
+const clothTop = (rows: number) => 1.5 + rows * DIAMETER
 const clothColumns = (count: number) => 2 * clothRows(count)
-/** How many particles that cloth has: a little fewer than asked, so that its last row is whole. */
-const clothFit = (count: number) => clothRows(count) * clothColumns(count)
+
 /**
- * A cloth of `count` particles, as clothFit gives, twice as wide as tall, one diameter between
- * neighbours, hanging by its top row, which is held. It starts flat
- * and leaning 20 degrees, so that it swings when let go. Each particle is joined to its
+ * One cloth: `columns` by `rows` particles, named row after row from `first` on, so that the
+ * particle in column a of row b is first + a + b × columns. Where each one starts, in meters, and
+ * whether it is held.
+ */
+interface Patch {
+  first: number
+  columns: number
+  rows: number
+  at: (a: number, b: number) => Vec3
+  held: (a: number, b: number) => boolean
+}
+
+/**
+ * The cloths of a page, for about `count` particles, one diameter between neighbours.
+ *
+ * "cloth": one, twice as wide as tall, as large as `count` allows, hanging by its top row. It
+ * starts flat and leaning 20 degrees, so that it swings when let go.
+ *
+ * The other pages have as many cloths of PATCH_COLUMNS by PATCH_ROWS as `count` holds, one at
+ * least, placed the same way at every run. "curtains": hanging by their top rows in lines across
+ * the box, each turned a little and leaning 8 degrees to one side or the other. "pile": flat and
+ * almost level, one above the other, each turned and moved its own way, to fall into a heap; the
+ * larger they are, the further apart they start, so that two tilted ones do not cross.
+ * "float": upright, side by side from front to back, for a page with no gravity.
+ */
+function patchesOf(count: number): Patch[] {
+  if (SPRINGS === 'cloth' || !PATCH_COLUMNS || !PATCH_ROWS) {
+    const rows = clothRows(count)
+    const columns = clothColumns(count)
+    const lean = [-Math.cos(Math.PI / 9) * DIAMETER, Math.sin(Math.PI / 9) * DIAMETER]
+    const top = clothTop(rows)
+    return [
+      {
+        first: 0,
+        columns,
+        rows,
+        at: (a, b) => [(a - (columns - 1) / 2) * DIAMETER, top + b * lean[0], b * lean[1]],
+        held: (_, b) => b === 0,
+      },
+    ]
+  }
+  const columns = PATCH_COLUMNS
+  const rows = PATCH_ROWS
+  const each = columns * rows
+  const cloths = Math.max(Math.floor(count / each), 1)
+  const next = random(3)
+  const inLine = Math.ceil(Math.sqrt(cloths)) // curtains in a line
+  const lineCount = Math.ceil(cloths / inLine)
+  return Array.from({ length: cloths }, (_, k) => {
+    // A cloth is made flat, x across it and y or z along it, then turned around the vertical by
+    // `yaw` and moved to `center`.
+    let yaw = 0
+    let center: Vec3 = [0, 0, 0]
+    let flat: (across: number, b: number) => Vec3
+    if (SPRINGS === 'curtains') {
+      const line = Math.floor(k / inLine)
+      const lean = (k % 2 ? 1 : -1) * (Math.PI / 22.5)
+      yaw = (next() - 0.5) * (Math.PI / 3.6)
+      center = [
+        ((k % inLine) - (inLine - 1) / 2 + (line % 2 ? 0.25 : -0.25)) * (columns * DIAMETER + 1.5),
+        clothTop(rows),
+        (line - (lineCount - 1) / 2) * 6,
+      ]
+      flat = (across, b) => [across, -b * DIAMETER * Math.cos(lean), b * DIAMETER * Math.sin(lean)]
+    } else if (SPRINGS === 'pile') {
+      const tilt = (next() - 0.5) * (Math.PI / 7.5)
+      yaw = next() * 2 * Math.PI
+      const wide = rows * DIAMETER
+      const apart = 0.2 + 2 * (wide / 2) * Math.sin(Math.PI / 15)
+      center = [(next() - 0.5) * 0.8 * wide, apart * (k + 1), (next() - 0.5) * 0.8 * wide]
+      flat = (across, b) => {
+        const along = (b - (rows - 1) / 2) * DIAMETER
+        return [across, along * Math.sin(tilt), along * Math.cos(tilt)]
+      }
+    } else {
+      center = [0, 2 + rows * DIAMETER, (k - (cloths - 1) / 2) * 3]
+      flat = (across, b) => [across, -b * DIAMETER, 0]
+    }
+    const [cos, sin] = [Math.cos(yaw), Math.sin(yaw)]
+    return {
+      first: k * each,
+      columns,
+      rows,
+      at: (a, b) => {
+        const [x, y, z] = flat((a - (columns - 1) / 2) * DIAMETER, b)
+        return [center[0] + x * cos + z * sin, center[1] + y, center[2] - x * sin + z * cos]
+      },
+      held: (_, b) => SPRINGS === 'curtains' && b === 0,
+    }
+  })
+}
+/** How many particles the cloths have: a little fewer than asked, so that each one is whole. */
+const clothFit = (count: number) =>
+  patchesOf(count).reduce((sum, patch) => sum + patch.columns * patch.rows, 0)
+/** How far the cloths reach at the start, in meters: from the middle of the floor, and up. */
+function clothReach(count: number): [across: number, up: number] {
+  let across = 0
+  let up = 0
+  for (const { columns, rows, at } of patchesOf(count))
+    for (const a of [0, columns - 1])
+      for (const b of [0, rows - 1]) {
+        const [x, y, z] = at(a, b)
+        across = Math.max(across, Math.abs(x), Math.abs(z))
+        up = Math.max(up, y)
+      }
+  return [across, up]
+}
+/**
+ * How tall the box is for this many particles, in meters: taller than HEIGHT only for large
+ * cloths. With no gravity, where the box has a ceiling, there is as much room above the cloths as
+ * below.
+ */
+const heightFor = (count: number) =>
+  CLOTH ? Math.max(HEIGHT, Math.ceil(clothReach(count)[1] + (GRAVITY === 0 ? 2 : 1))) : HEIGHT
+/**
+ * The cloths of `count` particles, as clothFit gives (patchesOf). Each particle is joined to its
  * neighbours along the two sides, 4 links per particle. With 8, also along the two diagonals,
  * which keep its squares from leaning into diamonds (shear). With 12, also to the particle two
  * places further along each side: when the cloth folds between them they come closer, and the link
  * pushes them back (bend, chapter 066). The groups: links along a row that start at an even
  * column, at an odd one, the same down the columns and for each diagonal; a bend link from column
  * a is in one group when a / 2, rounded down, is even, in another when it is odd. No two of a
- * group share a particle, so a group can run in one dispatch.
+ * group share a particle, so a group can run in one dispatch: two cloths share none either, and
+ * use the same groups.
  */
 function cloth(count: number, linksEach: number) {
-  const columns = clothColumns(count)
+  const patches = patchesOf(count)
   const at = new Float32Array(count * 3)
   const held: number[] = []
   const links: Link[] = []
-  const lean = [-Math.cos(Math.PI / 9) * DIAMETER, Math.sin(Math.PI / 9) * DIAMETER]
-  const top = clothTop(count)
-  const name = (a: number, b: number) => a + b * columns
-  for (let i = 0; i < count; i++) {
-    const a = i % columns
-    const b = Math.floor(i / columns)
-    at.set([(a - (columns - 1) / 2) * DIAMETER, top + b * lean[0], b * lean[1]], i * 3)
-    if (b === 0) held.push(i)
-    const right = a + 1 < columns && i + 1 < count
-    const below = name(a, b + 1) < count
-    if (right) links.push([i, i + 1, a % 2, DIAMETER])
-    if (below) links.push([i, name(a, b + 1), 2 + (b % 2), DIAMETER])
-    if (linksEach >= 12) {
-      if (a + 2 < columns && i + 2 < count)
-        links.push([i, i + 2, 8 + (Math.floor(a / 2) % 2), 2 * DIAMETER, true])
-      if (name(a, b + 2) < count)
-        links.push([i, name(a, b + 2), 10 + (Math.floor(b / 2) % 2), 2 * DIAMETER, true])
-    }
-    if (linksEach < 8) continue
-    if (right && name(a + 1, b + 1) < count)
-      links.push([i, name(a + 1, b + 1), 4 + (a % 2), DIAMETER * Math.SQRT2])
-    if (right && below) links.push([i + 1, name(a, b + 1), 6 + (a % 2), DIAMETER * Math.SQRT2])
+  for (const patch of patches) {
+    const { first, columns, rows } = patch
+    const name = (a: number, b: number) => first + a + b * columns
+    for (let b = 0; b < rows; b++)
+      for (let a = 0; a < columns; a++) {
+        const i = name(a, b)
+        at.set(patch.at(a, b), i * 3)
+        if (patch.held(a, b)) held.push(i)
+        const right = a + 1 < columns
+        const below = b + 1 < rows
+        if (right) links.push([i, i + 1, a % 2, DIAMETER])
+        if (below) links.push([i, name(a, b + 1), 2 + (b % 2), DIAMETER])
+        if (linksEach >= 12) {
+          if (a + 2 < columns)
+            links.push([i, i + 2, 8 + (Math.floor(a / 2) % 2), 2 * DIAMETER, true])
+          if (b + 2 < rows)
+            links.push([i, name(a, b + 2), 10 + (Math.floor(b / 2) % 2), 2 * DIAMETER, true])
+        }
+        if (linksEach < 8 || !right || !below) continue
+        links.push([i, name(a + 1, b + 1), 4 + (a % 2), DIAMETER * Math.SQRT2])
+        links.push([i + 1, name(a, b + 1), 6 + (a % 2), DIAMETER * Math.SQRT2])
+      }
   }
-  return { at, held, links }
+  return { at, held, links, patches }
 }
 
 /**
@@ -423,7 +564,7 @@ async function makePipelines(device: GPUDevice, hash: string) {
     })
   const [predict, clearIf, finish, ...book] = await Promise.all(
     [
-      predictCode,
+      DRIFT ? predictDriftCode : predictCode,
       rebuildCode + clearIfCode,
       finishLimitCode,
       // the address book: the particles sorted by cell
@@ -487,6 +628,8 @@ fn repeated(home: vec3i, offset: vec3i, slots: u32) -> bool {
   const springKit = SPRINGS
     ? await Promise.all([alone(registerCode), make(springsCode)])
     : undefined
+  // With cloths: the hand that drags them. It stands alone too.
+  const grab = CLOTH ? await alone(grabCode) : undefined
   const moveProperties = MIXED
     ? await Promise.all(
         [propertiesMoveCode, propertiesSettleCode].map((code) => make(rebuildCode + code)),
@@ -534,6 +677,7 @@ fn repeated(home: vec3i, offset: vec3i, slots: u32) -> bool {
     byTable: filing(1),
     moveProperties,
     springKit,
+    grab,
   }
 }
 type Pipelines = Awaited<ReturnType<typeof makePipelines>>
@@ -611,13 +755,16 @@ function makeSimulation(
   slotsEach: number,
   inOrder: boolean,
   half: number,
+  height: number,
+  handPath: GPUBuffer,
   ratio = 1,
   linksEach = 8,
 ) {
   // The cube stands on the floor of the box, wherever the box is turned.
   const start = cube(count, masses)
   const two = TWO ? twoSizes(count, ratio, half) : undefined
-  const roped = ROPES ? ropes(count) : CLOTH ? cloth(count, linksEach) : undefined
+  const clothed = CLOTH ? cloth(count, linksEach) : undefined
+  const roped = ROPES ? ropes(count) : clothed
   const placed = two?.at ?? roped?.at
   if (placed) for (let i = 0; i < count; i++) start.set(placed.subarray(i * 3, i * 3 + 3), i * 4)
   for (const i of roped?.held ?? []) start[i * 4 + 3] = 0 // 1 / mass of 0: it never moves
@@ -663,7 +810,7 @@ function makeSimulation(
   const blocks = storage(blockCount * 4)
   const file = cells === 'table' ? kit.byTable : kit.byGrid
   const levels = [storage(count * 4), storage(count * 4)]
-  const walls = planesOf(half)
+  const walls = planesOf(half, height)
   const planes = storage(walls.length * 16)
   const control = storage(32, GPUBufferUsage.COPY_SRC) // see rebuild.wgsl
   const params = device.createBuffer({
@@ -707,7 +854,20 @@ function makeSimulation(
       layout: p.getBindGroupLayout(0),
       entries: entries.map((buffer, binding) => ({ binding, resource: { buffer } })),
     })
-  const predictGroup = group(kit.predict, [params, positions, velocities, predicted[0]])
+  // The drift of predict-drift.wgsl: the time, how strong it is and how wide its currents.
+  const drift = device.createBuffer({
+    size: 16,
+    usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
+  })
+  buffers.push(drift)
+  device.queue.writeBuffer(drift, 0, new Float32Array([0, 0, 0.5]))
+  const predictGroup = group(kit.predict, [
+    params,
+    positions,
+    velocities,
+    predicted[0],
+    ...(DRIFT ? [drift] : []),
+  ])
   const clearGroup = group(kit.clearIf, [params, control, counts])
   const bookGroups = {
     count: group(file.bookCount, [params, predicted[0], counts, control]),
@@ -806,6 +966,17 @@ function makeSimulation(
     })
     return [{ workgroups: Math.ceil(n / 64), fresh, later }]
   })
+  // The hand on a cloth (grab.wgsl): for every name, where that particle is held from the handle
+  // and how firmly, and the handle of this substep, copied from `handPath` as the ball is.
+  const grabbed = storage(kit.grab && sizes ? count * 16 : 16)
+  const handle = device.createBuffer({
+    size: 16,
+    usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
+  })
+  buffers.push(handle)
+  const grabGroup =
+    kit.grab && sizes ? group(kit.grab, [properties, predicted[0], grabbed, handle]) : undefined
+  let grabbing = false
   let springRounds = SPRING_ROUNDS
   // Levels alternate between two buffers, a step each; positions between two, a round each.
   // The levels and the rounds read the cells of the book: the counts and the starts, then, after
@@ -870,7 +1041,7 @@ function makeSimulation(
     // the register: for each name, the row of that particle now (decision 036)
     registerBuffer: springs.length ? rowOf : undefined,
     // a cloth's shape, in particles: for who draws it as a surface
-    cloth: CLOTH ? { columns: clothColumns(count), rows: clothRows(count) } : undefined,
+    cloths: clothed?.patches.map(({ first, columns, rows }) => ({ first, columns, rows })),
     positionBuffer: positions,
     substepCount: 0,
 
@@ -897,6 +1068,7 @@ function makeSimulation(
         const first = s === 0
         const last = s === substeps - 1
         encoder.copyBufferToBuffer(path, (from + s) * 16, pointer, 0, 16)
+        if (grabbing) encoder.copyBufferToBuffer(handPath, (from + s) * 16, handle, 0, 16)
         encoder.clearBuffer(control, 8, 4) // the largest move, measured again at every substep
         const whole = profile
           ? undefined
@@ -943,6 +1115,8 @@ function makeSimulation(
             dispatch('move', kit.moveProperties[1], propertyGroups[1])
           }
         }
+        // The hand moves its particles before the springs, which then pull the rest along.
+        if (grabbing && grabGroup && kit.grab) dispatch('grab', kit.grab, grabGroup)
         if (registerGroup && kit.springKit) {
           dispatch('names', kit.springKit[0], registerGroup)
           for (let r = 0; r < springRounds; r++)
@@ -1001,6 +1175,25 @@ function makeSimulation(
       device.queue.writeBuffer(limit, 4, new Float32Array([drag]))
     },
 
+    /**
+     * The drift, from the next step on: the time, in seconds, how strong it is, in m/s², and how
+     * wide its currents, in radians per meter. Only on a page with a drift.
+     */
+    setDrift(time: number, strength: number, scale: number) {
+      device.queue.writeBuffer(drift, 0, new Float32Array([time, strength, scale]))
+    },
+
+    /**
+     * A hand takes hold of a cloth, or lets it go. `held` has four numbers for every name: where
+     * that particle is from the handle, in meters, and its weight, 1 for the firmest hold and 0
+     * for a particle left alone. While it holds, each substep reads its handle from the path
+     * given when the simulation was made. With nothing, the hand lets go.
+     */
+    grab(held?: Float32Array) {
+      grabbing = held !== undefined && grabGroup !== undefined
+      if (held && grabbing) device.queue.writeBuffer(grabbed, 0, held)
+    },
+
     /** µ, how much of their slide two touching particles take back: 0 is none (decision 020). */
     setFriction(mu: number) {
       device.queue.writeBuffer(rub, 0, new Float32Array([mu]))
@@ -1014,9 +1207,9 @@ function makeSimulation(
 type Simulation = ReturnType<typeof makeSimulation>
 /** A clock with two entries per shader of a step, and the names of the shaders that wrote them. */
 type Profile = { clock: GPUQuerySet; names: string[] }
-// The most shaders a step runs: sixteen, the rounds, and the groups of springs in each of their
+// The most shaders a step runs: seventeen, the rounds, and the groups of springs in each of their
 // rounds, in every substep.
-const MAX_PASSES = (16 + ROUNDS + MAX_SPRING_GROUPS * MAX_SPRING_ROUNDS) * MAX_SUBSTEPS
+const MAX_PASSES = (17 + ROUNDS + MAX_SPRING_GROUPS * MAX_SPRING_ROUNDS) * MAX_SUBSTEPS
 
 async function start() {
   const adapter = await navigator.gpu?.requestAdapter()
@@ -1129,7 +1322,8 @@ async function start() {
   }
   fitBox(SMALLEST_HALF)
   const orbit = new OrbitControls(camera, renderer.domElement)
-  orbit.target.set(0, 0.5, 0)
+  // data-target="6" on a page's <body>: the camera looks at a point that high, for what hangs.
+  orbit.target.set(0, Number(document.body.dataset.target) || 0.5, 0)
   orbit.enableDamping = true
   orbit.dampingFactor = 0.08
   // On a phone one finger pushes the particles, so the camera turns with two.
@@ -1235,7 +1429,9 @@ async function start() {
     raycaster.setFromCamera(screen, camera)
     // the ray as the box sees it, since the plane and the ball are the box's own
     raycaster.ray.applyMatrix4(inside.copy(world.matrixWorld).invert())
-    const on = pointing && raycaster.ray.intersectPlane(surface, hit) !== null
+    // no ball while the pointer is a hand that grabs
+    const on =
+      settings.pointer === 'push' && pointing && raycaster.ray.intersectPlane(surface, hit) !== null
     // A pointer near the horizon hits the plane very far away, and the ball would take a long time
     // to come back: it stays within a margin of the walls.
     const most = half + BALL_MARGIN
@@ -1269,6 +1465,177 @@ async function start() {
     ballMesh.scale.setScalar(ball.radius)
     ballMesh.position.set(ball.x, lift, ball.z)
   }
+
+  // ---- the hand ------------------------------------------------------------------------------------
+  // On a page with cloths the pointer can be a hand: pressing on a cloth takes hold of it, and
+  // dragging pulls it (../cloth/grab.wgsl). Three things are worked out here, in JavaScript.
+  //
+  // Which particle is under the pointer. The positions live on the GPU, so a copy is read back
+  // every few frames, with the names: when the pointer goes down, the particle picked is the
+  // nearest to the eye of those within PICK of the pointer's ray, in that copy. The copy is a few
+  // frames old, which a hand does not notice.
+  //
+  // Whom the hand holds, and how firmly: the particles of the same cloth within `reach` of the
+  // one picked, counted along the cloth, in particles, not through the air. So a fold lying
+  // under the hand, or another cloth, is not taken along. The weight is 1 in the middle and falls
+  // smoothly to 0 at the reach.
+  //
+  // Where the hand goes: the handle starts at the point picked and moves on the plane through it
+  // that faces the camera, to stay under the pointer. Like the ball, it covers a share of the way
+  // at each step, at HAND_SPEED at most, and where it is at every substep is written in
+  // `handPath`.
+  const handPath = device.createBuffer({
+    size: MAX_STEPS_PER_FRAME * MAX_SUBSTEPS * 16,
+    usage: GPUBufferUsage.COPY_SRC | GPUBufferUsage.COPY_DST,
+  })
+  const handData = new Float32Array(MAX_STEPS_PER_FRAME * MAX_SUBSTEPS * 4)
+  // The copy: the positions, then the properties, four numbers per particle each, of `sim`.
+  let copy: { sim: Simulation; both: Float32Array } | undefined
+  let copyBack: GPUBuffer | undefined
+  let copying = false
+  async function readCopy(sim: Simulation) {
+    if (copying || !sim.propertiesBuffer) return
+    copying = true
+    const size = sim.particleCount * 16
+    if (copyBack?.size !== 2 * size) {
+      copyBack?.destroy()
+      copyBack = device.createBuffer({
+        size: 2 * size,
+        usage: GPUBufferUsage.MAP_READ | GPUBufferUsage.COPY_DST,
+      })
+    }
+    const back = copyBack
+    const encoder = device.createCommandEncoder()
+    encoder.copyBufferToBuffer(sim.positionBuffer, 0, back, 0, size)
+    encoder.copyBufferToBuffer(sim.propertiesBuffer, 0, back, size, size)
+    device.queue.submit([encoder.finish()])
+    try {
+      await back.mapAsync(GPUMapMode.READ)
+      const both = new Float32Array(back.getMappedRange().slice(0))
+      back.unmap()
+      if (sim === simulation) copy = { sim, both }
+    } finally {
+      copying = false
+    }
+  }
+  /** The particle under the pointer: its row in the copy, and how far from the eye, in meters. */
+  function pick() {
+    if (!copy || copy.sim !== simulation) return undefined
+    const { both, sim } = copy
+    raycaster.setFromCamera(screen, camera)
+    const { origin, direction } = raycaster.ray
+    let depth = Number.POSITIVE_INFINITY
+    let row = -1
+    for (let i = 0; i < sim.particleCount; i++) {
+      const x = both[i * 4] - origin.x
+      const y = both[i * 4 + 1] - origin.y
+      const z = both[i * 4 + 2] - origin.z
+      const along = x * direction.x + y * direction.y + z * direction.z
+      if (along <= 0 || along >= depth) continue
+      if (x * x + y * y + z * z - along * along < PICK * PICK) {
+        depth = along
+        row = i
+      }
+    }
+    return row < 0 ? undefined : { row, depth }
+  }
+  const hand = new Vector3() // the handle, in the world
+  const handPlane = new Plane()
+  const handAim = new Vector3()
+  let holding: number | undefined // the pointer that holds a cloth, by its pointerId
+  /** Takes hold of the cloth under the pointer, if there is one. */
+  function takeHold(): boolean {
+    const found = pick()
+    const sim = simulation
+    if (!found || !copy || !sim?.cloths) return false
+    const { both } = copy
+    const n = sim.particleCount
+    const nameOf = (row: number) => both[(n + row) * 4 + 1]
+    const picked = nameOf(found.row)
+    const patch = sim.cloths.find(
+      ({ first, columns, rows }) => picked >= first && picked < first + columns * rows,
+    )
+    if (!patch) return false
+    const { first, columns, rows } = patch
+    const a0 = (picked - first) % columns
+    const b0 = Math.floor((picked - first) / columns)
+    // the handle: the point of the pointer's ray as deep as the particle picked
+    hand.copy(raycaster.ray.direction).multiplyScalar(found.depth).add(raycaster.ray.origin)
+    handPlane.setFromNormalAndCoplanarPoint(camera.getWorldDirection(handAim), hand)
+    const reach = settings.reach / DIAMETER // in particles
+    const held = new Float32Array(n * 4)
+    for (let row = 0; row < n; row++) {
+      const name = nameOf(row)
+      if (name < first || name >= first + columns * rows) continue
+      const far =
+        Math.hypot(((name - first) % columns) - a0, Math.floor((name - first) / columns) - b0) /
+        reach
+      if (far >= 1) continue
+      held.set(
+        [
+          both[row * 4] - hand.x,
+          both[row * 4 + 1] - hand.y,
+          both[row * 4 + 2] - hand.z,
+          (1 - far * far) ** 2,
+        ],
+        name * 4,
+      )
+    }
+    sim.grab(held)
+    return true
+  }
+  /** Lets go of the cloth. It keeps the speed the hand gave it. */
+  function letGo() {
+    if (holding === undefined) return
+    holding = undefined
+    simulation?.grab()
+    orbit.enabled = true
+    canvas.style.cursor = ''
+  }
+  /**
+   * Moves the handle through the `steps` steps of this frame, `substeps` each, toward the point of
+   * its plane under the pointer, and writes where it is at every substep into `handPath`.
+   */
+  function moveHand(steps: number, substeps: number) {
+    if (holding === undefined || !steps) return
+    raycaster.setFromCamera(screen, camera)
+    // a pointer that misses the plane leaves the hand where it is
+    if (!raycaster.ray.intersectPlane(handPlane, handAim)) handAim.copy(hand)
+    const h = STEP / substeps
+    const follow = 1 - (1 - HAND_FOLLOW) ** (1 / substeps)
+    for (let k = 0; k < steps * substeps; k++) {
+      const far = hand.distanceTo(handAim)
+      if (far > 0) hand.lerp(handAim, Math.min(follow, (HAND_SPEED * h) / far))
+      handData.set([hand.x, hand.y, hand.z, settings.pull], k * 4)
+    }
+    device.queue.writeBuffer(handPath, 0, handData, 0, steps * substeps * 4)
+  }
+  // Before the camera's own listener hears of it: a press that takes hold of a cloth must not turn
+  // the camera too.
+  canvas.addEventListener(
+    'pointerdown',
+    (event) => {
+      if (settings.pointer !== 'grab' || holding !== undefined) return
+      if (event.pointerType === 'mouse' && event.button !== 0) return
+      aim(event)
+      if (!takeHold()) return
+      holding = event.pointerId
+      orbit.enabled = false
+      canvas.style.cursor = 'grabbing'
+    },
+    { capture: true },
+  )
+  // An open hand over a cloth that can be taken.
+  canvas.addEventListener('pointermove', (event) => {
+    if (settings.pointer !== 'grab' || holding !== undefined || event.pointerType !== 'mouse')
+      return
+    canvas.style.cursor = event.buttons === 0 && pick() ? 'grab' : ''
+  })
+  // The pointer may be let go anywhere, also outside the canvas.
+  for (const type of ['pointerup', 'pointercancel'] as const)
+    window.addEventListener(type, (event) => {
+      if (event.pointerId === holding) letGo()
+    })
 
   // ---- the simulation and the panel ----------------------------------------------------------------
   // ?particles=20000 in the address starts with that many, in thousands from 1000 to a million.
@@ -1384,12 +1751,43 @@ async function start() {
     bendGive: MathUtils.clamp(Number(query.get('bend') ?? 1) || 0, 0, 20),
     // How thick a cloth drawn as a slab is, in meters: half a particle at the start. The particles
     // are in its middle. ?thickness=0.2 in the address.
-    thickness: MathUtils.clamp(Number(query.get('thickness')) || RADIUS, 0.01, 0.5),
+    // A page sets its own with data-thickness on its <body>.
+    thickness: MathUtils.clamp(
+      Number(query.get('thickness') ?? document.body.dataset.thickness) || RADIUS,
+      0.01,
+      0.5,
+    ),
     // How a cloth is drawn: its particles, a surface through them, a slab with a thickness, or the
     // wires of the surface. ?cloth=surface, ?cloth=slab or ?cloth=wires in the address.
-    cloth: ['surface', 'wires', 'slab'].includes(query.get('cloth') ?? '')
-      ? (query.get('cloth') as string)
+    // A page sets its own with data-cloth on its <body>.
+    cloth: ['surface', 'wires', 'slab', 'particles'].includes(
+      query.get('cloth') ?? document.body.dataset.cloth ?? '',
+    )
+      ? ((query.get('cloth') ?? document.body.dataset.cloth) as string)
       : 'particles',
+    // The pile: how many cloths, and how many particles on a side of each. The count of particles
+    // follows: cloths × side². ?cloths=20 and ?side=30 in the address start with those.
+    cloths: MathUtils.clamp(
+      Math.round(Number(query.get('cloths'))) ||
+        Math.floor(
+          (Number(document.body.dataset.particles) || 20000) / (PATCH_COLUMNS * PATCH_ROWS),
+        ) ||
+        1,
+      1,
+      MAX_CLOTHS,
+    ),
+    side: MathUtils.clamp(Math.round(Number(query.get('side'))) || PATCH_ROWS || 24, 4, MAX_SIDE),
+    // What the pointer does to a cloth: 'push', with the ball, or 'grab', where pressing on a
+    // cloth takes hold of it and dragging pulls it (data-pointer="grab" on the page's <body>).
+    pointer: CLOTH && document.body.dataset.pointer === 'grab' ? 'grab' : 'push',
+    // The hand that grabs: how far along the cloth it holds, in meters, less and less firmly, and
+    // the share of the way to the pointer its middle covers in a substep.
+    reach: 1,
+    pull: 0.5,
+    // The drift of a page with data-drift: how strong, in m/s², and how wide its currents, in
+    // radians per meter.
+    drift: Number(document.body.dataset.drift) || 0,
+    driftScale: 0.5,
   }
   // How much wider than the largest particle a cell is, in meters. The cells are filed when a
   // substep begins and read at every round, while the particles move a little: the margin is the
@@ -1438,7 +1836,7 @@ async function start() {
   const massColors = [new Color(settings.light), new Color(settings.heavy)] as const
   let view: ParticleView | undefined
   let caster: ParticleView | undefined // the same particles as the light sees them
-  let clothView: ClothView | undefined // a cloth drawn as a surface, or as its wires
+  let clothViews: ClothView[] = [] // the cloths drawn as surfaces, slabs or wires
   /**
    * Whether this frame is drawn in the stage's passes, whether with shadows, and whether with
    * shadows but straight to the screen, each sphere reading the shadow map itself.
@@ -1462,11 +1860,11 @@ async function start() {
       each.dispose()
     }
     view = caster = undefined
-    if (clothView) {
-      scene.remove(clothView.mesh)
-      clothView.dispose()
-      clothView = undefined
+    for (const each of clothViews) {
+      scene.remove(each.mesh)
+      each.dispose()
     }
+    clothViews = []
     // With shadows the ball takes its light from the stage, like the spheres: from its last pass,
     // or in its own shader. So does the floor, which without the stage is not drawn at all.
     ballMesh.material = deferred() ? ballShadowed : forward() ? ballForward : ballLit
@@ -1478,20 +1876,31 @@ async function start() {
     lines[0].visible = !floorLines
     if (!simulation || settings.draw === 'none') return
     // A cloth as a surface or as its wires, in place of its particles.
-    if (settings.cloth !== 'particles' && simulation.cloth && simulation.registerBuffer) {
-      clothView = new ClothView(
-        renderer,
-        { ...simulation, ...simulation.cloth, registerBuffer: simulation.registerBuffer },
-        massColors[0],
-        settings.cloth as 'surface' | 'wires' | 'slab',
-      )
-      clothView.thickness.value = settings.thickness
-      scene.add(clothView.mesh)
+    // Several cloths have a color each; one alone has the color of the particles.
+    const sim = simulation
+    const { cloths, registerBuffer } = sim
+    if (settings.cloth !== 'particles' && cloths && registerBuffer) {
+      clothViews = cloths.map((patch, k) => {
+        const each = new ClothView(
+          renderer,
+          { ...sim, ...patch, registerBuffer },
+          cloths.length > 1 ? CLOTH_COLORS[k % CLOTH_COLORS.length] : massColors[0],
+          settings.cloth as 'surface' | 'wires' | 'slab',
+        )
+        each.thickness.value = settings.thickness
+        scene.add(each.mesh)
+        return each
+      })
       return
     }
     view = new ParticleView(renderer, simulation, {
       massRange: massRange(),
       massColors,
+      // several cloths, all of one size: a color each, the same as their surfaces have
+      groups:
+        cloths && cloths.length > 1
+          ? { size: cloths[0].columns * cloths[0].rows, colors: CLOTH_COLORS }
+          : undefined,
       look: settings.draw === 'flat' ? 'flat' : deferred() ? 'surface' : 'sphere',
       lighting: forward() ? (...surface) => stage.lightOn(...surface) : undefined,
     })
@@ -1507,6 +1916,12 @@ async function start() {
 
   function restart() {
     if (switching) return // the menu was only told of the change below
+    letGo()
+    // In a pile the panel says how many cloths and how large: the count of particles follows.
+    if (PILE) {
+      PATCH_COLUMNS = PATCH_ROWS = settings.side
+      settings.particles = settings.cloths * settings.side ** 2
+    }
     simulation?.destroy()
     fitBox(halfFor(settings.particles), heightFor(settings.particles))
     fitBallSlider()
@@ -1543,6 +1958,8 @@ async function start() {
       slotsEach,
       IN_ORDER,
       half,
+      height,
+      handPath,
       settings.sizes,
       settings.links,
     )
@@ -1644,10 +2061,27 @@ async function start() {
       min: 1000,
       max: MOST_PARTICLES,
       step: 1000,
+      hidden: PILE, // a pile is sized by its cloths, below
     })
     .on('change', (event) => {
       if (event.last) restart()
     })
+  // The pile: its cloths, and the particles on a side of each. Built again when a slider is let go.
+  for (const [key, label, min, max] of [
+    ['cloths', 'cloths', 1, MAX_CLOTHS],
+    ['side', 'particles a side', 4, MAX_SIDE],
+  ] as const)
+    particles
+      .addBinding(settings, key, { label, min, max, step: 1, hidden: !PILE })
+      .on('change', (event) => {
+        if (event.last) restart()
+      })
+  particles.addBinding(settings, 'particles', {
+    label: 'particles',
+    readonly: true,
+    hidden: !PILE,
+    format: (v) => v.toFixed(0),
+  })
   particles
     .addBinding(settings, 'masses', {
       label: MIXED ? 'made of' : 'masses',
@@ -1826,9 +2260,44 @@ async function start() {
       hidden: !CLOTH,
     })
     .on('change', () => {
-      if (clothView) clothView.thickness.value = settings.thickness
+      for (const each of clothViews) each.thickness.value = settings.thickness
     })
-  const ballFolder = pane.addFolder({ title: 'Ball' })
+  // The drift: only on a page with one.
+  const driftFolder = pane.addFolder({ title: 'Drift', hidden: !DRIFT })
+  driftFolder.addBinding(settings, 'drift', { label: 'push, m/s²', min: 0, max: 10, step: 0.1 })
+  driftFolder.addBinding(settings, 'driftScale', {
+    label: 'currents, rad/m',
+    min: 0.05,
+    max: 2,
+    step: 0.05,
+  })
+  // What the pointer does: only on a page with cloths.
+  const pointerFolder = pane.addFolder({ title: 'Pointer', hidden: !CLOTH })
+  pointerFolder
+    .addBinding(settings, 'pointer', {
+      label: 'it',
+      options: { 'pushes, with a ball': 'push', 'grabs and drags': 'grab' },
+    })
+    .on('change', () => {
+      letGo()
+      ballFolder.hidden = settings.pointer === 'grab'
+      reach.hidden = pull.hidden = settings.pointer !== 'grab'
+    })
+  const reach = pointerFolder.addBinding(settings, 'reach', {
+    label: 'reach, m',
+    min: 0.2,
+    max: 4,
+    step: 0.1,
+    hidden: settings.pointer !== 'grab',
+  })
+  const pull = pointerFolder.addBinding(settings, 'pull', {
+    label: 'pull',
+    min: 0.05,
+    max: 1,
+    step: 0.05,
+    hidden: settings.pointer !== 'grab',
+  })
+  const ballFolder = pane.addFolder({ title: 'Ball', hidden: settings.pointer === 'grab' })
   const ballSlider = ballFolder.addBinding(settings, 'ball', {
     label: 'radius',
     min: 0.3,
@@ -1838,7 +2307,9 @@ async function start() {
   // A large cloth wants a large ball: the slider goes up to a third of the cloth's height, 3 m at
   // least. Called at every restart, since the cloth changes size with the count of particles.
   fitBallSlider = () => {
-    const most = CLOTH ? Math.max(3, Math.round((clothRows(settings.particles) * DIAMETER) / 3)) : 3
+    const most = CLOTH
+      ? Math.max(3, Math.round((patchesOf(settings.particles)[0].rows * DIAMETER) / 3))
+      : 3
     ;(ballSlider as unknown as { max: number }).max = most
     if (settings.ball > most) {
       settings.ball = most
@@ -2146,6 +2617,9 @@ async function start() {
       }
       if (owed >= STEP) owed = 0 // the GPU cannot keep up: slow down rather than pile up
       moveBall(steps, sim.substeps, settings.ball)
+      moveHand(steps, sim.substeps)
+      if (DRIFT)
+        sim.setDrift((sim.substepCount / sim.substeps) * STEP, settings.drift, settings.driftScale)
       const sample = steps > 0 && !reading && frame++ % SAMPLE_EVERY === 0
       // the first step of this frame is profiled, if ?profile asks and the wait is over
       const profile =
@@ -2182,6 +2656,8 @@ async function start() {
       device.queue.submit([encoder.finish()])
       if (sample && stamps) read()
       if (sample) readStretch(sim).catch(showError)
+      // the copy the hand picks from, while it holds nothing
+      if (settings.pointer === 'grab' && holding === undefined) readCopy(sim).catch(showError)
       if (profile && profileBack) readProfile(profileBack, profile.names).catch(showError)
     }
     // Same queue, same order: the steps sent above run before this drawing reads the positions.

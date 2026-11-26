@@ -15,6 +15,7 @@ import {
   Discard,
   dot,
   Fn,
+  floor,
   If,
   instanceIndex,
   log,
@@ -26,6 +27,7 @@ import {
   positionGeometry,
   pow,
   saturate,
+  select,
   sqrt,
   storage,
   uniform,
@@ -107,6 +109,13 @@ export interface ParticleViewOptions {
    * objects: change one, with `set`, and the particles change color at the next frame.
    */
   massColors?: readonly [lightest: Color, heaviest: Color]
+  /**
+   * Colors the particles by groups, in place of their mass: the first `size` names take the first
+   * color, the next `size` the second, and so on, starting again when the colors run out. For a
+   * world of several cloths of `size` particles each. It needs the world's properties, where the
+   * name of a particle is.
+   */
+  groups?: { size: number; colors: readonly Color[] }
   /** How the particles are drawn: see Look. */
   look?: Look
   /**
@@ -151,13 +160,16 @@ export class ParticleView {
     // from the world's buffer in the vertex shader and handed to the fragment shader.
     let cornerRadius = uniform(world.radius) as unknown as Node<'float'>
     let radius = cornerRadius
+    let name: Node<'float'> | undefined // the particle's name, the second of its properties
     if (world.propertiesBuffer) {
       const properties = new StorageInstancedBufferAttribute(world.particleCount, 4)
       useExternalBuffer(renderer, properties, world.propertiesBuffer)
-      cornerRadius = storage(properties, 'vec4', world.particleCount)
+      const own = storage(properties, 'vec4', world.particleCount)
         .toReadOnly()
-        .element(instanceIndex).x as unknown as Node<'float'>
+        .element(instanceIndex)
+      cornerRadius = own.x as unknown as Node<'float'>
       radius = varying(cornerRadius) as unknown as Node<'float'>
+      name = own.y as unknown as Node<'float'>
     }
 
     // The color: one for all, or from the mass m = 1 / w. log(m / lightest) / log(heaviest /
@@ -166,17 +178,36 @@ export class ParticleView {
     const light = uniform(options.massColors?.[0] ?? new Color(0x4ea3ff))
     const [lightest, heaviest] = options.massRange ?? [1, 1]
     const spread = Math.log(heaviest / lightest)
-    const tint = !options.massRange
-      ? this.color
-      : spread > 0
-        ? varying(
-            mix(
-              light,
-              uniform(options.massColors?.[1] ?? new Color(0xd1495b)),
-              saturate(log(particle.w).negate().sub(Math.log(lightest)).div(spread)),
-            ),
-          )
-        : light
+    // Or by groups of names: which group, then which of the colors, chosen one by one, since
+    // there are few. Worked out in the vertex shader too.
+    const groups = options.groups
+    const grouped =
+      groups && name
+        ? (() => {
+            const turn = floor(name.add(0.5).div(groups.size)).mod(groups.colors.length)
+            let color = uniform(groups.colors[0]) as unknown as Node<'vec3'>
+            for (let k = 1; k < groups.colors.length; k++)
+              color = select(
+                turn.greaterThan(k - 0.5),
+                uniform(groups.colors[k]),
+                color,
+              ) as unknown as Node<'vec3'>
+            return varying(color)
+          })()
+        : undefined
+    const tint = grouped
+      ? grouped
+      : !options.massRange
+        ? this.color
+        : spread > 0
+          ? varying(
+              mix(
+                light,
+                uniform(options.massColors?.[1] ?? new Color(0xd1495b)),
+                saturate(log(particle.w).negate().sub(Math.log(lightest)).div(spread)),
+              ),
+            )
+          : light
 
     // Three corners shared by every particle, drawn once per particle (instancing).
     this.geometry = new InstancedBufferGeometry()

@@ -73,6 +73,7 @@ This is where we tell how FORCE gets built, one step at a time. If you are new h
 | 064 | [As Soft as Asked](./logbook/064-as-soft-as-asked.md) | A soft spring got stiffer with every pass: a running total for each spring fixes it. And a wrong sum of ours, found and told |
 | 065 | [Two Kinds of Brake](./logbook/065-two-kinds-of-brake.md) | What stops a spring's bounce does not stop a rope's swing: a damping ratio inside each spring, and a drag on every particle |
 | 066 | [Against the Fold](./logbook/066-against-the-fold.md) | A spring from each particle to the one two places further resists a cloth's folding: it rounds a sharp corner, and its give sets the crease |
+| 067 | [A Hand on the Cloth](./logbook/067-a-hand-on-the-cloth.md) | Curtains, a pile of cloths and a cloth with no gravity, and a pointer that takes hold of a cloth and drags it, firmly in the middle and less around it |
 
 ## For reference
 

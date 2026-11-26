@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>FORCE: a cloth with no gravity</title>
+    <meta
+      name="description"
+      content="A cloth of particles joined by springs with no gravity on the GPU, waving in slow currents: grab it with the pointer and pull."
+    />
+    <link rel="stylesheet" href="../site.css" />
+  </head>
+  <!-- The same page as heap-simulation, with the particles joined into cloths by springs
+       (data-springs), and a pointer that grabs a cloth and drags it (data-pointer). -->
+  <body
+    class="stage"
+    data-springs="float"
+    data-sizes="1"
+    data-max-particles="30000"
+    data-friction="0.3"
+    data-drag="0.5"
+    data-pointer="grab"
+    data-particles="4000" data-half="10" data-cloth="surface" data-gravity="0" data-drift="0.5" data-target="7"
+  >
+    <nav class="crumb">
+      <a href="../">← FORCE</a> · A cloth with no gravity
+      <p>No gravity: slow currents push the cloth around, and nothing holds it.</p>
+      <p>Drag a cloth to pull it. Drag the empty space to turn the camera, two fingers on a phone.</p>
+    </nav>
+    <script type="module" src="../heap-simulation/main.ts"></script>
+  </body>
+</html>
