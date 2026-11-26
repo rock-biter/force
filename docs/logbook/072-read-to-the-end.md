@@ -52,4 +52,4 @@ The facts are from the sources, with what each said in its own words in the note
 
 ## Next step
 
-The user's choice: the candidates of the page, tried by script in 3D on two fixed scenes, in one table.
+The user's choice: go through the sources one by one together, to know every method before deciding. Among them: would a cloth of triangles instead of squares help, and did any source consider it? Then which tests to run.
