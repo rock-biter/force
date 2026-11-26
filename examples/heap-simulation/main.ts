@@ -61,6 +61,7 @@ import predictCode from '../contact-cost/predict.wgsl?raw'
 import rebuildCode from '../contact-cost/rebuild.wgsl?raw'
 import { ClothView } from '../debug/cloth.js'
 import { ParticleView, SUN } from '../debug/particles.js'
+import { type RopeLook, RopeView } from '../debug/rope.js'
 import { CASTERS, ShadowStage, SURFACES } from '../debug/shadows.js'
 import { showError } from '../debug/viewer.js'
 import levelsCellsSizedCode from '../mixed-sizes/levels-cells-sized.wgsl?raw'
@@ -1106,6 +1107,8 @@ function makeSimulation(
     propertiesBuffer: sizes ? properties : undefined,
     // the register: for each name, the row of that particle now (decision 036)
     registerBuffer: springs.length ? rowOf : undefined,
+    // how many particles a rope has: for who draws the ropes as solids
+    ropeLength: ROPES ? ROPE : undefined,
     // a cloth's shape, in particles: for who draws it as a surface
     cloths: clothed?.patches.map(({ first, columns, rows }) => ({ first, columns, rows })),
     positionBuffer: positions,
@@ -1827,7 +1830,8 @@ async function start() {
     // are in its middle. ?thickness=0.2 in the address.
     // A page sets its own with data-thickness on its <body>.
     thickness: MathUtils.clamp(
-      Number(query.get('thickness') ?? document.body.dataset.thickness) || RADIUS,
+      Number(query.get('thickness') ?? document.body.dataset.thickness) ||
+        (ROPES ? DIAMETER : RADIUS),
       0.01,
       0.5,
     ),
@@ -1839,6 +1843,16 @@ async function start() {
     )
       ? ((query.get('cloth') ?? document.body.dataset.cloth) as string)
       : 'particles',
+    // How the ropes are drawn: their particles, or a box, a cylinder or a flat ribbon around
+    // them, as thick as `thickness`. ?rope=box, ?rope=cylinder or ?rope=plane in the address.
+    // A page sets its own with data-rope on its <body>.
+    rope: ['box', 'cylinder', 'plane', 'particles'].includes(
+      query.get('rope') ?? document.body.dataset.rope ?? '',
+    )
+      ? ((query.get('rope') ?? document.body.dataset.rope) as string)
+      : 'particles',
+    // The ropes' triangles as lines, to see their subdivisions. ?wires in the address.
+    ropeWires: query.has('wires'),
     // The pile: how many cloths, and how many particles on a side of each. The count of particles
     // follows: cloths × side². ?cloths=20 and ?side=30 in the address start with those.
     cloths: MathUtils.clamp(
@@ -1911,6 +1925,7 @@ async function start() {
   let view: ParticleView | undefined
   let caster: ParticleView | undefined // the same particles as the light sees them
   let clothViews: ClothView[] = [] // the cloths drawn as surfaces, slabs or wires
+  let ropeView: RopeView | undefined // the ropes drawn as boxes, cylinders or ribbons
   /**
    * Whether this frame is drawn in the stage's passes, whether with shadows, and whether with
    * shadows but straight to the screen, each sphere reading the shadow map itself.
@@ -1939,6 +1954,11 @@ async function start() {
       each.dispose()
     }
     clothViews = []
+    if (ropeView) {
+      scene.remove(ropeView.mesh)
+      ropeView.dispose()
+      ropeView = undefined
+    }
     // With shadows the ball takes its light from the stage, like the spheres: from its last pass,
     // or in its own shader. So does the floor, which without the stage is not drawn at all.
     ballMesh.material = deferred() ? ballShadowed : forward() ? ballForward : ballLit
@@ -1965,6 +1985,19 @@ async function start() {
         scene.add(each.mesh)
         return each
       })
+      return
+    }
+    // The ropes as solids, in place of their particles.
+    if (settings.rope !== 'particles' && sim.ropeLength && registerBuffer) {
+      ropeView = new RopeView(
+        renderer,
+        { ...sim, registerBuffer, length: sim.ropeLength },
+        massColors[0],
+        settings.rope as RopeLook,
+        settings.ropeWires,
+      )
+      ropeView.thickness.value = settings.thickness
+      scene.add(ropeView.mesh)
       return
     }
     view = new ParticleView(renderer, simulation, {
@@ -2326,15 +2359,26 @@ async function start() {
     })
     .on('change', redraw)
   springFolder
+    .addBinding(settings, 'rope', {
+      label: 'drawn as',
+      options: { particles: 'particles', boxes: 'box', cylinders: 'cylinder', planes: 'plane' },
+      hidden: !ROPES,
+    })
+    .on('change', redraw)
+  springFolder
+    .addBinding(settings, 'ropeWires', { label: 'wires', hidden: !ROPES })
+    .on('change', redraw)
+  springFolder
     .addBinding(settings, 'thickness', {
       label: 'thickness, m',
       min: 0.01,
       max: 0.5,
       step: 0.01,
-      hidden: !CLOTH,
+      hidden: !CLOTH && !ROPES,
     })
     .on('change', () => {
       for (const each of clothViews) each.thickness.value = settings.thickness
+      if (ropeView) ropeView.thickness.value = settings.thickness
     })
   // The drift: only on a page with one.
   const driftFolder = pane.addFolder({ title: 'Drift', hidden: !DRIFT })

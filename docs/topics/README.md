@@ -5,7 +5,7 @@
 Everything we have met while building FORCE, concepts and sources, and how far we went with each
 one. Use it to look up a term, to find what to read, or to pick what to explore next.
 
-- **316 concepts:** ● 31 studied · ◐ 155 seen · ○ 130 mentioned
+- **318 concepts:** ● 31 studied · ◐ 155 seen · ○ 132 mentioned
 - **167 sources:** ● 15 studied · ◐ 17 seen · ○ 135 mentioned · read by Claude: 82 parts, 17 in full
 
 | | Status | What it means |
@@ -325,7 +325,9 @@ The math behind motion: change over time, rotations, numbers on a computer.
 | ○ | Linear complementarity problem | The math name of the contact problem: each contact either pushes or is separating, never both |  | [Iterative Dynamics with Temporal Coherence](https://box2d.org/files/ErinCatto_IterativeDynamics_GDC2005.pdf) |
 | ○ | Mass matrix | The masses and inertias of all bodies in one table, so the equations of every body can be written at once |  | [Iterative Dynamics with Temporal Coherence](https://box2d.org/files/ErinCatto_IterativeDynamics_GDC2005.pdf) |
 | ◐ | Newton-Raphson method | Improving a guess step by step: for a square root, average the guess with the number divided by the guess |  | [Advanced Character Physics](https://edelkas.github.io/n/files/bib/jakobsen.pdf) |
+| ○ | Parallel transport (Bishop frame) | Carrying a sideways direction along a line, turning it only as much as the line's bends force: what gives a shape drawn around a rope no twist of its own. Names from memory, no source opened yet |  | [070](../logbook/070-a-shape-around-a-rope.md) |
 | ○ | Robust geometric tests | Tests such as "which side of this triangle is the point on" that rounding errors can answer wrongly, and the exact or interval arithmetic used to trust them |  | [Data structures and algorithms for contact detection in numerical simulation of discrete particle systems](https://www2.msm.ctw.utwente.nl/sluding/PAPERS/OgarkoWCPT2010.pdf) |
+| ○ | Rodrigues' rotation | A vector turned around an axis by an angle, with cross and dot products only; here, the smallest turn that brings one direction onto another. Name from memory, no source opened yet |  | [070](../logbook/070-a-shape-around-a-rope.md) |
 | ◐ | Rotation invariance | Turning the whole scene must give the same motion, only turned: a rule that treats x, y and z one by one breaks it, like a Box3 that changes size when the mesh turns |  | [026](../logbook/026-the-marble-in-the-pocket.md) |
 | ○ | Taylor expansion | Replacing a curve, near a point where you know it, with something simpler: at first order, its tangent line |  | [Advanced Character Physics](https://edelkas.github.io/n/files/bib/jakobsen.pdf) |
 

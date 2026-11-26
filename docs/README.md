@@ -76,6 +76,7 @@ This is where we tell how FORCE gets built, one step at a time. If you are new h
 | 067 | [A Hand on the Cloth](./logbook/067-a-hand-on-the-cloth.md) | Curtains, a pile of cloths and a cloth with no gravity, and a pointer that takes hold of a cloth and drags it, firmly in the middle and less around it |
 | 068 | [One Page for the Demos](./logbook/068-one-page-for-the-demos.md) | The demos in one page, a card with a picture for each and the one chosen running beside them, with an address that says which |
 | 069 | [Three Walls](./logbook/069-three-walls.md) | Why Safari stopped our shader: a bug in WebKit that doubled the work at every `||`, fixed nine days ago; Metal's limit of 256; and https. None is about the device |
+| 070 | [A Shape Around a Rope](./logbook/070-a-shape-around-a-rope.md) | Ropes drawn as boxes, cylinders or ribbons: a ring of vertices per particle, and a sideways direction carried down the rope so the shape never twists on its own |
 
 ## For reference
 

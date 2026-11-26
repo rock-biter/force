@@ -115,6 +115,9 @@ On the way the demos stopped working in Safari, and we looked up why: one bug of
 fixed, one limit of Apple's shader compiler, and one rule of the web
 ([chapter 069](./docs/logbook/069-three-walls.md)).
 
+The ropes can now be drawn as boxes, cylinders or ribbons, with a shape that follows each rope as
+it bends ([chapter 070](./docs/logbook/070-a-shape-around-a-rope.md)).
+
 **Next:** springs for any net, and lighter particles. Then our rules read again against the
 devices.
 
