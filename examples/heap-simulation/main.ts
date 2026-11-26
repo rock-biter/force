@@ -619,6 +619,9 @@ fn repeated(home: vec3i, offset: vec3i, slots: u32) -> bool { return false; }
 `
   // `clashing`: the 27 slots worked out once, s0 to s26, and every pair of them compared. Written
   // out by this loop, since a shader's own array would be slow to fill and read (chapter 045).
+  // The 351 comparisons are an `if` for each cell, against the cells before it, 26 at most in one
+  // line. As one expression, all joined by ||, Safari never finished compiling the shader, and
+  // every demo failed there with a GPUPipelineError that says nothing; Chrome took it.
   const cells27 = Array.from({ length: 27 }, (_, m) => m)
   const FIRST = `
 fn clashing(home: vec3i, slots: u32) -> bool {
@@ -628,9 +631,18 @@ ${cells27
       `  let s${m} = slot(home + vec3i(${(m % 3) - 1}, ${(Math.floor(m / 3) % 3) - 1}, ${Math.floor(m / 9) - 1}), slots);`,
   )
   .join('\n')}
-  return ${cells27
-    .flatMap((m) => cells27.slice(0, m).map((k) => `s${k} == s${m}`))
-    .join(' ||\n    ')};
+${cells27
+  .slice(1)
+  .map(
+    (m) => `  if (${cells27
+      .slice(0, m)
+      .map((k) => `s${k} == s${m}`)
+      .join(' || ')}) {
+    return true;
+  }`,
+  )
+  .join('\n')}
+  return false;
 }
 fn repeated(home: vec3i, offset: vec3i, slots: u32) -> bool {
   let mine = slot(home + offset, slots);
