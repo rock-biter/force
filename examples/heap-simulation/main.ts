@@ -155,7 +155,9 @@ const ROPE = 30 // particles in a rope: 5.8 m
 // The most groups of springs that share no particle: 2 along a rope, 12 in a cloth with
 // diagonals and bend links.
 const MAX_SPRING_GROUPS = 12
-const SPRING_ROUNDS = 3 // passes over the springs in a substep, at the start: the panel changes it
+// Passes over the springs in a substep, at the start: 4 on a page with cloths, 3 with ropes. The
+// panel changes it.
+const SPRING_ROUNDS = CLOTH ? 4 : 3
 const MAX_SPRING_ROUNDS = 10
 const IN_ORDER = new URLSearchParams(location.search).get('sorted') !== 'off' || MIXED
 const MAX_SIZES = 4 // the largest radius over the smallest, at most (decision 035)
