@@ -11,3 +11,6 @@ library/
 
 # Social posts about the project, drafts and published: kept local.
 posts/
+
+# The certificate of `npm run dev:phone`: made on each computer, never committed.
+.cert/

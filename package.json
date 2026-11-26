@@ -37,6 +37,7 @@
   },
   "scripts": {
     "dev": "vite examples",
+    "dev:phone": "node scripts/dev-phone.mjs",
     "build": "vite build && tsc -p tsconfig.build.json",
     "build:site": "vite build examples",
     "preview:site": "vite preview examples",

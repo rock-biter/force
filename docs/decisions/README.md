@@ -53,6 +53,7 @@ The choices that shape FORCE, one per page: what we decided, why, what we left o
 | 039 | [A spring's softness is its compliance, with a running total](./039-a-running-total-for-each-spring.md) | Accepted | November 25, 2026 |
 | 040 | [Damping in each spring, drag on every particle](./040-damping-and-drag.md) | Accepted | November 25, 2026 |
 | 041 | [Bend links by distance, with a softness of their own](./041-bend-by-distance.md) | Accepted | November 25, 2026 |
+| 042 | [Short chains of && and \|\| in our shaders](./042-short-chains-in-shaders.md) | Accepted | November 26, 2026 |
 
 ## Rules
 

@@ -72,6 +72,15 @@ export default defineConfig({
   },
   server: {
     fs: { allow: ['..'] },
+    // `npm run dev:phone` (scripts/dev-phone.mjs) gives a certificate, and the server is on https:
+    // a phone on the same Wi-Fi then gets WebGPU, which a page on http does not.
+    https:
+      process.env.FORCE_HTTPS_KEY && process.env.FORCE_HTTPS_CERT
+        ? {
+            key: readFileSync(process.env.FORCE_HTTPS_KEY),
+            cert: readFileSync(process.env.FORCE_HTTPS_CERT),
+          }
+        : undefined,
   },
   build: {
     outDir: '../_site',

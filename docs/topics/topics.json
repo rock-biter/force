@@ -2666,7 +2666,8 @@
         "webgpu-errors",
         "error-scope",
         "shader-module",
-        "early-depth-test"
+        "early-depth-test",
+        "secure-context"
       ],
       "citedIn": [
         "README.md",
@@ -2681,7 +2682,8 @@
         "docs/guides/timestamp-queries.md",
         "docs/logbook/021-a-short-trip.md",
         "docs/guides/readback.md",
-        "docs/logbook/046-a-promise-not-yet-kept.md"
+        "docs/logbook/046-a-promise-not-yet-kept.md",
+        "docs/logbook/069-three-walls.md"
       ],
       "url": "https://www.w3.org/TR/webgpu/",
       "claudeRead": "parts"
@@ -2704,14 +2706,16 @@
         "override-constant",
         "shader-module",
         "conservative-depth",
-        "wgsl-language-feature"
+        "wgsl-language-feature",
+        "shader-compiler-limits"
       ],
       "citedIn": [
         ".claude/skills/guide/SKILL.md",
         "docs/logbook/004-the-detour.md",
         "docs/guides/buffers.md",
         "docs/guides/compute-shader.md",
-        "docs/logbook/046-a-promise-not-yet-kept.md"
+        "docs/logbook/046-a-promise-not-yet-kept.md",
+        "docs/logbook/069-three-walls.md"
       ],
       "url": "https://www.w3.org/TR/WGSL/",
       "claudeRead": "parts"
@@ -8535,6 +8539,115 @@
         "seen": "2026-11-26"
       },
       "citedIn": ["docs/logbook/067-a-hand-on-the-cloth.md"]
+    },
+    {
+      "id": "shader-compiler-limits",
+      "kind": "concept",
+      "title": "What a browser's shader compiler does not take",
+      "summary": "A right WGSL shader can fail in one browser and pass in another: the specification lists few limits, and each compiler adds its own",
+      "area": "gpu",
+      "status": "seen",
+      "since": {
+        "seen": "2026-11-26"
+      },
+      "related": ["shader-module", "webgpu-browser-support"],
+      "citedIn": [
+        "docs/logbook/068-one-page-for-the-demos.md",
+        "docs/logbook/069-three-walls.md",
+        "docs/decisions/042-short-chains-in-shaders.md"
+      ],
+      "code": ["examples/heap-simulation/main.ts", "examples/compile-probe/main.ts"]
+    },
+    {
+      "id": "short-circuit-operators",
+      "kind": "concept",
+      "title": "Short-circuit operators, && and ||",
+      "summary": "Logical operators that do not work out their right side when the left one already decides; a chain of them made Safari's type checker double its work at each one",
+      "area": "gpu",
+      "status": "seen",
+      "since": {
+        "seen": "2026-11-26"
+      },
+      "partOf": "shader-compiler-limits",
+      "citedIn": [
+        "docs/logbook/069-three-walls.md",
+        "webkit-wgsl-type-checker",
+        "docs/decisions/042-short-chains-in-shaders.md"
+      ]
+    },
+    {
+      "id": "shader-translation",
+      "kind": "concept",
+      "title": "From WGSL to the GPU's own language",
+      "summary": "A browser translates WGSL before the GPU sees it: Tint in Chrome, WebKit's compiler in Safari, on Apple devices into Metal Shading Language, compiled again by Metal",
+      "area": "gpu",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-26"
+      },
+      "partOf": "shader-compiler-limits",
+      "citedIn": ["docs/logbook/069-three-walls.md"]
+    },
+    {
+      "id": "secure-context",
+      "kind": "concept",
+      "title": "Secure context",
+      "summary": "A page on https or on localhost: the only pages a browser gives WebGPU to",
+      "area": "gpu",
+      "status": "seen",
+      "since": {
+        "seen": "2026-11-26"
+      },
+      "related": ["adapter-and-device"],
+      "citedIn": ["docs/logbook/069-three-walls.md", "webgpu-spec"]
+    },
+    {
+      "id": "webkit-wgsl-type-checker",
+      "kind": "code",
+      "title": "WebKit, WGSL/TypeCheck.cpp",
+      "summary": "The type checker of Safari's WGSL compiler: where a chain of || took time that doubled at each operator, from May 19 to November 17, 2026",
+      "area": "gpu",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-26"
+      },
+      "about": ["shader-compiler-limits", "short-circuit-operators"],
+      "citedIn": ["docs/logbook/069-three-walls.md"],
+      "url": "https://github.com/WebKit/WebKit/blob/main/Source/WebGPU/WGSL/TypeCheck.cpp",
+      "claudeRead": "parts"
+    },
+    {
+      "id": "webkit-short-circuit-fix",
+      "kind": "code",
+      "title": "WebKit, commit 327051@main",
+      "summary": "The fix: \"Convert O(2^N) algorithm to O(N)\", November 17, 2026, a regression of 313467@main of May 19",
+      "area": "gpu",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-26"
+      },
+      "partOf": "webkit-wgsl-type-checker",
+      "about": ["short-circuit-operators"],
+      "citedIn": ["docs/logbook/069-three-walls.md"],
+      "url": "https://commits.webkit.org/327051@main",
+      "year": 2026,
+      "claudeRead": "full"
+    },
+    {
+      "id": "wgsl-limits-not-in-the-spec",
+      "kind": "article",
+      "title": "WGSL limits you won't find in the spec",
+      "summary": "A hunt for the limits of Chrome's and Safari's WGSL compilers by trying: expression depth, Metal's 256 brackets, shaders that hang Safari",
+      "area": "gpu",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-26"
+      },
+      "about": ["shader-compiler-limits", "shader-translation"],
+      "citedIn": ["docs/logbook/069-three-walls.md"],
+      "url": "https://hugodaniel.com/posts/webgpu-shader-unknown-limits/",
+      "year": 2025,
+      "claudeRead": "parts"
     }
   ]
 }

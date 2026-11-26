@@ -619,10 +619,49 @@ fn repeated(home: vec3i, offset: vec3i, slots: u32) -> bool { return false; }
 `
   // `clashing`: the 27 slots worked out once, s0 to s26, and every pair of them compared. Written
   // out by this loop, since a shader's own array would be slow to fill and read (chapter 045).
-  // The 351 comparisons are an `if` for each cell, against the cells before it, 26 at most in one
-  // line. As one expression, all joined by ||, Safari never finished compiling the shader, and
-  // every demo failed there with a GPUPipelineError that says nothing; Chrome took it.
+  // No line has more than four comparisons joined by ||: each four have a line and a name of
+  // their own, and the names are joined four at a time in the same way. Safari's compiler does
+  // not take long chains of ||, and gives no error: as one expression of 351, the pipeline failed
+  // on a Mac with a GPUPipelineError that says nothing; with 26 in a line, a Mac took it and an
+  // iPhone never finished compiling, showed an empty page, and then refused a GPU to every page
+  // until restarted. Chrome takes them all. Tried one by one in ../compile-probe: four at a time
+  // is the way an iPhone takes that costs Chrome nothing, 1.75 ms for the levels of 100 000
+  // particles, as with one expression; joined by | in place of ||, about 1.87 (chapter 068).
   const cells27 = Array.from({ length: 27 }, (_, m) => m)
+  const others = cells27.slice(1)
+  /**
+   * Joins answers with ||, four at a time, each four in a line of its own with a name, then those
+   * names four at a time, until one is left: the lines, and the name of the last answer.
+   */
+  const byFours = (names: string[], prefix: string) => {
+    const lines: string[] = []
+    for (let level = 0; names.length > 1; level++) {
+      const next: string[] = []
+      for (let k = 0; k < names.length; k += 4) {
+        const name = `${prefix}${level}_${k / 4}`
+        lines.push(`  let ${name} = ${names.slice(k, k + 4).join(' || ')};`)
+        next.push(name)
+      }
+      names = next
+    }
+    return { lines, last: names[0] }
+  }
+  // each cell against the cells before it, then the 26 answers together
+  const each = others.map((m) =>
+    byFours(
+      cells27.slice(0, m).map((k) => `s${k} == s${m}`),
+      `c${m}_`,
+    ),
+  )
+  const all = byFours(
+    each.map(({ last }) => last),
+    'all',
+  )
+  const CLASH_BODY = [
+    ...each.flatMap(({ lines }) => lines),
+    ...all.lines,
+    `  return ${all.last};`,
+  ].join('\n')
   const FIRST = `
 fn clashing(home: vec3i, slots: u32) -> bool {
 ${cells27
@@ -631,18 +670,7 @@ ${cells27
       `  let s${m} = slot(home + vec3i(${(m % 3) - 1}, ${(Math.floor(m / 3) % 3) - 1}, ${Math.floor(m / 9) - 1}), slots);`,
   )
   .join('\n')}
-${cells27
-  .slice(1)
-  .map(
-    (m) => `  if (${cells27
-      .slice(0, m)
-      .map((k) => `s${k} == s${m}`)
-      .join(' || ')}) {
-    return true;
-  }`,
-  )
-  .join('\n')}
-  return false;
+${CLASH_BODY}
 }
 fn repeated(home: vec3i, offset: vec3i, slots: u32) -> bool {
   let mine = slot(home + offset, slots);
@@ -1251,7 +1279,15 @@ const MAX_PASSES = (17 + ROUNDS + MAX_SPRING_GROUPS * MAX_SPRING_ROUNDS) * MAX_S
 
 async function start() {
   const adapter = await navigator.gpu?.requestAdapter()
-  if (!adapter) throw new Error('no WebGPU here')
+  // Three ways to have no GPU, told apart: on a phone there is no console to look into.
+  if (!adapter)
+    throw new Error(
+      !window.isSecureContext
+        ? `no WebGPU here: a browser gives it only to pages on https or on localhost, and this one is on ${location.origin}`
+        : !navigator.gpu
+          ? 'no WebGPU here: this browser does not have it, or has it switched off'
+          : 'no WebGPU here: the browser has it, but gave no adapter. Close its other pages that use the GPU, or restart it',
+    )
   // The GPU clock, where there is one, to time a step.
   const hasClock = adapter.features.has('timestamp-query')
   const device = await adapter.requestDevice({

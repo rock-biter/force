@@ -110,6 +110,10 @@ pointer ([try it](https://rock-biter.github.io/force/cloth-pile/),
 All the demos are now in [one page](https://rock-biter.github.io/force/demos/), a picture each
 ([chapter 068](./docs/logbook/068-one-page-for-the-demos.md)).
 
+On the way the demos stopped working in Safari, and we looked up why: one bug of the browser, already
+fixed, one limit of Apple's shader compiler, and one rule of the web
+([chapter 069](./docs/logbook/069-three-walls.md)).
+
 **Next:** springs for any net, and lighter particles. Then our rules read again against the
 devices.
 

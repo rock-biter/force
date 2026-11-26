@@ -41,4 +41,4 @@ Everything in the repo is in English: code, comments, docs and skills. Chat in I
 
 ## Commands
 
-`npm run dev` (examples), `npm test`, `npm run typecheck`, `npm run lint`, `npm run build`, `npm run build:site` (the website, from `examples/` into `_site/`), `npm run shots` (takes the pictures of the demos, from the running dev server), `npm run topics` (checks the topic map and regenerates its index), `npm run benchmarks` (reports on the benchmark issues; `-- --batch` and `-- --close` show what taking in the clean ones and closing them would do, and do it with `--yes`).
+`npm run dev` (examples), `npm run dev:phone` (the same on https, for a phone on the same Wi-Fi: on http a phone gets no WebGPU), `npm test`, `npm run typecheck`, `npm run lint`, `npm run build`, `npm run build:site` (the website, from `examples/` into `_site/`), `npm run shots` (takes the pictures of the demos, from the running dev server), `npm run topics` (checks the topic map and regenerates its index), `npm run benchmarks` (reports on the benchmark issues; `-- --batch` and `-- --close` show what taking in the clean ones and closing them would do, and do it with `--yes`).
