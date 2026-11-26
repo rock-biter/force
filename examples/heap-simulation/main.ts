@@ -336,7 +336,8 @@ interface Patch {
  * the box, each turned a little and leaning 8 degrees to one side or the other. "pile": flat and
  * almost level, one above the other, each turned and moved its own way, to fall into a heap; the
  * larger they are, the further apart they start, so that two tilted ones do not cross.
- * "float": upright, side by side from front to back, for a page with no gravity.
+ * "float": upright, side by side from front to back, each bent into a wave of its own, for a page
+ * with no gravity.
  */
 function patchesOf(count: number): Patch[] {
   if (SPRINGS === 'cloth' || !PATCH_COLUMNS || !PATCH_ROWS) {
@@ -388,8 +389,31 @@ function patchesOf(count: number): Patch[] {
         return [across, along * Math.sin(tilt), along * Math.cos(tilt)]
       }
     } else {
-      center = [0, 2 + rows * DIAMETER, (k - (cloths - 1) / 2) * 3]
-      flat = (across, b) => [across, -b * DIAMETER, 0]
+      // Not flat: bent into a wave, across for one cloth and down for the next. The wave is drawn
+      // one diameter at a time along a line that turns left and right, so the particles along it
+      // are still a diameter apart, and those of the other direction too, since the cloth is
+      // bent one way only, as a sheet of paper can be. No spring starts stretched.
+      const down = k % 2 === 1
+      const steps = down ? rows : columns
+      const swing = 0.4 + 0.3 * next() // radians: the most the line turns
+      const waves = 1 + next()
+      const phase = next() * 2 * Math.PI
+      const line: [along: number, out: number][] = []
+      let [along, out] = [0, 0]
+      for (let i = 0; i < steps; i++) {
+        line.push([along, out])
+        const turn = swing * Math.sin((2 * Math.PI * waves * i) / steps + phase)
+        along += DIAMETER * Math.cos(turn)
+        out += DIAMETER * Math.sin(turn)
+      }
+      const middle = line.reduce((sum, [, o]) => sum + o, 0) / steps
+      const width = line[steps - 1][0]
+      center = [0, 2 + rows * DIAMETER, (k - (cloths - 1) / 2) * 4]
+      flat = (across, b) => {
+        const a = Math.round(across / DIAMETER + (columns - 1) / 2)
+        const [l, o] = line[down ? b : a]
+        return down ? [across, -l, o - middle] : [l - width / 2, -b * DIAMETER, o - middle]
+      }
     }
     const [cos, sin] = [Math.cos(yaw), Math.sin(yaw)]
     return {
