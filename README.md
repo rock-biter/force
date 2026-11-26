@@ -118,7 +118,11 @@ fixed, one limit of Apple's shader compiler, and one rule of the web
 The ropes can now be drawn as boxes, cylinders or ribbons, with a shape that follows each rope as
 it bends ([chapter 070](./docs/logbook/070-a-shape-around-a-rope.md)).
 
-**Next:** springs for any net, and lighter particles. Then our rules read again against the
+Our cloths sometimes pass through each other. We looked at why, and at what other engines do about
+it: a cloth made of spheres is thin between its particles, and does not know which side a thing was
+on ([chapter 071](./docs/logbook/071-the-gate.md)).
+
+**Next:** four cheap ways to keep a cloth shut, tried by script. Then springs for any net, and lighter particles. Then our rules read again against the
 devices.
 
 Every step, with what we learned and what went wrong, is in the [logbook](./docs/README.md).

@@ -279,7 +279,8 @@
         "advanced-character-physics",
         "docs/logbook/032-two-kinds-of-bounce.md",
         "docs/logbook/033-the-speed-limit.md",
-        "docs/logbook/048-big-and-small.md"
+        "docs/logbook/048-big-and-small.md",
+        "docs/logbook/071-the-gate.md"
       ]
     },
     {
@@ -474,7 +475,8 @@
         "docs/decisions/037-springs-one-by-one-in-groups.md",
         "docs/logbook/063-a-cloth.md",
         "docs/logbook/066-against-the-fold.md",
-        "docs/decisions/041-bend-by-distance.md"
+        "docs/decisions/041-bend-by-distance.md",
+        "docs/logbook/071-the-gate.md"
       ],
       "code": ["examples/cloth/index.html"]
     },
@@ -1090,7 +1092,8 @@
         "docs/logbook/032-two-kinds-of-bounce.md",
         "docs/logbook/033-the-speed-limit.md",
         "docs/logbook/045-a-million-and-one-pass.md",
-        "docs/logbook/060-one-by-one-or-all-at-once.md"
+        "docs/logbook/060-one-by-one-or-all-at-once.md",
+        "docs/logbook/071-the-gate.md"
       ],
       "page": "docs/topics/integration.md#substeps",
       "code": ["src/world.ts"]
@@ -1486,7 +1489,8 @@
       "citedIn": [
         "docs/logbook/004-the-detour.md",
         "advanced-character-physics",
-        "iterative-dynamics-paper"
+        "iterative-dynamics-paper",
+        "docs/logbook/071-the-gate.md"
       ]
     },
     {
@@ -1943,17 +1947,27 @@
       "id": "self-collision",
       "kind": "concept",
       "title": "Self-collision",
-      "summary": "Cloth or a soft body hitting itself",
+      "summary": "Cloth or a soft body hitting itself: with spheres on the vertices, a wall with thin spots and no side",
       "area": "physics",
-      "status": "mentioned",
+      "status": "seen",
       "since": {
-        "mentioned": "2026-11-05"
+        "mentioned": "2026-11-05",
+        "seen": "2026-11-26"
       },
       "partOf": "cloth",
       "citedIn": [
         "docs/logbook/004-the-detour.md",
         "ten-minute-physics",
-        "advanced-character-physics"
+        "advanced-character-physics",
+        "docs/logbook/071-the-gate.md",
+        "docs/topics/self-collision.md"
+      ],
+      "related": [
+        "tunneling",
+        "strain-limiting",
+        "rest-pose-filter",
+        "predictive-contact",
+        "point-triangle-contact"
       ]
     },
     {
@@ -2608,11 +2622,13 @@
         "fluid",
         "rigid-body",
         "broad-phase",
-        "gpu-parallelism"
+        "gpu-parallelism",
+        "self-collision"
       ],
-      "citedIn": ["docs/logbook/001-the-flip-book.md"],
+      "citedIn": ["docs/logbook/001-the-flip-book.md", "docs/logbook/071-the-gate.md"],
       "url": "https://matthias-research.github.io/pages/tenMinutePhysics/index.html",
-      "authors": "Matthias Müller"
+      "authors": "Matthias Müller",
+      "claudeRead": "parts"
     },
     {
       "id": "physically-based-modeling",
@@ -2789,7 +2805,8 @@
         "static-and-kinetic-friction",
         "angle-of-repose",
         "particle-reordering",
-        "mixed-particle-sizes"
+        "mixed-particle-sizes",
+        "self-collision"
       ],
       "citedIn": [
         "docs/logbook/004-the-detour.md",
@@ -2801,7 +2818,8 @@
         "docs/logbook/032-two-kinds-of-bounce.md",
         "docs/logbook/034-the-box-on-the-ramp.md",
         "docs/logbook/041-next-to-each-other.md",
-        "docs/logbook/048-big-and-small.md"
+        "docs/logbook/048-big-and-small.md",
+        "docs/logbook/071-the-gate.md"
       ],
       "url": "https://doi.org/10.1145/2601097.2601152",
       "authors": "Miles Macklin, Matthias Müller, Nuttapong Chentanez, Tae-Yong Kim",
@@ -2869,12 +2887,14 @@
         "position-based-dynamics",
         "distance-constraint",
         "gauss-seidel",
-        "verlet-integration"
+        "verlet-integration",
+        "point-triangle-contact"
       ],
       "citedIn": [
         "docs/logbook/004-the-detour.md",
         "docs/logbook/012-the-family-tree.md",
-        "docs/logbook/058-how-engines-set-a-spring.md"
+        "docs/logbook/058-how-engines-set-a-spring.md",
+        "docs/logbook/071-the-gate.md"
       ],
       "url": "https://doi.org/10.1016/j.jvcir.2007.01.005",
       "authors": "Matthias Müller, Bruno Heidelberger, Marcus Hennix, John Ratcliff",
@@ -2944,7 +2964,8 @@
       "citedIn": [
         "docs/logbook/004-the-detour.md",
         "docs/logbook/012-the-family-tree.md",
-        "docs/logbook/060-one-by-one-or-all-at-once.md"
+        "docs/logbook/060-one-by-one-or-all-at-once.md",
+        "docs/logbook/071-the-gate.md"
       ],
       "url": "https://mmacklin.com/smallsteps.pdf",
       "authors": "Miles Macklin, Kier Storey, Michelle Lu, Pierre Terdiman, Nuttapong Chentanez, Stefan Jeschke, Matthias Müller",
@@ -3172,7 +3193,11 @@
         "substepping",
         "soft-constraint"
       ],
-      "citedIn": ["docs/logbook/004-the-detour.md", "docs/logbook/016-the-same-road.md"],
+      "citedIn": [
+        "docs/logbook/004-the-detour.md",
+        "docs/logbook/016-the-same-road.md",
+        "docs/logbook/071-the-gate.md"
+      ],
       "url": "https://github.com/jrouwe/JoltPhysics/blob/master/Docs/Architecture.md",
       "claudeRead": "parts"
     },
@@ -3227,9 +3252,10 @@
         "mentioned": "2026-11-05"
       },
       "partOf": "flex",
-      "about": ["unified-particle-physics", "shape-matching"],
-      "citedIn": ["docs/logbook/004-the-detour.md"],
-      "url": "https://gameworksdocs.nvidia.com/FleX/1.2/lib_docs/manual.html"
+      "about": ["unified-particle-physics", "shape-matching", "self-collision", "rest-pose-filter"],
+      "citedIn": ["docs/logbook/004-the-detour.md", "docs/logbook/071-the-gate.md"],
+      "url": "https://gameworksdocs.nvidia.com/FleX/1.2/lib_docs/manual.html",
+      "claudeRead": "parts"
     },
     {
       "id": "flex-ext-api",
@@ -6507,7 +6533,8 @@
       "citedIn": [
         "box2d-contact-solver",
         "jolt-physics-settings",
-        "docs/logbook/027-the-stored-nudge.md"
+        "docs/logbook/027-the-stored-nudge.md",
+        "docs/logbook/071-the-gate.md"
       ]
     },
     {
@@ -7475,7 +7502,8 @@
         "restitution",
         "sleeping",
         "stiff-stacks",
-        "mixed-particle-sizes"
+        "mixed-particle-sizes",
+        "rest-pose-filter"
       ],
       "citedIn": [
         "docs/logbook/032-two-kinds-of-bounce.md",
@@ -7485,7 +7513,8 @@
         "docs/logbook/058-how-engines-set-a-spring.md",
         "docs/logbook/059-a-name-or-a-corrected-list.md",
         "docs/logbook/065-two-kinds-of-brake.md",
-        "docs/decisions/040-damping-and-drag.md"
+        "docs/decisions/040-damping-and-drag.md",
+        "docs/logbook/071-the-gate.md"
       ],
       "url": "https://github.com/NVIDIAGameWorks/FleX/blob/master/include/NvFlex.h",
       "authors": "NVIDIA",
@@ -7509,7 +7538,8 @@
         "docs/decisions/017-a-speed-limit-per-substep.md",
         "docs/decisions/018-max-speed-in-meters-per-second.md",
         "docs/decisions/019-default-speed-limit.md",
-        "docs/logbook/048-big-and-small.md"
+        "docs/logbook/048-big-and-small.md",
+        "docs/logbook/071-the-gate.md"
       ],
       "code": ["examples/heap-simulation/finish-limit.wgsl"]
     },
@@ -8363,7 +8393,11 @@
       "since": {
         "mentioned": "2026-11-25"
       },
-      "citedIn": ["docs/logbook/058-how-engines-set-a-spring.md", "flex-header"],
+      "citedIn": [
+        "docs/logbook/058-how-engines-set-a-spring.md",
+        "flex-header",
+        "docs/logbook/071-the-gate.md"
+      ],
       "partOf": "distance-constraint"
     },
     {
@@ -8678,6 +8712,306 @@
       "url": "https://hugodaniel.com/posts/webgpu-shader-unknown-limits/",
       "year": 2025,
       "claudeRead": "parts"
+    },
+    {
+      "id": "strain-limiting",
+      "kind": "concept",
+      "title": "Strain limiting",
+      "summary": "A cap on how much a cloth may stretch: after the springs, any link still too long is shortened, to 10% over its length in the first paper",
+      "area": "physics",
+      "status": "seen",
+      "since": {
+        "seen": "2026-11-26"
+      },
+      "citedIn": ["docs/logbook/071-the-gate.md", "docs/topics/self-collision.md"],
+      "partOf": "cloth",
+      "related": ["tether-constraint"]
+    },
+    {
+      "id": "long-range-attachment",
+      "kind": "concept",
+      "title": "Long range attachment",
+      "summary": "A tether from each particle of a cloth to the point where the cloth is held: it stops stretch in one pass, and does nothing for a cloth held by nothing",
+      "area": "physics",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-26"
+      },
+      "citedIn": ["docs/logbook/071-the-gate.md", "docs/topics/self-collision.md"],
+      "partOf": "tether-constraint"
+    },
+    {
+      "id": "rest-pose-filter",
+      "kind": "concept",
+      "title": "Rest-pose filter",
+      "summary": "Two particles that are close in the mesh at rest do not collide: it lets the collision distance be larger than the spacing without fighting the springs",
+      "area": "physics",
+      "status": "seen",
+      "since": {
+        "seen": "2026-11-26"
+      },
+      "citedIn": ["docs/logbook/071-the-gate.md", "docs/topics/self-collision.md"],
+      "partOf": "self-collision"
+    },
+    {
+      "id": "predictive-contact",
+      "kind": "concept",
+      "title": "Predictive contact",
+      "summary": "A contact made before two things meet, as a plane between them: each must stay on the side it started on, however far it is pushed",
+      "area": "physics",
+      "status": "seen",
+      "since": {
+        "seen": "2026-11-26"
+      },
+      "citedIn": ["docs/logbook/071-the-gate.md", "docs/topics/self-collision.md"],
+      "partOf": "self-collision",
+      "related": ["speculative-contact", "continuous-collision-detection"]
+    },
+    {
+      "id": "point-triangle-contact",
+      "kind": "concept",
+      "title": "Point against triangle",
+      "summary": "Colliding a vertex of a cloth with the triangles of the mesh, and edges with edges, not only vertex with vertex: no holes between particles",
+      "area": "physics",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-26"
+      },
+      "citedIn": ["docs/logbook/071-the-gate.md", "docs/topics/self-collision.md"],
+      "partOf": "self-collision"
+    },
+    {
+      "id": "impact-zone",
+      "kind": "concept",
+      "title": "Impact zone",
+      "summary": "A fail-safe for cloth: the vertices of collisions that could not be solved are moved together as one rigid body",
+      "area": "physics",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-26"
+      },
+      "citedIn": ["docs/logbook/071-the-gate.md", "docs/topics/self-collision.md"],
+      "partOf": "self-collision"
+    },
+    {
+      "id": "cloth-untangling",
+      "kind": "concept",
+      "title": "Untangling",
+      "summary": "Repairing a cloth that already crosses itself: finding the line where it does and pulling the two sides apart",
+      "area": "physics",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-26"
+      },
+      "citedIn": ["docs/logbook/071-the-gate.md", "docs/topics/self-collision.md"],
+      "partOf": "self-collision"
+    },
+    {
+      "id": "displacement-limit",
+      "kind": "concept",
+      "title": "Displacement limit",
+      "summary": "A cap on how far a vertex moves in one step, whatever moves it, small enough that a check at the end of the step holds for the whole way",
+      "area": "physics",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-26"
+      },
+      "citedIn": ["docs/logbook/071-the-gate.md", "docs/topics/self-collision.md"],
+      "related": ["speed-limit", "tunneling"]
+    },
+    {
+      "id": "ten-minute-physics-self-collision",
+      "kind": "code",
+      "title": "Ten Minute Physics 15: self-collisions",
+      "summary": "A cloth of spheres that hits itself, in one page of JavaScript: thickness equal to spacing, 10 substeps and a cap of 0.2 of the thickness per substep",
+      "area": "physics",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-26"
+      },
+      "about": ["self-collision", "speed-limit", "substepping"],
+      "citedIn": ["docs/logbook/071-the-gate.md", "docs/topics/self-collision.md"],
+      "claudeRead": "parts",
+      "partOf": "ten-minute-physics",
+      "url": "https://github.com/matthias-research/pages/blob/master/tenMinutePhysics/15-selfCollision.html",
+      "authors": "Matthias Müller"
+    },
+    {
+      "id": "safe-fast-repulsion-paper",
+      "kind": "paper",
+      "title": "A Safe and Fast Repulsion Method for GPU-based Cloth Self Collisions",
+      "summary": "When a mesh collided only at its vertices cannot be crossed: no edge longer than L, other vertices at least L/√2 apart, and a cap on the move per step",
+      "area": "physics",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-26"
+      },
+      "about": ["self-collision", "displacement-limit", "strain-limiting"],
+      "citedIn": ["docs/logbook/071-the-gate.md", "docs/topics/self-collision.md"],
+      "claudeRead": "parts",
+      "url": "https://wanghmin.github.io/publication/wu-2020-sfr/",
+      "file": "library/safe-fast-repulsion-gpu-cloth.pdf",
+      "authors": "Longhua Wu, Botao Wu, Yin Yang, Huamin Wang",
+      "year": 2020
+    },
+    {
+      "id": "predictive-contacts-talk",
+      "kind": "talk",
+      "title": "Cloth Self Collision with Predictive Contacts",
+      "summary": "How a game studio keeps cloth from crossing itself in a fraction of a millisecond: contacts found once per step that remember the side",
+      "area": "physics",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-26"
+      },
+      "about": ["predictive-contact", "self-collision", "point-triangle-contact"],
+      "citedIn": ["docs/logbook/071-the-gate.md", "docs/topics/self-collision.md"],
+      "claudeRead": "full",
+      "url": "https://media.contentapi.ea.com/content/dam/eacom/frostbite/files/gdc2018-chrislewin-clothselfcollisionwithpredictivecontacts.pdf",
+      "file": "library/cloth-self-collision-predictive-contacts-gdc2018.pdf",
+      "authors": "Chris Lewin",
+      "year": 2018
+    },
+    {
+      "id": "robust-cloth-collisions-paper",
+      "kind": "paper",
+      "title": "Robust Treatment of Collisions, Contact and Friction for Cloth Animation",
+      "summary": "The classic pipeline for cloth in films: a thickness with repulsion, then the whole path checked, then impact zones as a fail-safe",
+      "area": "physics",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-26"
+      },
+      "about": [
+        "self-collision",
+        "continuous-collision-detection",
+        "impact-zone",
+        "strain-limiting"
+      ],
+      "citedIn": ["docs/logbook/071-the-gate.md", "docs/topics/self-collision.md"],
+      "claudeRead": "parts",
+      "url": "https://www.cs.ubc.ca/~rbridson/docs/cloth2002.pdf",
+      "file": "library/robust-treatment-of-collisions-cloth.pdf",
+      "authors": "Robert Bridson, Ronald Fedkiw, John Anderson",
+      "year": 2002
+    },
+    {
+      "id": "provot-deformation-constraints-paper",
+      "kind": "paper",
+      "title": "Deformation Constraints in a Mass-Spring Model to Describe Rigid Cloth Behavior",
+      "summary": "The first cap on stretch: after each step, a spring more than 10% too long is shortened",
+      "area": "physics",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-26"
+      },
+      "about": ["strain-limiting"],
+      "citedIn": ["docs/logbook/071-the-gate.md", "docs/topics/self-collision.md"],
+      "claudeRead": "parts",
+      "url": "https://graphicsinterface.org/wp-content/uploads/gi1995-17.pdf",
+      "file": "library/provot-deformation-constraints-mass-spring.pdf",
+      "authors": "Xavier Provot",
+      "year": 1995
+    },
+    {
+      "id": "long-range-attachments-paper",
+      "kind": "paper",
+      "title": "Long Range Attachments",
+      "summary": "One tether per particle to where the cloth is held, so a cloth does not stretch with few passes",
+      "area": "physics",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-26"
+      },
+      "about": ["long-range-attachment", "strain-limiting"],
+      "citedIn": ["docs/logbook/071-the-gate.md", "docs/topics/self-collision.md"],
+      "claudeRead": "parts",
+      "url": "https://matthias-research.github.io/pages/publications/sca2012cloth.pdf",
+      "file": "library/long-range-attachments.pdf",
+      "authors": "Tae-Yong Kim, Nuttapong Chentanez, Matthias Müller",
+      "year": 2012
+    },
+    {
+      "id": "untangling-cloth-paper",
+      "kind": "paper",
+      "title": "Untangling Cloth",
+      "summary": "Repairing cloth that already crosses itself, with no memory of the past: what lies inside the line of crossing is pulled back",
+      "area": "physics",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-26"
+      },
+      "about": ["cloth-untangling"],
+      "citedIn": ["docs/logbook/071-the-gate.md", "docs/topics/self-collision.md"],
+      "claudeRead": "parts",
+      "url": "https://doi.org/10.1145/882262.882357",
+      "file": "library/untangling-cloth.pdf",
+      "authors": "David Baraff, Andrew Witkin, Michael Kass",
+      "year": 2003
+    },
+    {
+      "id": "i-cloth-paper",
+      "kind": "paper",
+      "title": "I-Cloth",
+      "summary": "Cloth with the whole path checked, on a GPU: hundreds of thousands of vertices at 2 to 8 frames per second",
+      "area": "physics",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-26"
+      },
+      "about": ["continuous-collision-detection", "impact-zone"],
+      "citedIn": ["docs/logbook/071-the-gate.md", "docs/topics/self-collision.md"],
+      "claudeRead": "parts",
+      "url": "https://min-tang.github.io/ICloth/files/icloth.pdf",
+      "file": "library/i-cloth.pdf",
+      "authors": "Min Tang, Tongtong Wang, Zhongyuan Liu, Ruofeng Tong, Dinesh Manocha",
+      "year": 2018
+    },
+    {
+      "id": "nvcloth-self-collision-docs",
+      "kind": "docs",
+      "title": "NvCloth, self-collision and tethers",
+      "summary": "NVIDIA's cloth for games: particles kept a distance apart, a check against the rest pose, and tethers against stretch",
+      "area": "physics",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-26"
+      },
+      "about": ["self-collision", "rest-pose-filter", "long-range-attachment"],
+      "citedIn": ["docs/logbook/071-the-gate.md", "docs/topics/self-collision.md"],
+      "claudeRead": "parts",
+      "url": "https://github.com/NVIDIAGameWorks/NvCloth"
+    },
+    {
+      "id": "physx-pbd-cloth-snippet",
+      "kind": "code",
+      "title": "PhysX 5.4, SnippetPBDCloth.cpp",
+      "summary": "A cloth of particles in PhysX: spheres that rest at twice the spacing of the mesh, with the rest-pose filter on",
+      "area": "physics",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-26"
+      },
+      "about": ["self-collision", "rest-pose-filter"],
+      "citedIn": ["docs/logbook/071-the-gate.md", "docs/topics/self-collision.md"],
+      "claudeRead": "parts",
+      "partOf": "physx",
+      "url": "https://github.com/NVIDIA-Omniverse/PhysX/blob/106.0-physx-5.4.1/physx/snippets/snippetpbdcloth/SnippetPBDCloth.cpp"
+    },
+    {
+      "id": "obi-collisions-manual",
+      "kind": "docs",
+      "title": "Obi, manual: collisions and surface collisions",
+      "summary": "A particle engine for Unity: contacts made before the touch, and contacts between triangles so that the gaps between particles close",
+      "area": "physics",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-26"
+      },
+      "about": ["self-collision", "point-triangle-contact", "speculative-contact"],
+      "citedIn": ["docs/logbook/071-the-gate.md", "docs/topics/self-collision.md"],
+      "claudeRead": "parts",
+      "url": "https://obi.virtualmethodstudio.com/manual/7.0/surfacecollisions.html"
     }
   ]
 }
