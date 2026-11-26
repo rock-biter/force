@@ -107,6 +107,9 @@ And cloths can be grabbed: curtains, a pile of cloths and a cloth with no gravit
 pointer ([try it](https://rock-biter.github.io/force/cloth-pile/),
 [chapter 067](./docs/logbook/067-a-hand-on-the-cloth.md)).
 
+All the demos are now in [one page](https://rock-biter.github.io/force/demos/), a picture each
+([chapter 068](./docs/logbook/068-one-page-for-the-demos.md)).
+
 **Next:** springs for any net, and lighter particles. Then our rules read again against the
 devices.
 

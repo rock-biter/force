@@ -38,8 +38,12 @@ if (article) {
     return chapter && `./logbook/#${chapter}`
   })
 
-  // The README opens with what FORCE is and where we are. The examples and the map go right after
-  // that, before the sections for who wants to use the library.
-  const sections = document.querySelectorAll('#examples, #topic-map')
-  article.querySelectorAll('h2')[1]?.before(...sections)
+  // The README opens with what FORCE is, then where we are. The demos go between the two, first
+  // thing after the introduction. The map goes after where we are, before the sections for who
+  // wants to use the library.
+  const [whereWeAre, next] = article.querySelectorAll('h2')
+  const demos = document.querySelector('#examples')
+  const map = document.querySelector('#topic-map')
+  if (demos) whereWeAre?.before(demos)
+  if (map) next?.before(map)
 }

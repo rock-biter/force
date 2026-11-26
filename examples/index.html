@@ -13,7 +13,7 @@
   <body>
     <main class="column prose">
       <nav>
-        <a href="#examples">demos</a>
+        <a href="./demos/">demos</a>
         <a href="./lab/">lab</a>
         <a href="./logbook/">logbook</a>
         <a href="./topic-map/">topic map</a>
@@ -23,22 +23,24 @@
       <!-- The README of the repo, put here by home.ts: the home page says what the README says. -->
       <article id="readme"></article>
 
-      <!-- home.ts moves these two sections up, right after the first section of the README. -->
+      <!-- home.ts moves these two sections up: the demos before "Where we are" of the README, the
+           map right after it. -->
       <section id="examples">
         <h2>Demos</h2>
         <p class="note">They run in a browser with WebGPU support.</p>
+        <p><a href="./demos/">Open the demos →</a></p>
         <ul>
-          <li><a href="./heap-simulation/">heap-simulation</a>: up to a million particles pushed apart on the GPU, live, and pushed away by the pointer</li>
-          <li><a href="./tilted-box/">tilted-box</a>: the same particles with friction, in a box that tilts by up to 30 degrees</li>
-          <li><a href="./cloth/">cloth</a>: a cloth of particles joined by springs, hanging by its top edge, pushed by the pointer</li>
-          <li><a href="./curtains/">curtains</a>: tall, narrow cloths hanging side by side, each its own color, grabbed and pulled with the pointer</li>
-          <li><a href="./cloth-pile/">cloth-pile</a>: square cloths dropped in a heap on the floor, dragged out from under each other with the pointer</li>
-          <li><a href="./cloth-float/">cloth-float</a>: three cloths with no gravity, waving in slow currents, pulled with the pointer</li>
-          <li><a href="./ropes/">ropes</a>: ropes of particles joined by springs, hanging, swinging and pushed by the pointer</li>
-          <li><a href="./mixed-sizes/">mixed-sizes</a>: particles of different sizes, the largest up to four times the smallest, of one material or of several</li>
-          <li><a href="./debug-viewer/">debug-viewer</a>: a small pile and the ways we draw it, with soft shadows, colors and the time a frame takes</li>
-          <li><a href="./compare/">compare</a>: every way of pushing particles apart we studied, side by side, live</li>
-          <li><a href="./fountain/">fountain</a>: particles under gravity, in the debug viewer</li>
+          <li><a href="./demos/#heap-simulation">A heap of particles</a>: up to a million particles pushed apart on the GPU, and pushed away by the pointer</li>
+          <li><a href="./demos/#tilted-box">A box that tilts</a>: the same particles with friction, in a box that tilts by up to 30 degrees</li>
+          <li><a href="./demos/#mixed-sizes">Different sizes</a>: particles of different sizes, the largest up to four times the smallest</li>
+          <li><a href="./demos/#ropes">Ropes</a>: ropes of particles joined by springs: they hang, swing and are pushed by the pointer</li>
+          <li><a href="./demos/#cloth">A cloth</a>: a cloth of particles joined by springs, hanging by its top edge</li>
+          <li><a href="./demos/#curtains">Curtains</a>: tall, narrow cloths hanging side by side. Grab one and pull it</li>
+          <li><a href="./demos/#cloth-pile">A pile of cloths</a>: square cloths dropped in a heap. Drag one out from under the others</li>
+          <li><a href="./demos/#cloth-float">Cloths with no gravity</a>: three cloths waving in slow currents, with no gravity. Grab one and pull</li>
+          <li><a href="./demos/#debug-viewer">Shadows</a>: a small pile and the ways we draw it, with soft shadows and colors</li>
+          <li><a href="./demos/#compare">Side by side</a>: every way of pushing particles apart we studied, running together</li>
+          <li><a href="./demos/#fountain">A fountain</a>: particles under gravity, in the debug viewer</li>
         </ul>
         <p>
           The measurements and tests we run while we build, which print numbers rather than draw,

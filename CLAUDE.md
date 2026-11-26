@@ -34,10 +34,11 @@ Everything in the repo is in English: code, comments, docs and skills. Chat in I
 - `docs/decisions/`: the decisions that shape the engine, and why.
 - `docs/topics/`: the topic map of concepts and sources (`topics.json`, with a generated index), theory pages and reading notes. For looking things up, not for reading straight through.
 - `CONTRIBUTING.md` and `.github/ISSUE_TEMPLATE/`: how people suggest what to study, report mistakes and send benchmark results.
+- `examples/demos/`: the page that gathers the demos, a card each. A new demo needs a line in `demos.json` and its picture in `examples/public/shots/` (`npm run shots`, while `npm run dev` runs).
 - `examples/bench/`: the benchmark page people run on their devices. `scripts/benchmarks.mjs` reads what they send; `docs/topics/cells-devices.json` holds what we accepted.
 - `library/`: local copies of papers and PDFs. Ignored by git, never committed.
 - `posts/`: the social posts about the project, drafts and published (`post` skill). Ignored by git.
 
 ## Commands
 
-`npm run dev` (examples), `npm test`, `npm run typecheck`, `npm run lint`, `npm run build`, `npm run build:site` (the website, from `examples/` into `_site/`), `npm run topics` (checks the topic map and regenerates its index), `npm run benchmarks` (reports on the benchmark issues; `-- --batch` and `-- --close` show what taking in the clean ones and closing them would do, and do it with `--yes`).
+`npm run dev` (examples), `npm test`, `npm run typecheck`, `npm run lint`, `npm run build`, `npm run build:site` (the website, from `examples/` into `_site/`), `npm run shots` (takes the pictures of the demos, from the running dev server), `npm run topics` (checks the topic map and regenerates its index), `npm run benchmarks` (reports on the benchmark issues; `-- --batch` and `-- --close` show what taking in the clean ones and closing them would do, and do it with `--yes`).

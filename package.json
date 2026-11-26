@@ -47,6 +47,7 @@
     "format": "biome check --write .",
     "topics": "biome format --write docs/topics/topics.json && node scripts/topics.mjs",
     "benchmarks": "node scripts/benchmarks.mjs",
+    "shots": "node scripts/demo-shots.mjs",
     "prepublishOnly": "npm run lint && npm run typecheck && npm run test && npm run build"
   },
   "devDependencies": {

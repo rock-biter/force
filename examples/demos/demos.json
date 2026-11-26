@@ -1,0 +1,57 @@
+[
+  {
+    "id": "heap-simulation",
+    "title": "A heap of particles",
+    "text": "Up to a million particles pushed apart on the GPU, and pushed away by the pointer."
+  },
+  {
+    "id": "tilted-box",
+    "title": "A box that tilts",
+    "text": "The same particles with friction, in a box that tilts by up to 30 degrees."
+  },
+  {
+    "id": "mixed-sizes",
+    "title": "Different sizes",
+    "text": "Particles of different sizes, the largest up to four times the smallest."
+  },
+  {
+    "id": "ropes",
+    "title": "Ropes",
+    "text": "Ropes of particles joined by springs: they hang, swing and are pushed by the pointer."
+  },
+  {
+    "id": "cloth",
+    "title": "A cloth",
+    "text": "A cloth of particles joined by springs, hanging by its top edge."
+  },
+  {
+    "id": "curtains",
+    "title": "Curtains",
+    "text": "Tall, narrow cloths hanging side by side. Grab one and pull it."
+  },
+  {
+    "id": "cloth-pile",
+    "title": "A pile of cloths",
+    "text": "Square cloths dropped in a heap. Drag one out from under the others."
+  },
+  {
+    "id": "cloth-float",
+    "title": "Cloths with no gravity",
+    "text": "Three cloths waving in slow currents, with no gravity. Grab one and pull."
+  },
+  {
+    "id": "debug-viewer",
+    "title": "Shadows",
+    "text": "A small pile and the ways we draw it, with soft shadows and colors."
+  },
+  {
+    "id": "compare",
+    "title": "Side by side",
+    "text": "Every way of pushing particles apart we studied, running together."
+  },
+  {
+    "id": "fountain",
+    "title": "A fountain",
+    "text": "Particles under gravity, in the debug viewer."
+  }
+]

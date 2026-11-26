@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>FORCE: demos</title>
+    <meta
+      name="description"
+      content="The demos of FORCE, a GPU physics engine for the web, in one page: particles, ropes and cloths running live in the browser with WebGPU."
+    />
+    <link rel="stylesheet" href="../site.css" />
+    <style>
+      /*
+       * Two parts: a list of the demos on the left, a card each, and the demo chosen on the right,
+       * in a frame that takes the rest of the window. On a narrow window the list is a drawer: it
+       * starts closed, and a button in a bar at the top opens it over the demo.
+       */
+      body {
+        display: grid;
+        grid-template: "list stage" 100dvh / 300px 1fr;
+        margin: 0;
+        overflow: hidden;
+      }
+      .bar {
+        display: none;
+      }
+      .list {
+        grid-area: list;
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+        border-right: 1px solid var(--ink);
+        background: var(--paper);
+      }
+      .list header {
+        flex: none;
+        padding: 12px 16px;
+        border-bottom: 1px solid var(--ink);
+      }
+      .list .hint {
+        margin: 0;
+        color: var(--grey);
+      }
+      /* The search, as on the topic map: a line to type in, over the cards. */
+      .search {
+        flex: none;
+        box-sizing: border-box;
+        width: 100%;
+        margin: 0;
+        padding: 8px 16px;
+        border: 0;
+        border-bottom: 1px solid var(--ink);
+        border-radius: 0;
+        outline: none;
+        background: none;
+        color: inherit;
+        font: inherit;
+      }
+      .search::placeholder {
+        color: var(--grey);
+      }
+      .search:focus {
+        background: rgb(22 22 26 / 0.06);
+      }
+      .nothing {
+        margin: 0;
+        padding: 16px;
+        color: var(--grey);
+      }
+      .cards {
+        min-height: 0;
+        margin: 0;
+        padding: 16px 16px 0;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        scrollbar-width: thin;
+        scrollbar-color: var(--grey) transparent;
+        list-style: none;
+      }
+      .cards li {
+        margin-bottom: 16px;
+      }
+      /* A card: the picture of the demo, its name, and a line about it. All of it is the link. */
+      .cards a {
+        display: block;
+        border: 1px solid var(--ink);
+        text-decoration: none;
+      }
+      .cards img {
+        display: block;
+        width: 100%;
+        height: auto;
+        aspect-ratio: 16 / 10;
+        border-bottom: 1px solid var(--ink);
+        background: #e9e9e9; /* the background of the demos, while the picture loads */
+        object-fit: cover;
+      }
+      .cards h2,
+      .cards p {
+        margin: 0;
+        padding: 0 12px;
+        font: inherit;
+      }
+      .cards h2 {
+        padding-top: 8px;
+        font-weight: 700;
+      }
+      .cards p {
+        padding-bottom: 10px;
+        color: var(--grey);
+      }
+      /* The demo on show: its card is inked. */
+      .cards a[aria-current] {
+        background: var(--ink);
+        color: var(--paper);
+      }
+      .cards a[aria-current] p {
+        color: inherit;
+        opacity: 0.7;
+      }
+      .cards a:hover:not([aria-current]) {
+        background: rgb(22 22 26 / 0.06);
+      }
+      .stage {
+        grid-area: stage;
+        width: 100%;
+        height: 100%;
+        border: 0;
+        background: #e9e9e9;
+      }
+
+      @media (max-width: 720px) {
+        body {
+          grid-template: "bar" 40px "stage" calc(100dvh - 40px) / 1fr;
+        }
+        .bar {
+          grid-area: bar;
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          padding: 0 16px;
+          border-bottom: 1px solid var(--ink);
+        }
+        .bar button {
+          padding: 2px 8px;
+          border: 1px solid var(--ink);
+          border-radius: 0;
+          background: none;
+          color: inherit;
+          font: inherit;
+          cursor: pointer;
+        }
+        .bar span {
+          overflow: hidden;
+          color: var(--grey);
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+        /* The drawer: over the demo, out of the window on the left until it is opened. */
+        .list {
+          position: fixed;
+          top: 40px;
+          bottom: 0;
+          left: 0;
+          z-index: 2;
+          width: min(300px, calc(100vw - 48px));
+          visibility: hidden;
+          transform: translateX(-100%);
+          transition:
+            transform 0.2s,
+            visibility 0.2s;
+        }
+        body[data-list="open"] .list {
+          visibility: visible;
+          transform: none;
+        }
+        /* A veil over the demo while the drawer is open: a tap on it closes the drawer. */
+        .veil {
+          position: fixed;
+          inset: 40px 0 0;
+          z-index: 1;
+          display: none;
+          background: rgb(242 241 236 / 0.7);
+        }
+        body[data-list="open"] .veil {
+          display: block;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="bar">
+      <button type="button" class="toggle" aria-controls="list" aria-expanded="false">demos</button>
+      <span class="now"></span>
+    </div>
+    <aside class="list" id="list">
+      <header>
+        <a href="../">← FORCE</a> · demos
+        <p class="hint">They run in a browser with WebGPU support.</p>
+      </header>
+      <input class="search" type="search" placeholder="search the demos" aria-label="Search the demos" />
+      <!-- The cards, written by main.ts from demos.json. -->
+      <ul class="cards"></ul>
+      <p class="nothing" hidden>No demo with those words.</p>
+    </aside>
+    <div class="veil"></div>
+    <iframe class="stage" title="The demo" allow="fullscreen"></iframe>
+    <script type="module" src="./main.ts"></script>
+  </body>
+</html>
