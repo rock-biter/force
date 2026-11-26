@@ -9,8 +9,9 @@ has the examples running in the browser, the logbook and the topic map in 3D. Th
 documentation of the library will live there too.
 
 > **Status: early development.** FORCE is being built in the open, one step at a time, and
-> studying how physics engines work is part of the job. The package is not published on npm, and
-> the API will change without notice.
+> studying how physics engines work is part of the job. The package is on npm as
+> [`force-gpu`](https://www.npmjs.com/package/force-gpu), version 0.1.0, to hold the name: it has
+> only the first pieces, and the API will change without notice.
 
 ## Where we are
 
