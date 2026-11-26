@@ -59,3 +59,24 @@ chapter that studies it.
 ## Code
 
 The engine is not there yet, so code contributions will come later. This guide will say how.
+
+## Branches and releases
+
+Two branches, and no more:
+
+- **`dev`** is where all the work happens, a commit at a time. A pull request goes there.
+- **`main`** is what is online. The [website](https://rock-biter.github.io/force/) is built from it,
+  and every version of [`force-gpu`](https://www.npmjs.com/package/force-gpu) on npm is one of its
+  commits, with a tag such as `v0.1.0`. It has no commit of its own: it only moves forward to where
+  `dev` is.
+
+Two commands move it, both run from `dev` ([release.mjs](./scripts/release.mjs)):
+
+- `npm run publish:site` puts the website online as `dev` has it: new demos, new chapters of the
+  logbook. The package on npm does not change.
+- `npm run release -- patch` (or `minor`) does the same and makes a new version of the package: it
+  changes the number in `package.json`, commits, tags, and leaves the last step, `npm publish`, to a
+  person.
+
+While the version starts with 0, everything may change. A `minor`, 0.1.0 to 0.2.0, is for when what
+the package offers has changed; a `patch`, 0.1.0 to 0.1.1, for anything else.

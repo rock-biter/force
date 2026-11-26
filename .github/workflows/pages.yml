@@ -1,4 +1,6 @@
-# Builds the website (examples/) and puts it online on GitHub Pages, at every push to main.
+# Builds the website (examples/) and puts it online on GitHub Pages, at every push to main. We work
+# on dev: main moves forward to it with `npm run publish:site` or `npm run release`
+# (scripts/release.mjs).
 name: Website
 
 on:

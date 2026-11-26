@@ -10,6 +10,7 @@ Knows JavaScript, three.js and GLSL well. Starts from zero on WebGPU and physics
 ## How we work
 
 - **Start with a recap.** At the start of every session, before anything else, briefly recall the last things we did together (`recap` skill).
+- **One branch to work on, one that is online.** All work is on `dev`: study, demos, docs, the engine. `main` is what is online: the website is built from it, and every version on npm is a commit of it with a tag. `main` only moves forward to `dev`, with `npm run publish:site` (the website) or `npm run release -- patch|minor` (the website and a version of the package, then `npm publish` by hand). Claude commits on `dev`, and never pushes to `main`, runs those two commands or publishes on npm: the user does. No other branch, but a short one for an experiment that may be thrown away, if the user asks.
 - **One step at a time.** When a step is done, stop and wait. Do not run ahead to the next one.
 - **Explain from zero.** The idea with a concrete example first, the technical name after.
 - **Start from what is already known.** Connect new concepts to three.js and GLSL.
@@ -41,4 +42,4 @@ Everything in the repo is in English: code, comments, docs and skills. Chat in I
 
 ## Commands
 
-`npm run dev` (examples), `npm run dev:phone` (the same on https, for a phone on the same Wi-Fi: on http a phone gets no WebGPU), `npm test`, `npm run typecheck`, `npm run lint`, `npm run build`, `npm run build:site` (the website, from `examples/` into `_site/`), `npm run shots` (takes the pictures of the demos, from the running dev server), `npm run topics` (checks the topic map and regenerates its index), `npm run benchmarks` (reports on the benchmark issues; `-- --batch` and `-- --close` show what taking in the clean ones and closing them would do, and do it with `--yes`).
+`npm run dev` (examples), `npm run dev:phone` (the same on https, for a phone on the same Wi-Fi: on http a phone gets no WebGPU), `npm test`, `npm run typecheck`, `npm run lint`, `npm run build`, `npm run build:site` (the website, from `examples/` into `_site/`), `npm run publish:site` and `npm run release -- patch|minor` (put `dev` online: see above; for the user to run), `npm run shots` (takes the pictures of the demos, from the running dev server), `npm run topics` (checks the topic map and regenerates its index), `npm run benchmarks` (reports on the benchmark issues; `-- --batch` and `-- --close` show what taking in the clean ones and closing them would do, and do it with `--yes`).
