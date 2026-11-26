@@ -11,6 +11,8 @@
 //
 // A release adds one commit that changes the version in package.json, and its tag. The last step,
 // `npm publish`, is left to a person: it asks for a login, and it cannot be taken back.
+// `npm publish` by itself refuses to go on unless this script ran first (check-release.mjs): a
+// version never reaches npm without the website being published with it.
 
 import { execFileSync } from 'node:child_process'
 import { readFileSync } from 'node:fs'
