@@ -1481,9 +1481,10 @@
       "title": "Continuous collision detection",
       "summary": "Checking the whole path between two steps, so fast objects cannot tunnel through walls",
       "area": "physics",
-      "status": "mentioned",
+      "status": "seen",
       "since": {
-        "mentioned": "2026-11-05"
+        "mentioned": "2026-11-05",
+        "seen": "2026-11-27"
       },
       "partOf": "collision-detection",
       "related": ["tunneling"],
@@ -1492,7 +1493,8 @@
         "advanced-character-physics",
         "iterative-dynamics-paper",
         "docs/logbook/071-the-gate.md",
-        "docs/logbook/072-read-to-the-end.md"
+        "docs/logbook/072-read-to-the-end.md",
+        "docs/logbook/073-eight-ways-to-close-a-net.md"
       ]
     },
     {
@@ -1951,10 +1953,11 @@
       "title": "Self-collision",
       "summary": "Cloth or a soft body hitting itself: with spheres on the vertices, a wall with thin spots and no side",
       "area": "physics",
-      "status": "seen",
+      "status": "studied",
       "since": {
         "mentioned": "2026-11-05",
-        "seen": "2026-11-26"
+        "seen": "2026-11-26",
+        "studied": "2026-11-27"
       },
       "partOf": "cloth",
       "citedIn": [
@@ -1963,15 +1966,19 @@
         "advanced-character-physics",
         "docs/logbook/071-the-gate.md",
         "docs/topics/self-collision.md",
-        "docs/logbook/072-read-to-the-end.md"
+        "docs/logbook/072-read-to-the-end.md",
+        "docs/logbook/073-eight-ways-to-close-a-net.md"
       ],
       "related": [
         "tunneling",
         "strain-limiting",
         "rest-pose-filter",
         "predictive-contact",
-        "point-triangle-contact"
-      ]
+        "point-triangle-contact",
+        "locking",
+        "triangle-net"
+      ],
+      "page": "docs/topics/self-collision.md"
     },
     {
       "id": "sph",
@@ -2935,8 +2942,12 @@
       "since": {
         "mentioned": "2026-11-05"
       },
-      "about": ["position-based-dynamics", "cloth", "soft-body", "strain-limiting"],
-      "citedIn": ["docs/logbook/004-the-detour.md", "docs/logbook/072-read-to-the-end.md"],
+      "about": ["position-based-dynamics", "cloth", "soft-body", "strain-limiting", "locking"],
+      "citedIn": [
+        "docs/logbook/004-the-detour.md",
+        "docs/logbook/072-read-to-the-end.md",
+        "docs/logbook/073-eight-ways-to-close-a-net.md"
+      ],
       "url": "https://matthias-research.github.io/pages/publications/strainBasedDynamics.pdf",
       "authors": "Matthias Müller, Nuttapong Chentanez, Tae-Yong Kim, Miles Macklin",
       "year": 2014,
@@ -8424,15 +8435,17 @@
       "title": "Tether",
       "summary": "A link that only resists being pulled, like a thread, and does nothing when its ends come closer",
       "area": "physics",
-      "status": "mentioned",
+      "status": "seen",
       "since": {
-        "mentioned": "2026-11-25"
+        "mentioned": "2026-11-25",
+        "seen": "2026-11-27"
       },
       "citedIn": [
         "docs/logbook/058-how-engines-set-a-spring.md",
         "flex-header",
         "docs/logbook/071-the-gate.md",
-        "docs/logbook/072-read-to-the-end.md"
+        "docs/logbook/072-read-to-the-end.md",
+        "docs/logbook/073-eight-ways-to-close-a-net.md"
       ],
       "partOf": "distance-constraint"
     },
@@ -8762,7 +8775,8 @@
       "citedIn": [
         "docs/logbook/071-the-gate.md",
         "docs/topics/self-collision.md",
-        "docs/logbook/072-read-to-the-end.md"
+        "docs/logbook/072-read-to-the-end.md",
+        "docs/logbook/073-eight-ways-to-close-a-net.md"
       ],
       "partOf": "cloth",
       "related": ["tether-constraint"]
@@ -8773,14 +8787,16 @@
       "title": "Long range attachment",
       "summary": "A tether from each particle of a cloth to the point where the cloth is held: it stops stretch in one pass, and does nothing for a cloth held by nothing",
       "area": "physics",
-      "status": "mentioned",
+      "status": "seen",
       "since": {
-        "mentioned": "2026-11-26"
+        "mentioned": "2026-11-26",
+        "seen": "2026-11-27"
       },
       "citedIn": [
         "docs/logbook/071-the-gate.md",
         "docs/topics/self-collision.md",
-        "docs/logbook/072-read-to-the-end.md"
+        "docs/logbook/072-read-to-the-end.md",
+        "docs/logbook/073-eight-ways-to-close-a-net.md"
       ],
       "partOf": "tether-constraint"
     },
@@ -8797,7 +8813,8 @@
       "citedIn": [
         "docs/logbook/071-the-gate.md",
         "docs/topics/self-collision.md",
-        "docs/logbook/072-read-to-the-end.md"
+        "docs/logbook/072-read-to-the-end.md",
+        "docs/logbook/073-eight-ways-to-close-a-net.md"
       ],
       "partOf": "self-collision"
     },
@@ -8814,7 +8831,8 @@
       "citedIn": [
         "docs/logbook/071-the-gate.md",
         "docs/topics/self-collision.md",
-        "docs/logbook/072-read-to-the-end.md"
+        "docs/logbook/072-read-to-the-end.md",
+        "docs/logbook/073-eight-ways-to-close-a-net.md"
       ],
       "partOf": "self-collision",
       "related": ["speculative-contact", "continuous-collision-detection"]
@@ -8825,14 +8843,16 @@
       "title": "Point against triangle",
       "summary": "Colliding a vertex of a cloth with the triangles of the mesh, and edges with edges, not only vertex with vertex: no holes between particles",
       "area": "physics",
-      "status": "mentioned",
+      "status": "seen",
       "since": {
-        "mentioned": "2026-11-26"
+        "mentioned": "2026-11-26",
+        "seen": "2026-11-27"
       },
       "citedIn": [
         "docs/logbook/071-the-gate.md",
         "docs/topics/self-collision.md",
-        "docs/logbook/072-read-to-the-end.md"
+        "docs/logbook/072-read-to-the-end.md",
+        "docs/logbook/073-eight-ways-to-close-a-net.md"
       ],
       "partOf": "self-collision"
     },
@@ -8842,14 +8862,16 @@
       "title": "Impact zone",
       "summary": "A fail-safe for cloth: the vertices of collisions that could not be solved are moved together as one rigid body",
       "area": "physics",
-      "status": "mentioned",
+      "status": "seen",
       "since": {
-        "mentioned": "2026-11-26"
+        "mentioned": "2026-11-26",
+        "seen": "2026-11-27"
       },
       "citedIn": [
         "docs/logbook/071-the-gate.md",
         "docs/topics/self-collision.md",
-        "docs/logbook/072-read-to-the-end.md"
+        "docs/logbook/072-read-to-the-end.md",
+        "docs/logbook/073-eight-ways-to-close-a-net.md"
       ],
       "partOf": "self-collision"
     },
@@ -8859,14 +8881,16 @@
       "title": "Untangling",
       "summary": "Repairing a cloth that already crosses itself: finding the line where it does and pulling the two sides apart",
       "area": "physics",
-      "status": "mentioned",
+      "status": "seen",
       "since": {
-        "mentioned": "2026-11-26"
+        "mentioned": "2026-11-26",
+        "seen": "2026-11-27"
       },
       "citedIn": [
         "docs/logbook/071-the-gate.md",
         "docs/topics/self-collision.md",
-        "docs/logbook/072-read-to-the-end.md"
+        "docs/logbook/072-read-to-the-end.md",
+        "docs/logbook/073-eight-ways-to-close-a-net.md"
       ],
       "partOf": "self-collision"
     },
@@ -8876,14 +8900,16 @@
       "title": "Displacement limit",
       "summary": "A cap on how far a vertex moves in one step, whatever moves it, small enough that a check at the end of the step holds for the whole way",
       "area": "physics",
-      "status": "mentioned",
+      "status": "seen",
       "since": {
-        "mentioned": "2026-11-26"
+        "mentioned": "2026-11-26",
+        "seen": "2026-11-27"
       },
       "citedIn": [
         "docs/logbook/071-the-gate.md",
         "docs/topics/self-collision.md",
-        "docs/logbook/072-read-to-the-end.md"
+        "docs/logbook/072-read-to-the-end.md",
+        "docs/logbook/073-eight-ways-to-close-a-net.md"
       ],
       "related": ["speed-limit", "tunneling"]
     },
@@ -8918,12 +8944,13 @@
       "since": {
         "mentioned": "2026-11-26"
       },
-      "about": ["self-collision", "displacement-limit", "strain-limiting"],
+      "about": ["self-collision", "displacement-limit", "strain-limiting", "triangle-net"],
       "citedIn": [
         "docs/logbook/071-the-gate.md",
         "docs/topics/self-collision.md",
         "docs/logbook/072-read-to-the-end.md",
-        "docs/topics/safe-fast-repulsion-paper.md"
+        "docs/topics/safe-fast-repulsion-paper.md",
+        "docs/logbook/073-eight-ways-to-close-a-net.md"
       ],
       "claudeRead": "full",
       "url": "https://wanghmin.github.io/publication/wu-2020-sfr/",
@@ -8968,12 +8995,14 @@
         "self-collision",
         "continuous-collision-detection",
         "impact-zone",
-        "strain-limiting"
+        "strain-limiting",
+        "edge-edge-contact"
       ],
       "citedIn": [
         "docs/logbook/071-the-gate.md",
         "docs/topics/self-collision.md",
-        "docs/logbook/072-read-to-the-end.md"
+        "docs/logbook/072-read-to-the-end.md",
+        "docs/logbook/073-eight-ways-to-close-a-net.md"
       ],
       "claudeRead": "full",
       "url": "https://www.cs.ubc.ca/~rbridson/docs/cloth2002.pdf",
@@ -9133,11 +9162,14 @@
       "title": "Global intersection analysis",
       "summary": "Finding the closed lines where a cloth crosses itself, and coloring the smaller side of each, so that side is pulled back through instead of pushed further",
       "area": "physics",
-      "status": "mentioned",
+      "status": "seen",
       "since": {
-        "mentioned": "2026-11-27"
+        "seen": "2026-11-27"
       },
-      "citedIn": ["docs/logbook/072-read-to-the-end.md"],
+      "citedIn": [
+        "docs/logbook/072-read-to-the-end.md",
+        "docs/logbook/073-eight-ways-to-close-a-net.md"
+      ],
       "partOf": "cloth-untangling"
     },
     {
@@ -9159,11 +9191,14 @@
       "title": "Air mesh",
       "summary": "The air between layers of cloth filled once with triangles or tetrahedra that may never turn inside out: a side kept for good, and a way to untangle",
       "area": "physics",
-      "status": "mentioned",
+      "status": "seen",
       "since": {
-        "mentioned": "2026-11-27"
+        "seen": "2026-11-27"
       },
-      "citedIn": ["docs/logbook/072-read-to-the-end.md"],
+      "citedIn": [
+        "docs/logbook/072-read-to-the-end.md",
+        "docs/logbook/073-eight-ways-to-close-a-net.md"
+      ],
       "partOf": "self-collision"
     },
     {
@@ -9172,11 +9207,14 @@
       "title": "Layer order",
       "summary": "Which layer of a garment lies on top of which, set by hand, so contacts between layers keep their side and can undo a crossing",
       "area": "physics",
-      "status": "mentioned",
+      "status": "seen",
       "since": {
-        "mentioned": "2026-11-27"
+        "seen": "2026-11-27"
       },
-      "citedIn": ["docs/logbook/072-read-to-the-end.md"],
+      "citedIn": [
+        "docs/logbook/072-read-to-the-end.md",
+        "docs/logbook/073-eight-ways-to-close-a-net.md"
+      ],
       "partOf": "self-collision"
     },
     {
@@ -9195,7 +9233,11 @@
         "point-triangle-contact",
         "vertex-block-descent"
       ],
-      "citedIn": ["docs/logbook/072-read-to-the-end.md", "docs/topics/self-collision.md"],
+      "citedIn": [
+        "docs/logbook/072-read-to-the-end.md",
+        "docs/topics/self-collision.md",
+        "docs/logbook/073-eight-ways-to-close-a-net.md"
+      ],
       "url": "https://graphics.cs.utah.edu/research/projects/ogc/",
       "file": "library/offset-geometric-contact.pdf",
       "authors": "Anka He Chen, Jerry Hsu, Ziheng Liu, Miles Macklin, Yin Yang, Cem Yuksel",
@@ -9212,8 +9254,12 @@
       "since": {
         "mentioned": "2026-11-27"
       },
-      "about": ["barrier", "continuous-collision-detection", "strain-limiting"],
-      "citedIn": ["docs/logbook/072-read-to-the-end.md", "docs/topics/self-collision.md"],
+      "about": ["barrier", "continuous-collision-detection", "strain-limiting", "contact-barrier"],
+      "citedIn": [
+        "docs/logbook/072-read-to-the-end.md",
+        "docs/topics/self-collision.md",
+        "docs/logbook/073-eight-ways-to-close-a-net.md"
+      ],
       "url": "https://arxiv.org/abs/2012.04457",
       "file": "library/codimensional-ipc.pdf",
       "authors": "Minchen Li, Danny M. Kaufman, Chenfanfu Jiang",
@@ -9266,8 +9312,12 @@
       "since": {
         "mentioned": "2026-11-27"
       },
-      "about": ["strain-limiting"],
-      "citedIn": ["docs/logbook/072-read-to-the-end.md", "docs/topics/self-collision.md"],
+      "about": ["strain-limiting", "locking"],
+      "citedIn": [
+        "docs/logbook/072-read-to-the-end.md",
+        "docs/topics/self-collision.md",
+        "docs/logbook/073-eight-ways-to-close-a-net.md"
+      ],
       "url": "https://www.cs.columbia.edu/cg/pdfs/131-ESIC.pdf",
       "file": "library/efficient-simulation-of-inextensible-cloth.pdf",
       "authors": "Rony Goldenthal, David Harmon, Raanan Fattal, Michel Bercovier, Eitan Grinspun",
@@ -9408,6 +9458,76 @@
       "url": "https://doi.org/10.1111/j.1467-8659.2009.01397.x",
       "authors": "Bernhard Thomaszewski, Simon Pabst, Wolfgang Straßer",
       "year": 2009
+    },
+    {
+      "id": "locking",
+      "kind": "concept",
+      "title": "Locking",
+      "summary": "A mesh made rigid by its own links: each rigid link takes away one of the 3 directions a particle can move in, and a net of triangles has about 3 per particle, so nothing is left to bend with",
+      "area": "physics",
+      "status": "seen",
+      "since": {
+        "seen": "2026-11-27"
+      },
+      "partOf": "cloth",
+      "related": ["strain-limiting", "shear-constraint", "triangle-net"],
+      "citedIn": [
+        "inextensible-cloth-paper",
+        "strain-based-dynamics-paper",
+        "docs/logbook/073-eight-ways-to-close-a-net.md",
+        "docs/topics/self-collision.md"
+      ]
+    },
+    {
+      "id": "triangle-net",
+      "kind": "concept",
+      "title": "Net of triangles",
+      "summary": "A cloth whose rows are shifted by half a spacing, so each particle has six neighbours: its holes are smaller than those of a net of squares",
+      "area": "physics",
+      "status": "seen",
+      "since": {
+        "seen": "2026-11-27"
+      },
+      "partOf": "cloth",
+      "related": ["self-collision", "locking"],
+      "citedIn": ["docs/logbook/073-eight-ways-to-close-a-net.md", "docs/topics/self-collision.md"],
+      "code": ["docs/topics/self-collision.mjs"]
+    },
+    {
+      "id": "edge-edge-contact",
+      "kind": "concept",
+      "title": "Edge against edge contact",
+      "summary": "Two edges of a mesh that pass through each other like two crossed pencils, with no corner going through a face: a test point against triangle does not see it",
+      "area": "physics",
+      "status": "seen",
+      "since": {
+        "seen": "2026-11-27"
+      },
+      "partOf": "self-collision",
+      "related": ["point-triangle-contact"],
+      "citedIn": [
+        "robust-cloth-collisions-paper",
+        "docs/logbook/073-eight-ways-to-close-a-net.md",
+        "docs/topics/self-collision.md"
+      ]
+    },
+    {
+      "id": "contact-barrier",
+      "kind": "concept",
+      "title": "Contact barrier",
+      "summary": "A push that switches on below a small gap and grows without end as the gap closes: a solver that only goes downhill never reaches zero, as long as each of its jumps is checked along the path",
+      "area": "physics",
+      "status": "seen",
+      "since": {
+        "seen": "2026-11-27"
+      },
+      "partOf": "self-collision",
+      "related": ["continuous-collision-detection"],
+      "citedIn": [
+        "codimensional-ipc-paper",
+        "docs/logbook/073-eight-ways-to-close-a-net.md",
+        "docs/topics/self-collision.md"
+      ]
     }
   ]
 }

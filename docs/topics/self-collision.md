@@ -28,12 +28,21 @@ At 41.4% a particle passes without touching anything. A paper proves when a mesh
 
 **Why more substeps help less than hoped.** Our engine moves the world in *steps* of 1/60 s, and each step is cut into *substeps*: 2 on our pages. A *pass* is one run over all the springs, or all the contacts. Our speed limit is one radius per substep for each particle ([decision 027](../decisions/027-the-safe-speed-limit-by-default.md)): more substeps raise the limit in meters per second, and the distance per substep stays one radius. Two cloths meeting head on close 2 r in a substep, more than the gate between particles: a center can go from not touching yet to past the plane in one substep, with no push in between, at any number of substeps. And the limit cuts the speed only: the springs, and the hand that drags a cloth with the pointer, move particles after it.
 
+**Squares or triangles.** Shift every other row of particles by half a spacing and each has six neighbours, and the holes are triangles. The middle of a triangle is closer to its corners: s/√3 of the spacing s, against s/√2 for a square. Part 6 of the script:
+
+| | Squares | Triangles, same spacing | Triangles, as many particles |
+| --- | --- | --- | --- |
+| Gate at rest | 1.41 r | 1.63 r | 1.57 r |
+| Open from | 41% | 73% | 61% |
+
+The same spacing takes 15% more particles; with as many particles, neighbours no longer touch at rest, and the gain is still most of it: it comes from the shape. No source we read compares the two nets for collisions. Wu 2020 works on triangles of nearly equal sides. Goldenthal and others (2007) choose squares on purpose, for another reason: *locking*. A particle can move in 3 directions and each rigid link takes one away. A net of triangles has about 3 links per particle and nothing is left: the cloth turns to sheet metal. A net of squares has 2, and the one left over is the bend. So they keep the diagonals soft, as Strain Based Dynamics (2014) does on triangles. Our demo pages with 8 links have 4 per particle (each link counts for its two ends), all as stiff as rods by default, and still fold around a ball. Our guess, to measure: the links never quite reach their length, and that stretch is what lets the cloth bend.
+
 ## Choices and trade-offs
 
 | Way | Who, as read in their code or text | What it costs |
 | --- | --- | --- |
 | **Fatter spheres.** The contact distance is larger than the spacing, and pairs closer than it at rest do not collide (a *rest-pose filter*) | NvCloth's sample at 1.3 times the spacing, PhysX's at 2. FleX's demos mostly keep 1, as we do | Thicker layers, more neighbours. At 2 times, the gate is 94% of the contact distance and opens only past 183% of stretch |
-| **A cap on the move**, tied to the thickness | Ten Minute Physics: 0.4 r per substep, with 10 substeps. Some FleX demos 0.5 r. Small Steps, for fluids: 0.3 r, "no particle crossings". OGC 2025: each vertex may move 0.45 of its distance to the nearest thing | Slow falls, or more substeps. The cap has to count the springs too, not only the speed |
+| **A cap on the move**, tied to the thickness | Ten Minute Physics: 0.4 r per substep, with 10 substeps. Some FleX demos 0.5 r. Small Steps, for fluids: 0.3 r, "no particle crossings". OGC 2025: each vertex may move 0.45 of its distance to the nearest thing | Slow falls, or more substeps. The cap has to count the springs too, not only the speed. With OGC's, two cloths brake to a stop just short of touching: it needs a push that starts before the spheres touch |
 | **A cap on stretch.** No spring left longer than 10% over its length (*strain limiting*), or a *tether* from each particle to where the cloth hangs (*long range attachment*) | Provot 1995, one pass; NvCloth and Unreal's Chaos use tethers | Tethers do nothing for a free cloth, and leave neighbours free to stretch. Passes spring by spring converge slowly: on a fine mesh, 512 still leave 3% of stretch on average (Wang 2010) |
 | **A side kept for a step.** For pairs about to meet, keep a plane between them, taken at the start of the step (*predictive contacts*) | Lewin at EA ([our notes](./predictive-contacts-talk.md)); Unreal's Chaos keeps a side bit per point and triangle; Bullet's newer soft bodies; Houdini's Vellum | Contacts made before the spheres touch. A crossing that lasts to the end of a step is kept |
 | **Triangles, not only vertices.** A point against a triangle, an edge against an edge | Chaos (point against triangle only), Blender, Bullet's newer soft bodies, Obi's surface collisions, PhysX's newer cloth, Rapier since September 2026 | Another search, and contacts on four particles. No holes at all |
@@ -46,7 +55,7 @@ Jolt and Havok have no collision between two cloths, and Godot says nothing of o
 
 ## On the GPU
 
-Fatter spheres, the caps and a side read from the start of the substep fit the pass we have: each particle reads its neighbours and writes itself. The rest-pose filter needs no list for a cloth of ours: the number that names a particle, which it keeps while it changes place in memory, gives its row and column in the cloth. OGC's cap is one number per particle, from the distances the search for neighbours through the grid already measures. Triangles need a second search and a write to four particles at once, which our pushes never do. Tethers are one more run over the particles.
+Fatter spheres, the caps and a side read from the start of the substep fit the pass we have: each particle reads its neighbours and writes itself. The rest-pose filter needs no list for a cloth of ours: the number that names a particle, which it keeps while it changes place in memory, gives its row and column in the cloth. OGC's cap is one number per particle, from the distances the search for neighbours through the grid already measures, leaving out the neighbours in the cloth, which touch at rest and would make it zero. Triangles need a second search and a write to four particles at once, which our pushes never do. Tethers are one more run over the particles.
 
 ## In FORCE
 
@@ -55,7 +64,10 @@ Not yet. The pages collide spheres one diameter apart, with the speed limit of d
 - a contact distance larger than the spacing, with the rest-pose filter;
 - a tighter cap, or OGC's cap per particle, counting every move in a substep;
 - a cap on stretch as the last pass over the springs;
-- the side kept: the push along the direction the two had at the start of the substep, with contacts made from a little further away. Part 5 of the script: a particle that starts 2 r above the middle of four is held 1.45 r above the cloth, above the gate, because each contact keeps the direction it had at the start, which pointed more upward. That needs contacts made from 2.45 r away.
+- the side kept: the push along the direction the two had at the start of the substep, with contacts made from a little further away. Part 5 of the script: a particle that starts 2 r above the middle of four is held 1.45 r above the cloth, above the gate, because each contact keeps the direction it had at the start, which pointed more upward. That needs contacts made from 2.45 r away;
+- a net of triangles, if it does not lock with rigid links.
+
+Three of the ways need contacts made before two spheres touch: fatter spheres, OGC's cap and the kept side. Fatter spheres and OGC also push from there, and leave layers apart; the kept side only makes the contact early, and pushes at 2 r. The braking under OGC's cap and the need for that earlier push are our reading, not measured.
 
 ## Check yourself
 

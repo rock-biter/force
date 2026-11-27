@@ -126,7 +126,11 @@ Then we read every source of that study from start to end, before trying anythin
 had wrong, and two ideas to try, above all keeping track of which side of a cloth a particle came
 from ([chapter 072](./docs/logbook/072-read-to-the-end.md)).
 
-**Next:** four cheap ways to keep a cloth shut, tried by script. Then springs for any net, and lighter particles. Then our rules read again against the
+And we went through those sources together, one way of keeping a cloth shut at a time: a net of
+triangles has smaller holes than one of squares, but if all its links are rigid it can no longer
+bend ([chapter 073](./docs/logbook/073-eight-ways-to-close-a-net.md)).
+
+**Next:** the cheap ways to keep a cloth shut, tried by script. Then springs for any net, and lighter particles. Then our rules read again against the
 devices.
 
 Every step, with what we learned and what went wrong, is in the [logbook](./docs/README.md).

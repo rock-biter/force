@@ -19,7 +19,7 @@ const radii = (x) => `${(x / r).toFixed(2)} r`.padStart(7)
 
 console.log('1. The gate at the middle of a cell, as the cloth stretches\n')
 console.log('stretch | both ways | one way only')
-for (const stretch of [0, 0.03, 0.12, 0.2, 0.3, 0.41, 0.5, 0.73]) {
+for (const stretch of [0, 0.03, 0.1, 0.12, 0.2, 0.3, 0.41, 0.5, 0.73]) {
   const s = d * (1 + stretch)
   console.log(`${pct(stretch)}   |  ${radii(gate(s, s))}  |  ${radii(gate(s, d))}`)
 }
@@ -110,3 +110,32 @@ console.log(
 console.log(
   'only when two spheres already overlap, closer than 2 r: none of these four would be made.',
 )
+
+console.log('\n6. A net of triangles: rows shifted by half a spacing, six neighbours each\n')
+console.log('The middle of a triangle of side s is s / √3 from its corners, the middle of a square')
+console.log(
+  's / √2. At the same spacing the triangles need 15% more particles; with as many particles',
+)
+console.log(
+  'as the squares, their spacing is 7.5% longer and neighbours no longer touch at rest.\n',
+)
+/** Height of first touch above the middle of a triangle of side `s`, or 0 if it passes untouched. */
+const gateTriangle = (s) => Math.sqrt(Math.max(d * d - (s * s) / 3, 0))
+const sameCount = d * Math.sqrt(2 / Math.sqrt(3)) // the spacing of triangles with as many particles per m²
+console.log('stretch | squares | triangles, spacing 2 r | triangles, as many particles')
+for (const stretch of [0, 0.1, 0.2, 0.3, 0.41, 0.5, 0.6]) {
+  const f = 1 + stretch
+  console.log(
+    `${pct(stretch)}   | ${radii(gate(d * f, d * f))} | ${radii(gateTriangle(d * f)).padStart(22)} | ${radii(gateTriangle(sameCount * f)).padStart(28)}`,
+  )
+}
+console.log(
+  `\nOpen from: squares ${pct(Math.SQRT2 - 1)}, triangles ${pct(Math.sqrt(3) - 1)}, triangles with as many particles ${pct((d * Math.sqrt(3)) / sameCount - 1)}.`,
+)
+console.log('The shape gives most of the gain, the extra particles the rest.')
+console.log('\nThe price, by the count of Goldenthal and others (2007): a particle can move in 3')
+console.log('directions, and each rigid link takes one away. Links per particle in a large net:')
+console.log('  squares, sides only          2   one left each: the cloth can bend')
+console.log('  triangles                    3   almost none left: rigid (locking)')
+console.log('  squares with both diagonals  4   our pages with 8 links and give 0: not locked')
+console.log('                                   on screen, maybe because the links still stretch')
