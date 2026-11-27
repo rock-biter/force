@@ -151,6 +151,23 @@ const NET = SPRINGS === 'net'
 const LOOSE = CLOTH && !NET ? Number(document.body.dataset.loose) || 0 : 0
 const FOR_CLOTHS = LOOSE ? (Number(document.body.dataset.particles) || 20000) - LOOSE : 0
 const NET_HEIGHT = 3.5 // meters: how high the net is held
+// On the page with the net, a trial: the particles of the net are FINE times smaller than the
+// largest loose one, and as many times closer, so that the net is smoother under them. The page
+// says how many with data-fine on its <body>, ?fine=4 in the address starts with that, and the
+// panel changes it. A finer net keeps three quarters of its
+// width, to spare particles.
+let FINE = NET
+  ? Math.min(
+      Math.max(
+        Number(new URLSearchParams(location.search).get('fine') ?? document.body.dataset.fine) || 1,
+        1,
+      ),
+      4,
+    )
+  : 1
+/** Meters between two particles of the net: a diameter of theirs. */
+const netPitch = () => (2 * 0.1) / FINE
+const NET_SIDE = (side: number) => (FINE > 1 ? Math.round(side * FINE * 0.75) : side)
 // ?kept=0 in the address, to compare: the pushes as they were before decision 046, along the line
 // two particles are on now.
 const SIDE_KEPT = new URLSearchParams(location.search).get('kept') !== '0'
@@ -380,8 +397,8 @@ function patchesOf(asked: number): Patch[] {
       },
     ]
   }
-  const columns = PATCH_COLUMNS
-  const rows = PATCH_ROWS
+  const columns = NET ? NET_SIDE(PATCH_COLUMNS) : PATCH_COLUMNS
+  const rows = NET ? NET_SIDE(PATCH_ROWS) : PATCH_ROWS
   const each = columns * rows
   if (NET)
     return [
@@ -390,9 +407,9 @@ function patchesOf(asked: number): Patch[] {
         columns,
         rows,
         at: (a, b) => [
-          (a - (columns - 1) / 2) * DIAMETER,
+          (a - (columns - 1) / 2) * netPitch(),
           NET_HEIGHT,
-          (b - (rows - 1) / 2) * DIAMETER,
+          (b - (rows - 1) / 2) * netPitch(),
         ],
         // two particles each way at every corner
         held: (a, b) => Math.min(a, columns - 1 - a) < 2 && Math.min(b, rows - 1 - b) < 2,
@@ -474,7 +491,9 @@ function patchesOf(asked: number): Patch[] {
  */
 const clothFit = (count: number) => {
   const fit = patchesOf(count).reduce((sum, patch) => sum + patch.columns * patch.rows, 0)
-  return NET || LOOSE ? Math.max(count, fit) : fit
+  // a finer net has more particles: the loose ones stay as many as with the net of the page
+  if (NET) return fit + Math.max(count - PATCH_COLUMNS * PATCH_ROWS, 0)
+  return LOOSE ? Math.max(count, fit) : fit
 }
 /** How far the cloths reach at the start, in meters: from the middle of the floor, and up. */
 function clothReach(count: number): [across: number, up: number] {
@@ -508,6 +527,7 @@ const heightFor = (count: number) =>
  * use the same groups.
  */
 function cloth(count: number, linksEach: number) {
+  const apart = NET ? netPitch() : DIAMETER // between two neighbours of a cloth, at rest
   const patches = patchesOf(count)
   const at = new Float32Array(count * 3)
   const held: number[] = []
@@ -522,17 +542,16 @@ function cloth(count: number, linksEach: number) {
         if (patch.held(a, b)) held.push(i)
         const right = a + 1 < columns
         const below = b + 1 < rows
-        if (right) links.push([i, i + 1, a % 2, DIAMETER])
-        if (below) links.push([i, name(a, b + 1), 2 + (b % 2), DIAMETER])
+        if (right) links.push([i, i + 1, a % 2, apart])
+        if (below) links.push([i, name(a, b + 1), 2 + (b % 2), apart])
         if (linksEach >= 12) {
-          if (a + 2 < columns)
-            links.push([i, i + 2, 8 + (Math.floor(a / 2) % 2), 2 * DIAMETER, true])
+          if (a + 2 < columns) links.push([i, i + 2, 8 + (Math.floor(a / 2) % 2), 2 * apart, true])
           if (b + 2 < rows)
-            links.push([i, name(a, b + 2), 10 + (Math.floor(b / 2) % 2), 2 * DIAMETER, true])
+            links.push([i, name(a, b + 2), 10 + (Math.floor(b / 2) % 2), 2 * apart, true])
         }
         if (linksEach < 8 || !right || !below) continue
-        links.push([i, name(a + 1, b + 1), 4 + (a % 2), DIAMETER * Math.SQRT2])
-        links.push([i + 1, name(a, b + 1), 6 + (a % 2), DIAMETER * Math.SQRT2])
+        links.push([i, name(a + 1, b + 1), 4 + (a % 2), apart * Math.SQRT2])
+        links.push([i + 1, name(a, b + 1), 6 + (a % 2), apart * Math.SQRT2])
       }
   }
   // The particles the cloths do not take are loose. With a net they start as a block above its
@@ -540,7 +559,7 @@ function cloth(count: number, linksEach: number) {
   const taken = patches.reduce((sum, patch) => sum + patch.columns * patch.rows, 0)
   const pitch = DIAMETER + GAP
   const side = NET
-    ? Math.max(Math.floor((PATCH_COLUMNS * DIAMETER) / 2 / pitch), 1)
+    ? Math.max(Math.floor((NET_SIDE(PATCH_COLUMNS) * netPitch()) / 2 / pitch), 1)
     : Math.max(Math.ceil(Math.sqrt((count - taken) / 6)), 1)
   const bottom = NET ? NET_HEIGHT + 0.5 : RADIUS + GAP
   const next = random(4)
@@ -921,6 +940,14 @@ function makeSimulation(
   // density times its volume, the largest sphere of density 1 being 1 kg. One material is one
   // density for all, and the weight then follows the size alone.
   const sizes = MIXED ? (two?.radii ?? radiiOf(count, ratio)) : undefined
+  // On the page with the net, the sizes and the materials of the panel are for the loose
+  // particles only: the net is of one size, set by FINE, and of one material.
+  if (sizes && NET)
+    for (const { first, columns, rows } of clothed?.patches ?? []) {
+      sizes.fill(RADIUS / FINE, first, first + columns * rows)
+      for (let i = first; i < first + columns * rows; i++)
+        if (start[i * 4 + 3]) start[i * 4 + 3] = 1
+    }
   if (sizes) for (let i = 0; i < count; i++) start[i * 4 + 3] /= (sizes[i] / RADIUS) ** 3
   const bytes = start.byteLength
   // The slots that count particles: one per cell of the grid, or those of the table, the first
@@ -1947,6 +1974,8 @@ async function start() {
       MAX_CLOTHS,
     ),
     side: MathUtils.clamp(Math.round(Number(query.get('side'))) || PATCH_ROWS || 24, 4, MAX_SIDE),
+    // How many times smaller than a loose particle those of the net are: see FINE.
+    fine: FINE,
     // What the pointer does to a cloth: 'push', with the ball, or 'grab', where pressing on a
     // cloth takes hold of it and dragging pulls it (data-pointer="grab" on the page's <body>).
     pointer: CLOTH && document.body.dataset.pointer === 'grab' ? 'grab' : 'push',
@@ -1988,7 +2017,7 @@ async function start() {
   // Cells as wide as the largest particle plus the margin, so that 3 × 3 × 3 of them hold every
   // particle that can touch (decision 023). With sizes the margin follows the smallest particle,
   // half its radius as with one size.
-  const listMargin = () => (MIXED ? margin / settings.sizes : margin)
+  const listMargin = () => (MIXED ? margin / Math.max(settings.sizes, settings.fine) : margin)
   const cellWidth = () => (query.has('narrow') ? CELL : DIAMETER + listMargin())
   const gridOf = (cell: number) =>
     document.body.dataset.tilt !== undefined
@@ -2122,6 +2151,7 @@ async function start() {
       PATCH_COLUMNS = PATCH_ROWS = settings.side
       settings.particles = settings.cloths * settings.side ** 2
     }
+    if (NET) FINE = settings.fine
     simulation?.destroy()
     fitBox(halfFor(settings.particles), heightFor(settings.particles))
     fitBallSlider()
@@ -2285,6 +2315,18 @@ async function start() {
     hidden: !PILE,
     format: (v) => v.toFixed(0),
   })
+  // The net: how small its particles are. Built again when the slider is let go.
+  particles
+    .addBinding(settings, 'fine', {
+      label: 'net, times smaller',
+      min: 1,
+      max: MAX_SIZES,
+      step: 0.5,
+      hidden: !NET,
+    })
+    .on('change', (event) => {
+      if (event.last) restart()
+    })
   particles
     .addBinding(settings, 'masses', {
       label: MIXED ? 'made of' : 'masses',

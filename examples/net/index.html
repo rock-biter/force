@@ -11,7 +11,9 @@
     <link rel="stylesheet" href="../site.css" />
   </head>
   <!-- The same page as heap-simulation, with one cloth held level by its 4 corners and the other
-       particles left loose above it (data-springs="net"), and the ball under the cloth. -->
+       particles left loose above it (data-springs="net"), and the ball under the cloth. The
+       particles of the cloth are 3 times smaller than the loose ones (data-fine), so that these
+       roll on it and do not lodge between them. -->
   <body
     class="stage"
     data-springs="net"
@@ -21,9 +23,10 @@
     data-half="8"
     data-ball="1.5"
     data-ball-height="1.6"
-    data-friction="0.3"
+    data-friction="0.15"
     data-drag="0.5"
     data-cloth="slab"
+    data-fine="3"
   >
     <nav class="crumb">
       <a href="../">← FORCE</a> · A net full of particles
