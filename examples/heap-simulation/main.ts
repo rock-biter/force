@@ -124,18 +124,33 @@ const TWO = MIXED && new URLSearchParams(location.search).has('two')
 // 036 and 037). "ropes": into ropes of ROPE particles, each held by its first particle. "cloth":
 // into one cloth twice as wide as it is tall, held by its top row. "curtains": into several tall,
 // narrow cloths, each held by its top row. "pile": into square cloths dropped on each other, held
-// by nothing. "float": into square cloths that hang in the air, for a page with no gravity.
+// by nothing. "float": into square cloths that hang in the air, for a page with no gravity. "net":
+// into one square cloth held level by its 4 corners, and the rest of the particles left loose, in
+// a block that falls on it.
 const SPRINGS = MIXED ? document.body.dataset.springs : undefined
 const ROPES = SPRINGS === 'ropes'
 const CLOTH = SPRINGS !== undefined && !ROPES
 // How many particles wide and tall each cloth of those three pages is: data-patch="20x70" on the
 // page's <body>, or these.
-const PATCHES: Record<string, string> = { curtains: '20x70', pile: '24x24', float: '60x60' }
+const PATCHES: Record<string, string> = {
+  curtains: '20x70',
+  pile: '24x24',
+  float: '60x60',
+  net: '40x40',
+}
 // On the page with the pile the panel changes them: see `side`.
 let [PATCH_COLUMNS, PATCH_ROWS] = (document.body.dataset.patch ?? PATCHES[SPRINGS ?? ''] ?? '')
   .split('x')
   .map(Number)
 const PILE = SPRINGS === 'pile'
+const NET = SPRINGS === 'net'
+// data-loose="4000" on the <body> of a page with cloths: of the particles the page starts with,
+// this many are joined to nothing, and start as a low block on the floor under the cloths. The
+// cloths take the others, and stay as they are when the panel asks for more particles or fewer:
+// only the loose ones change.
+const LOOSE = CLOTH && !NET ? Number(document.body.dataset.loose) || 0 : 0
+const FOR_CLOTHS = LOOSE ? (Number(document.body.dataset.particles) || 20000) - LOOSE : 0
+const NET_HEIGHT = 3.5 // meters: how high the net is held
 // ?kept=0 in the address, to compare: the pushes as they were before decision 046, along the line
 // two particles are on now.
 const SIDE_KEPT = new URLSearchParams(location.search).get('kept') !== '0'
@@ -348,7 +363,8 @@ interface Patch {
  * "float": upright, side by side from front to back, each bent into a wave of its own, for a page
  * with no gravity.
  */
-function patchesOf(count: number): Patch[] {
+function patchesOf(asked: number): Patch[] {
+  const count = FOR_CLOTHS || asked // with loose particles, the cloths never change
   if (SPRINGS === 'cloth' || !PATCH_COLUMNS || !PATCH_ROWS) {
     const rows = clothRows(count)
     const columns = clothColumns(count)
@@ -367,6 +383,21 @@ function patchesOf(count: number): Patch[] {
   const columns = PATCH_COLUMNS
   const rows = PATCH_ROWS
   const each = columns * rows
+  if (NET)
+    return [
+      {
+        first: 0,
+        columns,
+        rows,
+        at: (a, b) => [
+          (a - (columns - 1) / 2) * DIAMETER,
+          NET_HEIGHT,
+          (b - (rows - 1) / 2) * DIAMETER,
+        ],
+        // two particles each way at every corner
+        held: (a, b) => Math.min(a, columns - 1 - a) < 2 && Math.min(b, rows - 1 - b) < 2,
+      },
+    ]
   const cloths = Math.max(Math.floor(count / each), 1)
   const next = random(3)
   const inLine = Math.ceil(Math.sqrt(cloths)) // curtains in a line
@@ -437,9 +468,14 @@ function patchesOf(count: number): Patch[] {
     }
   })
 }
-/** How many particles the cloths have: a little fewer than asked, so that each one is whole. */
-const clothFit = (count: number) =>
-  patchesOf(count).reduce((sum, patch) => sum + patch.columns * patch.rows, 0)
+/**
+ * How many particles the cloths have: a little fewer than asked, so that each one is whole. With a
+ * net, all those asked for: the ones the net does not take are loose.
+ */
+const clothFit = (count: number) => {
+  const fit = patchesOf(count).reduce((sum, patch) => sum + patch.columns * patch.rows, 0)
+  return NET || LOOSE ? Math.max(count, fit) : fit
+}
 /** How far the cloths reach at the start, in meters: from the middle of the floor, and up. */
 function clothReach(count: number): [across: number, up: number] {
   let across = 0
@@ -459,7 +495,7 @@ function clothReach(count: number): [across: number, up: number] {
  * below.
  */
 const heightFor = (count: number) =>
-  CLOTH ? Math.max(HEIGHT, Math.ceil(clothReach(count)[1] + (GRAVITY === 0 ? 2 : 1))) : HEIGHT
+  CLOTH ? Math.max(HEIGHT, Math.ceil(clothReach(count)[1] + (GRAVITY === 0 ? 2 : 1))) : HEIGHT // a net's loose particles fit under HEIGHT: about 4 000 of them reach 2.5 m above it
 /**
  * The cloths of `count` particles, as clothFit gives (patchesOf). Each particle is joined to its
  * neighbours along the two sides, 4 links per particle. With 8, also along the two diagonals,
@@ -498,6 +534,27 @@ function cloth(count: number, linksEach: number) {
         links.push([i, name(a + 1, b + 1), 4 + (a % 2), DIAMETER * Math.SQRT2])
         links.push([i + 1, name(a, b + 1), 6 + (a % 2), DIAMETER * Math.SQRT2])
       }
+  }
+  // The particles the cloths do not take are loose. With a net they start as a block above its
+  // middle, half as wide as it is; on the other pages as a block 6 particles tall on the floor.
+  const taken = patches.reduce((sum, patch) => sum + patch.columns * patch.rows, 0)
+  const pitch = DIAMETER + GAP
+  const side = NET
+    ? Math.max(Math.floor((PATCH_COLUMNS * DIAMETER) / 2 / pitch), 1)
+    : Math.max(Math.ceil(Math.sqrt((count - taken) / 6)), 1)
+  const bottom = NET ? NET_HEIGHT + 0.5 : RADIUS + GAP
+  const next = random(4)
+  const jitter = () => (next() - 0.5) * 0.01 // or they would stand in columns
+  for (let i = taken; i < count; i++) {
+    const k = i - taken
+    at.set(
+      [
+        ((k % side) - (side - 1) / 2) * pitch + jitter(),
+        bottom + Math.floor(k / (side * side)) * pitch,
+        ((Math.floor(k / side) % side) - (side - 1) / 2) * pitch + jitter(),
+      ],
+      i * 3,
+    )
   }
   return { at, held, links, patches }
 }
@@ -2003,14 +2060,20 @@ async function start() {
         const each = new ClothView(
           renderer,
           { ...sim, ...patch, registerBuffer },
-          cloths.length > 1 ? CLOTH_COLORS[k % CLOTH_COLORS.length] : massColors[0],
+          // a net has a color of its own, to tell it from the particles on it
+          cloths.length > 1
+            ? CLOTH_COLORS[k % CLOTH_COLORS.length]
+            : NET
+              ? CLOTH_COLORS[1]
+              : massColors[0],
           settings.cloth as 'surface' | 'wires' | 'slab',
         )
         each.thickness.value = settings.thickness
         scene.add(each.mesh)
         return each
       })
-      return
+      // loose particles are drawn too, as particles
+      if (!NET && !LOOSE) return
     }
     // The ropes as solids, in place of their particles.
     if (settings.rope !== 'particles' && sim.ropeLength && registerBuffer) {
@@ -2033,6 +2096,10 @@ async function start() {
         cloths && cloths.length > 1
           ? { size: cloths[0].columns * cloths[0].rows, colors: CLOTH_COLORS }
           : undefined,
+      // with a net drawn as a surface, only the particles that lie on it
+      loose: clothViews.length > 0,
+      // and with a net drawn as particles, the net in the color its surface has
+      bodyColor: NET ? CLOTH_COLORS[1] : undefined,
       look: settings.draw === 'flat' ? 'flat' : deferred() ? 'surface' : 'sphere',
       lighting: forward() ? (...surface) => stage.lightOn(...surface) : undefined,
     })
@@ -2040,6 +2107,7 @@ async function start() {
     if (deferred()) view.mesh.layers.set(SURFACES)
     if (!shadowed()) return
     caster = new ParticleView(renderer, simulation, {
+      loose: clothViews.length > 0,
       look: settings.shadows === 'flat' ? 'caster-flat' : 'caster',
     })
     caster.mesh.layers.set(CASTERS)

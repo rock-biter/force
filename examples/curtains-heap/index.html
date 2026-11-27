@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>FORCE: curtains and a heap</title>
+    <meta
+      name="description"
+      content="Curtains of particles joined by springs hang over a heap of loose particles on the GPU: a ball pushes the curtains and throws the particles at them."
+    />
+    <link rel="stylesheet" href="../site.css" />
+  </head>
+  <!-- The page of the curtains and the one of the heap together: cloths held by their top rows
+       (data-springs="curtains"), loose particles on the floor under them (data-loose), and the
+       ball in place of the hand. -->
+  <body
+    class="stage"
+    data-springs="curtains"
+    data-loose="4000"
+    data-sizes="1"
+    data-max-particles="30000"
+    data-friction="0.3"
+    data-drag="0.5"
+    data-particles="12400" data-half="8" data-cloth="surface" data-target="4"
+  >
+    <nav class="crumb">
+      <a href="../">← FORCE</a> · Curtains and a heap
+      <p>Curtains hang over a heap of loose particles. Move the pointer to push both with the ball, and throw the particles at the curtains.</p>
+      <p>Drag to turn the camera, two fingers on a phone.</p>
+    </nav>
+    <script type="module" src="../heap-simulation/main.ts"></script>
+  </body>
+</html>

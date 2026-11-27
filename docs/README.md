@@ -82,6 +82,7 @@ This is where we tell how FORCE gets built, one step at a time. If you are new h
 | 073 | [Eight Ways to Close a Net](./logbook/073-eight-ways-to-close-a-net.md) | The cloth sources gone through together, one way at a time: triangles close the holes better than squares but rigid ones lock, and three ways need contacts made before two spheres touch |
 | 074 | [A Particle in Every Square](./logbook/074-a-particle-in-every-square.md) | A particle that only collides at the middle of every square of a cloth: it wins in a script and is dropped on the GPU. What stays: 3 substeps for cloths, and a hand that gives way |
 | 075 | [Which Side You Came From](./logbook/075-which-side-you-came-from.md) | A cap on stretch does not stop a cloth pulled through another; a push along the line two particles had when the substep began does, and is on between two bodies |
+| 076 | [Cloths and Loose Particles Together](./logbook/076-cloths-and-loose-particles.md) | Two demos where cloths and loose particles share a scene, a net that catches them and curtains over a heap: the first use of the body a particle is part of |
 
 ## For reference
 

@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>FORCE: a net full of particles</title>
+    <meta
+      name="description"
+      content="A cloth of particles held by its four corners catches a block of loose particles on the GPU: push it from below with a ball to make them jump."
+    />
+    <link rel="stylesheet" href="../site.css" />
+  </head>
+  <!-- The same page as heap-simulation, with one cloth held level by its 4 corners and the other
+       particles left loose above it (data-springs="net"), and the ball under the cloth. -->
+  <body
+    class="stage"
+    data-springs="net"
+    data-sizes="1"
+    data-particles="4600"
+    data-max-particles="30000"
+    data-half="8"
+    data-ball="1.5"
+    data-ball-height="1.6"
+    data-friction="0.3"
+    data-drag="0.5"
+    data-cloth="slab"
+  >
+    <nav class="crumb">
+      <a href="../">← FORCE</a> · A net full of particles
+      <p>A cloth held by its four corners catches the particles that fall on it. Move the pointer under it to push it with the ball.</p>
+      <p>Drag to turn the camera, two fingers on a phone.</p>
+    </nav>
+    <script type="module" src="../heap-simulation/main.ts"></script>
+  </body>
+</html>

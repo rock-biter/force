@@ -40,6 +40,16 @@
     "text": "Three cloths waving in slow currents, with no gravity. Grab one and pull."
   },
   {
+    "id": "net",
+    "title": "A net full of particles",
+    "text": "A cloth held by its four corners catches loose particles: push it from below with a ball."
+  },
+  {
+    "id": "curtains-heap",
+    "title": "Curtains and a heap",
+    "text": "Curtains hang over a heap of loose particles: a ball pushes both, and throws the particles at the curtains."
+  },
+  {
     "id": "debug-viewer",
     "title": "Shadows",
     "text": "A small pile and the ways we draw it, with soft shadows and colors."

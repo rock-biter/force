@@ -477,7 +477,8 @@
         "docs/logbook/063-a-cloth.md",
         "docs/logbook/066-against-the-fold.md",
         "docs/decisions/041-bend-by-distance.md",
-        "docs/logbook/071-the-gate.md"
+        "docs/logbook/071-the-gate.md",
+        "docs/logbook/076-cloths-and-loose-particles.md"
       ],
       "code": ["examples/cloth/index.html"]
     },
@@ -3977,7 +3978,10 @@
       "since": {
         "seen": "2026-11-11"
       },
-      "citedIn": ["docs/logbook/009-the-first-picture.md"],
+      "citedIn": [
+        "docs/logbook/009-the-first-picture.md",
+        "docs/logbook/076-cloths-and-loose-particles.md"
+      ],
       "code": ["examples/debug/particles.ts"]
     },
     {
@@ -8638,6 +8642,23 @@
         "docs/topics/self-collision.md"
       ],
       "code": ["docs/topics/self-collision-middles.mjs"]
+    },
+    {
+      "id": "particle-body",
+      "kind": "concept",
+      "title": "The body of a particle",
+      "summary": "A number each particle carries that says which cloth or rope it is part of, 0 for none: it tells the pushes, the drawing and the colors what belongs to what",
+      "area": "physics",
+      "status": "seen",
+      "since": {
+        "seen": "2026-11-27"
+      },
+      "citedIn": [
+        "docs/logbook/075-which-side-you-came-from.md",
+        "docs/decisions/046-the-side-kept.md",
+        "docs/logbook/076-cloths-and-loose-particles.md"
+      ],
+      "code": ["examples/heap-simulation/main.ts", "examples/mixed-sizes/round-cells-sized.wgsl"]
     },
     {
       "id": "grab",

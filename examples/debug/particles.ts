@@ -113,9 +113,21 @@ export interface ParticleViewOptions {
    * Colors the particles by groups, in place of their mass: the first `size` names take the first
    * color, the next `size` the second, and so on, starting again when the colors run out. For a
    * world of several cloths of `size` particles each. It needs the world's properties, where the
-   * name of a particle is.
+   * name of a particle is. A particle that is part of no body keeps the color of its mass.
    */
   groups?: { size: number; colors: readonly Color[] }
+  /**
+   * Draws only the particles that are part of no body: those whose third property is 0. For a
+   * world where a cloth is drawn as a surface and loose particles lie on it. It needs the world's
+   * properties.
+   */
+  loose?: boolean
+  /**
+   * The color of the particles that are part of a body, whose third property is not 0, in place
+   * of the one they would have: to tell a cloth from the loose particles on it. It needs the
+   * world's properties.
+   */
+  bodyColor?: Color
   /** How the particles are drawn: see Look. */
   look?: Look
   /**
@@ -161,15 +173,20 @@ export class ParticleView {
     let cornerRadius = uniform(world.radius) as unknown as Node<'float'>
     let radius = cornerRadius
     let name: Node<'float'> | undefined // the particle's name, the second of its properties
+    let body: Node<'float'> | undefined // the body it is part of, the third: 0 for none
     if (world.propertiesBuffer) {
       const properties = new StorageInstancedBufferAttribute(world.particleCount, 4)
       useExternalBuffer(renderer, properties, world.propertiesBuffer)
       const own = storage(properties, 'vec4', world.particleCount)
         .toReadOnly()
         .element(instanceIndex)
-      cornerRadius = own.x as unknown as Node<'float'>
+      // a particle that is not drawn has no radius: its triangle is a point
+      cornerRadius = (options.loose
+        ? select(own.z.greaterThan(0.5), 0, own.x)
+        : own.x) as unknown as Node<'float'>
       radius = varying(cornerRadius) as unknown as Node<'float'>
       name = own.y as unknown as Node<'float'>
+      body = own.z as unknown as Node<'float'>
     }
 
     // The color: one for all, or from the mass m = 1 / w. log(m / lightest) / log(heaviest /
@@ -195,19 +212,39 @@ export class ParticleView {
             return varying(color)
           })()
         : undefined
-    const tint = grouped
-      ? grouped
-      : !options.massRange
-        ? this.color
-        : spread > 0
-          ? varying(
-              mix(
-                light,
-                uniform(options.massColors?.[1] ?? new Color(0xd1495b)),
-                saturate(log(particle.w).negate().sub(Math.log(lightest)).div(spread)),
-              ),
-            )
-          : light
+    const byMass = !options.massRange
+      ? this.color
+      : spread > 0
+        ? varying(
+            mix(
+              light,
+              uniform(options.massColors?.[1] ?? new Color(0xd1495b)),
+              saturate(log(particle.w).negate().sub(Math.log(lightest)).div(spread)),
+            ),
+          )
+        : light
+    // The colors of the groups are for the particles of a body: a loose one keeps its own.
+    const plain = !grouped
+      ? byMass
+      : body
+        ? varying(
+            select(
+              body.greaterThan(0.5),
+              grouped as unknown as Node<'vec3'>,
+              byMass as unknown as Node<'vec3'>,
+            ) as unknown as Node<'vec3'>,
+          )
+        : grouped
+    const tint =
+      options.bodyColor && body
+        ? varying(
+            select(
+              body.greaterThan(0.5),
+              uniform(options.bodyColor) as unknown as Node<'vec3'>,
+              plain as unknown as Node<'vec3'>,
+            ) as unknown as Node<'vec3'>,
+          )
+        : plain
 
     // Three corners shared by every particle, drawn once per particle (instancing).
     this.geometry = new InstancedBufferGeometry()

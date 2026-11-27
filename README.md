@@ -140,6 +140,11 @@ One case was left, a cloth dragged hard through the others. A limit to how far i
 not stop it. A push that remembers which side each particle came from did, and now two
 different things are pushed apart that way ([chapter 075](./docs/logbook/075-which-side-you-came-from.md)).
 
+And two new demos, where cloths and loose particles share a scene: a net held by its corners that
+catches them ([try it](https://rock-biter.github.io/force/net/)), and curtains over a heap
+([try it](https://rock-biter.github.io/force/curtains-heap/),
+[chapter 076](./docs/logbook/076-cloths-and-loose-particles.md)).
+
 **Next:** springs for any net, and lighter particles.
 Then our rules read again against the devices.
 

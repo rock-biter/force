@@ -5,7 +5,7 @@
 Everything we have met while building FORCE, concepts and sources, and how far we went with each
 one. Use it to look up a term, to find what to read, or to pick what to explore next.
 
-- **335 concepts:** ● 32 studied · ◐ 173 seen · ○ 130 mentioned
+- **336 concepts:** ● 32 studied · ◐ 174 seen · ○ 130 mentioned
 - **191 sources:** ● 15 studied · ◐ 17 seen · ○ 159 mentioned · read by Claude: 84 parts, 42 in full
 
 | | Status | What it means |
@@ -212,6 +212,7 @@ How things move, collide and stay together.
 | ◐ | Temporal coherence | A scene changes little from one step to the next, so the last answer is a good first guess |  | [Iterative Dynamics with Temporal Coherence](https://box2d.org/files/ErinCatto_IterativeDynamics_GDC2005.pdf) |
 | ◐ | Tether | A link that only resists being pulled, like a thread, and does nothing when its ends come closer | Distance constraint | [058](../logbook/058-how-engines-set-a-spring.md) |
 | ◐ | TGS solver | PhysX's solver with substeps: one round over the rules in each, and the rounds without correction at the end of the step | Solver | [004](../logbook/004-the-detour.md) |
+| ◐ | The body of a particle | A number each particle carries that says which cloth or rope it is part of, 0 for none: it tells the pushes, the drawing and the colors what belongs to what |  | [075](../logbook/075-which-side-you-came-from.md) |
 | ● | **[Time accumulator](fixed-timestep.md#the-accumulator)** | Keeps the real time not simulated yet, and spends it in fixed steps | Fixed timestep | [004](../logbook/004-the-detour.md) |
 | ○ | Time of impact | Rewinding the step to the exact moment two things touch and handling the hit there: precise, but slow when hits are many | Collision response | [Advanced Character Physics](https://edelkas.github.io/n/files/bib/jakobsen.pdf) |
 | ● | **[Timestep](fixed-timestep.md)** | The jump in time of each step, often 1/60 of a second | Simulation step | [001](../logbook/001-the-flip-book.md) |
