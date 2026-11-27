@@ -1095,7 +1095,8 @@
         "docs/logbook/045-a-million-and-one-pass.md",
         "docs/logbook/060-one-by-one-or-all-at-once.md",
         "docs/logbook/071-the-gate.md",
-        "docs/logbook/074-a-particle-in-every-square.md"
+        "docs/logbook/074-a-particle-in-every-square.md",
+        "docs/logbook/075-which-side-you-came-from.md"
       ],
       "page": "docs/topics/integration.md#substeps",
       "code": ["src/world.ts"]
@@ -1969,7 +1970,8 @@
         "docs/topics/self-collision.md",
         "docs/logbook/072-read-to-the-end.md",
         "docs/logbook/073-eight-ways-to-close-a-net.md",
-        "docs/logbook/074-a-particle-in-every-square.md"
+        "docs/logbook/074-a-particle-in-every-square.md",
+        "docs/logbook/075-which-side-you-came-from.md"
       ],
       "related": [
         "tunneling",
@@ -8800,7 +8802,8 @@
         "docs/topics/self-collision.md",
         "docs/logbook/072-read-to-the-end.md",
         "docs/logbook/073-eight-ways-to-close-a-net.md",
-        "docs/logbook/074-a-particle-in-every-square.md"
+        "docs/logbook/074-a-particle-in-every-square.md",
+        "docs/logbook/075-which-side-you-came-from.md"
       ],
       "partOf": "cloth",
       "related": ["tether-constraint"]
@@ -8856,7 +8859,8 @@
         "docs/logbook/071-the-gate.md",
         "docs/topics/self-collision.md",
         "docs/logbook/072-read-to-the-end.md",
-        "docs/logbook/073-eight-ways-to-close-a-net.md"
+        "docs/logbook/073-eight-ways-to-close-a-net.md",
+        "docs/logbook/075-which-side-you-came-from.md"
       ],
       "partOf": "self-collision",
       "related": ["speculative-contact", "continuous-collision-detection"]
@@ -8998,7 +9002,8 @@
         "docs/logbook/071-the-gate.md",
         "docs/topics/self-collision.md",
         "docs/logbook/072-read-to-the-end.md",
-        "docs/topics/predictive-contacts-talk.md"
+        "docs/topics/predictive-contacts-talk.md",
+        "docs/logbook/075-which-side-you-came-from.md"
       ],
       "claudeRead": "full",
       "url": "https://media.contentapi.ea.com/content/dam/eacom/frostbite/files/gdc2018-chrislewin-clothselfcollisionwithpredictivecontacts.pdf",

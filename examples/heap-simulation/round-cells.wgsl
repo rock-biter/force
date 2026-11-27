@@ -36,6 +36,12 @@ fn lightness(w: f32) -> f32 {
   return select(pow(w, params.alpha), 0.0, w == 0.0);
 }
 
+// The side kept (decision 046): a push goes along the line the two centers were on when the
+// substep began, not the one they are on now, and asks that they stay a diameter apart along it.
+// A particle that got past another in this substep is then pushed back to the side it came from.
+// ?kept=0 in the address writes `false` here, to compare with the push as it was.
+const SIDE_KEPT = true;
+
 // What one contact asks friction to take back: the part of `slide` across the way out `n`, all of
 // it if it is shorter than µ × overlap (static friction), µ × overlap of it otherwise (kinetic).
 fn rub(slide: vec3f, n: vec3f, overlap: f32) -> vec3f {
@@ -98,6 +104,15 @@ fn main(@builtin(global_invocation_id) id: vec3u) {
             continue;
           }
           let distance = sqrt(squared);
+          // the side kept: the way out is the one the two had when the substep began
+          var out = away / distance;
+          var overlap = diameter - distance;
+          let was = start[i].xyz - start[j].xyz;
+          let wasFar = length(was);
+          if (SIDE_KEPT && wasFar > 0.0) {
+            out = was / wasFar;
+            overlap = diameter - dot(away, out);
+          }
           // The lower of two particles in a pile looks heavier (levels, chapter 029).
           var tilt = 1.0;
           let theirs = levels[j];
@@ -106,11 +121,11 @@ fn main(@builtin(global_invocation_id) id: vec3u) {
           }
           let wi = mine * tilt;
           let wj = lightness(other.w);
-          sum += away / distance * ((diameter - distance) * wi / (wi + wj));
+          sum += out * (overlap * wi / (wi + wj));
           n += 1.0;
           if (rubbing) {
             let theirSlide = other.xyz - start[j].xyz;
-            back += rub(slid - theirSlide, away / distance, diameter - distance) * (wi / (wi + wj));
+            back += rub(slid - theirSlide, out, overlap) * (wi / (wi + wj));
           }
         }
       }

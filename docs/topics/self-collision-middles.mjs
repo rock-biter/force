@@ -40,6 +40,7 @@ function world(variant, gravity = true, damping = 1) {
     links: [],
     mid: [],
     cloths: [],
+    spot: [], // for every particle of a cloth: its cloth, column and row
   }
 }
 
@@ -54,6 +55,7 @@ function addCloth(W, nx, nz, x0, y0, z0, sx, sz, vy = 0, pinned = () => false) {
       W.v.push(0, vy, 0)
       W.w.push(pinned(i, j) ? 0 : 1)
       W.rad.push(r)
+      W.spot[W.w.length - 1] = [id, i, j]
     }
   for (let j = 0; j < nz; j++)
     for (let i = 0; i < nx; i++) {
@@ -100,7 +102,7 @@ function build(W) {
   W.head = new Int32Array(TABLE)
   W.next = new Int32Array(W.n + W.m)
   W.cand = new Int32Array(W.n + W.m)
-  W.seen = new Int32Array(27)
+  W.seen = new Int32Array(125)
   W.pairsChecked = 0
   W.maxMove = 0 // the most any particle moved in one substep, springs and pushes included
   return W
@@ -148,16 +150,19 @@ function fillGrid(W) {
   }
 }
 
-/** The points in the 27 cells around point p, in W.cand by their numbers; returns how many. */
-function near(W, p) {
+/**
+ * The points in the 27 cells around point p, in W.cand by their numbers; returns how many. With a
+ * `reach` of 2, in the 125 cells around it.
+ */
+function near(W, p, reach = 1) {
   const cx = cellOf(pos(W, p, 0))
   const cy = cellOf(pos(W, p, 1))
   const cz = cellOf(pos(W, p, 2))
   let count = 0
   let seen = 0
-  for (let ix = -1; ix <= 1; ix++)
-    for (let iy = -1; iy <= 1; iy++)
-      for (let iz = -1; iz <= 1; iz++) {
+  for (let ix = -reach; ix <= reach; ix++)
+    for (let iy = -reach; iy <= reach; iy++)
+      for (let iz = -reach; iz <= reach; iz++) {
         const b = bucket(cx + ix, cy + iy, cz + iz)
         if (W.seen.subarray(0, seen).includes(b)) continue // two cells in one bucket
         W.seen[seen++] = b
@@ -166,6 +171,33 @@ function near(W, p) {
   W.cand.subarray(0, count).sort()
   W.pairsChecked += count
   return count
+}
+
+// The side kept (Lewin 2018, as we read it): a push between particles i and j goes along the line
+// their centers were on when the substep began, not the one they are on now, and asks that they
+// stay a `reach` apart along it. A particle that got past the other is then pushed back to the
+// side it came from. Two ways, in `variant.side`:
+// - 'direction': a contact is made as today, when the two overlap now;
+// - 'plane': a contact is made for every pair that began the substep closer than the reach plus
+//   `far`, and is still that close, overlapping or not: a contact before the touch. Neighbours in
+//   a cloth, along its sides and diagonals, are left out (a rest-pose filter).
+function askSide(W, acc, i, j, reach, share) {
+  const { x, prev } = W
+  const { way, far } = W.variant.side
+  const n = [0, 1, 2].map((k) => prev[i * 3 + k] - prev[j * 3 + k])
+  const d0 = Math.hypot(...n)
+  const d = [0, 1, 2].map((k) => x[i * 3 + k] - x[j * 3 + k])
+  const now = Math.hypot(...d)
+  if (d0 === 0) return
+  if (way === 'plane') {
+    if (d0 >= reach + far || now >= reach + far) return
+    const [a, b] = [W.spot[i], W.spot[j]]
+    if (a && b && a[0] === b[0] && Math.abs(a[1] - b[1]) <= 1 && Math.abs(a[2] - b[2]) <= 1) return
+  } else if (now >= reach) return
+  const over = reach - (d[0] * n[0] + d[1] * n[1] + d[2] * n[2]) / d0
+  if (over <= 0) return
+  for (let k = 0; k < 3; k++) acc[k] += (n[k] / d0) * over * share
+  acc[3]++
 }
 
 function round(W) {
@@ -217,10 +249,13 @@ function round(W) {
     if (w[i] === 0) continue
     acc.fill(0)
     const [px, py, pz] = [x[i * 3], x[i * 3 + 1], x[i * 3 + 2]]
-    const count = near(W, i)
+    const side = W.variant.side
+    const count = near(W, i, side?.way === 'plane' ? 2 : 1)
     for (let t = 0; t < count; t++) {
       const j = cand[t]
-      if (j < n) {
+      if (j < n && side) {
+        askSide(W, acc, i, j, rad[i] + rad[j], w[i] / (w[i] + w[j]))
+      } else if (j < n) {
         const share = w[i] / (w[i] + w[j])
         ask(acc, px, py, pz, x[j * 3], x[j * 3 + 1], x[j * 3 + 2], rad[i] + rad[j], share)
       } else {
@@ -291,6 +326,28 @@ function grab(W, h) {
   }
 }
 
+// A cap on stretch (Provot 1995), as the last thing in a substep, after the pushes: `passes` times
+// over the links, each one longer than `most` over its length at rest is pulled back to that. Our
+// links are rods already, but the pushes come after them and stretch them again.
+function limitStretch(W, { most, passes }) {
+  const { x, w } = W
+  for (let p = 0; p < passes; p++) {
+    for (const [a, b, rest] of W.links) {
+      const sum = w[a] + w[b]
+      if (sum === 0) continue
+      const e = [0, 1, 2].map((k) => x[b * 3 + k] - x[a * 3 + k])
+      const len = Math.hypot(...e)
+      const over = len - rest * (1 + most)
+      if (over <= 0) continue
+      for (let k = 0; k < 3; k++) {
+        x[a * 3 + k] += (w[a] / sum) * (over / len) * e[k]
+        x[b * 3 + k] -= (w[b] / sum) * (over / len) * e[k]
+      }
+    }
+    hold(W)
+  }
+}
+
 function step(W) {
   const { x, v, w, prev, n } = W
   const limit = W.variant.limit ?? LIMIT
@@ -329,6 +386,7 @@ function step(W) {
       round(W)
       hold(W)
     }
+    if (W.variant.strain) limitStretch(W, W.variant.strain)
     for (let i = 0; i < n; i++) {
       const moved = Math.hypot(
         x[i * 3] - prev[i * 3],
@@ -1055,6 +1113,132 @@ if (want(11)) {
       })
       console.log(
         `${base.name.padEnd(15)}| ${mode.padEnd(6)} | ${cells.map((c) => pad(c, 18)).join(' | ')} | ${pad(`${Math.round(stretch * 100)}%`, 7)}`,
+      )
+    }
+}
+
+if (want(12)) {
+  console.log(
+    '\n12. A cap on stretch after the pushes: no link left more than 10% longer than at rest.',
+  )
+  console.log(
+    '    Plain squares, the hand that gives way (capped). The curtain of part 7 and the pull',
+  )
+  console.log(
+    '    of part 10 with B held: steps with a crossing, (left at the end), and for the pull',
+  )
+  console.log('    how high the hand got. Then the most stretched link, and the strip of part 3\n')
+  const DROPS = [3, 6, 10]
+  console.log(
+    `substeps, cap on speed | cap on stretch | ${DROPS.map((d) => pad(`${d} m`, 8)).join(' | ')} | ${pad('pull, 2 m/s', 18)} | ${pad('pull, 10 m/s', 18)} | stretch | strip: tip, fold`,
+  )
+  for (const [substeps, limit] of [
+    [2, r],
+    [3, CAP],
+  ])
+    for (const strain of [undefined, { most: 0.1, passes: 1 }, { most: 0.1, passes: 4 }]) {
+      const v = { name: 'squares', middle: 0, substeps, limit, strain }
+      let stretch = 0
+      const falls = DROPS.map((drop) => {
+        let frames = 0
+        let left = 0
+        for (const wave of WAVES) {
+          const c = curtain(v, drop, wave)
+          frames += c.frames
+          left += c.left
+          stretch = Math.max(stretch, c.stretch)
+        }
+        return `${frames} (${left})`
+      })
+      const pulls = [2, 10].map((speed) => {
+        let frames = 0
+        let left = 0
+        let lift = 0
+        for (const off of [...aims.map(([, o]) => o), [0, 0]]) {
+          const c = pull(v, speed, off, true, 'capped')
+          frames += c.frames
+          left += c.left
+          lift += c.lift / 4
+          stretch = Math.max(stretch, c.stretch)
+        }
+        return `${frames} (${left}) ${lift.toFixed(2)} m`
+      })
+      const { tip, sharpest } = strip(v)
+      const name = strain ? `10%, ${strain.passes} pass${strain.passes > 1 ? 'es' : ''}` : 'none'
+      console.log(
+        `${pad(substeps, 8)}, ${pad(radii(limit), 12)} | ${name.padEnd(14)} | ${falls.map((c) => pad(c, 8)).join(' | ')} | ${pulls.map((c) => pad(c, 18)).join(' | ')} | ${pad(`${Math.round(stretch * 100)}%`, 7)} | ${tip.toFixed(2)} m, ${sharpest.toFixed(0)}°`,
+      )
+    }
+}
+
+if (want(13)) {
+  console.log(
+    '\n13. The side kept: a push along the line two particles were on when the substep began.',
+  )
+  console.log(
+    '    Plain squares, the hand that gives way. Two cloths head on at 9 m/s each and at the',
+  )
+  console.log(
+    '    speed limit (worst aim, B below A); grains through a cloth held stretched by 41%, of',
+  )
+  console.log(
+    '    192; the curtain from 6 and 10 m and the pull with B held, in steps with a crossing',
+  )
+  console.log('    (left at the end); the strip; a flat cloth left alone\n')
+  console.log(
+    'substeps, cap | push      | head on 9, limit | grains | curtain 6 m, 10 m | pull 2 m/s, 10 m/s        | strip: tip, fold | alone',
+  )
+  for (const [substeps, limit] of [
+    [2, r],
+    [3, CAP],
+  ])
+    for (const side of [undefined, { way: 'direction' }, { way: 'plane', far: 1.5 * r }]) {
+      const v = { name: 'squares', middle: 0, substeps, limit, side }
+      const heads = [9, 60].map((speed) => {
+        let worst = 0
+        for (const [, off] of aims) {
+          let crossed = 0
+          let counted = 0
+          for (const phase of PHASES) {
+            const out = headOn(v, speed, off, phase)
+            crossed += out.crossed
+            counted += out.counted
+          }
+          worst = Math.max(worst, crossed / counted)
+        }
+        return `${Math.round(worst * 100)}%`
+      })
+      let through = 0
+      for (const speed of [3, 6, 12])
+        for (const phase of PHASES) {
+          const g = grains(v, 0.41, speed, phase)
+          through += g.out[0] + g.out[1]
+        }
+      const falls = [6, 10].map((drop) => {
+        let frames = 0
+        let left = 0
+        for (const wave of WAVES) {
+          const c = curtain(v, drop, wave)
+          frames += c.frames
+          left += c.left
+        }
+        return `${frames} (${left})`
+      })
+      const pulls = [2, 10].map((speed) => {
+        let frames = 0
+        let left = 0
+        let lift = 0
+        for (const off of [...aims.map(([, o]) => o), [0, 0]]) {
+          const c = pull(v, speed, off, true, 'capped')
+          frames += c.frames
+          left += c.left
+          lift += c.lift / 4
+        }
+        return `${frames} (${left}) ${lift.toFixed(2)} m`
+      })
+      const { tip, sharpest } = strip(v)
+      console.log(
+        `${pad(substeps, 3)}, ${pad(radii(limit), 8)} | ${(side?.way ?? 'today').padEnd(9)} | ${pad(heads.join(', '), 16)} | ${pad(through, 6)} | ${pad(falls.join(', '), 17)} | ${pad(pulls.join(', '), 25)} | ${pad(`${tip.toFixed(2)} m, ${sharpest.toFixed(0)}°`, 16)} | ${still(v).toExponential(1)} m`,
       )
     }
 }

@@ -19,8 +19,17 @@ struct Pointer {
 @group(0) @binding(7) var<uniform> pointer: Pointer;
 @group(0) @binding(8) var<storage, read> start: array<vec4f>; // positions when the substep began
 @group(0) @binding(9) var<uniform> friction: f32;             // µ, 0 for none
-@group(0) @binding(10) var<storage, read> properties: array<vec4f>; // x: the radius, in meters
+@group(0) @binding(10) var<storage, read> properties: array<vec4f>; // x: the radius, in meters, z: the body
 @group(0) @binding(11) var<storage, read> book: array<u32>;
+
+// The side kept (decision 046): a push goes along the line the two centers were on when the
+// substep began, not the one they are on now, and asks that they stay a diameter apart along it.
+// A particle that got past another in this substep is then pushed back to the side it came from.
+// Not between two particles of one body, a cloth or a rope: a fold that has crossed another must
+// be free to cross back, and the springs pull it. The body is the third of the properties, a
+// whole number from 1 on, or 0 for a particle that belongs to none.
+// ?kept=0 in the address writes `false` here, to compare with the push as it was.
+const SIDE_KEPT = true;
 
 // How heavy the solver thinks a particle is, as 1 / m^alpha; 0 never moves.
 fn lightness(w: f32) -> f32 {
@@ -53,6 +62,7 @@ fn main(@builtin(global_invocation_id) id: vec3u) {
   let mine = lightness(me.w);
   let level = levels[i];
   let radius = properties[i].x;
+  let body = properties[i].z;
   var sum = vec3f(0.0);
   var n = 0.0;
   // Friction, in the same loop as the pushes: how far this particle has slid up to the last round.
@@ -83,13 +93,24 @@ fn main(@builtin(global_invocation_id) id: vec3u) {
             continue;
           }
           let other = before[j];
-          let diameter = radius + properties[j].x; // where these two just touch
+          let theirKind = properties[j];
+          let diameter = radius + theirKind.x; // where these two just touch
           let away = p - other.xyz;
           let squared = dot(away, away);
           if (squared >= diameter * diameter || squared == 0.0) {
             continue;
           }
           let distance = sqrt(squared);
+          // the side kept: the way out is the one the two had when the substep began
+          var out = away / distance;
+          var overlap = diameter - distance;
+          let was = start[i].xyz - start[j].xyz;
+          let wasFar = length(was);
+          let apart = body == 0.0 || body != theirKind.z; // not two of one body
+          if (SIDE_KEPT && apart && wasFar > 0.0) {
+            out = was / wasFar;
+            overlap = diameter - dot(away, out);
+          }
           // The lower of two particles in a pile looks heavier (levels, chapter 029).
           var tilt = 1.0;
           let theirs = levels[j];
@@ -98,11 +119,11 @@ fn main(@builtin(global_invocation_id) id: vec3u) {
           }
           let wi = mine * tilt;
           let wj = lightness(other.w);
-          sum += away / distance * ((diameter - distance) * wi / (wi + wj));
+          sum += out * (overlap * wi / (wi + wj));
           n += 1.0;
           if (rubbing) {
             let theirSlide = other.xyz - start[j].xyz;
-            back += rub(slid - theirSlide, away / distance, diameter - distance) * (wi / (wi + wj));
+            back += rub(slid - theirSlide, out, overlap) * (wi / (wi + wj));
           }
         }
       }

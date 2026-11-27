@@ -136,6 +136,9 @@ let [PATCH_COLUMNS, PATCH_ROWS] = (document.body.dataset.patch ?? PATCHES[SPRING
   .split('x')
   .map(Number)
 const PILE = SPRINGS === 'pile'
+// ?kept=0 in the address, to compare: the pushes as they were before decision 046, along the line
+// two particles are on now.
+const SIDE_KEPT = new URLSearchParams(location.search).get('kept') !== '0'
 const MAX_CLOTHS = 30 // in a pile
 const MAX_SIDE = 60 // particles on a side of a cloth of the pile: 12 m
 // data-drift="0.5" on a page's <body>: slow currents that push the particles around, this many m/s²
@@ -590,7 +593,15 @@ async function makePipelines(device: GPUDevice, hash: string) {
   const make = (code: string) =>
     device.createComputePipelineAsync({
       layout: 'auto',
-      compute: { module: device.createShaderModule({ code: commonCode + code }) },
+      compute: {
+        module: device.createShaderModule({
+          code:
+            commonCode +
+            (SIDE_KEPT
+              ? code
+              : code.replace('const SIDE_KEPT = true;', 'const SIDE_KEPT = false;')),
+        }),
+      },
     })
   const [predict, clearIf, finish, ...book] = await Promise.all(
     [
@@ -897,7 +908,8 @@ function makeSimulation(
 
   // What a particle is, and does not change during a step: four numbers each, in one buffer, so
   // that a shader spends one of its 8 storage buffers on all of them (decision 032). The radius
-  // first, then the particle's name; the other two are free, for what comes next.
+  // first, then the particle's name, then its body: the cloth or the rope it is part of, from 1
+  // on, or 0 for a particle on its own. The last is free, for what comes next.
   const properties = storage(sizes ? count * 16 : 16, GPUBufferUsage.COPY_SRC) // read back by ?profile
   if (sizes) {
     const data = new Float32Array(count * 4)
@@ -905,6 +917,10 @@ function makeSimulation(
     sizes.forEach((radius, i) => {
       data[i * 4] = radius
       data[i * 4 + 1] = i
+      if (ROPES) data[i * 4 + 2] = Math.floor(i / ROPE) + 1
+    })
+    clothed?.patches.forEach(({ first, columns, rows }, k) => {
+      for (let i = first; i < first + columns * rows; i++) data[i * 4 + 2] = k + 1
     })
     device.queue.writeBuffer(properties, 0, data)
   }

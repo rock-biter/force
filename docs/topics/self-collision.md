@@ -63,12 +63,11 @@ Fatter spheres, the caps and a side read from the start of the substep fit the p
 
 ## In FORCE
 
-The pages collide spheres one diameter apart, with the speed limit of decision 027. Cloths run at 3 substeps or more ([decision 043](../decisions/043-three-substeps-for-cloths.md)), where the limit is three quarters of a radius per substep ([decision 045](../decisions/045-a-tighter-limit-from-three-substeps.md)), and the hand that drags one moves no particle more than a radius in a substep ([decision 044](../decisions/044-a-hand-that-gives-way.md)). A cloth pulled hard through another still passes. The candidates left to try by script, none decided:
+The pages collide spheres one diameter apart, with the speed limit of decision 027. Cloths run at 3 substeps or more ([decision 043](../decisions/043-three-substeps-for-cloths.md)), where the limit is three quarters of a radius per substep ([decision 045](../decisions/045-a-tighter-limit-from-three-substeps.md)), and the hand that drags one moves no particle more than a radius in a substep ([decision 044](../decisions/044-a-hand-that-gives-way.md)). A push between two bodies keeps its side: it goes along the line the two centers had when the substep began ([decision 046](../decisions/046-the-side-kept.md)); inside one cloth it does not, so that a fold that crossed can cross back. With these, in our second script, two cloths at the speed limit and a cloth pulled through a held one no longer pass. Tried and left: a cap on stretch after the pushes, which shortens the links and stops nothing ([chapter 075](../logbook/075-which-side-you-came-from.md)). Still to try, none decided:
 
 - a contact distance larger than the spacing, with the rest-pose filter;
 - a tighter cap, or OGC's cap per particle, counting every move in a substep;
-- a cap on stretch as the last pass over the springs;
-- the side kept: the push along the direction the two had at the start of the substep, with contacts made from a little further away. Part 5 of the script: a particle that starts 2 r above the middle of four is held 1.45 r above the cloth, above the gate, because each contact keeps the direction it had at the start, which pointed more upward. That needs contacts made from 2.45 r away;
+- the side kept with contacts made before the touch. Part 5 of the script: a particle that starts 2 r above the middle of four is held 1.45 r above the cloth, above the gate, if contacts are made from 2.45 r away. In the second script it did no better than the direction alone;
 - a net of triangles, if it does not lock with rigid links.
 
 Three of the ways need contacts made before two spheres touch: fatter spheres, OGC's cap and the kept side. Fatter spheres and OGC also push from there, and leave layers apart; the kept side only makes the contact early, and pushes at 2 r. The braking under OGC's cap and the need for that earlier push are our reading, not measured.

@@ -136,7 +136,11 @@ slow, and we dropped it. What stayed is simpler: cloths now take three smaller s
 two, and the hand that drags one gives way when the cloth cannot follow
 ([chapter 074](./docs/logbook/074-a-particle-in-every-square.md)).
 
-**Next:** a limit to how far a cloth can stretch. Then springs for any net, and lighter particles.
+One case was left, a cloth dragged hard through the others. A limit to how far it can stretch did
+not stop it. A push that remembers which side each particle came from did, and now two
+different things are pushed apart that way ([chapter 075](./docs/logbook/075-which-side-you-came-from.md)).
+
+**Next:** springs for any net, and lighter particles.
 Then our rules read again against the devices.
 
 Every step, with what we learned and what went wrong, is in the [logbook](./docs/README.md).
