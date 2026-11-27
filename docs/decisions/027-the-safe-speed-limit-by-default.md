@@ -1,6 +1,6 @@
 # 027 · The safe speed limit by default
 
-*Accepted · November 23, 2026 · The user, after making 2 substeps the default ([chapter 045](../logbook/045-a-million-and-one-pass.md))*
+*Accepted, changed by [045](./045-a-tighter-limit-from-three-substeps.md) from 3 substeps on · November 23, 2026 · The user, after making 2 substeps the default ([chapter 045](../logbook/045-a-million-and-one-pass.md))*
 
 **Decision:** we will cut every particle's speed, at the end of each substep, to one radius per substep by default: radius × 60 × substeps, 12 m/s for spheres of 10 cm with the 2 substeps of [decision 026](./026-two-rounds-two-substeps.md).
 

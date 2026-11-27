@@ -178,6 +178,9 @@ const MAX_STEPS_PER_FRAME = 2
 const MAX_SUBSTEPS = 8
 const SAMPLE_EVERY = 30 // frames between two readings of the GPU's numbers
 const FORCE_PLUS = { alpha: 0.5, levels: 1.5, substeps: 2 } // decisions 015, 028 and 029
+// On a page with cloths, 3 substeps at least: with 2, a cloth that falls on itself from a few
+// meters passes through itself (docs/topics/self-collision-middles.mjs, part 9).
+const MIN_SUBSTEPS = CLOTH ? 3 : 1
 // The choices of the masses menu: the lightest and the heaviest, in kg. Only their ratio changes
 // what the solver does: gravity pulls every mass alike, and a contact shares by w_i / (w_i + w_j).
 const MASSES: Record<string, readonly [number, number]> = {
@@ -749,8 +752,14 @@ fn repeated(home: vec3i, offset: vec3i, slots: u32) -> bool {
 }
 type Pipelines = Awaited<ReturnType<typeof makePipelines>>
 
-/** One radius per substep, in m/s: 6 with 1 substep, 12 with 2, the safe limit (decision 017). */
-const safeSpeed = (substeps: number) => (RADIUS * substeps) / STEP
+/**
+ * The safe limit, in m/s: one radius per substep with 1 or 2 substeps, 6 and 12 m/s (decision
+ * 027), and three quarters of a radius from 3 substeps on, 13.5 m/s with 3 and 18 with 4
+ * (decision 045).
+ */
+const SAFE_SHARE = 0.75
+const safeSpeed = (substeps: number) =>
+  ((substeps >= 3 ? SAFE_SHARE : 1) * RADIUS * substeps) / STEP
 /** The limit of decision 019, as a share of the safe one: 9 m/s with 1 substep, 18 with 2. */
 const DEFAULT_SHARE = 1.5
 
@@ -1735,17 +1744,17 @@ async function start() {
     // FORCE+ ('plus') or FORCE ('force'): the same rule, with α = 1 and c = 0
     method: 'plus',
     ...FORCE_PLUS,
-    // ?substeps=1 in the address starts with that many
+    // ?substeps=4 in the address starts with that many
     substeps: MathUtils.clamp(
       Math.round(Number(query.get('substeps'))) || FORCE_PLUS.substeps,
-      1,
+      MIN_SUBSTEPS,
       MAX_SUBSTEPS,
     ),
     // ?c=0 in the address starts without levels
     levels: query.has('c') ? MathUtils.clamp(Number(query.get('c')) || 0, 0, 4) : FORCE_PLUS.levels,
-    // The speed limit: 'safe', the default, one radius per substep (decision 027), 'auto', 1.5 ×
-    // the safe one, 'custom', `speed` in m/s, or 'off' (decisions 017 to 019). With the default 2
-    // substeps, 'safe' is 12 m/s.
+    // The speed limit: 'safe', the default, one radius per substep, or three quarters of one from
+    // 3 substeps on (decisions 027 and 045), 'auto', 1.5 × the safe one, 'custom', `speed` in m/s,
+    // or 'off' (decisions 017 to 019). With the default 2 substeps, 'safe' is 12 m/s.
     maxSpeed: 'safe',
     speed: 20,
     // µ: 0 is the liquid of chapter 031, 0.3 already makes a pile stand (chapter 034). A page
@@ -2123,7 +2132,7 @@ async function start() {
     .on('change', applySolver)
   // Each substep has its own rounds, so a step costs about as many times more.
   const substeps = solver
-    .addBinding(settings, 'substeps', { min: 1, max: MAX_SUBSTEPS, step: 1 })
+    .addBinding(settings, 'substeps', { min: MIN_SUBSTEPS, max: MAX_SUBSTEPS, step: 1 })
     .on('change', applySolver)
   // The speed limit: 1.5 × the safe one by default, the safe one, one radius per substep, or any
   // speed in m/s, at the risk of splashes above the safe one (decisions 017 to 019).
@@ -2152,7 +2161,10 @@ async function start() {
     .addBinding(settings, 'friction', { label: 'friction µ', min: 0, max: 1, step: 0.05 })
     .on('change', applySolver)
   solver.addButton({ title: 'as decision 015' }).on('click', () => {
-    Object.assign(settings, FORCE_PLUS, { method: 'plus' })
+    Object.assign(settings, FORCE_PLUS, {
+      method: 'plus',
+      substeps: Math.max(FORCE_PLUS.substeps, MIN_SUBSTEPS),
+    })
     alpha.disabled = levels.disabled = false
     method.refresh()
     alpha.refresh()

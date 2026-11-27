@@ -80,6 +80,7 @@ This is where we tell how FORCE gets built, one step at a time. If you are new h
 | 071 | [The Gate](./logbook/071-the-gate.md) | Why cloths pass through each other: a cloth of spheres is thin between its particles and has no side. What engines and papers do about it besides more substeps |
 | 072 | [Read to the End](./logbook/072-read-to-the-end.md) | The sources of the last study read in full: four things we had wrong, steps per second that are not frames, and two ideas to try, a side kept for a substep and a cap per particle |
 | 073 | [Eight Ways to Close a Net](./logbook/073-eight-ways-to-close-a-net.md) | The cloth sources gone through together, one way at a time: triangles close the holes better than squares but rigid ones lock, and three ways need contacts made before two spheres touch |
+| 074 | [A Particle in Every Square](./logbook/074-a-particle-in-every-square.md) | A particle that only collides at the middle of every square of a cloth: it wins in a script and is dropped on the GPU. What stays: 3 substeps for cloths, and a hand that gives way |
 
 ## For reference
 

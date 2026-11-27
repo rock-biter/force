@@ -5,7 +5,7 @@
 Everything we have met while building FORCE, concepts and sources, and how far we went with each
 one. Use it to look up a term, to find what to read, or to pick what to explore next.
 
-- **334 concepts:** ● 32 studied · ◐ 172 seen · ○ 130 mentioned
+- **335 concepts:** ● 32 studied · ◐ 173 seen · ○ 130 mentioned
 - **191 sources:** ● 15 studied · ◐ 17 seen · ○ 159 mentioned · read by Claude: 84 parts, 42 in full
 
 | | Status | What it means |
@@ -28,6 +28,7 @@ How things move, collide and stay together.
 
 | | Concept | In short | Part of | First cited in |
 | --- | --- | --- | --- | --- |
+| ◐ | A particle in every square | One more sphere at the middle of each square of a cloth, not simulated, that only collides and passes its pushes to its 4 corners: it closes the holes, and makes the cloth stiff and the step heavy | Self-collision | [074](../logbook/074-a-particle-in-every-square.md) |
 | ◐ | A push that changes in space | An acceleration that depends on where a particle is and on time, like wind or currents: here a drift made of sine waves, where gravity was |  | [067](../logbook/067-a-hand-on-the-cloth.md) |
 | ◐ | Accumulated impulse | Keeping the total push of a rule and clamping that, not each round alone, so a later round can take part of it back | Sequential impulses (PGS) | [Iterative Dynamics with Temporal Coherence](https://box2d.org/files/ErinCatto_IterativeDynamics_GDC2005.pdf) |
 | ◐ | Air mesh | The air between layers of cloth filled once with triangles or tetrahedra that may never turn inside out: a side kept for good, and a way to untangle | Self-collision | [072](../logbook/072-read-to-the-end.md) |

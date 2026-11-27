@@ -130,8 +130,14 @@ And we went through those sources together, one way of keeping a cloth shut at a
 triangles has smaller holes than one of squares, but if all its links are rigid it can no longer
 bend ([chapter 073](./docs/logbook/073-eight-ways-to-close-a-net.md)).
 
-**Next:** the cheap ways to keep a cloth shut, tried by script. Then springs for any net, and lighter particles. Then our rules read again against the
-devices.
+Then we tried an idea of our own, one more particle at the middle of every square of a cloth, only
+to collide. In a script it held where nothing else did; on the GPU the cloths became too stiff and
+slow, and we dropped it. What stayed is simpler: cloths now take three smaller steps where they took
+two, and the hand that drags one gives way when the cloth cannot follow
+([chapter 074](./docs/logbook/074-a-particle-in-every-square.md)).
+
+**Next:** a limit to how far a cloth can stretch. Then springs for any net, and lighter particles.
+Then our rules read again against the devices.
 
 Every step, with what we learned and what went wrong, is in the [logbook](./docs/README.md).
 

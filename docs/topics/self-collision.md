@@ -1,6 +1,6 @@
 # Self-collision
 
-*Theory · 6 min read · Updated November 27, 2026 · [Topic map](./README.md)*
+*Theory · 7 min read · Updated November 27, 2026 · [Topic map](./README.md)*
 
 **In short:** A cloth made of spheres is a wall with thin spots, and no memory of which side a thing was on. Engines for games keep it shut with fatter spheres, a cap on the move, a cap on stretch, or contacts that keep their side for a step. Nothing that promises no crossing at all runs at 60 Hz yet.
 
@@ -37,6 +37,10 @@ At 41.4% a particle passes without touching anything. A paper proves when a mesh
 
 The same spacing takes 15% more particles; with as many particles, neighbours no longer touch at rest, and the gain is still most of it: it comes from the shape. No source we read compares the two nets for collisions. Wu 2020 works on triangles of nearly equal sides. Goldenthal and others (2007) choose squares on purpose, for another reason: *locking*. A particle can move in 3 directions and each rigid link takes one away. A net of triangles has about 3 links per particle and nothing is left: the cloth turns to sheet metal. A net of squares has 2, and the one left over is the bend. So they keep the diagonals soft, as Strain Based Dynamics (2014) does on triangles. Our demo pages with 8 links have 4 per particle (each link counts for its two ends), all as stiff as rods by default, and still fold around a ball. Our guess, to measure: the links never quite reach their length, and that stretch is what lets the cloth bend.
 
+**A particle in every square.** One more sphere at the middle of each square, not simulated: it stays at the average of its 4 corners, ignores them, and passes its pushes on to them. Wu 2020 adds such points inside stretched triangles. [Our second script](./self-collision-middles.mjs), a copy of our step in 3D: the gate goes to 1.73 r, and to 1.20 r at 60% of stretch; two cloths head on hold up to 9 m/s each, not 6; grains on a cloth stretched by 45% no longer pass. The price: 3.4 times the pairs to look at, and on the GPU cloths too stiff. Dropped ([chapter 074](../logbook/074-a-particle-in-every-square.md)).
+
+**What substeps do.** At a given speed, more substeps mean less distance in each. In the same script a curtain that falls and folds crosses itself with 2 substeps and never with 3, and two cloths head on are safe up to 6, 9 and 12 m/s each with 2, 3 and 4. Twice the passes over the springs do not help.
+
 ## Choices and trade-offs
 
 | Way | Who, as read in their code or text | What it costs |
@@ -59,7 +63,7 @@ Fatter spheres, the caps and a side read from the start of the substep fit the p
 
 ## In FORCE
 
-Not yet. The pages collide spheres one diameter apart, with the speed limit of decision 027. The candidates to try by script, none decided:
+The pages collide spheres one diameter apart, with the speed limit of decision 027. Cloths run at 3 substeps or more ([decision 043](../decisions/043-three-substeps-for-cloths.md)), where the limit is three quarters of a radius per substep ([decision 045](../decisions/045-a-tighter-limit-from-three-substeps.md)), and the hand that drags one moves no particle more than a radius in a substep ([decision 044](../decisions/044-a-hand-that-gives-way.md)). A cloth pulled hard through another still passes. The candidates left to try by script, none decided:
 
 - a contact distance larger than the spacing, with the rest-pose filter;
 - a tighter cap, or OGC's cap per particle, counting every move in a substep;
@@ -79,7 +83,7 @@ Three of the ways need contacts made before two spheres touch: fatter spheres, O
 
 Read in full, except where said. The notes of each reading stay in `library/notes/self-collision/`, out of git.
 
-- Our own numbers: [self-collision.mjs](./self-collision.mjs), geometry only.
+- Our own numbers: [self-collision.mjs](./self-collision.mjs), geometry only, and [self-collision-middles.mjs](./self-collision-middles.mjs), a copy of our step.
 - Engines, one line each: Jolt's `Architecture.md`, Godot's `SoftBody3D` docs, Havok's cloth docs, Rapier's changelog and soft-body contacts.
 - Engines in their code: FleX's manual, header and demos (its solver is closed); NvCloth's docs and self-collision code; PhysX 5.6's particle cloth and its newer cloth; Blender's `collision.cc`; Bullet's soft bodies, old and new; Unreal's Chaos 4.26 and 5.8, from unofficial copies of Epic's code. In their manuals: Obi, Houdini's Vellum. Ten Minute Physics 15: the code of the simulation.
 - Papers on our case: Wu 2020 and Lewin 2018 (with his patent, US 10,692,266), see their notes; Unified Particle Physics 2014; Position Based Dynamics 2007; Small Steps 2019; the survey of position based methods, 2014.

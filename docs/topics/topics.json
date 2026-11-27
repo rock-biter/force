@@ -1094,7 +1094,8 @@
         "docs/logbook/033-the-speed-limit.md",
         "docs/logbook/045-a-million-and-one-pass.md",
         "docs/logbook/060-one-by-one-or-all-at-once.md",
-        "docs/logbook/071-the-gate.md"
+        "docs/logbook/071-the-gate.md",
+        "docs/logbook/074-a-particle-in-every-square.md"
       ],
       "page": "docs/topics/integration.md#substeps",
       "code": ["src/world.ts"]
@@ -1967,7 +1968,8 @@
         "docs/logbook/071-the-gate.md",
         "docs/topics/self-collision.md",
         "docs/logbook/072-read-to-the-end.md",
-        "docs/logbook/073-eight-ways-to-close-a-net.md"
+        "docs/logbook/073-eight-ways-to-close-a-net.md",
+        "docs/logbook/074-a-particle-in-every-square.md"
       ],
       "related": [
         "tunneling",
@@ -8618,6 +8620,24 @@
       "citedIn": ["docs/logbook/066-against-the-fold.md", "jolt-soft-body-settings"]
     },
     {
+      "id": "cloth-middles",
+      "kind": "concept",
+      "title": "A particle in every square",
+      "summary": "One more sphere at the middle of each square of a cloth, not simulated, that only collides and passes its pushes to its 4 corners: it closes the holes, and makes the cloth stiff and the step heavy",
+      "area": "physics",
+      "status": "seen",
+      "since": {
+        "seen": "2026-11-27"
+      },
+      "partOf": "self-collision",
+      "citedIn": [
+        "docs/logbook/074-a-particle-in-every-square.md",
+        "safe-fast-repulsion-paper",
+        "docs/topics/self-collision.md"
+      ],
+      "code": ["docs/topics/self-collision-middles.mjs"]
+    },
+    {
       "id": "grab",
       "kind": "concept",
       "title": "Grabbing with the pointer",
@@ -8627,7 +8647,10 @@
       "since": {
         "seen": "2026-11-26"
       },
-      "citedIn": ["docs/logbook/067-a-hand-on-the-cloth.md"]
+      "citedIn": [
+        "docs/logbook/067-a-hand-on-the-cloth.md",
+        "docs/logbook/074-a-particle-in-every-square.md"
+      ]
     },
     {
       "id": "picking",
@@ -8776,7 +8799,8 @@
         "docs/logbook/071-the-gate.md",
         "docs/topics/self-collision.md",
         "docs/logbook/072-read-to-the-end.md",
-        "docs/logbook/073-eight-ways-to-close-a-net.md"
+        "docs/logbook/073-eight-ways-to-close-a-net.md",
+        "docs/logbook/074-a-particle-in-every-square.md"
       ],
       "partOf": "cloth",
       "related": ["tether-constraint"]
@@ -8950,7 +8974,8 @@
         "docs/topics/self-collision.md",
         "docs/logbook/072-read-to-the-end.md",
         "docs/topics/safe-fast-repulsion-paper.md",
-        "docs/logbook/073-eight-ways-to-close-a-net.md"
+        "docs/logbook/073-eight-ways-to-close-a-net.md",
+        "docs/logbook/074-a-particle-in-every-square.md"
       ],
       "claudeRead": "full",
       "url": "https://wanghmin.github.io/publication/wu-2020-sfr/",

@@ -38,7 +38,7 @@ The choices that shape FORCE, one per page: what we decided, why, what we left o
 | 024 | [Cells kept in a hashed table](./024-cells-in-a-hashed-table.md) | Accepted | November 23, 2026 |
 | 025 | [Friction in the same pass as the pushes](./025-friction-in-one-pass.md) | Accepted | November 23, 2026 |
 | 026 | [Two rounds, in each of two substeps](./026-two-rounds-two-substeps.md) | Superseded by 029 | November 23, 2026 |
-| 027 | [The safe speed limit by default](./027-the-safe-speed-limit-by-default.md) | Accepted | November 23, 2026 |
+| 027 | [The safe speed limit by default](./027-the-safe-speed-limit-by-default.md) | Accepted, changed by 045 from 3 substeps on | November 23, 2026 |
 | 028 | [A level strength of 1.5](./028-level-strength.md) | Accepted | November 23, 2026 |
 | 029 | [Three rounds, in each of two substeps](./029-three-rounds-two-substeps.md) | Accepted | November 23, 2026 |
 | 030 | [Shadows in the debug viewer, shaded once per pixel](./030-viewer-shadows-shaded-once-per-pixel.md) | Accepted | November 25, 2026 |
@@ -54,6 +54,9 @@ The choices that shape FORCE, one per page: what we decided, why, what we left o
 | 040 | [Damping in each spring, drag on every particle](./040-damping-and-drag.md) | Accepted | November 25, 2026 |
 | 041 | [Bend links by distance, with a softness of their own](./041-bend-by-distance.md) | Accepted | November 25, 2026 |
 | 042 | [Short chains of && and \|\| in our shaders](./042-short-chains-in-shaders.md) | Accepted | November 26, 2026 |
+| 043 | [Three substeps for cloths, at least](./043-three-substeps-for-cloths.md) | Accepted | November 27, 2026 |
+| 044 | [A hand that gives way](./044-a-hand-that-gives-way.md) | Accepted | November 27, 2026 |
+| 045 | [A tighter speed limit from 3 substeps on](./045-a-tighter-limit-from-three-substeps.md) | Accepted | November 27, 2026 |
 
 ## Rules
 

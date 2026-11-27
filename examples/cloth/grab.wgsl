@@ -13,6 +13,11 @@
 //
 // The share is taken at every substep, so more substeps make the same pull firmer: to do, if this
 // goes into the engine.
+//
+// The hand gives way: it moves no particle more than that particle's radius in a substep, the cap
+// on the speed of decision 027. Without it the hand covers its share of the way whatever is in
+// between, and pulls a cloth through another that cannot move aside
+// (docs/topics/self-collision-middles.mjs, part 11).
 
 struct Handle {
   at: vec3f,  // where the handle is in this substep, in meters
@@ -36,5 +41,11 @@ fn main(@builtin(global_invocation_id) id: vec3u) {
   if (p.w == 0.0 || share <= 0.0) {
     return;
   }
-  predicted[row] = vec4f(mix(p.xyz, handle.at + hold.xyz, share), p.w);
+  var shift = (handle.at + hold.xyz - p.xyz) * share;
+  let far = length(shift);
+  let most = properties[row].x;
+  if (far > most) {
+    shift *= most / far;
+  }
+  predicted[row] = vec4f(p.xyz + shift, p.w);
 }
