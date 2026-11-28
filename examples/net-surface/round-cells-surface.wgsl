@@ -31,6 +31,10 @@
 // DEEPEST would, each of its particles on its own. With LARGE there are no slots: every large
 // sphere of the other cloth is a contact of its own, as every sphere is today.
 //
+// A choice for each cloth: one whose surface is off has no normal (normals.wgsl), and pushes with
+// its spheres as before. Its particles are grains to a cloth whose surface is on, and rest their
+// radius and half a thickness from its middle.
+//
 // With `surface.rounded`, in DEEPEST and BLENDED, the cloth ends with a rounded edge. Without it
 // a grain up to a diameter past the last particle is still pushed along the normal, as if the
 // cloth went on, flat, and a grain that comes from the side is thrown up or down. With it, for a
@@ -196,10 +200,20 @@ fn main(@builtin(global_invocation_id) id: vec3u) {
           }
           // a particle of a cloth and one that is not of that cloth: the push of the surface
           let theirBody = theirKind.z;
-          let both = body != 0.0 && theirBody != 0.0; // two cloths
-          let onCloth = apart && (body != 0.0 || theirBody != 0.0);
-          if (surfaced && onCloth) {
-            let grain = theirBody != 0.0; // this particle lies on their cloth
+          // a cloth has a surface if it has a normal
+          var mineOn = false;
+          var theirsOn = false;
+          if (surfaced && apart && theirBody != 0.0) {
+            let theirNormal = normals[2 * j].xyz;
+            theirsOn = dot(theirNormal, theirNormal) > 0.0;
+          }
+          if (surfaced && apart && body != 0.0) {
+            let myNormal = normals[2 * i].xyz;
+            mineOn = dot(myNormal, myNormal) > 0.0;
+          }
+          let both = mineOn && theirsOn; // two cloths, each on the other's surface
+          if (mineOn || theirsOn) {
+            let grain = theirsOn; // this particle lies on their cloth
             let turn = select(-1.0, 1.0, grain); // `away` goes to the grain, or from it
             let cloth = 2 * select(i, j, grain);
             let normal = normals[cloth].xyz;

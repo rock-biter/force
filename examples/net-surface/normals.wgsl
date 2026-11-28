@@ -4,7 +4,9 @@
 //
 // A particle of a cloth knows its place in it from its name: the cloth is `columns` by `rows`
 // particles, named row after row from `first`. Which cloth is its body, the third of its
-// properties, from 1 on: `nets` holds the three numbers of each, in that order. Its two neighbours along a row and its two along a
+// properties, from 1 on: `nets` holds the three numbers of each, in that order, and a fourth: 1 if
+// the cloth pushes with its surface, 0 if with its spheres as before. Then it gets no normal, and
+// that is how the round knows. Its two neighbours along a row and its two along a
 // column give two lines that lie on the cloth, and the normal is across both: their cross
 // product, as for a triangle that is drawn. On the border a particle stands in for the neighbour
 // it does not have. Which of the two ways out the normal points does not matter: the round looks
@@ -24,7 +26,7 @@
 @group(0) @binding(1) var<storage, read> rowOf: array<u32>;
 @group(0) @binding(2) var<storage, read> positions: array<vec4f>;
 @group(0) @binding(3) var<storage, read_write> normals: array<vec4f>;
-@group(0) @binding(4) var<storage, read> nets: array<vec4u>; // first, columns, rows
+@group(0) @binding(4) var<storage, read> nets: array<vec4u>; // first, columns, rows, surface on
 
 fn at(net: vec4u, a: u32, b: u32) -> vec3f {
   return positions[rowOf[net.x + a + b * net.y]].xyz;
@@ -44,6 +46,11 @@ fn main(@builtin(global_invocation_id) id: vec3u) {
     return;
   }
   let net = nets[u32(kind.z) - 1];
+  if (net.w == 0u) {
+    normals[2 * row] = vec4f(0.0);
+    normals[2 * row + 1] = vec4f(0.0);
+    return;
+  }
   let columns = net.y;
   let rows = net.z;
   let k = u32(kind.y) - net.x;

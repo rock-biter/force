@@ -153,6 +153,11 @@ const NET = SPRINGS === 'net'
 const LOOSE = CLOTH && !NET ? Number(document.body.dataset.loose) || 0 : 0
 const FOR_CLOTHS = LOOSE ? (Number(document.body.dataset.particles) || 20000) - LOOSE : 0
 const NET_HEIGHT = 3.5 // meters: how high the net is held
+// data-net="44" on the <body> of the page with the pile: under the cloths, a net of that many
+// particles a side, held level by its 4 corners at NET_HEIGHT, catches them. It is the last cloth
+// of the page, and the sliders of the pile leave it as it is.
+const CATCH = PILE ? Number(document.body.dataset.net) || 0 : 0
+const CATCH_COLOR = new Color(0x9aa3ad)
 // A trial, on the page ../net-surface (data-surface on its <body>) and on any page with cloths
 // opened with ?surface= in the address: what lies on a cloth, a loose particle or another cloth,
 // is pushed by the surface of the cloth, in one of the ways of
@@ -167,19 +172,24 @@ type SurfaceMethod = keyof typeof SURFACE_METHODS
 // largest loose one, and as many times closer, so that the net is smoother under them. The page
 // says how many with data-fine on its <body>, ?fine=4 in the address starts with that, and the
 // panel changes it. A finer net keeps three quarters of its
-// width, to spare particles.
-let FINE = NET
-  ? Math.min(
-      Math.max(
-        Number(new URLSearchParams(location.search).get('fine') ?? document.body.dataset.fine) || 1,
-        1,
-      ),
-      4,
-    )
-  : 1
+// width, to spare particles. The same for the net that catches a pile of cloths (CATCH), which
+// keeps its whole width.
+let FINE =
+  NET || CATCH
+    ? Math.min(
+        Math.max(
+          Number(new URLSearchParams(location.search).get('fine') ?? document.body.dataset.fine) ||
+            1,
+          1,
+        ),
+        4,
+      )
+    : 1
 /** Meters between two particles of the net: a diameter of theirs. */
 const netPitch = () => (2 * 0.1) / FINE
 const NET_SIDE = (side: number) => (FINE > 1 ? Math.round(side * FINE * 0.75) : side)
+/** How many particles a side the net that catches a pile has: as wide as CATCH large ones. */
+const catchSide = () => Math.round(CATCH * FINE)
 // ?kept=0 in the address, to compare: the pushes as they were before decision 046, along the line
 // two particles are on now.
 const SIDE_KEPT = new URLSearchParams(location.search).get('kept') !== '0'
@@ -378,6 +388,8 @@ interface Patch {
   rows: number
   at: (a: number, b: number) => Vec3
   held: (a: number, b: number) => boolean
+  /** Meters between two neighbours, and their radius, when not those of the page: a finer net. */
+  pitch?: number
 }
 
 /**
@@ -429,11 +441,11 @@ function patchesOf(asked: number): Patch[] {
         held: (a, b) => Math.min(a, columns - 1 - a) < 2 && Math.min(b, rows - 1 - b) < 2,
       },
     ]
-  const cloths = Math.max(Math.floor(count / each), 1)
+  const cloths = Math.max(Math.floor((count - catchSide() ** 2) / each), 1)
   const next = random(3)
   const inLine = Math.ceil(Math.sqrt(cloths)) // curtains in a line
   const lineCount = Math.ceil(cloths / inLine)
-  return Array.from({ length: cloths }, (_, k) => {
+  const free = Array.from({ length: cloths }, (_, k): Patch => {
     // A cloth is made flat, x across it and y or z along it, then turned around the vertical by
     // `yaw` and moved to `center`.
     let yaw = 0
@@ -454,7 +466,11 @@ function patchesOf(asked: number): Patch[] {
       yaw = next() * 2 * Math.PI
       const wide = rows * DIAMETER
       const apart = 0.2 + 2 * (wide / 2) * Math.sin(Math.PI / 15)
-      center = [(next() - 0.5) * 0.8 * wide, apart * (k + 1), (next() - 0.5) * 0.8 * wide]
+      center = [
+        (next() - 0.5) * 0.8 * wide,
+        (CATCH ? NET_HEIGHT : 0) + apart * (k + 1),
+        (next() - 0.5) * 0.8 * wide,
+      ]
       flat = (across, b) => {
         const along = (b - (rows - 1) / 2) * DIAMETER
         return [across, along * Math.sin(tilt), along * Math.cos(tilt)]
@@ -498,6 +514,21 @@ function patchesOf(asked: number): Patch[] {
       held: (_, b) => SPRINGS === 'curtains' && b === 0,
     }
   })
+  if (!CATCH) return free
+  const side = catchSide()
+  const pitch = netPitch()
+  return [
+    ...free,
+    {
+      first: cloths * each,
+      columns: side,
+      rows: side,
+      pitch,
+      at: (a, b) => [(a - (side - 1) / 2) * pitch, NET_HEIGHT, (b - (side - 1) / 2) * pitch],
+      // at every corner, as much of the net as two large particles each way
+      held: (a, b) => Math.min(a, side - 1 - a) < 2 * FINE && Math.min(b, side - 1 - b) < 2 * FINE,
+    },
+  ]
 }
 /**
  * How many particles the cloths have: a little fewer than asked, so that each one is whole. With a
@@ -541,13 +572,14 @@ const heightFor = (count: number) =>
  * use the same groups.
  */
 function cloth(count: number, linksEach: number) {
-  const apart = NET ? netPitch() : DIAMETER // between two neighbours of a cloth, at rest
   const patches = patchesOf(count)
   const at = new Float32Array(count * 3)
   const held: number[] = []
   const links: Link[] = []
   for (const patch of patches) {
     const { first, columns, rows } = patch
+    // between two neighbours of a cloth, at rest
+    const apart = patch.pitch ?? (NET ? netPitch() : DIAMETER)
     const name = (a: number, b: number) => first + a + b * columns
     for (let b = 0; b < rows; b++)
       for (let a = 0; a < columns; a++) {
@@ -959,8 +991,10 @@ function makeSimulation(
   const sizes = MIXED ? (two?.radii ?? radiiOf(count, ratio)) : undefined
   // On the page with the net, the sizes and the materials of the panel are for the loose
   // particles only: the net is of one size, set by FINE, and of one material.
-  if (sizes && NET)
-    for (const { first, columns, rows } of clothed?.patches ?? []) {
+  // The same for the net that catches a pile: the last cloth of the page.
+  if (sizes && (NET || CATCH))
+    for (const { first, columns, rows, pitch } of clothed?.patches ?? []) {
+      if (CATCH && pitch === undefined) continue
       sizes.fill(RADIUS / FINE, first, first + columns * rows)
       for (let i = first; i < first + columns * rows; i++)
         if (start[i * 4 + 3]) start[i * 4 + 3] = 1
@@ -1184,11 +1218,6 @@ function makeSimulation(
     usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
   })
   buffers.push(surface)
-  device.queue.writeBuffer(
-    netShapes,
-    0,
-    new Uint32Array(nets.flatMap(({ first, columns, rows }) => [first, columns, rows, 0])),
-  )
   const normalsGroup =
     surfaced && kit.normals
       ? group(kit.normals, [properties, rowOf, positions, normals, netShapes])
@@ -1419,6 +1448,21 @@ function makeSimulation(
      * thickness of the cloth in meters, the radius of the large sphere, in radii of a particle
      * of the net, and whether the cloth ends with a rounded edge. Only on the page of that trial.
      */
+    /**
+     * Which cloths push with their surface: all of them, or the net alone (the only cloth of the
+     * page of the net, the one that catches on the page of the pile). The others push with their
+     * spheres. The fourth number of each cloth in the table normals.wgsl reads.
+     */
+    setSurfaced(which: 'all' | 'net') {
+      const table = nets.flatMap(({ first, columns, rows, pitch }) => [
+        first,
+        columns,
+        rows,
+        which === 'all' || NET || pitch !== undefined ? 1 : 0,
+      ])
+      device.queue.writeBuffer(netShapes, 0, new Uint32Array(table))
+    },
+
     setSurface(method: SurfaceMethod, half: number, large: number, rounded: boolean) {
       const data = new ArrayBuffer(16)
       new Uint32Array(data).set([SURFACE_METHODS[method], 0, 0, rounded ? 1 : 0])
@@ -2042,6 +2086,9 @@ async function start() {
     // The cloth ends with a rounded edge, for the two pushes along the normal. ?rounded=0 for
     // the flat slab that goes on past the last particle.
     rounded: query.get('rounded') !== '0',
+    // Which cloths push with their surface: 'all', or the 'net' alone, where a net catches a pile
+    // of cloths. ?surface-of=all in the address.
+    surfaceOf: (CATCH && query.get('surface-of') !== 'all' ? 'net' : 'all') as 'all' | 'net',
     // What the pointer does to a cloth: 'push', with the ball, or 'grab', where pressing on a
     // cloth takes hold of it and dragging pulls it (data-pointer="grab" on the page's <body>).
     pointer: CLOTH && document.body.dataset.pointer === 'grab' ? 'grab' : 'push',
@@ -2157,7 +2204,9 @@ async function start() {
           { ...sim, ...patch, registerBuffer },
           // a net has a color of its own, to tell it from the particles on it
           cloths.length > 1
-            ? CLOTH_COLORS[k % CLOTH_COLORS.length]
+            ? CATCH && k === cloths.length - 1
+              ? CATCH_COLOR
+              : CLOTH_COLORS[k % CLOTH_COLORS.length]
             : NET
               ? NET_COLOR
               : massColors[0],
@@ -2218,7 +2267,8 @@ async function start() {
     // In a pile the panel says how many cloths and how large: the count of particles follows.
     if (PILE) {
       PATCH_COLUMNS = PATCH_ROWS = settings.side
-      settings.particles = settings.cloths * settings.side ** 2
+      if (CATCH) FINE = settings.fine
+      settings.particles = settings.cloths * settings.side ** 2 + catchSide() ** 2
     }
     if (NET) FINE = settings.fine
     simulation?.destroy()
@@ -2300,6 +2350,7 @@ async function start() {
       settings.large,
       settings.rounded,
     )
+    simulation?.setSurfaced(settings.surfaceOf)
   }
 
   const pane = new Pane({ title: 'FORCE on the GPU', expanded: window.innerWidth >= 600 })
@@ -2349,6 +2400,13 @@ async function start() {
       max: 8,
       step: 0.5,
       disabled: settings.surface !== 'large',
+    })
+    .on('change', applySolver)
+  surfaceFolder
+    .addBinding(settings, 'surfaceOf', {
+      label: 'surface of',
+      options: { 'the net only': 'net', 'every cloth': 'all' },
+      hidden: !CATCH,
     })
     .on('change', applySolver)
   const rounded = surfaceFolder
@@ -2450,7 +2508,7 @@ async function start() {
       min: 1,
       max: MAX_SIZES,
       step: 0.5,
-      hidden: !NET,
+      hidden: !NET && !CATCH,
     })
     .on('change', (event) => {
       if (event.last) restart()

@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>FORCE: a net that catches cloths</title>
+    <meta
+      name="description"
+      content="Square cloths of particles joined by springs fall on a net held by its four corners, on the GPU: grab one with the pointer and drag it out from under the others, or off the net."
+    />
+    <link rel="stylesheet" href="../site.css" />
+  </head>
+  <!-- The same page as heap-simulation, with the particles joined into cloths by springs
+       (data-springs), a pointer that grabs a cloth and drags it (data-pointer), and under them a net
+       held by its 4 corners that catches them (data-net: its side, in particles). -->
+  <body
+    class="stage"
+    data-springs="pile"
+    data-surface
+    data-sizes="1"
+    data-max-particles="40000"
+    data-friction="0.15"
+    data-drag="0.5"
+    data-pointer="grab"
+    data-particles="4700" data-half="8" data-cloth="slab" data-net="44"
+  >
+    <nav class="crumb">
+      <a href="../">← FORCE</a> · A net that catches cloths
+      <p>Square cloths fall on a net held by its four corners.</p>
+      <p>Drag a cloth to pull it, off the net too. Drag the empty space to turn the camera, two fingers on a phone.</p>
+    </nav>
+    <script type="module" src="../heap-simulation/main.ts"></script>
+  </body>
+</html>
