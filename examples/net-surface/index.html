@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>FORCE: the surface of a cloth</title>
+    <meta
+      name="description"
+      content="Loose particles on a net of particles as large as they are, on the GPU: pushed by the net's spheres they lodge between them, pushed by its surface they roll. Switch between the ways."
+    />
+    <link rel="stylesheet" href="../site.css" />
+  </head>
+  <!-- A trial (chapter 077), with a green net to tell it from the page of the net. The same page as the net, with the particles of the net as large as
+       the loose ones (data-fine="1"), which then lodge between them and do not roll. With
+       data-surface the panel chooses how a loose particle on the net is pushed: by its spheres,
+       as today, or by its surface (round-cells-surface.wgsl). -->
+  <body
+    class="stage"
+    data-springs="net"
+    data-surface
+    data-sizes="1"
+    data-particles="4600"
+    data-max-particles="30000"
+    data-half="8"
+    data-ball="1.5"
+    data-ball-height="1.6"
+    data-friction="0.15"
+    data-drag="0.5"
+    data-cloth="slab"
+    data-fine="1"
+  >
+    <nav class="crumb">
+      <a href="../">← FORCE</a> · The surface of a cloth
+      <p>The <a href="../net/">net</a> again, with particles as large as the loose ones. Pushed by its spheres they lodge between them; pushed by its surface they slide. Choose in the panel, and set how thick the cloth is.</p>
+      <p>Move the pointer under the net to push it with the ball. Drag to turn the camera, two fingers on a phone.</p>
+    </nav>
+    <script type="module" src="../heap-simulation/main.ts"></script>
+  </body>
+</html>

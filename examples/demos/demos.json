@@ -41,8 +41,13 @@
   },
   {
     "id": "net",
-    "title": "A net full of particles",
-    "text": "A cloth held by its four corners catches loose particles: push it from below with a ball."
+    "title": "A fine net full of particles",
+    "text": "A cloth held by its four corners catches loose particles. Its own particles are 3 times smaller, so they roll on it: push it from below with a ball."
+  },
+  {
+    "id": "net-surface",
+    "title": "The surface of a cloth",
+    "text": "The same net with particles as large as the loose ones, which lodge between them. Pushed by the cloth's surface they slide: switch between the ways, and set how thick the cloth is."
   },
   {
     "id": "curtains-heap",

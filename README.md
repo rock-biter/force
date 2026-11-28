@@ -15,7 +15,7 @@ documentation of the library will live there too.
 
 ## Where we are
 
-*Updated November 27, 2026*
+*Updated November 28, 2026*
 
 **Latest steps:** chapters [038](./docs/logbook/038-one-hundred-twenty-five-cells.md),
 [039](./docs/logbook/039-far-apart-in-memory.md) and [040](./docs/logbook/040-the-table.md). To find
@@ -145,7 +145,11 @@ catches them ([try it](https://rock-biter.github.io/force/net/)), and curtains o
 ([try it](https://rock-biter.github.io/force/curtains-heap/),
 [chapter 076](./docs/logbook/076-cloths-and-loose-particles.md)).
 
-**Next:** springs for any net, and lighter particles.
+Particles that fell on that net stayed where they landed: a cloth made of spheres is an egg tray to
+them. Pushed along the direction that leaves the cloth, they now slide as on a smooth sheet, and the
+cloth can be as thin as it is drawn ([chapter 077](./docs/logbook/077-the-surface-of-a-cloth.md)).
+
+**Next:** a net that catches a pile of cloths, then springs for any net and lighter particles.
 Then our rules read again against the devices.
 
 Every step, with what we learned and what went wrong, is in the [logbook](./docs/README.md).

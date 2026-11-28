@@ -478,7 +478,9 @@
         "docs/logbook/066-against-the-fold.md",
         "docs/decisions/041-bend-by-distance.md",
         "docs/logbook/071-the-gate.md",
-        "docs/logbook/076-cloths-and-loose-particles.md"
+        "docs/logbook/076-cloths-and-loose-particles.md",
+        "docs/logbook/077-the-surface-of-a-cloth.md",
+        "docs/decisions/047-pushed-by-the-surface.md"
       ],
       "code": ["examples/cloth/index.html"]
     },
@@ -1972,7 +1974,8 @@
         "docs/logbook/072-read-to-the-end.md",
         "docs/logbook/073-eight-ways-to-close-a-net.md",
         "docs/logbook/074-a-particle-in-every-square.md",
-        "docs/logbook/075-which-side-you-came-from.md"
+        "docs/logbook/075-which-side-you-came-from.md",
+        "docs/logbook/077-the-surface-of-a-cloth.md"
       ],
       "related": [
         "tunneling",
@@ -2265,7 +2268,9 @@
         "docs/guides/dispatch-and-workgroups.md",
         "docs/logbook/021-a-short-trip.md",
         "docs/logbook/030-the-lazy-list.md",
-        "docs/logbook/049-a-radius-each.md"
+        "docs/logbook/049-a-radius-each.md",
+        "docs/logbook/077-the-surface-of-a-cloth.md",
+        "docs/guides/uniform-buffers.md"
       ],
       "code": ["src/world.ts"]
     },
@@ -2821,7 +2826,8 @@
         "angle-of-repose",
         "particle-reordering",
         "mixed-particle-sizes",
-        "self-collision"
+        "self-collision",
+        "cloth-surface-contact"
       ],
       "citedIn": [
         "docs/logbook/004-the-detour.md",
@@ -2835,7 +2841,8 @@
         "docs/logbook/041-next-to-each-other.md",
         "docs/logbook/048-big-and-small.md",
         "docs/logbook/071-the-gate.md",
-        "docs/logbook/072-read-to-the-end.md"
+        "docs/logbook/072-read-to-the-end.md",
+        "docs/logbook/077-the-surface-of-a-cloth.md"
       ],
       "url": "https://doi.org/10.1145/2601097.2601152",
       "authors": "Miles Macklin, Matthias Müller, Nuttapong Chentanez, Tae-Yong Kim",
@@ -2911,7 +2918,8 @@
         "docs/logbook/012-the-family-tree.md",
         "docs/logbook/058-how-engines-set-a-spring.md",
         "docs/logbook/071-the-gate.md",
-        "docs/logbook/072-read-to-the-end.md"
+        "docs/logbook/072-read-to-the-end.md",
+        "docs/logbook/077-the-surface-of-a-cloth.md"
       ],
       "url": "https://doi.org/10.1016/j.jvcir.2007.01.005",
       "authors": "Matthias Müller, Bruno Heidelberger, Marcus Hennix, John Ratcliff",
@@ -3282,7 +3290,8 @@
       "citedIn": [
         "docs/logbook/004-the-detour.md",
         "docs/logbook/071-the-gate.md",
-        "docs/logbook/072-read-to-the-end.md"
+        "docs/logbook/072-read-to-the-end.md",
+        "docs/logbook/077-the-surface-of-a-cloth.md"
       ],
       "url": "https://github.com/NVIDIAGameWorks/FleX/blob/master/doc/_sources/manual.txt",
       "claudeRead": "full"
@@ -3749,9 +3758,10 @@
       "title": "Uniform buffer",
       "summary": "A small read-only buffer of values shared by every thread, like a GLSL uniform",
       "area": "gpu",
-      "status": "mentioned",
+      "status": "studied",
       "since": {
-        "mentioned": "2026-11-11"
+        "mentioned": "2026-11-11",
+        "studied": "2026-11-28"
       },
       "partOf": "buffer",
       "citedIn": [
@@ -3759,9 +3769,17 @@
         "docs/guides/buffers.md",
         "docs/guides/compute-shader.md",
         "wgsl-spec-var-declarations",
-        "docs/logbook/031-the-yellow-ball.md"
+        "docs/logbook/031-the-yellow-ball.md",
+        "docs/logbook/077-the-surface-of-a-cloth.md",
+        "docs/guides/uniform-buffers.md"
       ],
-      "code": ["src/world.ts", "src/shaders/integrate.wgsl"]
+      "code": [
+        "src/world.ts",
+        "src/shaders/integrate.wgsl",
+        "examples/net-surface/round-cells-surface.wgsl"
+      ],
+      "page": "docs/guides/uniform-buffers.md",
+      "related": []
     },
     {
       "id": "override-constant",
@@ -3918,7 +3936,7 @@
       },
       "partOf": "mdn-webgpu",
       "about": ["device-limits"],
-      "citedIn": ["docs/guides/adapter-and-device.md"],
+      "citedIn": ["docs/guides/adapter-and-device.md", "docs/guides/uniform-buffers.md"],
       "url": "https://developer.mozilla.org/en-US/docs/Web/API/GPUSupportedLimits",
       "claudeRead": "parts"
     },
@@ -4484,7 +4502,9 @@
         "docs/logbook/030-the-lazy-list.md",
         "docs/logbook/049-a-radius-each.md",
         "docs/logbook/050-the-price-of-remembering.md",
-        "docs/logbook/059-a-name-or-a-corrected-list.md"
+        "docs/logbook/059-a-name-or-a-corrected-list.md",
+        "docs/logbook/077-the-surface-of-a-cloth.md",
+        "docs/guides/uniform-buffers.md"
       ]
     },
     {
@@ -7330,7 +7350,11 @@
       },
       "partOf": "contact",
       "related": ["penetration-depth"],
-      "citedIn": ["docs/logbook/024-twenty-seven-cells.md"]
+      "citedIn": [
+        "docs/logbook/024-twenty-seven-cells.md",
+        "docs/logbook/077-the-surface-of-a-cloth.md",
+        "docs/decisions/047-pushed-by-the-surface.md"
+      ]
     },
     {
       "id": "dashpot",
@@ -7531,7 +7555,8 @@
         "docs/logbook/032-two-kinds-of-bounce.md",
         "docs/logbook/034-the-box-on-the-ramp.md",
         "docs/logbook/035-the-grid-stays-still.md",
-        "docs/logbook/045-a-million-and-one-pass.md"
+        "docs/logbook/045-a-million-and-one-pass.md",
+        "docs/logbook/077-the-surface-of-a-cloth.md"
       ],
       "code": ["examples/heap-simulation/round-push.wgsl"]
     },
@@ -8901,7 +8926,8 @@
         "docs/logbook/071-the-gate.md",
         "docs/topics/self-collision.md",
         "docs/logbook/072-read-to-the-end.md",
-        "docs/logbook/073-eight-ways-to-close-a-net.md"
+        "docs/logbook/073-eight-ways-to-close-a-net.md",
+        "docs/logbook/077-the-surface-of-a-cloth.md"
       ],
       "partOf": "self-collision"
     },
@@ -9198,11 +9224,17 @@
       "since": {
         "mentioned": "2026-11-26"
       },
-      "about": ["self-collision", "point-triangle-contact", "speculative-contact"],
+      "about": [
+        "self-collision",
+        "point-triangle-contact",
+        "speculative-contact",
+        "cloth-surface-contact"
+      ],
       "citedIn": [
         "docs/logbook/071-the-gate.md",
         "docs/topics/self-collision.md",
-        "docs/logbook/072-read-to-the-end.md"
+        "docs/logbook/072-read-to-the-end.md",
+        "docs/logbook/077-the-surface-of-a-cloth.md"
       ],
       "claudeRead": "full",
       "url": "https://obi.virtualmethodstudio.com/manual/7.0/surfacecollisions.html"
@@ -9579,6 +9611,145 @@
         "docs/logbook/073-eight-ways-to-close-a-net.md",
         "docs/topics/self-collision.md"
       ]
+    },
+    {
+      "id": "cloth-surface-contact",
+      "kind": "concept",
+      "title": "Contact with the surface of a cloth",
+      "summary": "A particle that touches a cloth of spheres is pushed along the cloth's normal, not between two centers, so it slides on it as on a sheet and not on an egg tray",
+      "area": "physics",
+      "status": "seen",
+      "since": {
+        "seen": "2026-11-28"
+      },
+      "partOf": "cloth",
+      "related": ["contact-normal", "cloth-thickness", "oriented-particles"],
+      "citedIn": [
+        "docs/logbook/077-the-surface-of-a-cloth.md",
+        "docs/decisions/047-pushed-by-the-surface.md"
+      ],
+      "code": ["examples/net-surface/round-cells-surface.wgsl", "examples/net-surface/normals.wgsl"]
+    },
+    {
+      "id": "cloth-thickness",
+      "kind": "concept",
+      "title": "Thickness of a cloth",
+      "summary": "How far from its middle a cloth stops what touches it: a number of its own, apart from the radius of its particles",
+      "area": "physics",
+      "status": "seen",
+      "since": {
+        "seen": "2026-11-28"
+      },
+      "partOf": "cloth",
+      "citedIn": [
+        "docs/logbook/077-the-surface-of-a-cloth.md",
+        "docs/decisions/047-pushed-by-the-surface.md"
+      ],
+      "code": ["examples/net-surface/round-cells-surface.wgsl"]
+    },
+    {
+      "id": "blended-normal",
+      "kind": "concept",
+      "title": "Blended normal",
+      "summary": "The normals of the nearby points of a surface mixed by distance, so that a surface of flat pieces looks, or pushes, as a smooth one",
+      "area": "math",
+      "status": "seen",
+      "since": {
+        "seen": "2026-11-28"
+      },
+      "related": ["cloth-surface-contact"],
+      "citedIn": [
+        "docs/logbook/077-the-surface-of-a-cloth.md",
+        "docs/decisions/047-pushed-by-the-surface.md"
+      ],
+      "code": ["examples/net-surface/round-cells-surface.wgsl"]
+    },
+    {
+      "id": "oriented-particles",
+      "kind": "concept",
+      "title": "Oriented particles",
+      "summary": "Particles that carry a rotation and a shape, an ellipsoid, so a surface made of them is less bumpy than one of spheres",
+      "area": "physics",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-28"
+      },
+      "related": ["orientation"],
+      "citedIn": [
+        "solid-simulation-oriented-particles-paper",
+        "docs/logbook/077-the-surface-of-a-cloth.md"
+      ]
+    },
+    {
+      "id": "solid-simulation-oriented-particles-paper",
+      "kind": "paper",
+      "title": "Solid Simulation with Oriented Particles",
+      "summary": "Particles with an orientation and an ellipsoid for a shape: says that spheres give bumpy collisions and unnatural friction",
+      "area": "physics",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-28"
+      },
+      "about": ["oriented-particles", "shape-matching", "cloth-surface-contact"],
+      "citedIn": ["docs/logbook/077-the-surface-of-a-cloth.md"],
+      "url": "https://matthias-research.github.io/pages/publications/orientedParticles.pdf",
+      "file": "library/solid-simulation-oriented-particles.pdf",
+      "authors": "Matthias Müller, Nuttapong Chentanez",
+      "year": 2011,
+      "claudeRead": "parts"
+    },
+    {
+      "id": "oriented-particles-characters-paper",
+      "kind": "paper",
+      "title": "Adding Physics to Animated Characters with Oriented Particles",
+      "summary": "A particle on a surface has an outward direction and pushes as a larger sphere that touches the surface from inside",
+      "area": "physics",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-28"
+      },
+      "about": ["oriented-particles", "cloth-surface-contact", "rest-pose-filter"],
+      "citedIn": [
+        "docs/logbook/077-the-surface-of-a-cloth.md",
+        "docs/decisions/047-pushed-by-the-surface.md"
+      ],
+      "url": "https://matthias-research.github.io/pages/publications/animParticles.pdf",
+      "file": "library/adding-physics-animated-characters-oriented-particles.pdf",
+      "authors": "Matthias Müller, Nuttapong Chentanez",
+      "year": 2011,
+      "claudeRead": "parts"
+    },
+    {
+      "id": "physx-particle-system-docs",
+      "kind": "docs",
+      "title": "PhysX 5.6, particle system",
+      "summary": "Cloth made of particles in PhysX, marked as deprecated",
+      "area": "physics",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-28"
+      },
+      "partOf": "physx",
+      "about": ["cloth", "unified-particle-physics"],
+      "citedIn": ["docs/logbook/077-the-surface-of-a-cloth.md"],
+      "url": "https://nvidia-omniverse.github.io/PhysX/physx/5.6.1/docs/ParticleSystem.html",
+      "claudeRead": "parts"
+    },
+    {
+      "id": "vellum-collisions-docs",
+      "kind": "docs",
+      "title": "Houdini Vellum, collisions",
+      "summary": "The thickness of a cloth for collisions, taken from the length of its edges",
+      "area": "physics",
+      "status": "mentioned",
+      "since": {
+        "mentioned": "2026-11-28"
+      },
+      "about": ["cloth-thickness", "self-collision"],
+      "citedIn": ["docs/logbook/077-the-surface-of-a-cloth.md"],
+      "url": "https://www.sidefx.com/docs/houdini/vellum/collisions.html",
+      "authors": "SideFX",
+      "claudeRead": "parts"
     }
   ]
 }

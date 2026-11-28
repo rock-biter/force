@@ -58,6 +58,7 @@ The choices that shape FORCE, one per page: what we decided, why, what we left o
 | 044 | [A hand that gives way](./044-a-hand-that-gives-way.md) | Accepted | November 27, 2026 |
 | 045 | [A tighter speed limit from 3 substeps on](./045-a-tighter-limit-from-three-substeps.md) | Accepted | November 27, 2026 |
 | 046 | [The side kept](./046-the-side-kept.md) | Accepted | November 27, 2026 |
+| 047 | [Pushed by the surface of a cloth](./047-pushed-by-the-surface.md) | Accepted | November 28, 2026 |
 
 ## Rules
 

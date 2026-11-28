@@ -16,6 +16,7 @@ Short guides, one concept each, built from the code of FORCE. They are written f
 | [How long did the GPU take?](./timestamp-queries.md) | Timestamp queries |
 | [How do you get the results back?](./readback.md) | Readback and buffer mapping |
 | [How do threads share a counter?](./atomics.md) | Atomics and clearing a buffer |
+| [How do you give every thread the same values?](./uniform-buffers.md) | Uniform buffers, and when not to use a storage buffer |
 
 ## Planned
 
@@ -31,6 +32,6 @@ The first series comes from [`examples/hello-compute`](../../examples/hello-comp
 - [x] How long did the GPU take? (timestamp queries, from [`examples/dispatch-cost`](../../examples/dispatch-cost/main.ts))
 - [ ] When does the GPU actually run? (commands and queue)
 - [x] How do you get the results back? (readback, with the times from [`examples/round-trip`](../../examples/round-trip/main.ts))
-- [ ] How do you give every thread the same values? (uniform buffers)
+- [x] How do you give every thread the same values? (uniform buffers, from [`examples/net-surface`](../../examples/net-surface/round-cells-surface.wgsl))
 - [ ] Why does a vec3f take 16 bytes? (memory alignment)
 - [ ] How do two libraries share GPU data? (one device, one buffer, from [`examples/debug`](../../examples/debug/viewer.ts))

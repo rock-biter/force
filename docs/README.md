@@ -83,6 +83,7 @@ This is where we tell how FORCE gets built, one step at a time. If you are new h
 | 074 | [A Particle in Every Square](./logbook/074-a-particle-in-every-square.md) | A particle that only collides at the middle of every square of a cloth: it wins in a script and is dropped on the GPU. What stays: 3 substeps for cloths, and a hand that gives way |
 | 075 | [Which Side You Came From](./logbook/075-which-side-you-came-from.md) | A cap on stretch does not stop a cloth pulled through another; a push along the line two particles had when the substep began does, and is on between two bodies |
 | 076 | [Cloths and Loose Particles Together](./logbook/076-cloths-and-loose-particles.md) | Two demos where cloths and loose particles share a scene, a net that catches them and curtains over a heap: the first use of the body a particle is part of |
+| 077 | [The Surface of a Cloth](./logbook/077-the-surface-of-a-cloth.md) | Why grains lodge on a cloth of spheres, and a push along the cloth's normal that lets them slide, with a thickness and a rounded edge (decision 047) |
 
 ## For reference
 

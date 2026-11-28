@@ -68,6 +68,8 @@ import levelsCellsSizedCode from '../mixed-sizes/levels-cells-sized.wgsl?raw'
 import propertiesMoveCode from '../mixed-sizes/properties-move.wgsl?raw'
 import propertiesSettleCode from '../mixed-sizes/properties-settle.wgsl?raw'
 import roundCellsSizedCode from '../mixed-sizes/round-cells-sized.wgsl?raw'
+import normalsCode from '../net-surface/normals.wgsl?raw'
+import roundCellsSurfaceCode from '../net-surface/round-cells-surface.wgsl?raw'
 import registerCode from '../ropes/register.wgsl?raw'
 import springsCode from '../ropes/springs.wgsl?raw'
 import bookBlocksCode from './book-blocks.wgsl?raw'
@@ -151,6 +153,16 @@ const NET = SPRINGS === 'net'
 const LOOSE = CLOTH && !NET ? Number(document.body.dataset.loose) || 0 : 0
 const FOR_CLOTHS = LOOSE ? (Number(document.body.dataset.particles) || 20000) - LOOSE : 0
 const NET_HEIGHT = 3.5 // meters: how high the net is held
+// A trial, on the page ../net-surface (data-surface on its <body>) and on any page with cloths
+// opened with ?surface= in the address: what lies on a cloth, a loose particle or another cloth,
+// is pushed by the surface of the cloth, in one of the ways of
+// ../net-surface/round-cells-surface.wgsl, which the panel chooses.
+const SURFACE =
+  CLOTH &&
+  (document.body.dataset.surface !== undefined ||
+    new URLSearchParams(location.search).has('surface'))
+const SURFACE_METHODS = { today: 0, deepest: 1, blended: 2, large: 3 } as const
+type SurfaceMethod = keyof typeof SURFACE_METHODS
 // On the page with the net, a trial: the particles of the net are FINE times smaller than the
 // largest loose one, and as many times closer, so that the net is smoother under them. The page
 // says how many with data-fine on its <body>, ?fine=4 in the address starts with that, and the
@@ -187,6 +199,8 @@ const HAND_SPEED = 10
 const CLOTH_COLORS = [
   0x4ea3ff, 0xf2a93b, 0xd1495b, 0x3fb68b, 0x9b6bd6, 0xe8d44d, 0xe5739a, 0x5fc4d6,
 ].map((hex) => new Color(hex))
+// The net is orange, and green on the page of the trial of its surface, to tell the two pages apart.
+const NET_COLOR = CLOTH_COLORS[document.body.dataset.surface !== undefined ? 3 : 1]
 const ROPE = 30 // particles in a rope: 5.8 m
 // The most groups of springs that share no particle: 2 along a rope, 12 in a cloth with
 // diagonals and bend links.
@@ -787,6 +801,8 @@ fn repeated(home: vec3i, offset: vec3i, slots: u32) -> bool {
     : undefined
   // With cloths: the hand that drags them. It stands alone too.
   const grab = CLOTH ? await alone(grabCode) : undefined
+  // With the trial of the cloth's surface: the normals of the net.
+  const normals = SURFACE ? await alone(normalsCode) : undefined
   const moveProperties = MIXED
     ? await Promise.all(
         [propertiesMoveCode, propertiesSettleCode].map((code) => make(rebuildCode + code)),
@@ -799,8 +815,8 @@ fn repeated(home: vec3i, offset: vec3i, slots: u32) -> bool {
         ? [
             listInOrder(levelsCellsSizedCode),
             listInOrder(levelsCellsSizedCode),
-            listInOrder(roundCellsSizedCode),
-            listInOrder(roundCellsSizedCode),
+            listInOrder(SURFACE ? roundCellsSurfaceCode : roundCellsSizedCode),
+            listInOrder(SURFACE ? roundCellsSurfaceCode : roundCellsSizedCode),
           ]
         : [
             levelsCellsCode,
@@ -835,6 +851,7 @@ fn repeated(home: vec3i, offset: vec3i, slots: u32) -> bool {
     moveProperties,
     springKit,
     grab,
+    normals,
   }
 }
 type Pipelines = Awaited<ReturnType<typeof makePipelines>>
@@ -982,7 +999,9 @@ function makeSimulation(
   const file = cells === 'table' ? kit.byTable : kit.byGrid
   const levels = [storage(count * 4), storage(count * 4)]
   const walls = planesOf(half, height)
-  const planes = storage(walls.length * 16)
+  // Room for 6 planes, and a uniform too: round-cells-surface.wgsl reads them as a fixed array, to
+  // stay within the 8 storage buffers a shader has.
+  const planes = storage(6 * 16, GPUBufferUsage.UNIFORM)
   const control = storage(32, GPUBufferUsage.COPY_SRC) // see rebuild.wgsl
   const params = device.createBuffer({
     size: 80,
@@ -1154,6 +1173,26 @@ function makeSimulation(
     kit.grab && sizes ? group(kit.grab, [properties, predicted[0], grabbed, handle]) : undefined
   let grabbing = false
   let springRounds = SPRING_ROUNDS
+  // The trial of the cloth's surface: two places for every particle, worked out at every substep
+  // for those of a cloth (normals.wgsl), the shape of each cloth, and the way the round pushes.
+  const nets = clothed?.patches ?? []
+  const surfaced = kit.normals !== undefined && nets.length > 0 && sizes !== undefined
+  const normals = storage(surfaced ? bytes * 2 : 32)
+  const netShapes = storage(Math.max(nets.length, 1) * 16)
+  const surface = device.createBuffer({
+    size: 16,
+    usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
+  })
+  buffers.push(surface)
+  device.queue.writeBuffer(
+    netShapes,
+    0,
+    new Uint32Array(nets.flatMap(({ first, columns, rows }) => [first, columns, rows, 0])),
+  )
+  const normalsGroup =
+    surfaced && kit.normals
+      ? group(kit.normals, [properties, rowOf, positions, normals, netShapes])
+      : undefined
   // Levels alternate between two buffers, a step each; positions between two, a round each.
   // The levels and the rounds read the cells of the book: the counts and the starts, then, after
   // their other buffers, the properties, with sizes, and the book, unless in order.
@@ -1186,6 +1225,7 @@ function makeSimulation(
         positions, // where each particle was when the substep began: friction measures from there
         rub,
         ...bookLast,
+        ...(SURFACE ? [normals, surface] : []),
       ]),
     ),
   )
@@ -1301,6 +1341,8 @@ function makeSimulation(
             for (const g of springGroups)
               dispatch('springs', kit.springKit[1], r === 0 ? g.fresh : g.later, g.workgroups)
         }
+        // the normals of the net, from where its particles began the substep, found by their names
+        if (normalsGroup && kit.normals) dispatch('normals', kit.normals, normalsGroup)
         if (levelsOn) dispatch('levels', levelsKit, levelGroups[parity])
         for (let r = 0; r < ROUNDS; r++) dispatch('rounds', roundKit, roundGroups[parity][r % 2])
         dispatch('finish', kit.finish, finishGroup)
@@ -1370,6 +1412,18 @@ function makeSimulation(
     grab(held?: Float32Array) {
       grabbing = held !== undefined && grabGroup !== undefined
       if (held && grabbing) device.queue.writeBuffer(grabbed, 0, held)
+    },
+
+    /**
+     * How a loose particle on the net is pushed (round-cells-surface.wgsl): the way, half the
+     * thickness of the cloth in meters, the radius of the large sphere, in radii of a particle
+     * of the net, and whether the cloth ends with a rounded edge. Only on the page of that trial.
+     */
+    setSurface(method: SurfaceMethod, half: number, large: number, rounded: boolean) {
+      const data = new ArrayBuffer(16)
+      new Uint32Array(data).set([SURFACE_METHODS[method], 0, 0, rounded ? 1 : 0])
+      new Float32Array(data).set([half, large], 1)
+      device.queue.writeBuffer(surface, 0, data)
     },
 
     /** µ, how much of their slide two touching particles take back: 0 is none (decision 020). */
@@ -1901,8 +1955,9 @@ async function start() {
         : 'off',
     // The color of the lightest particle and of the heaviest: the others are in between, by the
     // logarithm of their mass. With one mass for all, only the first is used.
-    // On the page with ropes, the yellow of spaghetti.
-    light: ROPES ? '#f2d16b' : '#4ea3ff',
+    // On the page with ropes, the yellow of spaghetti; on the trial of a cloth's surface, a yellow
+    // that stands out on its green net.
+    light: ROPES ? '#f2d16b' : document.body.dataset.surface !== undefined ? '#f5c518' : '#4ea3ff',
     heavy: '#d1495b',
     // The side of the shadow map, in texels: as ?shadowmap=4096 in the address asks, or 2048.
     shadowMap: stage.mapSize,
@@ -1976,6 +2031,17 @@ async function start() {
     side: MathUtils.clamp(Math.round(Number(query.get('side'))) || PATCH_ROWS || 24, 4, MAX_SIDE),
     // How many times smaller than a loose particle those of the net are: see FINE.
     fine: FINE,
+    // The trial of the cloth's surface (SURFACE): how a loose particle on the net is pushed, how
+    // thick the cloth is, in centimeters, and the large sphere, in radii of a particle of the net.
+    // ?surface=today, deepest, blended or large in the address, ?cloth-thickness=4 and ?large=4.
+    surface: (Object.keys(SURFACE_METHODS).includes(query.get('surface') ?? '')
+      ? query.get('surface')
+      : 'blended') as SurfaceMethod,
+    clothThickness: MathUtils.clamp(Number(query.get('cloth-thickness') ?? 4), 0, 16),
+    large: MathUtils.clamp(Number(query.get('large')) || 4, 1, 8),
+    // The cloth ends with a rounded edge, for the two pushes along the normal. ?rounded=0 for
+    // the flat slab that goes on past the last particle.
+    rounded: query.get('rounded') !== '0',
     // What the pointer does to a cloth: 'push', with the ball, or 'grab', where pressing on a
     // cloth takes hold of it and dragging pulls it (data-pointer="grab" on the page's <body>).
     pointer: CLOTH && document.body.dataset.pointer === 'grab' ? 'grab' : 'push',
@@ -2093,7 +2159,7 @@ async function start() {
           cloths.length > 1
             ? CLOTH_COLORS[k % CLOTH_COLORS.length]
             : NET
-              ? CLOTH_COLORS[1]
+              ? NET_COLOR
               : massColors[0],
           settings.cloth as 'surface' | 'wires' | 'slab',
         )
@@ -2128,7 +2194,7 @@ async function start() {
       // with a net drawn as a surface, only the particles that lie on it
       loose: clothViews.length > 0,
       // and with a net drawn as particles, the net in the color its surface has
-      bodyColor: NET ? CLOTH_COLORS[1] : undefined,
+      bodyColor: NET ? NET_COLOR : undefined,
       look: settings.draw === 'flat' ? 'flat' : deferred() ? 'surface' : 'sphere',
       lighting: forward() ? (...surface) => stage.lightOn(...surface) : undefined,
     })
@@ -2143,6 +2209,9 @@ async function start() {
     scene.add(caster.mesh)
   }
 
+  // On the trial of the cloth's surface the cloth is drawn as thick as it is to the particles.
+  if (SURFACE && settings.surface !== 'today')
+    settings.thickness = Math.max(settings.clothThickness / 100, 0.01)
   function restart() {
     if (switching) return // the menu was only told of the change below
     letGo()
@@ -2225,10 +2294,69 @@ async function start() {
       settings.bendGive / 1000,
     )
     simulation?.setDrag(settings.drag)
+    simulation?.setSurface(
+      settings.surface,
+      settings.clothThickness / 200,
+      settings.large,
+      settings.rounded,
+    )
   }
 
   const pane = new Pane({ title: 'FORCE on the GPU', expanded: window.innerWidth >= 600 })
   pane.registerPlugin(EssentialsPlugin)
+  // The trial of the cloth's surface: how a loose particle on the net is pushed. The cloth is
+  // drawn as thick as it is to the particles.
+  const surfaceFolder = pane.addFolder({ title: 'Cloth surface', hidden: !SURFACE })
+  const drawThickness = () => {
+    if (!SURFACE || settings.surface === 'today') return
+    settings.thickness = Math.max(settings.clothThickness / 100, 0.01)
+    for (const each of clothViews) each.thickness.value = settings.thickness
+    pane.refresh()
+  }
+  surfaceFolder
+    .addBinding(settings, 'surface', {
+      label: 'push',
+      options: {
+        'as today, between centers': 'today',
+        'normal, of the nearest': 'deepest',
+        'normal, blended with neighbours': 'blended',
+        'large sphere': 'large',
+      },
+    })
+    .on('change', () => {
+      thick.disabled = settings.surface === 'today'
+      largeSlider.disabled = settings.surface !== 'large'
+      rounded.disabled = settings.surface !== 'deepest' && settings.surface !== 'blended'
+      applySolver()
+      drawThickness()
+    })
+  const thick = surfaceFolder
+    .addBinding(settings, 'clothThickness', {
+      label: 'thickness, cm',
+      min: 0,
+      max: 16,
+      step: 0.5,
+      disabled: settings.surface === 'today',
+    })
+    .on('change', () => {
+      applySolver()
+      drawThickness()
+    })
+  const largeSlider = surfaceFolder
+    .addBinding(settings, 'large', {
+      label: 'sphere, radii',
+      min: 1,
+      max: 8,
+      step: 0.5,
+      disabled: settings.surface !== 'large',
+    })
+    .on('change', applySolver)
+  const rounded = surfaceFolder
+    .addBinding(settings, 'rounded', {
+      label: 'rounded edge',
+      disabled: settings.surface !== 'deepest' && settings.surface !== 'blended',
+    })
+    .on('change', applySolver)
   // The debug-viewer page keeps the solver as decided, and does not show it.
   const solver = pane.addFolder({ title: 'Solver', hidden: renderPage })
   // FORCE or FORCE+: with FORCE, α and c do not apply, and their sliders rest.
